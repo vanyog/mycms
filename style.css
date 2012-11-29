@@ -1,0 +1,10 @@
+body { font-family: arial, sans-serif; }
+code { padding:0; margin: 0; }
+pre  { padding:0; margin: 0; }
+td { padding: 0 5px 0 5px; }
+a { text-decoration:none; }
+.red { color:red; }
+
+#main { padding-right:180px; }
+#right { width:160px; height:600px; border:solid 1px grey; float:right; }
+

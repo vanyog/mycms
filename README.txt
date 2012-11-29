@@ -1,0 +1,1 @@
+There is a README-bg.txt file in Bulgarian.
