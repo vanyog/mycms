@@ -1,5 +1,7 @@
 <?php
 
+// This function is from http://php.net/manual/en/ref.iconv.php
+
 function utf8_to_cp1251($s)
         {
             $byte2=false;
