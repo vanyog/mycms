@@ -40,6 +40,9 @@ $q = $q1.substr($q2,0,strlen($q2)-1).$q3.';';
 
 mysql_query($q,$db_link);
 
-if ($gtc) header('Location: '.$adm_pth.'show_table.php?t='.$t);
+session_start();
+
+if ($gtc) header('Location: '.$_SESSION['http_referer']);
 else header('Location: '.$adm_pth.'edit_record.php?t='.$t.'&r='.$r);
+
 ?>

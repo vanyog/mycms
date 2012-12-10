@@ -25,8 +25,12 @@ include_once($idir.'lib/f_db_select_1.php');
 include_once($idir.'lib/f_db_field_types.php');
 include_once("editor.php");
 
+session_start();
+if (strpos( $_SERVER['HTTP_REFERER'], $_SERVER['PHP_SELF'] ) === false ) 
+   $_SESSION['http_referer'] = $_SERVER['HTTP_REFERER'];
+
 $t = $_GET['t'];
-$id = $_GET['r'];
+$id = 1*$_GET['r'];
 
 $ft = db_field_types($t);
 $r = db_select_1('*',$t,"ID=$id");
