@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Функцията parse_content($cnt) замества елементите <!--$$_XXX_$$--> в стринга $cnt
 // със съдържание, генерирано от php скриптове, които се съхраняват в таблица $tn_prefix.'scripts'
 
+include_once($idir.'lib/f_adm_links.php');
+
 function parse_content($cnt){
 global $page_options, $page_data, $content_date_time, $body_adds, $page_header, $idir, $adm_pth, $apth;
 
@@ -46,7 +48,7 @@ if (!$sc){
   $f = strtolower($tg[0]);
   $fn = "$f/f_$f.php";
   if (file_exists("$apth$fn")){
-    $c = "include('$fn');\n";
+    $c = "include('$idir$fn');\n";
     if (isset($tg[1])) $c .= '$tx = '."$f('$tg[1]');";
     else $c .= '$tx = '."$f();";
     eval($c);

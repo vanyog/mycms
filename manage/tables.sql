@@ -1,6 +1,32 @@
+-- phpMyAdmin SQL Dump
+-- version 3.4.3.2
+-- http://www.phpmyadmin.net
+--
+-- Хост: localhost
+-- Време на генериране: 10 дек 2012 в 08:41
+-- Версия на сървъра: 5.5.15
+-- Версия на PHP: 5.3.8
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
 
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
+--
+-- База данни: `bgdicdata`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Структура на таблица `content`
+--
+
+DROP TABLE IF EXISTS `content`;
 CREATE TABLE IF NOT EXISTS `content` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
@@ -13,7 +39,11 @@ CREATE TABLE IF NOT EXISTS `content` (
   KEY `date_time_2` (`date_time_2`),
   KEY `name` (`name`),
   FULLTEXT KEY `text` (`text`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+
+--
+-- Ссхема на данните от таблица `content`
+--
 
 INSERT INTO `content` (`ID`, `name`, `date_time_1`, `date_time_2`, `language`, `text`) VALUES
 (1, 'home_page_title', '2011-02-01 15:31:51', '2011-02-01 15:32:10', 'bg', 'Home page'),
@@ -21,6 +51,11 @@ INSERT INTO `content` (`ID`, `name`, `date_time_1`, `date_time_2`, `language`, `
 
 -- --------------------------------------------------------
 
+--
+-- Структура на таблица `menu_items`
+--
+
+DROP TABLE IF EXISTS `menu_items`;
 CREATE TABLE IF NOT EXISTS `menu_items` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `place` int(11) NOT NULL,
@@ -33,6 +68,11 @@ CREATE TABLE IF NOT EXISTS `menu_items` (
 
 -- --------------------------------------------------------
 
+--
+-- Структура на таблица `pages`
+--
+
+DROP TABLE IF EXISTS `pages`;
 CREATE TABLE IF NOT EXISTS `pages` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `menu_group` int(11) NOT NULL,
@@ -44,13 +84,22 @@ CREATE TABLE IF NOT EXISTS `pages` (
   `dcount` int(11) NOT NULL DEFAULT '0',
   `tcount` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+
+--
+-- Ссхема на данните от таблица `pages`
+--
 
 INSERT INTO `pages` (`ID`, `menu_group`, `title`, `content`, `template_id`, `hidden`, `options`, `dcount`, `tcount`) VALUES
 (1, 0, 'home_page_title', 'home_page_content', 1, 1, '', 0, 0);
 
 -- --------------------------------------------------------
 
+--
+-- Структура на таблица `scripts`
+--
+
+DROP TABLE IF EXISTS `scripts`;
 CREATE TABLE IF NOT EXISTS `scripts` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
@@ -58,16 +107,27 @@ CREATE TABLE IF NOT EXISTS `scripts` (
   `coment` text NOT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
+
+--
+-- Ссхема на данните от таблица `scripts`
+--
 
 INSERT INTO `scripts` (`ID`, `name`, `script`, `coment`) VALUES
 (1, 'ADMINMENU', 'include_once("f_adm_links.php"); $tx = adm_links();', 'Показва линкове за администриране на сайта'),
 (2, 'PAGETITLE', '$tx = translate($page_data[''title'']);', 'Заглавие на страницата'),
 (3, 'CONTENT', 'if (isset($tg[1])) $tx = translate($tg[1]);\r\nelse $tx = translate($page_data[''content'']);', 'Показване съдържанието на страницата и ли надпис със зададено име.'),
-(4, 'MENU', 'include_once(''f_menu.php'');\r\n$tx = menu($page_data[''menu_group'']);', 'Показване на група от хипервръзки (меню)');
+(4, 'MENU', 'include_once(''f_menu.php'');\r\n$tx = menu($page_data[''menu_group'']);', 'Показване на група от хипервръзки (меню)'),
+(5, 'BODYADDS', '$tx = $body_adds;', 'Вмъква добавките към <body> тага'),
+(6, 'PAGEHEADER', '$tx = $page_header;', 'Вмъква добавките към хедъра на страницата');
 
 -- --------------------------------------------------------
 
+--
+-- Структура на таблица `templates`
+--
+
+DROP TABLE IF EXISTS `templates`;
 CREATE TABLE IF NOT EXISTS `templates` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `parent` int(11) DEFAULT NULL,
@@ -75,18 +135,31 @@ CREATE TABLE IF NOT EXISTS `templates` (
   PRIMARY KEY (`ID`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
+--
+-- Ссхема на данните от таблица `templates`
+--
+
 INSERT INTO `templates` (`ID`, `parent`, `template`) VALUES
-(1, 0, '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">\r\n\r\n<head>\r\n  <title><!--$$_PAGETITLE_$$--></title>\r\n  <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1251">\r\n  <link href="/_new/style.css" rel="stylesheet" type="text/css">\r\n</head>\r\n<body>\r\n\r\n<!--$$_ADMINMENU_$$-->\r\n\r\n<!--$$_MENU_$$-->\r\n\r\n<h1><!--$$_PAGETITLE_$$--></h1>\r\n<!--$$_CONTENT_$$-->\r\n\r\n</body>\r\n</html>\r\n\r\n');
+(1, 0, '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">\r\n\r\n<head>\r\n  <title><!--$$_PAGETITLE_$$--></title>\r\n  <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1251">\r\n  <link href="/_new/style.css" rel="stylesheet" type="text/css">\r\n<!--$$_PAGEHEADER_$$-->\r\n</head>\r\n<body<!--$$_BODYADDS_$$-->>\r\n\r\n<!--$$_ADMINMENU_$$-->\r\n\r\n<!--$$_MENU_$$-->\r\n\r\n<h1><!--$$_PAGETITLE_$$--></h1>\r\n<!--$$_CONTENT_$$-->\r\n\r\n</body>\r\n</html>\r\n\r\n');
 
 -- --------------------------------------------------------
 
+--
+-- Структура на таблица `visit_history`
+--
+
+DROP TABLE IF EXISTS `visit_history`;
 CREATE TABLE IF NOT EXISTS `visit_history` (
-  `ID` int(11) NOT NULL auto_increment,
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
   `page_id` int(11) NOT NULL,
   `date` date NOT NULL,
   `count` int(11) NOT NULL,
-  PRIMARY KEY  (`ID`),
+  PRIMARY KEY (`ID`),
   KEY `page_id` (`page_id`),
   KEY `date` (`date`),
   KEY `count` (`count`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

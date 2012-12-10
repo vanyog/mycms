@@ -25,7 +25,8 @@ $web_host = 'yoursite.org'; // Домейн на сайта.
 $local_host = 'test'; // Локален домейн на сайта, който не е достъпен през Интернет.
                       // Използва се, когато се създава пробно локално копие на сайта.
 
-$phpmyadmin = 'http://yoursite.org/phpmyadmin'; // Адрес на phpMyAdmin за отдалечения сървър
+$phpmyadmin_site = 'http://yoursite.org/phpmyadmin';     // Адрес на phpMyAdmin за отдалечения сървър
+$phpmyadmin_local = 'http://localhost/phpmyadmin'; // Адрес на phpMyAdmin за локалния сървър
 
 // Връща истина, ако сайтът се намира на локален сървър.
 function is_local(){
