@@ -20,16 +20,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Скрипт за указване на пътя до някои директории
 
-// Директория на входната страница.
+// Интернет директория на входната страница.
 // Задава се ако сайтът се изгражда като раздел в друг сайт и се намира в директория на главния сайт.
 // Трябва да завършва с /.
-$pth = '/';
+$pth = current_pth();
 
 // Абсолютна директория на входната страница във файловата система на сървъра
 $apth = $_SERVER['DOCUMENT_ROOT'].$pth;
 
 // Директория за администриране
-$adm_pth = '/manage/';
+$adm_pth = $pth.'manage/';
 
 // Абсолютна директория на директорията за администриране във файловата система на сървъра
 $adm_apth = $_SERVER['DOCUMENT_ROOT'].$adm_pth;
@@ -51,6 +51,14 @@ $edit_value = 'on';  // Стойност на променлива, която се изпраща с GET за да се 
 function in_admin_path(){
 global $adm_pth;
 return ( substr($_SERVER['PHP_SELF'],0,strlen($adm_pth))==$adm_pth );
+}
+
+// Връща текущата директория. Използва се за определяне на $pth.
+function current_pth(){
+$p1 = $_SERVER['DOCUMENT_ROOT']; $n1 = strlen($p1);
+$p2 = dirname(__FILE__);         $n2 = strlen($p2);
+$r = substr($p2,$n1,$n2-$n1).'/';
+return $r;
 }
 
 ?>

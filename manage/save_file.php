@@ -37,7 +37,10 @@ if ( !(('/'.$fn == $adm_pth.'edit_file.php') ||
 //echo $afn; die;
 
 $f = fopen($afn,"w");
-fwrite( $f, $fc );
+if ($f){
+  fwrite( $f, $fc );
+  fclose($f);
+}
 
 header('Location: '.$adm_pth.'edit_file.php?f='.$fn);
 ?>
