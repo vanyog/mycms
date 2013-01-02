@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Време на генериране: 10 дек 2012 в 08:41
+-- Време на генериране:  2 яну 2013 в 09:56
 -- Версия на сървъра: 5.5.15
 -- Версия на PHP: 5.3.8
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- База данни: `bgdicdata`
+-- База данни: `proba`
 --
 
 -- --------------------------------------------------------
@@ -26,7 +26,6 @@ SET time_zone = "+00:00";
 -- Структура на таблица `content`
 --
 
-DROP TABLE IF EXISTS `content`;
 CREATE TABLE IF NOT EXISTS `content` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
@@ -55,7 +54,6 @@ INSERT INTO `content` (`ID`, `name`, `date_time_1`, `date_time_2`, `language`, `
 -- Структура на таблица `menu_items`
 --
 
-DROP TABLE IF EXISTS `menu_items`;
 CREATE TABLE IF NOT EXISTS `menu_items` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `place` int(11) NOT NULL,
@@ -69,10 +67,22 @@ CREATE TABLE IF NOT EXISTS `menu_items` (
 -- --------------------------------------------------------
 
 --
+-- Структура на таблица `options`
+--
+
+CREATE TABLE IF NOT EXISTS `options` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL,
+  `value` varchar(255) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=cp1251 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Структура на таблица `pages`
 --
 
-DROP TABLE IF EXISTS `pages`;
 CREATE TABLE IF NOT EXISTS `pages` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `menu_group` int(11) NOT NULL,
@@ -91,7 +101,7 @@ CREATE TABLE IF NOT EXISTS `pages` (
 --
 
 INSERT INTO `pages` (`ID`, `menu_group`, `title`, `content`, `template_id`, `hidden`, `options`, `dcount`, `tcount`) VALUES
-(1, 0, 'home_page_title', 'home_page_content', 1, 1, '', 0, 0);
+(1, 0, 'home_page_title', 'home_page_content', 1, 1, '', 1, 2);
 
 -- --------------------------------------------------------
 
@@ -99,7 +109,6 @@ INSERT INTO `pages` (`ID`, `menu_group`, `title`, `content`, `template_id`, `hid
 -- Структура на таблица `scripts`
 --
 
-DROP TABLE IF EXISTS `scripts`;
 CREATE TABLE IF NOT EXISTS `scripts` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
@@ -127,7 +136,6 @@ INSERT INTO `scripts` (`ID`, `name`, `script`, `coment`) VALUES
 -- Структура на таблица `templates`
 --
 
-DROP TABLE IF EXISTS `templates`;
 CREATE TABLE IF NOT EXISTS `templates` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `parent` int(11) DEFAULT NULL,
@@ -148,7 +156,6 @@ INSERT INTO `templates` (`ID`, `parent`, `template`) VALUES
 -- Структура на таблица `visit_history`
 --
 
-DROP TABLE IF EXISTS `visit_history`;
 CREATE TABLE IF NOT EXISTS `visit_history` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `page_id` int(11) NOT NULL,

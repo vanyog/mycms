@@ -88,6 +88,7 @@ return Array (
 function count_visits($p){
 global $tn_prefix, $db_link, $idir;
 include_once($idir."lib/f_adm_links.php");
+// Ако се показват линкове за администриране не се брои нищо
 if (!$p['ID'] || show_adm_links()) return '';
 new_day();
 $q = "UPDATE `$tn_prefix"."pages` SET dcount = dcount+1 WHERE `ID`=".$p['ID'].";";
@@ -97,22 +98,24 @@ mysql_query($q,$db_link);
 // Ако започва нов ден се записват данните за изминалото денонощие в таблица $tn_prefix.'visit_history'
 function new_day(){
 global $apth, $tn_prefix, $db_link;
-$tdf = $apth.'today.txt';
-$td = file($tdf);
-$d=getdate();
-if ($d['mday']==trim($td[0])) return;
+// чете се последната дата от таблица $tn_prefix.'options'
+include_once('lib/f_stored_value.php');
+$td = stored_value('today');
+$d = getdate();
+// ако не се е сменила датата не се прави нищо
+if ($d['mday']==$td) return;
 $dd = $d['year'].'-'.$d['mon'].'-'.$d['mday'];
+// четат се записите на посетените през деня страници от таблица $tn_prefix.'pages'
 $dt = db_select_m('ID,dcount','pages','`dcount`>0');
+// записват се броя посещения на всяка страница в таблица $tn_prefix.'visit_history'
 foreach($dt as $r){
   $q = "INSERT INTO `$tn_prefix"."visit_history` SET `page_id`=".$r['ID'].", `date`='$dd', `count`=".$r['dcount'].";";
-//  echo "$q<br>";
   mysql_query($q,$db_link);
 }
-$f = fopen($tdf,'w+');
-fwrite($f,$d['mday']);
-fclose($f);
+// записва се последната датата в таблица $tn_prefix.'options'
+store_value('today',$d['mday']);
+// нулира се броя на посещенията в таблица $tn_prefix.'pages'
 $q = "UPDATE `$tn_prefix"."pages` SET tcount = tcount + dcount, dcount = 0;";
-//echo "$q<br>";
 mysql_query($q,$db_link);
 }
 

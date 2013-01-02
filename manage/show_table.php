@@ -92,7 +92,8 @@ foreach($tbs as $tb) if (substr($tb,0,strlen($tn_prefix))==$tn_prefix){
  $tb0 = substr($tb,strlen($tn_prefix));
  $page_content .= '<a href="show_table.php?t='.$tb0.'">'.$tb0.'</a>, ';
 }
-if ($c){
+$b1020 = ''; // html кода за бутона "10,20..."
+if ($c){ // Ако са прочетени записи от таблицата
 
 $k = array_keys($r[0]);
 
@@ -106,8 +107,6 @@ $page_content .= '</select> LIKE
 <input type="text" name="value"> 
 <input type="submit" value="Filter"></p>
 </form>';
-
-$b1020 = '';
 
 $page_content .= '<table border="1" cellspacing="0"><tr>
 ';
@@ -133,7 +132,7 @@ foreach($r as $rc){
 }
 $page_content .= '</tr></table>';
 
-}
+} // край на if ($c)
 
 $page_content .= '<p><input type="button" value="New record" onclick="document.location=\''.$adm_pth.'new_record.php?t='.$t.'\';">'.$b1020.'</p>';
 
