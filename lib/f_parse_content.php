@@ -46,7 +46,7 @@ $sc = db_select_1('*','scripts',"`name`='".$tg[0]."'");
 
 if (!$sc){
   $f = strtolower($tg[0]);
-  $fn = "$f/f_$f.php";
+  $fn = "mod/$f/f_$f.php";
   if (file_exists("$apth$fn")){
     $c = "include('$idir$fn');\n";
     if (isset($tg[1])) $c .= '$tx = '."$f('$tg[1]');";
