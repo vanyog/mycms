@@ -38,6 +38,10 @@ foreach($d as $i=>$a){
 
 $fn = $idir.'mod/'.$_GET['m'].'/content.sql';
 
-print_r($q); die;
+$f = fopen($fn,"w");
+fwrite($f,$q);
+fclose($f);
+
+echo $q;
 
 ?>

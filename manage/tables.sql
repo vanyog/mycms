@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `content` (
   KEY `date_time_2` (`date_time_2`),
   KEY `name` (`name`),
   FULLTEXT KEY `text` (`text`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
 -- Ссхема на данните от таблица `content`
@@ -94,7 +94,7 @@ CREATE TABLE IF NOT EXISTS `pages` (
   `dcount` int(11) NOT NULL DEFAULT '0',
   `tcount` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
 -- Ссхема на данните от таблица `pages`
