@@ -36,10 +36,10 @@ foreach($d as $i=>$a){
  if ($i==count($d)-1) $q .= ");"; else $q .= "),\n(";
 }
 
-$fn = $idir.'mod/'.$_GET['m'].'/content.sql';
+$fn = $idir.'mod/'.$_GET['m'].'/tables.sql';
 
 $f = fopen($fn,"w");
-fwrite($f,$q);
+fwrite($f,iconv('cp1251','UTF-8',$q));
 fclose($f);
 
 echo $q;

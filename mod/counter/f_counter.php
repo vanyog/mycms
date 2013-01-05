@@ -17,17 +17,19 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// JavaScript - бро€ч на посещени€та
+function counter(){
+return '<div id="counter_result"></div>
+<script type="text/javascript">
 
-header("Content-Type: text/javascript; charset=windows-1251");
-
-echo '
 if (window.XMLHttpRequest) ajaxObj = new XMLHttpRequest();
 else ajaxObj = new ActiveXObject("Microsoft.XMLHTTP");
 
-ajaxObj.open("GET","http://'.$_SERVER['HTTP_HOST'].'/x/mod/counter/ajax_counter.php?r="+document.referrer+"&a="+Math.random(),false);
+ajaxObj.open("GET","http://ph/x/mod/counter/ajax_counter.php?r="+document.referrer+"&a="+Math.random(),false);
 ajaxObj.send(null);
 document.getElementById("counter_result").innerHTML=ajaxObj.responseText;
+
+</script>
 ';
+}
 
 ?>
