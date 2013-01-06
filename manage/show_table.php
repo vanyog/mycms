@@ -23,11 +23,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 $idir = dirname(dirname(__FILE__)).'/';
 
 include($idir.'conf_paths.php'); 
-include($idir.'lib/f_db_select_m.php');
-include($idir.'lib/f_db_tables.php');
-include($idir.'lib/f_db_table_field.php');
-include($idir.'lib/f_db_field_names.php');
-include($idir.'lib/f_set_query_var.php');
+include_once($idir.'lib/f_db_select_m.php');
+include_once($idir.'lib/f_db_tables.php');
+include_once($idir.'lib/f_db_table_field.php');
+include_once($idir.'lib/f_db_field_names.php');
+include_once($idir.'lib/f_set_query_var.php');
 
 $t = $_GET['t']; // Име на таблицата
 

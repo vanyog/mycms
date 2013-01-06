@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 $idir = dirname(dirname(__FILE__)).'/';
 
 include($idir."conf_paths.php");
-include($idir."lib/usedatabase.php");
+include_once($idir."lib/usedatabase.php");
 
 $t = ''; $r = 0; $gtc = false;
 $q1 = "UPDATE "; $q2 = ' SET'; $q3 = ' WHERE ID='; 

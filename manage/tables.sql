@@ -60,12 +60,17 @@ CREATE TABLE IF NOT EXISTS `options` (
 --
 
 INSERT INTO `options` (`ID`, `name`, `value`) VALUES
-(1, 'languages', '$languages = array(\'bg\' => \'Áúëãàðñêè\' /*, \'en\' => \'English\'*/ );'),
+(1, 'languages', '$languages = array(''bg'' => ''Ð‘ÑŠÐ»Ð³Ð°Ñ€ÑÐºÐ¸'' /*, ''en'' => ''English''*/ );'),
 (2, 'default_language', 'bg'),
-(4, 'host_web', 'mysite.com'),
-(5, 'host_local', 'mysite'),
-(6, 'phpmyadmin_web', 'http://mysite.com/phpmyadmin'),
-(7, 'phpmyadmin_local', 'http://localhost/phpmyadmin');
+(3, 'host_web', 'physics-bg.org'),
+(4, 'host_local', 'ph'),
+(5, 'phpmyadmin_web', 'http://server03.host.bg/sql/index.php'),
+(6, 'phpmyadmin_local', 'http://localhost/db'),
+(7, 'admin_path', 'manage'),
+(8, 'adm_name', 'admin'),
+(9, 'adm_value', 'on'),
+(10, 'edit_name', 'edit'),
+(11, 'edit_value', 'on');
 
 -- --------------------------------------------------------
 
