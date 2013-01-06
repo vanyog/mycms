@@ -29,9 +29,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 include_once("usedatabase.php");
 
-function db_select_1($fn,$tb,$whr){
+function db_select_1($fn,$tb,$whr,$y = false){
 global $db_link, $tn_prefix;
 $q="SELECT $fn FROM `$tn_prefix$tb` WHERE $whr LIMIT 1;";
+if ($y) echo "$q<br>";
 $r=mysql_query($q,$db_link);
 if (!$r) return false;
 $rc=mysql_fetch_assoc($r);

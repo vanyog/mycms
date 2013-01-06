@@ -50,10 +50,18 @@ CREATE TABLE IF NOT EXISTS `menu_items` (
 
 CREATE TABLE IF NOT EXISTS `options` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(20) NOT NULL,
+  `name` varchar(100) NOT NULL,
   `value` varchar(255) NOT NULL,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=cp1251 AUTO_INCREMENT=1 ;
+
+--
+-- Ссхема на данните от таблица `n_options`
+--
+
+INSERT INTO `n_options` (`ID`, `name`, `value`) VALUES
+(1, 'languages', '$languages = array(''bg'' => ''Български'' /*, ''en'' => ''English''*/ );'),
+(2, 'bgdic_last_word_count', '72447');
 
 -- --------------------------------------------------------
 

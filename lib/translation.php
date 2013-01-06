@@ -20,8 +20,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Набор функции за управление съдържанието на различни езици
 
-include($idir."conf_languages.php");
+
+include_once($idir."lib/f_stored_value.php");
 include_once($idir."lib/f_translate.php");
+
+eval(stored_value('languages'));
+$default_language = stored_value('default_language');
+
 
 $language = getLanguage();
 
