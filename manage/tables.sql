@@ -59,8 +59,8 @@ CREATE TABLE IF NOT EXISTS `options` (
 -- Ð¡ÑÑ…ÐµÐ¼Ð° Ð½Ð° Ð´Ð°Ð½Ð½Ð¸Ñ‚Ðµ Ð¾Ñ‚ Ñ‚Ð°Ð±Ð»Ð¸Ñ†Ð° `n_options`
 --
 
-INSERT INTO `n_options` (`ID`, `name`, `value`) VALUES
-(1, 'languages', '$languages = array(''bg'' => ''Áúëãàðñêè'' /*, ''en'' => ''English''*/ );'),
+INSERT INTO `options` (`ID`, `name`, `value`) VALUES
+(1, 'languages', '$languages = array(\'bg\' => \'Áúëãàðñêè\' /*, \'en\' => \'English\'*/ );'),
 (2, 'default_language', 'bg'),
 (4, 'host_web', 'mysite.com'),
 (5, 'host_local', 'mysite'),
