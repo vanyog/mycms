@@ -24,8 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include_once($idir."lib/f_stored_value.php");
 include_once($idir."lib/f_translate.php");
 
-eval(stored_value('languages'));
-$default_language = stored_value('default_language');
+eval(stored_value('languages','$languages = array("bg"=>"Български");'));
+$default_language = stored_value('default_language','bg');
 
 
 $language = getLanguage();

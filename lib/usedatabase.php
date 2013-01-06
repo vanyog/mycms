@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Този файл инициализира променливата $db_link
 // която се използва в mysql_query($q,$db_link);
 
+if (!file_exists($idir."conf_database.php")) die("Database is not configured");
+
 include($idir."conf_database.php");
 
 $db_link = get_db_link($user, $password, $database);

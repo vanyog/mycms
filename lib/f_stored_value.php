@@ -22,8 +22,8 @@ include_once('f_db_select_1.php');
 
 // Функцията stored_value($n) чете полето `value` от таблица $tn_prifix.'options'
 
-function stored_value($n){
-  return db_table_field('value','options',"`name`='$n'");
+function stored_value($n,$def = false){
+  return db_table_field('value','options',"`name`='$n'",$def);
 }
 
 // Функцията store_value($n,$v) записва стойността $v в запис с `name`=$n на таблица $tn_prifix.'options'

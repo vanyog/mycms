@@ -33,7 +33,7 @@ $pth = current_pth();
 $apth = $_SERVER['DOCUMENT_ROOT'].$pth;
 
 // Директория за администриране
-$adm_pth = stored_value('admin_path').'/';
+$adm_pth = stored_value('admin_path','manage').'/';
 if ($adm_pth[0]!='/') $adm_pth = $pth.$adm_pth;
 
 // Абсолютна директория на директорията за администриране във файловата система на сървъра
@@ -48,14 +48,14 @@ $ckpth = '/ckeditor/';
 // Тайни стойности, на които се базира сигурността на административния достъп до сайта:
 
 // Име на променлива, която се изпраща с GET за да се покаже менюто за администриране 
-$adm_name = stored_value('adm_name');
+$adm_name = stored_value('adm_name','admin');
 // Стойност на променлива, която се изпраща с GET за да се покаже менюто за администриране 
-$adm_value = stored_value('adm_value');
+$adm_value = stored_value('adm_value','on');
 
 // Име на променлива, която се изпраща с GET за да се мине в режим на редактиране
-$edit_name = stored_value('edit_name');
+$edit_name = stored_value('edit_name','edit');
 // Стойност на променлива, която се изпраща с GET за да се мине в режим на редактиране
-$edit_value = stored_value('edit_value');;
+$edit_value = stored_value('edit_value','on');
 
 // Връща истина, ако се изпълнява скрипт от директорията за администриране
 function in_admin_path(){
