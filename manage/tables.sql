@@ -60,8 +60,12 @@ CREATE TABLE IF NOT EXISTS `options` (
 --
 
 INSERT INTO `n_options` (`ID`, `name`, `value`) VALUES
-(1, 'languages', '$languages = array(''bg'' => ''Ð‘ÑŠÐ»Ð³Ð°Ñ€ÑÐºÐ¸'' /*, ''en'' => ''English''*/ );'),
-(2, 'bgdic_last_word_count', '72447');
+(1, 'languages', '$languages = array(''bg'' => ''Áúëãàðñêè'' /*, ''en'' => ''English''*/ );'),
+(2, 'default_language', 'bg'),
+(4, 'host_web', 'mysite.com'),
+(5, 'host_local', 'mysite'),
+(6, 'phpmyadmin_web', 'http://mysite.com/phpmyadmin'),
+(7, 'phpmyadmin_local', 'http://localhost/phpmyadmin');
 
 -- --------------------------------------------------------
 

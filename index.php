@@ -37,7 +37,6 @@ if (isset($_GET['pid'])) $page_id = 1*$_GET['pid'];
 $idir = dirname(__FILE__).'/';
 
 if (!file_exists($idir.'conf_database.php')
-  ||!file_exists($idir.'conf_host.php')
   ||!file_exists($idir.'conf_paths.php')
 ) 
    die('Системата все още не е правилно инсталирана и конфигурирана. Вижте файл USAGE.txt.');

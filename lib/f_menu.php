@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Функцията menu($i) съставя последователност от хипервръзки (Меню).
 // $i е номер на групата хипервръзки от таблица $tb_preffix.'menu_items'
 
-include_once('conf_host.php');
+include_once($idir."lib/f_is_local.php");
 include_once('conf_paths.php');
 include_once('f_db_select_m.php');
 

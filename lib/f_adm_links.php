@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 $idir = dirname(dirname(__FILE__)).'/';
 
 include_once($idir.'conf_paths.php');
-include_once($idir."conf_host.php");
+include_once($idir."lib/f_is_local.php");
 include_once($idir.'lib/f_set_query_var.php');
 include_once($idir.'lib/f_db_select_1.php');
 include_once($idir.'lib/f_db_table_exists.php');
