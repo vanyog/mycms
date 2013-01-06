@@ -1,5 +1,4 @@
 <?php
-
 /*
 MyCMS - a simple Content Management System
 Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>
@@ -18,27 +17,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-error_reporting(E_ALL); ini_set('display_errors',1);
+// Файл за настройка на административния блок
+// Използва се по изключение, ако административния блок не е в директория,
+// която е поддиректория на системата за управление на съдържанието
 
-include('conf_manage.php');
-include($idir.'lib/usedatabase.php');
-
-$p = 'tables.sql';
-
-if (isset($_GET['m'])) $p = "../mod/".$_GET['m']."/$p";
-
-if (!file_exists($p)) die("tables.sql file not found");
-
-$fc = file_get_contents($p);
-
-$fc = str_replace('CREATE TABLE IF NOT EXISTS `',   "CREATE TABLE IF NOT EXISTS `$tn_prefix",$fc);
-
-$fc = str_replace('INSERT INTO `',   "INSERT INTO `$tn_prefix",$fc);
-
-$fa = explode('-- --------------------------------------------------------',$fc);
-
-foreach($fa as $q) mysql_query($q,$db_link);
-
-echo "Success";
+$idir = dirname(dirname(__FILE__)).'/';
 
 ?>
