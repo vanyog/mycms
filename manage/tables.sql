@@ -36,15 +36,15 @@ CREATE TABLE IF NOT EXISTS `options` (
 INSERT INTO `options` (`ID`, `name`, `value`) VALUES
 (1, 'languages', '$languages = array(''bg'' => ''Български'' /*, ''en'' => ''English''*/ );'),
 (2, 'default_language', 'bg'),
-(3, 'host_web', 'mysite.org'),
-(4, 'host_local', 'mysite'),
-(5, 'phpmyadmin_web', 'http://mysite.org/phpmyadmin'),
-(6, 'phpmyadmin_local', 'http://localhost/phpmyadmin'),
-(7, 'admin_path', 'manage'),
-(8, 'adm_name', 'admin'),
-(9, 'adm_value', 'on'),
-(10, 'edit_name', 'edit'),
-(11, 'edit_value', 'on');
+(3, 'admin_path', 'manage'),
+(4, 'adm_name', 'admin'),
+(5, 'adm_value', 'on'),
+(6, 'edit_name', 'edit'),
+(7, 'edit_value', 'on'),
+(8, 'host_web', 'mysite.org'),
+(9, 'host_local', 'mysite'),
+(10, 'phpmyadmin_web', 'http://mysite.org/phpmyadmin'),
+(11, 'phpmyadmin_local', 'http://localhost/phpmyadmin');
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pages` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
