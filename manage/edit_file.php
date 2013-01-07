@@ -91,17 +91,20 @@ $dl = array();
 while ($a = readdir($dr)) if ( ($a!='.') && !(($a=='..')&&($d==$apth)) ) $dl[] = $a;
 sort($dl);
 
-$cls = 3; $rw = 0; $j = 0; $stp = ceil(count($dl)/$cls); $cln=0;
+$cls = 3; $rw = 0; $j = 0; $stp = floor(count($dl)/$cls); $cln=0;
+$rem = count($dl) % $cls; $rc = 0; 
 for($i=0; $i<count($dl); $i++){
   $a = $dl[$j];
   $j += $stp;
+  if ($rc<$rem) $j++;
+  $rc++;
   if ($j>count($dl)-1) { $rw++; $j = $rw; }
   $s1 = ''; $s2 = '';
   if (is_dir($d.'/'.$a)){ $s1 = '<strong>'; $s2 = '</strong>'; }
   $page_content .= '<td><input type="radio" name="file" value="'.$f.$a.
   "\"></td><td>$s1<a href=\"edit_file.php?f=$f$a\">$a</a>$s2</td>\n"; 
   $cln++;
-  if (($cln % $cls)==0) $page_content .= "</tr><tr>\n";
+  if (($cln % $cls)==0){ $page_content .= "</tr><tr>\n"; $rc = 0; }
 }
 if (($cln % $cls)!=0) $page_content .= "</tr>";
 
