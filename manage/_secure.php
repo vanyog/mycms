@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // “ози скрипт служи за повишаване сигурността на системата
 
 include('conf_manage.php');
-include($idir.'lib/f_stored_value.php');
+include($idir.'conf_paths.php');
 include($idir.'lib/f_rand_string.php');
 
 // ћасив от имена на стойности от таблица $tn_prefix.'options', на които се генерират случайни стойности
@@ -31,7 +31,7 @@ foreach($na as $i=>$n){
   $v = rand_string(4);
   if (!$i){
     $v[0] = '_';
-    echo "Rename 'manage' directory to '$v'";
+    echo "Rename 'manage' directory to '$v' and after that <a href=\"$pth"."$v\">click here</a>";
   }
   store_value($n,$v);
 }

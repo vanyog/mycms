@@ -42,7 +42,7 @@ INSERT INTO `options` (`ID`, `name`, `value`) VALUES
 (6, 'edit_name', 'edit'),
 (7, 'edit_value', 'on'),
 (8, 'host_web', 'mysite.org'),
-(9, 'host_local', 'mysite'),
+(9, 'host_local', 'localhost'),
 (10, 'phpmyadmin_web', 'http://mysite.org/phpmyadmin'),
 (11, 'phpmyadmin_local', 'http://localhost/phpmyadmin');
 -- --------------------------------------------------------
