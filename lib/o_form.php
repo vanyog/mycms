@@ -17,14 +17,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-$f = new HTMLForm('f1');
-$i = new FormInput('','proba','button','aaa');
-$i->set_event("onclick","alert('aaa')");
-$f->add_input($i);
-$f->astable = false;
-echo $f->html();
-
-
 //----- HTMLForm ------------
 
 class HTMLForm {
@@ -43,11 +35,24 @@ $this->ins[] = $in;
 }
 
 public function html(){
+$js = '';
+$js1 = 'function ifNotEmpty_'.$this->name.'(){
+var f = document.forms["'.$this->name.'"];
+var l = f.length;
+var r = 1;
+for(i=0;i<l-1;i++) r = r*f.elements[i].value.length;
+if (r) f.submit(); else alert("Please, fill in all boxes");
+}
+';
 $rz = "<form name=\"$this->name\" method=\"$this->method\">\n";
 if ($this->astable) $rz .= "<table>\n"; 
-foreach($this->ins as $i) $rz .= $i->html($this->astable);
+foreach($this->ins as $i){
+  $rz .= $i->html($this->astable);
+  if (!(strpos($i->js, 'ifNotEmpty_'.$this->name.'()')===false)) $js .= $js1; 
+}
 if ($this->astable) $rz .= "</table>\n"; 
 $rz .= "</form>\n";
+if ($js) $rz = "<script type=\"text/javascript\">\n$js1</script>\n$rz";
 return $rz;
 }
 
@@ -76,8 +81,8 @@ $this->js = " $e=\"$js\"";
 }
 
 public function html($it){
-if (!$it) $rz = "$this->caption <input type=\"$this->type\" name=\"This->name\"";
-else $rz = "<tr><td>$this->caption </td><td><input type=\"$this->type\" name=\"$this->name\"";
+if (!$it) $rz = "$this->caption <input type=\"$this->type\" name=\"$this->name\"";
+else $rz = "<tr><th>$this->caption </th><td><input type=\"$this->type\" name=\"$this->name\"";
 if ($this->value) $rz .= " value=\"$this->value\"";
 if ($this->id) $rz .= " id=\"$this->id\"";
 if ($this->js) $rz .= " $this->js";
