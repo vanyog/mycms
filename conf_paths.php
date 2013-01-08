@@ -66,8 +66,8 @@ return ( substr($_SERVER['PHP_SELF'],0,strlen($adm_pth))==$adm_pth );
 
 // Връща текущата директория
 function current_pth(){
-$p1 = $_SERVER['DOCUMENT_ROOT']; $n1 = strlen($p1);
-$p2 = dirname(__FILE__);         $n2 = strlen($p2);
+$p1 = $_SERVER['DOCUMENT_ROOT'];               $n1 = strlen($p1);
+$p2 = str_replace('\\','/',dirname(__FILE__)); $n2 = strlen($p2);
 $r = substr($p2,$n1,$n2-$n1).'/';
 return $r;
 }
