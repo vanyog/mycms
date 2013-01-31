@@ -33,15 +33,16 @@ include_once("usedatabase.php");
 
 function db_table_field($fn,$tb,$whr,$def = false){
 global $db_link,$tn_prefix;
-$q="SELECT $fn FROM $tn_prefix$tb WHERE $whr;"; //echo "$q<br>";
+if ($fn[0]=='`') $fn = substr($fn,1,strlen($fn)-2);
+$q="SELECT $fn FROM $tn_prefix$tb WHERE $whr;";
 $r=mysql_query($q,$db_link);
 if (!$r){
   if (!$def) echo $q.'<br>'; 
   return $def;
 }
 $rc=mysql_fetch_assoc($r);
-if ($fn[0]=='`') $fn = substr($fn,1,strlen($fn)-2);
-return stripslashes($rc[$fn]);
+if (isset($rc[$fn])) return stripslashes($rc[$fn]);
+else return $def;
 }
 
 </script>

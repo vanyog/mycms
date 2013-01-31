@@ -34,8 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 $idir = dirname(dirname(__FILE__)).'/';
 
-include_once($idir.'conf_paths.php');
-
 if (!isset($page_title)) $page_title = '';
 if (!isset($page_header)) $page_header = '';
 if (!isset($body_adds)) $body_adds = '';
@@ -46,7 +44,6 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 <head>
    <title>'.$page_title.'</title>
    <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
-   <link href="'.$pth.'style.css" rel="stylesheet" type="text/css">
    '.$page_header.'
 </head>
 

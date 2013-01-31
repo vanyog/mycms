@@ -20,7 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include_once('f_db_table_field.php');
 include_once('f_db_select_1.php');
 
-// Функцията stored_value($n) чете полето `value` от таблица $tn_prifix.'options'
+// Функцията stored_value($n,$def=false) чете полето `value` от таблица $tn_prifix.'options'
+// Ако не съществува такъв запис, връща стойността $def.
 
 function stored_value($n,$def = false){
   return db_table_field('value','options',"`name`='$n'",$def);

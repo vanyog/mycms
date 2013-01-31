@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include_once($idir.'lib/f_adm_links.php');
 
 function parse_content($cnt){
-global $page_options, $page_data, $content_date_time, $body_adds, $page_header, $idir, $adm_pth, $apth;
+global $page_options, $page_data, $content_date_time, $body_adds, $page_header, $idir, $adm_pth, $apth, $mod_pth;
 
 $l = strlen($cnt);
 $str1 = '<!--$$_';
@@ -46,9 +46,10 @@ $sc = db_select_1('*','scripts',"`name`='".$tg[0]."'");
 
 if (!$sc){
   $f = strtolower($tg[0]);
-  $fn = "mod/$f/f_$f.php";
-  if (file_exists("$apth$fn")){
-    $c = "include('$idir$fn');\n";
+  $fn = "$mod_pth$f/f_$f.php";
+  $afn = $_SERVER['DOCUMENT_ROOT']."$fn";
+  if (file_exists($_SERVER['DOCUMENT_ROOT']."$fn")){
+    $c = "include_once('$afn');\n";
     if (isset($tg[1])) $c .= '$tx = '."$f('$tg[1]');";
     else $c .= '$tx = '."$f();";
     eval($c);

@@ -1,5 +1,4 @@
 <?php
-
 /*
 MyCMS - a simple Content Management System
 Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>
@@ -55,7 +54,7 @@ else return $default_language;
 // Връща html код за показване на знаменца, за други езици
 
 function flags(){
-global $language, $languages, $dont_translate;
+global $language, $languages, $dont_translate, $pth;
 $ls = array_keys($languages);
 $r = "";
 if (!$dont_translate) foreach($ls as $l) if ($l!=$language){
@@ -68,7 +67,7 @@ if (!$dont_translate) foreach($ls as $l) if ($l!=$language){
   }
   else $h = $u.'?lang='.$l;
   $r .= '<a href="'.$h.'">
-<img src="/images/flag-'.$l.'.gif" alt="'.$l.'" border="0">
+<img src="'.$pth.'/images/flag-'.$l.'.gif" alt="'.$l.'" border="0">
 </a>
 ';
 }
