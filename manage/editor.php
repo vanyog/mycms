@@ -22,7 +22,16 @@ include("ta_ctag.php");
 
 function editor($n,$tx){
 global $ta_ctag, $ta_fctag, $page_header, $ckpth;
-$page_header .= '<script type="text/javascript" src="'.$ckpth.'ckeditor.js"></script>';
+// Път до основния файл на CKEditor
+$ckep = $_SERVER['DOCUMENT_ROOT'].$ckpth.'ckeditor.js';
+// HTML код за показване на бутон за включване на CKEditor
+$ckeb = '';
+// Проверка дали CKEditor съществува
+if (file_exists($ckep)){
+  $page_header .= '<script type="text/javascript" src="'.$ckpth.'ckeditor.js"></script>';
+  $ckeb = '
+<input type="button" onclick="CKEDITOR.replace( \'editor1\' );" value="CKEditor">';
+}
 return '
 <script type="text/javascript"><!--
 function doInsertTag(){
@@ -81,8 +90,7 @@ make_tag_button('a','tag_a1','tag_a2').'
 '.make_insert_2_button('include_once','\'include_once(\\\'\'','\'\\\');\'').'
 '.make_insert_2_button('print_r','\'print_r($\'','\'); die;\'').'
 '.make_insert_2_button('<!--$$_','\'<!--$$_\'','\'_$$-->\'').'
-'.make_insert_2_button('javascript','tag_s1','tag_s2').'
-<input type="button" onclick="CKEDITOR.replace( \'editor1\' );" value="CKEditor">
+'.make_insert_2_button('javascript','tag_s1','tag_s2').$ckeb.'
 <textarea id="editor1" cols="120" name="'.$n.'" rows="22" style="font-size:120%;">'.
 str_replace($ta_ctag,$ta_fctag,$tx).$ta_ctag;
 

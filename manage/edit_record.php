@@ -26,7 +26,8 @@ include_once($idir.'lib/f_db_field_types.php');
 include_once("editor.php");
 
 session_start();
-if (strpos( $_SERVER['HTTP_REFERER'], $_SERVER['PHP_SELF'] ) === false ) 
+// Ако рефериращата страница е различна от този скрипт, се запомня в променлива на сесията
+if (isset($_SERVER['HTTP_REFERER']) && (strpos( $_SERVER['HTTP_REFERER'], $_SERVER['PHP_SELF'] ) === false )) 
    $_SESSION['http_referer'] = $_SERVER['HTTP_REFERER'];
 
 $t = $_GET['t'];
