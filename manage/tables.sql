@@ -26,6 +26,18 @@ CREATE TABLE IF NOT EXISTS `menu_items` (
   KEY `group` (`group`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `menu_tree` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `group` int(11) NOT NULL,
+  `parent` int(11) DEFAULT NULL,
+  `index_page` int(11) NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `group` (`group`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+-- --------------------------------------------------------
+INSERT INTO `menu_tree` (`ID`, `group`, `parent`, `index_page`) VALUES
+(1, 0, 0, 1);
+-- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `options` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
