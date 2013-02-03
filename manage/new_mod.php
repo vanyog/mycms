@@ -20,15 +20,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Създава нов модул с име $_GET['n']
 
 $idir = dirname(dirname(__FILE__)).'/';
+include($idir.'conf_paths.php');
 
 // Име на модула
 $mf = strtolower($_GET['n']);
 
 // Име на директорията на модула
-$md = $idir.'mod/'.$mf;
+$md = $_SERVER['DOCUMENT_ROOT'].$mod_pth.$mf; echo "$md<br>";
 
 // Създаване на директорията, ако не съществува
-if (!file_exists($md)) mkdir($md);
+if (!file_exists($md)) if (!mkdir($md)) die("Can't create directory: $md");
 
 // Име на файла с модулната функция
 $ff = "$md/f_$mf.php";
