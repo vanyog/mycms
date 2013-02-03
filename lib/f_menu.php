@@ -38,7 +38,8 @@ foreach($d as $m){
   if ($page_id!=$lnn) $rz .= '<a href="'.$ln.'">'.$pl.translate($m['name']).'</a> '."\n";
   else $rz .= '<span>'.$pl.translate($m['name'])."</span> \n";
 }
-if (in_edit_mode()) $rz .= '<a href="'.$adm_pth.'new_record.php?t=menu_items&group='.$i.'&link='.$page_id.'">New</a> '."\n";
+if (in_edit_mode())
+   $rz .= '<a href="'.$adm_pth.'new_record.php?t=menu_items&group='.$i.'&link='.$page_id.'&name=p'.$page_id.'_link">New</a> '."\n";
 return $rz;
 }
 

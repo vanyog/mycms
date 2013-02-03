@@ -1,3 +1,4 @@
+.htaccess
 mod/bgdic
 _*
 conf_database.php
