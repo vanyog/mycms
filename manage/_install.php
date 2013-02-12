@@ -27,17 +27,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 error_reporting(E_ALL); ini_set('display_errors',1);
 
 include('conf_manage.php');
+include($idir.'conf_paths.php');
 
 $p = 'tables.sql';
 
-if (isset($_GET['m'])) $p = "../mod/".$_GET['m']."/$p";
+// Ако не е изпратено име на модул
+if (isset($_GET['m'])) $p = $_SERVER['DOCUMENT_ROOT'].$mod_pth.$_GET['m']."/$p";
 else create_conf_database();
-
-include($idir.'lib/usedatabase.php');
 
 header("Content-Type: text/html; charset=windows-1251");
 
-if (!file_exists($p)) die("tables.sql file not found");
+if (!file_exists($p)) die("$p file not found");
 
 $fc = file_get_contents($p);
 
@@ -47,7 +47,10 @@ $fc = str_replace('INSERT INTO `',   "INSERT INTO `$tn_prefix",$fc);
 
 $fa = explode('-- --------------------------------------------------------',$fc);
 
-foreach($fa as $q) mysql_query($q,$db_link);
+foreach($fa as $q){
+  echo "$q<p>";
+  mysql_query($q,$db_link);
+}
 
 echo '<p>Success</p>
 

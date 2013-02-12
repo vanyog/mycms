@@ -26,7 +26,7 @@ include($idir.'conf_paths.php');
 $mf = strtolower($_GET['n']);
 
 // Име на директорията на модула
-$md = $_SERVER['DOCUMENT_ROOT'].$mod_pth.$mf; echo "$md<br>";
+$md = $_SERVER['DOCUMENT_ROOT'].$mod_pth.$mf; //echo "$md<br>";
 
 // Създаване на директорията, ако не съществува
 if (!file_exists($md)) if (!mkdir($md)) die("Can't create directory: $md");
@@ -60,8 +60,12 @@ return \'Module '.$mf.' works\';
 
 ?>';
 
+// Създаване и записване на файла
 $f = fopen($ff,'w');
 fwrite($f,$fc);
 fclose($f);
+
+// Връщане към рефериращата страница
+header("Location: ".$_SERVER['HTTP_REFERER']);
 
 ?>
