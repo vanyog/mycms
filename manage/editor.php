@@ -22,6 +22,7 @@ include("ta_ctag.php");
 
 function editor($n,$tx){
 global $ta_ctag, $ta_fctag, $page_header, $ckpth;
+$tx = str_replace('&','&amp;',$tx);
 // Път до основния файл на CKEditor
 $ckep = $_SERVER['DOCUMENT_ROOT'].$ckpth.'ckeditor.js';
 // HTML код за показване на бутон за включване на CKEditor
