@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS `outer_links` (
 INSERT INTO `content` (`name`,`date_time_1`,`date_time_2`,`language`,`text`) VALUES
 ('outerlinks_categories',NOW(),NOW(),'bg','категории'),
 ('outerlinks_find',NOW(),NOW(),'bg','Търсене'),
+('outerlinks_found',NOW(),NOW(),'bg','намерени връзки'),
 ('outerlinks_home',NOW(),NOW(),'bg','Начало'),
 ('outerlinks_in',NOW(),NOW(),'bg','в'),
 ('outerlinks_intitles',NOW(),NOW(),'bg','надписите'),

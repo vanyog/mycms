@@ -156,7 +156,8 @@ return '<p class="link_tree"><a href="/_new/index.php?pid=29">'.translate('outer
 // Показване формата за търсене
 // ----------------------------
 function search_link_form(){
-return '<form method="POST"><p>'.translate('outerlinks_searchin').' 
+global $page_id;
+return '<form method="POST" action="'.$_SERVER['PHP_SELF'].'?pid='.$page_id.'"><p>'.translate('outerlinks_searchin').' 
 <input type="radio" name="search_by" value="keyword" checked> '.translate('outerlinks_intitles').' 
 <input type="radio" name="search_by" value="url"> '.translate('outerlinks_inurls').' 
 <input type="text" name="search_for">
