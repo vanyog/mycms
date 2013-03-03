@@ -60,8 +60,9 @@ else {
   return '<script type="text/javascript"><!--
 function doNewPage(){
 if (confirm("Do you want to create new page?"))
-document.location="'.$adm_pth.'new_record.php?t=pages&menu_group='.$page_data['menu_group'].
+na = "'.$adm_pth.'new_record.php?t=pages&menu_group='.$page_data['menu_group'].
 '&title=p'.($lpid+1).'_title&content=p'.($lpid+1).'_content&template_id='.$page_data['template_id'].'";
+document.location=na;
 }
 --></script>
 <p style="position:fixed; font-size:80%; margin:0; padding:0; border-style:solid; border-color:grey; border-width:0 0 1px 0; z-index:100;">

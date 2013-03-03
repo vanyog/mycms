@@ -40,7 +40,9 @@ foreach($fn as $i => $n){
   case 'hidden': break;
   case 'place': $pl = db_table_field('MAX(`place`)',$tb,'1')+10;
      $q .= "`$n`='$pl', "; break;
-  case 'template_id': $q .= "`template_id`=1, "; break;
+  case 'template_id':
+     if (isset($_GET['template_id'])) $q .= "`template_id`=".(1*$_GET['template_id']).', ';
+     else $q .= "`template_id`=1, "; break;
   default:
     $v = '';
     if (isset($_GET[$n])) $v = $_GET[$n];
