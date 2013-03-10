@@ -67,7 +67,7 @@ if (!$dont_translate) foreach($ls as $l) if ($l!=$language){
   }
   else $h = $u.'?lang='.$l;
   $r .= '<a href="'.$h.'">
-<img src="'.$pth.'/images/flag-'.$l.'.gif" alt="'.$l.'" border="0">
+<img src="'.$pth.'images/flag-'.$l.'.gif" alt="'.$l.'" border="0">
 </a>
 ';
 }
