@@ -24,6 +24,7 @@ class HTMLForm {
 public $name = '';
 public $method = 'post';
 public $astable = true;
+public $action = ''; //$_SERVER['REQUEST_URI'];
 private $ins = array();
 
 function __construct($n){
@@ -32,6 +33,7 @@ $this->name = $n;
 
 function add_input($in){
 $this->ins[] = $in;
+$this->action = $_SERVER['REQUEST_URI'];
 }
 
 public function html(){
@@ -44,7 +46,7 @@ for(i=0;i<l-1;i++) r = r*f.elements[i].value.length;
 if (r) f.submit(); else alert("Please, fill in all boxes");
 }
 ';
-$rz = "<form name=\"$this->name\" method=\"$this->method\">\n";
+$rz = "<form name=\"$this->name\" method=\"$this->method\" action=\"$this->action\">\n";
 if ($this->astable) $rz .= "<table>\n"; 
 foreach($this->ins as $i){
   $rz .= $i->html($this->astable);
