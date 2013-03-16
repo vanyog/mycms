@@ -24,7 +24,7 @@ class HTMLForm {
 public $name = '';
 public $method = 'post';
 public $astable = true;
-public $action = ''; //$_SERVER['REQUEST_URI'];
+public $action = '';
 private $ins = array();
 
 function __construct($n){
@@ -92,6 +92,37 @@ if (!$it) $rz .= ">\n";
 else $rz .= "></td></tr>\n";
 return $rz;
 }
+
+}
+
+//----- FormTextArea ------------
+
+class FormTextArea {
+
+public $caption = '';
+public $name = '';
+public $cols = '';
+public $rows = '';
+public $text = '';
+public $js = '';
+
+function __construct($c,$n,$cl=100,$r=10,$t=''){
+$this->caption = $c;
+$this->name = $n;
+$this->cols = $cl;
+$this->rows = $r;
+$this->text = $t;
+}
+
+public function html($it){
+if (!$it) $rz = "$this->caption <textarea name=\"$this->name\" cols=\"$this->cols\" rows=\"$this->rows\">$this->text</textarea>";
+else $rz = "<tr>
+<td>$this->caption</td>
+<td><textarea name=\"$this->name\" cols=\"$this->cols\" rows=\"$this->rows\">$this->text</textarea></td>
+</tr>";
+return $rz;
+}
+
 
 }
 
