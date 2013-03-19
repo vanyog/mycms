@@ -28,7 +28,8 @@ include_once('f_db_select_m.php');
 function menu($i){
 global $pth, $adm_pth, $page_id;
 $d = db_select_m('*','menu_items',"`group`=$i ORDER BY `place`");
-$rz = '';
+$rz = '<div id="page_menu">
+';
 foreach($d as $m){
   $lnn = 1*$m['link'];
   $ln = $m['link'];
@@ -43,7 +44,7 @@ if (in_edit_mode()){
   $rz .= '<a href="'.$adm_pth.'new_record.php?t=menu_items&group='.$i.'&link='.$page_id.
          '&name=p'.$ni.'_link">New</a> '."\n";
 }
-return $rz;
+return $rz.'</div>';
 }
 
 ?>
