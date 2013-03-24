@@ -26,6 +26,9 @@ $idir = dirname(dirname(__FILE__)).'/';
 
 include($idir.'lib/f_db_select_m.php');
 
+if (!isset($_GET['p'])) die("Parameter p=Name_Prefix is not posted");
+if (!isset($_GET['m'])) die("Parameter m=Mod_Name is not posted");
+
 $d = db_select_m('*','content',"`name` LIKE '".$_GET['p']."%'");
 
 $q = "INSERT INTO `content` (`name`,`date_time_1`,`date_time_2`,`language`,`text`) VALUES
@@ -39,7 +42,7 @@ foreach($d as $i=>$a){
 $fn = $idir.'mod/'.$_GET['m'].'/tables.sql';
 
 $f = fopen($fn,"w");
-fwrite($f,iconv('cp1251','UTF-8',$q));
+fwrite($f,$q);
 fclose($f);
 
 echo $q;
