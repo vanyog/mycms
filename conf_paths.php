@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // Скрипт за указване на пътя до някои директории
-// Настройките де не се задават вече тук а в таблица $tn_prefix.'options' !
+// Настройките де не се задават вече тук, а в таблица $tn_prefix.'options' !
 
 $idir = dirname(__FILE__).'/';
 
@@ -48,6 +48,9 @@ $ckpth = stored_value('ckeditor_path',$adm_pth.'ckeditor/');
 
 // Директория с модули
 $mod_pth = stored_value('mod_path',$pth.'mod').'/';
+
+// Абсолютна директория до директорията с модули
+$mod_apth = $_SERVER['DOCUMENT_ROOT'].$mod_pth;
 
 // Тайни стойности, на които се базира сигурността на административния достъп до сайта:
 

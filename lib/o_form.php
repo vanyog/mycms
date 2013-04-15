@@ -24,6 +24,7 @@ class HTMLForm {
 public $name = '';
 public $method = 'post';
 public $astable = true;
+public $action = '';
 private $ins = array();
 
 function __construct($n){
@@ -32,6 +33,7 @@ $this->name = $n;
 
 function add_input($in){
 $this->ins[] = $in;
+$this->action = $_SERVER['REQUEST_URI'];
 }
 
 public function html(){
@@ -44,7 +46,7 @@ for(i=0;i<l-1;i++) r = r*f.elements[i].value.length;
 if (r) f.submit(); else alert("Please, fill in all boxes");
 }
 ';
-$rz = "<form name=\"$this->name\" method=\"$this->method\">\n";
+$rz = "<form name=\"$this->name\" method=\"$this->method\" action=\"$this->action\">\n";
 if ($this->astable) $rz .= "<table>\n"; 
 foreach($this->ins as $i){
   $rz .= $i->html($this->astable);
@@ -90,6 +92,37 @@ if (!$it) $rz .= ">\n";
 else $rz .= "></td></tr>\n";
 return $rz;
 }
+
+}
+
+//----- FormTextArea ------------
+
+class FormTextArea {
+
+public $caption = '';
+public $name = '';
+public $cols = '';
+public $rows = '';
+public $text = '';
+public $js = '';
+
+function __construct($c,$n,$cl=100,$r=10,$t=''){
+$this->caption = $c;
+$this->name = $n;
+$this->cols = $cl;
+$this->rows = $r;
+$this->text = $t;
+}
+
+public function html($it){
+if (!$it) $rz = "$this->caption <textarea name=\"$this->name\" cols=\"$this->cols\" rows=\"$this->rows\">$this->text</textarea>";
+else $rz = "<tr>
+<td>$this->caption</td>
+<td><textarea name=\"$this->name\" cols=\"$this->cols\" rows=\"$this->rows\">$this->text</textarea></td>
+</tr>";
+return $rz;
+}
+
 
 }
 
