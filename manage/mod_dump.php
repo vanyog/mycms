@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 $idir = dirname(dirname(__FILE__)).'/';
 
+include($idir.'conf_paths.php');
 include($idir.'lib/f_db_select_m.php');
 
 if (!isset($_GET['p'])) die("Parameter p=Name_Prefix is not posted");
@@ -39,7 +40,7 @@ foreach($d as $i=>$a){
  if ($i==count($d)-1) $q .= ");"; else $q .= "),\n(";
 }
 
-$fn = $idir.'mod/'.$_GET['m'].'/tables.sql';
+$fn = $_SERVER['DOCUMENT_ROOT'].$mod_pth.$_GET['m'].'/tables.sql';
 
 $f = fopen($fn,"w");
 fwrite($f,$q);

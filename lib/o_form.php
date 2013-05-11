@@ -46,7 +46,7 @@ for(i=0;i<l-1;i++) r = r*f.elements[i].value.length;
 if (r) f.submit(); else alert("Please, fill in all boxes");
 }
 ';
-$rz = "<form name=\"$this->name\" method=\"$this->method\" action=\"$this->action\">\n";
+$rz = "<form enctype=\"multipart/form-data\" name=\"$this->name\" id=\"$this->name\" method=\"$this->method\" action=\"$this->action\">\n";
 if ($this->astable) $rz .= "<table>\n"; 
 foreach($this->ins as $i){
   $rz .= $i->html($this->astable);
@@ -68,8 +68,10 @@ public $caption = '';
 public $name = '';
 public $type = '';
 public $value = '';
+public $size = '';
 public $id = '';
 public $js = '';
+public $max_file_size = '5000000';
 
 function __construct($c,$n,$t,$v = ''){
 $this->caption = $c;
@@ -83,13 +85,17 @@ $this->js = " $e=\"$js\"";
 }
 
 public function html($it){
-if (!$it) $rz = "$this->caption <input type=\"$this->type\" name=\"$this->name\"";
-else $rz = "<tr><th>$this->caption </th><td><input type=\"$this->type\" name=\"$this->name\"";
+$rz = '';
+if (!$it) $rz .= "$this->caption <input type=\"$this->type\" name=\"$this->name\"";
+else $rz .= "<tr><th>$this->caption </th><td><input type=\"$this->type\" name=\"$this->name\"";
 if ($this->value) $rz .= " value=\"$this->value\"";
+if ($this->size) $rz .= " size=\"$this->size\"";
 if ($this->id) $rz .= " id=\"$this->id\"";
 if ($this->js) $rz .= " $this->js";
-if (!$it) $rz .= ">\n";
-else $rz .= "></td></tr>\n";
+$rz .= ">";
+if ($this->type=='file') $rz .= '<input type="hidden" name="MAX_FILE_SIZE" value="'.$this->max_file_size.'">'; 
+if (!$it) $rz .= "\n";
+else $rz .= "</td></tr>\n";
 return $rz;
 }
 
