@@ -20,7 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Чете надписите с имена, започващи с $_GET['p'] и съставя
 // content.sql файл в директория 'mod'.$_GET['m'], с който 
 // надписите да се импортират в таблица $tn_prefix.'content'
-// при инсталиране на модула
+// при инсталиране на модула. Ако файл content.sql вече съществува,
+// sql заявките се добавят в края му.
 
 $idir = dirname(dirname(__FILE__)).'/';
 
@@ -42,7 +43,11 @@ foreach($d as $i=>$a){
 
 $fn = $_SERVER['DOCUMENT_ROOT'].$mod_pth.$_GET['m'].'/tables.sql';
 
-$f = fopen($fn,"w");
+if (file_exists($fn)) {
+  $f = fopen($fn, 'a');
+  fwrite($f, "-- --------------------------------------------------------\n");
+}
+else $f = fopen($fn,"w");
 fwrite($f,$q);
 fclose($f);
 

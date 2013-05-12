@@ -25,12 +25,13 @@ include_once($idir.'lib/f_db_table_field.php');
 // Ако няма такъв, показва форма за влизане.
 // Ако потребителското име или паролата са невалидни връща "Access denied."
 // Ако потребителското име и паролата са валидни връща празен низ.
+// Ако е изпратен параметър $a='new' се показва форма за въвеждане данните за нов потребител.
 
 session_start();
 
 function user(){
 if (show_adm_links()) return '';
-// Ако няма влязъл потребител се отваря страница за влизане
+// Ако няма влязъл потребител се отваря страница за влизане.
 if (!isset($_SESSION['user_username'])) get_user();
 $rz = db_table_field('ID','users',
       "`username`='".addslashes($_SESSION['user_username'])."' AND `password`='".$_SESSION['user_password']."'");
@@ -60,6 +61,7 @@ die;
 function process_user(){
 $_SESSION['user_username'] = $_POST['username'];
 if (isset($_POST['password'])) $_SESSION['user_password'] = sha1($_POST['password']); else $_SESSION['user_password'] = '';
+//print_r($_SESSION); die;
 }
 
 ?>
