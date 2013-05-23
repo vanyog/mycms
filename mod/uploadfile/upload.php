@@ -26,7 +26,7 @@ $idir = dirname(dirname(dirname(__FILE__))).'/';
 
 include($idir.'lib/translation.php');
 include($idir.'lib/o_form.php');
-include_once($mod_apth.'user/f_user.php');
+//include_once($mod_apth.'user/f_user.php');
 
 // Проверка дали има влязъл потребител
 user('new');
@@ -47,7 +47,7 @@ $ftx = '';
 // Четене на данните за файла от таблица $tn_prefix.'files'.
 $fd = db_select_1('*','files',"`pid`='$pid' AND `name`='$fn'");
 
-if ($fd) $ftx = $fd['text'];
+if ($fd) $ftx = htmlspecialchars(stripslashes($fd['text']), ENT_COMPAT, 'cp1251');
 
 // Ако са изпратени данни се обработват.
 if (count($_POST) && !isset($_POST['password'])) process_data();
@@ -80,13 +80,17 @@ $page_content .= $uf->html();
 //
 function process_data(){
 global $pid, $fid, $fd, $tn_prefix, $fn, $db_link, $pth;
+
 // Път до директория за качване на файлове. Ако не е зададена друга, съвпада с директорията на модула.
 $fld = current_pth(__FILE__);
 $fld = $_SERVER['DOCUMENT_ROOT'].stored_value('uploadfile_dir',$fld); //echo "$fld<br>"; die;
+
 // Път до качения файл
 $fln = $fld.$_FILES['file']['name'];
+
 // Четене на данни от запис за файл със същото име.
 $dt = db_select_1('*','files',"`filename`='$fln'");
+
 // Ако има такъв запис - прекратяване със съобщение за грешка 
 if ($dt && ($dt['ID']!=$fid)){
   header("Content-Type: text/html; charset=windows-1251");
@@ -94,13 +98,16 @@ if ($dt && ($dt['ID']!=$fid)){
 }
 // Ако има друг файл на сървъра за този запис, файлът се изтрива.
 if ($fd && file_exists($fd['filename'])) unlink($fd['filename']);
+
 // Проверка дали има файл на сървъра със същото име, който не се отнася за същия запис.
 if (file_exists($fln) && (!$dt || ($dt['ID']!=$fid)) ){
   header("Content-Type: text/html; charset=windows-1251");
   die(translate('uploadfile_fileexists'));
 }
+
 // Преместване на качения файл в директория за качване на файлове
 if (!move_uploaded_file($_FILES['file']['tmp_name'], $fln)) die('Do not uploaded');
+
 // Записване на денни в базата
 $w = '';
 if ($fd) { $q = "UPDATE `"; $w = "WHERE `ID`=$fid"; }

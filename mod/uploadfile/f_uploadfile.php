@@ -17,26 +17,48 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+// Модул за качване на файлове
+// Функцията uploadfile($n) генерира html кода на хипервръзка към
+// качен на сървъра файл.
+// В режим на редактиране зад хипервръзката се показват знаци:
+// +  за качване на файл и 
+// -  за изтриване на качения файл.
+
+include_once($idir."f_allow_editing.php");
+
 function uploadfile($n){
 global $mod_pth, $page_id;
+// За всеки случай, ако не е дефиниран номер на страница.
 if (!isset($page_id)) $page_id = 1*$_GET['pid'];
+$pid = $page_id;
+// Разпадаме на параметъра на име и номер.
+$na = explode(',',$n);
+// Ако е изпратен и номер на страница - коригиране на $n и $pid
+if (isset($na[1])){ $pid = 1*$na[1]; $n = $na[0]; }
+// Връщан резултат
 $rz = '';
-$fr = db_select_1('*','files',"`pid`=$page_id AND `name`='$n'");
-if (!$fr){ 
+// Четене на данните за файла
+$fr = db_select_1('*','files',"`pid`=$pid AND `name`='$n'");
+$ne = false;
+if (!$fr){ // Ако няма данни за файл - надпис "Няма качен файл"
   $rz .= translate('uploadfile_nofile');
   $fid = 0;
 }
 else {
   $l = strlen($_SERVER['DOCUMENT_ROOT']);
+  $ne = $_SERVER['DOCUMENT_ROOT'] != substr($fr['filename'], 0, $l);
+//  echo $_SERVER['DOCUMENT_ROOT']."<br>".substr($fr['filename'], 0, $l); die;
   $f = substr($fr['filename'], $l, strlen($fr['filename'])-$l);
-  $rz .= '<a href="'.$f.'">'.stripslashes($fr['text']).'</a>';
+  if (!$fr['filename'] || $ne) $rz .= stripslashes($fr['text']);
+  else $rz .= '<a href="'.$f.'">'.stripslashes($fr['text']).'</a>';
   $fid = $fr['ID'];
 }
 if (show_adm_links()){
   $cp = current_pth(__FILE__);
-  $rz .= ' <a href="'.$cp."upload.php?pid=$page_id&amp;fid=$fid&amp;fn=$n"."\" title=\"Update\">+</a>\n";
-  if ($fr) $rz .= ' <a href="'.$cp."delete.php?fid=$fid".'" title="Delete" onclick="return confirm(\''.
-    translate('uploadfile_confdel').$f.' ?\');">-</a>'."\n";
+  $rz .= ' <a href="'.$cp."upload.php?pid=$pid&amp;fid=$fid&amp;fn=$n"."\" title=\"Update\">+</a>\n";
+  if ( isset($fr['filename']) && $fr['filename'] && !$ne ) 
+    $rz .= ' <a href="'.$cp."delete.php?fid=$fid".'" title="Delete" onclick="return confirm(\''.
+      translate('uploadfile_confdel').$f.' ?\');">-</a>'."\n";
 }
 return $rz;
 }

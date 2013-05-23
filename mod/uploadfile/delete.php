@@ -25,10 +25,7 @@ if (!isset($_GET['fid'])) die("No upload id");
 $idir = dirname(dirname(dirname(__FILE__))).'/';
 
 include($idir.'lib/translation.php');
-include_once($mod_apth.'user/f_user.php');
-
-// Проверка дали има влязъл потребител
-user('new');
+//include($idir.'lib/f_db_select_1.php');
 
 // Номер на записа за файла.
 $fid = 1*$_GET['fid'];
@@ -41,8 +38,11 @@ if (!$fd) die(translate('uploadfile_idnotexists'));
 // Изтриване на файла от сървъра
 unlink($fd['filename']);
 
-// Изтриване на записа от базата данни
-$q = "DELETE FROM `$tn_prefix"."files` WHERE `ID`=$fid;";
+// Изтриване или променяне на записа от базата данни
+if (stored_value('uploadfile_deletefileonly')=='true')
+  $q = "UPDATE `$tn_prefix"."files` SET `filename`='' WHERE `ID`=$fid;";
+else
+  $q = "DELETE FROM `$tn_prefix"."files` WHERE `ID`=$fid;";
 mysql_query($q,$db_link);
 
 // Препращане към страницата с линк към файла
