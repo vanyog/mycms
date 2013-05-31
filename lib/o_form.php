@@ -68,6 +68,7 @@ public $caption = '';
 public $name = '';
 public $type = '';
 public $value = '';
+public $checked = '';
 public $size = '';
 public $id = '';
 public $js = '';
@@ -92,7 +93,7 @@ if ($this->value) $rz .= " value=\"$this->value\"";
 if ($this->size) $rz .= " size=\"$this->size\"";
 if ($this->id) $rz .= " id=\"$this->id\"";
 if ($this->js) $rz .= " $this->js";
-$rz .= ">";
+$rz .= "$this->checked>";
 if ($this->type=='file') $rz .= '<input type="hidden" name="MAX_FILE_SIZE" value="'.$this->max_file_size.'">'; 
 if (!$it) $rz .= "\n";
 else $rz .= "</td></tr>\n";
@@ -123,7 +124,7 @@ $this->text = $t;
 public function html($it){
 if (!$it) $rz = "$this->caption <textarea name=\"$this->name\" cols=\"$this->cols\" rows=\"$this->rows\">$this->text</textarea>";
 else $rz = "<tr>
-<td>$this->caption</td>
+<th>$this->caption</th>
 <td><textarea name=\"$this->name\" cols=\"$this->cols\" rows=\"$this->rows\">$this->text</textarea></td>
 </tr>";
 return $rz;
@@ -132,4 +133,39 @@ return $rz;
 
 }
 
+//----- FormSelect ------------
+
+class FormSelect {
+
+public $caption = '';
+public $name = '';
+public $options = array();
+public $selected = -1;
+public $js = '';
+
+function __construct($c, $n, $op, $s = -1){
+$this->caption = $c;
+$this->name = $n;
+$this->options = $op;
+$this->selected = $s;
+}
+
+public function html($it){
+if (!$it) $rz = "$this->caption <select name=\"$this->name\">";
+else $rz = "<tr>
+<th>$this->caption</th>
+<td><select name=\"$this->name\">\n";
+foreach($this->options as $i => $v){
+  $sl = '';
+  if ($i==$this->selected) $sl = ' selected';
+  $rz .= "<option value=\"$v\"$sl>$v\n";
+}
+$rz .= "</select>";
+if ($it) $rz .= "</td>
+</tr>";
+return $rz;
+}
+
+
+}
 ?>

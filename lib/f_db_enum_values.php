@@ -17,13 +17,21 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Съставя адрес към текущо изпалнявания php скрипт $_SERVER['PHP_SELF']
-// с параметри, към които се добая и параметър с име $n и стойност $v
+// Функцията db_enum_values($fn, $tn) връща масив от валидните стойности
+// на полето $fn от таблица $tn ако това поле и от тип enum
 
-function set_self_query_var($n,$v){
-$r = $_GET;
-$r[$n] = $v;
-return $_SERVER['PHP_SELF'].'?'.str_replace('&','&amp;',http_build_query($r));
+include_once($idir.'conf_database.php');
+
+function db_enum_values($fn, $tn){
+global $tn_prefix, $db_link;
+$q = "SHOW COLUMNS FROM `$tn_prefix$tn` LIKE '$fn'";
+$r = mysql_query($q,$db_link);
+if (!$r) return false;
+$a = mysql_fetch_assoc($r);
+if (!isset($a['Type'])) return false;
+$rz = substr($a['Type'], 5, strlen($a['Type'])-6);
+if (substr($a['Type'], 0, 5)!='enum(') return false;
+return str_getcsv($rz, ',', "'");
 }
 
 ?>

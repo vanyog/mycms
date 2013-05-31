@@ -1,0 +1,280 @@
+#page_center2{
+  border: solid 1px white;
+  padding-top:10px;
+  min-height:680px;
+  width:828px;
+  padding-left:130px;
+}
+
+.abstract {
+  border: solid 1px #c7c7c7;
+  text-align:center;
+  margin:1px;
+  padding:5px;
+  border-radius: 10px;
+  vertical-align:top;
+}
+
+.abstract h1 { text-align:left; border-bottom:solid 1px #005037; margin:0px 0 10px 15px; }
+
+body {
+  background-color:#eaeaea;
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-size:15px;
+}
+
+#page_center{
+  border: solid 1px white;
+  padding-top:10px;
+  min-height:680px;
+  width:692px;
+  padding-left:130px;
+}
+
+#adv {
+  border: solid 1px #c7c7c7;
+  background-color:#f0f9ff;
+  width:120px; min-height:600px; height:auto;
+  position:absolute;
+  top:149px; left:825px;
+}
+
+#adv_2{
+  border: solid 1px #c7c7c7;
+  background-color:#f0f9ff;
+  width:688px; height:105px;
+/*  margin:14px 20px 0px 20px;*/
+  position:relative;
+}
+
+#adv_3{
+  border: solid 1px #c7c7c7;
+  background-color:#f0f9ff;
+  width:120px; min-height:600px; height:auto;
+  position:absolute;
+  top:149px; left:5px;
+}
+
+#news_list {
+  border: outset 4px #ccecff;
+  margin-right:5px;
+  width:auto;
+}
+
+#news_list table { margin-left:auto; margin-right:auto; }
+
+#news_list td {
+  white-space:nowrap;
+  padding:0 10px 0 10px;
+  vertical-align:text-top;
+}
+
+#news_list p { text-align:center; }
+
+#news_block {
+  border:solid 1px #ffffff;
+  padding:0 10px 0 10px;
+}
+
+#all_page {
+  width:950px;
+  background-color:white;
+  color:black;
+  position:relative;
+}
+
+#page_top {
+  border:solid 1px #ccecff;
+  background-color:#ccecff;
+  height:113px;
+}
+
+#logo {
+  width:225px; height:113px;
+  position:absolute;
+  background: url("/images/bulnozo_logo.png");
+}
+
+#hands {
+  float:right;
+}
+
+#page_top_center {
+  border:solid 1px #ccecff;
+  margin-left:226px;
+}
+
+#h_menu_box {
+  border:solid 1px #00165f;
+  height: 21px;
+  background-color:#00165f;
+}
+
+#h_menu {
+  position:absolute;
+  left:55px;
+  margin: 0;
+  padding: 0;
+  z-index: 100;
+}
+
+#h_menu li {
+   list-style: none;
+   display:inline;
+   float: left;
+}
+
+#h_menu li a {
+  display:block;
+  height:22px;
+  padding: 0px 13px 0px 13px;
+  color:white;
+  border-style:solid;
+  border-width: 0 1px 0 1px;
+  border-color: #00165f;
+  background-color:#00165f;
+}
+
+#h_menu li a:hover {
+  height:21px;
+  background-color: #ccecff;
+  border-width:0px 1px 1px 1px;
+  color:black;
+  text-decoration:none;
+}
+
+#h_menu div{
+  visibility:hidden;
+  position:absolute;
+}
+
+#h_menu div a{
+  width:auto;
+  text-decoration:none;
+}
+
+#l_menu {
+  border: outset 4px #ccecff;
+  float:left;
+  margin:5px 10px 10px 5px;
+  background-color:white;
+}
+
+#l_menu div {
+  height:23px;
+  vertical-align:middle;
+  padding: 2px 13px 0px 13px;
+}
+
+#l_menu span {
+  line-height:200%;
+  padding: 2px 13px 0px 13px; 
+}
+
+#l_menu a {
+  display:block;
+  color:white;
+  background-color:#00165f;
+  height:21px;
+  padding: 0px 13px 0px 13px;
+  margin:0;
+  border: solid 1px #00165f;
+}
+
+#l_menu a:hover {
+  color:black;
+  background-color:#ccecff;
+  border: solid 1px #00165f;
+  text-decoration:none;
+}
+
+.submenues {
+  list-style-type: none;
+  position:absolute;
+  top:137px;
+  visibility:hidden;
+  white-space:nowrap;
+}
+
+.submenues ul {
+  list-style-type: none;
+  margin:0; padding:0;
+}
+
+.submenues li{
+  padding:0px 13px 5px 13px;
+}
+
+.submenues li:hover {
+  background-color:#ccecff;
+}
+
+.ssmenu {
+  border:solid 1px #00165f;
+  position:absolute;
+  left: 0px;
+  color:black;
+  background-color:#00165f;
+}
+
+.ssmenu li:hover a {
+   color:black;
+}
+
+.ssmenu a {
+  color:white;
+}
+
+.ssmenu a:hover {
+  color:black;
+}
+
+.flags {
+  position:absolute;
+  display: inline;
+  padding-left:5px;
+  color:white;
+}
+
+.news_date {
+  background-color: #eaeaea;
+  margin:10px;
+}
+
+.no_link {
+   background-color:white;
+   height:21px;
+   padding: 0px 14px 0px 14px;
+   margin:0;
+}
+
+h1 {
+  text-align:center;
+  font-size:18px;
+}
+
+h2 { font-size: 14px; padding-left:40px; }
+
+P { padding:0 10px 0 10px; }
+
+a { text-decoration:none; }
+a:hover { text-decoration:underline; }
+
+hr { margin:5px 5px 0px 5px;}
+
+.g_title { text-align:center; }
+
+.footnote { margin-left:40px; font-size:90%; font-style:italic; background-color:#dedede; }
+.footnote hr { width:35%; text-align:left; }
+
+#main_content { margin:0; padding:0; border: solid 0px lightgrey; text-align: justify; }
+
+#main_content p { }
+
+#columns td { padding: 0 10px 0 10px }
+
+#user_login table { margin-left:auto; margin-right:auto; }
+#user_login th { text-align:right; }
+#user_login p { text-align:center; }
+p.user { text-align:right; }
+

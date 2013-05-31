@@ -17,13 +17,19 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Съставя адрес към текущо изпалнявания php скрипт $_SERVER['PHP_SELF']
-// с параметри, към които се добая и параметър с име $n и стойност $v
+if (!isset($idir)) $idir = dirname(dirname(__FILE__)).'/';
 
-function set_self_query_var($n,$v){
-$r = $_GET;
-$r[$n] = $v;
-return $_SERVER['PHP_SELF'].'?'.str_replace('&','&amp;',http_build_query($r));
+include_once("usedatabase.php");
+
+function db_show_columns($tn, $fn = '', $in = ''){
+global $tn_prefix, $db_link;
+$lk = '';
+if ($fn) $lk = " LIKE '$fn'";
+$q = "SHOW COLUMNS FROM `$tn_prefix$tn`$lk;";
+$r = mysql_query($q,$db_link);
+$rz = array();
+while ( $a = mysql_fetch_assoc($r) ) if ($in) $rz[] = $a[$in]; else $rz[] = $a;
+return $rz;
 }
 
 ?>

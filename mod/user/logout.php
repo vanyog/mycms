@@ -17,13 +17,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Съставя адрес към текущо изпалнявания php скрипт $_SERVER['PHP_SELF']
-// с параметри, към които се добая и параметър с име $n и стойност $v
+// Страница, която се показва при излизане на потребителя, ако не е зададена друга.
 
-function set_self_query_var($n,$v){
-$r = $_GET;
-$r[$n] = $v;
-return $_SERVER['PHP_SELF'].'?'.str_replace('&','&amp;',http_build_query($r));
-}
+$idir = dirname(dirname(dirname(__FILE__))).'/1/';
+
+include($idir."lib/f_translate.php");
+
+$page_title = translate('user_logouttitle');
+$page_content = "<h1>$page_title</h1>\n".translate('user_logoutcontent');
+
+include($idir."lib/build_page.php");
 
 ?>
