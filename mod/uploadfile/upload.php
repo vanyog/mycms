@@ -26,7 +26,7 @@ $idir = dirname(dirname(dirname(__FILE__))).'/';
 
 include($idir.'lib/translation.php');
 include($idir.'lib/o_form.php');
-//include_once($mod_apth.'user/f_user.php');
+include_once($mod_apth.'user/f_user.php');
 
 // Проверка дали има влязъл потребител
 user('new');

@@ -24,8 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // +  за качване на файл и 
 // -  за изтриване на качения файл.
 
-include_once($idir."f_allow_editing.php");
-
 function uploadfile($n){
 global $mod_pth, $page_id;
 // За всеки случай, ако не е дефиниран номер на страница.
