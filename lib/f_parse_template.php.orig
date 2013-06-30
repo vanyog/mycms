@@ -40,12 +40,11 @@ if (!$cnt) $cnt = '<h1><!--$$_PAGETITLE_$$--></h1>
 // Ако шаблонът има родител, родителят се четe и в него се вмъква шаблона
 // Повтаря се до шаблон без родител
 while ($t['parent']){
-  $t0 = db_select_1('*','templates',"ID=".$t['parent']);
-  $cnt = str_replace('<!--$$_TEMPLATE_$$-->', $cnt, stripslashes($t0['template']) );
-  $t = $t0;
+$t0 = db_select_1('*','templates',"ID=".$t['parent']);
+$cnt = str_replace('<!--$$_TEMPLATE_$$-->', $cnt, stripslashes($t0['template']) );
+$t = $t0;
 }
 
-// Заместване на елементите със съдържние и връщане на резултата
 return parse_content($cnt);
 }
 

@@ -111,3 +111,10 @@ CREATE TABLE IF NOT EXISTS `visit_history` (
   KEY `date` (`date`),
   KEY `count` (`count`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+-- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `filters` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) COLLATE utf8_bin NOT NULL,
+  `filters` varchar(255) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
