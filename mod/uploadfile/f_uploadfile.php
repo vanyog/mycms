@@ -37,21 +37,26 @@ if (isset($na[1])){ $pid = 1*$na[1]; $n = $na[0]; }
 $rz = '';
 // Четене на данните за файла
 $fr = db_select_1('*','files',"`pid`=$pid AND `name`='$n'");
-$ne = false;
-if (!$fr){ // Ако няма данни за файл - надпис "Няма качен файл"
-  $rz .= translate('uploadfile_nofile');
+$ne = false; // Флаг, който е истина, ако файла се намира в DOCUMENT_ROOT
+$imgs = array('jpg','gif','png'); // Разширения на файлове - изображения
+if (!$fr){ // Ако няма данни за файл - надпис "Няма качен файл" или нищо
+  if ((stored_value('uploadfile_nofilenotext','false')!='true')||in_edit_mode()) $rz .= translate('uploadfile_nofile');
   $fid = 0;
 }
 else {
   $l = strlen($_SERVER['DOCUMENT_ROOT']);
   $ne = $_SERVER['DOCUMENT_ROOT'] != substr($fr['filename'], 0, $l);
-//  echo $_SERVER['DOCUMENT_ROOT']."<br>".substr($fr['filename'], 0, $l); die;
   $f = substr($fr['filename'], $l, strlen($fr['filename'])-$l);
+  // Ако няма файл или е извън DOCUMENT_ROOT
   if (!$fr['filename'] || $ne) $rz .= stripslashes($fr['text']);
-  else $rz .= '<a href="'.$f.'">'.stripslashes($fr['text']).'</a>';
+  else {
+    $e = strtolower(pathinfo($f, PATHINFO_EXTENSION));
+    if (in_array($e, $imgs)) $rz .= '<img src="'.$f.'" alt="'.stripslashes($fr['text']).'">';
+    else $rz .= '<a href="'.$f.'">'.stripslashes($fr['text']).'</a>';
+  }
   $fid = $fr['ID'];
 }
-if (show_adm_links()){
+if (in_edit_mode()){
   $cp = current_pth(__FILE__);
   $rz .= ' <a href="'.$cp."upload.php?pid=$pid&amp;fid=$fid&amp;fn=$n"."\" title=\"Update\">+</a>\n";
   if ( isset($fr['filename']) && $fr['filename'] && !$ne ) 

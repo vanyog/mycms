@@ -54,7 +54,8 @@ if ($r){ // Ако има такъв запис
   $content_create_time = $r['date_time_1']; 
   $content_date_time = $r['date_time_2'];
   $t = stripslashes($r['text']);
-  $rz = parse_content(apply_filters($n,$t)).$el;
+  $rz = parse_content(apply_filters($n,$t));
+  if (!$r['nolink']) $rz .= $el;
 }
 else if (is_local() || in_edit_mode())
          // На локелен сървър или в режим на редактиране се показва името на стринга като линк,

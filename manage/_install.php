@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 error_reporting(E_ALL); ini_set('display_errors',1);
 
 include('conf_manage.php');
+if (!file_exists($idir.'conf_database.php')) create_conf_database();
 include($idir.'conf_paths.php');
 
 $p = 'tables.sql';

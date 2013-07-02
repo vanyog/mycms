@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS `content` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
+  `nolink` tinyint(1) NOT NULL,
   `date_time_1` datetime NOT NULL,
   `date_time_2` datetime NOT NULL,
   `language` varchar(5) CHARACTER SET latin1 NOT NULL DEFAULT 'bg',
@@ -10,7 +11,7 @@ CREATE TABLE IF NOT EXISTS `content` (
   KEY `date_time_2` (`date_time_2`),
   KEY `name` (`name`),
   FULLTEXT KEY `text` (`text`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
 INSERT INTO `content` (`ID`, `name`, `date_time_1`, `date_time_2`, `language`, `text`) VALUES
 (1, 'home_page_title', '2011-02-01 15:31:51', '2011-02-01 15:32:10', 'bg', 'Home page'),

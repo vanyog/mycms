@@ -29,7 +29,7 @@ include($idir.'lib/o_form.php');
 include_once($mod_apth.'user/f_user.php');
 
 // Проверка дали има влязъл потребител
-user('new');
+if (!in_edit_mode()) user('new');
 
 // Номер на интернет страницата.
 $pid = 1*$_GET['pid'];
