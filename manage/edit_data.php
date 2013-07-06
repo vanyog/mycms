@@ -42,7 +42,17 @@ foreach($fn as $n) $page_content .= "   $n";
 $page_content .= "</td></tr>\n";
 }
  
-$page_content .= '</table>';
+$page_content .= '</table><br>
+<form method="post" action="do_sql.php">
+<table>
+<tr>
+<td valign="top" align="right">
+SQL:<br><br>
+<input type="submit" value="mysql_query">
+</td>
+<td><textarea name="sql" cols="60" rows="4"></textarea></td></tr>
+</table>
+</form>';
 
 include_once("build_page.php");
 ?>

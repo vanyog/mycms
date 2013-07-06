@@ -1,7 +1,7 @@
 <?php
 /*
 MyCMS - a simple Content Management System
-Copyright (C) 2013  Vanyo Georgiev <info@vanyog.com>
+Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,14 +17,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// В режим на администриране функцията pagestat() показва броя на посещенията на страницата -
-// общия брой и за деня, както и линк "page stats", който отваря страница с таблица на статистиката 
-// на посещенията на страниците от сайта
+// Изпълнява SQL заявка
 
-function pagestat(){
-global $page_data;
-if (!show_adm_links()) return '';
-$pth = current_pth(__FILE__);
-return 'Total '.$page_data['tcount'].' Today '.$page_data['dcount'].' See <a href="'.$pth.'page_stats.php">page stats</a>';}
+include("conf_manage.php");
+include($idir."lib/usedatabase.php");
+
+$q = $_POST['sql'];
+
+$q = str_replace('INSERT INTO `scripts`',"INSERT INTO `$tn_prefix"."scripts`",$q);
+mysql_query($q,$db_link);
+
+header('Location: edit_data.php');
 
 ?>
