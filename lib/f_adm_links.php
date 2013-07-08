@@ -74,7 +74,7 @@ document.location=na;
 <a href="'.$adm_pth.'showenv.php?AAAAAAA" target="_blank">$_SERVER</a> :: 
 <a href="'.$go.'">'.$gon.'</a> <!--:: 
 <a hr  ="'.$adm_pth.'dump_data.php">Dump</a-->'.$w3c.'
-</p><p>&nbsp</p>';
+</p>';
   }
 }
 

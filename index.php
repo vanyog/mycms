@@ -41,10 +41,10 @@ if (!file_exists($idir.'conf_database.php')
 ) 
    die('Системата все още не е правилно инсталирана и конфигурирана. Вижте файл USAGE.txt.');
    
-include('lib/f_db_select_1.php');
-include('lib/f_db_select_m.php');
-include('lib/f_parse_template.php');
-include_once('lib/translation.php');
+include($idir.'lib/f_db_select_1.php');
+include($idir.'lib/f_db_select_m.php');
+include($idir.'lib/f_parse_template.php');
+include_once($idir.'lib/translation.php');
 
 $page_header = ''; // Добавки към хедъра на страницата
 $body_adds   = ''; // Добавки към body тага

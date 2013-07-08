@@ -57,7 +57,8 @@ INSERT INTO `options` (`ID`, `name`, `value`) VALUES
 (8, 'host_web', 'mysite.org'),
 (9, 'host_local', 'localhost'),
 (10, 'phpmyadmin_web', 'http://mysite.org/phpmyadmin'),
-(11, 'phpmyadmin_local', 'http://localhost/phpmyadmin');
+(11, 'phpmyadmin_local', 'http://localhost/phpmyadmin'),
+(12, 'mod_path', '/_mod');
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pages` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
