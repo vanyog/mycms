@@ -95,9 +95,9 @@ mysql_query($q,$db_link);
 
 // Ако започва нов ден се записват данните за изминалото денонощие в таблица $tn_prefix.'visit_history'
 function new_day(){
-global $apth, $tn_prefix, $db_link;
+global $apth, $tn_prefix, $db_link, $idir;
 // чете се последната дата от таблица $tn_prefix.'options'
-include_once('lib/f_stored_value.php');
+include_once($idir.'lib/f_stored_value.php');
 $td = stored_value('today');
 $d = getdate();
 // ако не се е сменила датата не се прави нищо

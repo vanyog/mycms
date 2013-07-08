@@ -70,6 +70,7 @@ document.location=na;
 <a href="'.$pth.'index.php?pid='.$lpid.'&amp;'.$edit_name.'='.urlencode($edit_value).'">'.$lpid.'</a> :: 
 <a href="'.$adm_pth.'edit_file.php">File system</a> :: 
 <a href="'.$adm_pth.'edit_data.php">Database</a> :: 
+<a href="'.stored_value('cpanel_url').'" target="_blank">cPanel</a> :: 
 <a href="'.$mphp.'" target="_blank">phpMyAdmin</a> :: 
 <a href="'.$adm_pth.'showenv.php?AAAAAAA" target="_blank">$_SERVER</a> :: 
 <a href="'.$go.'">'.$gon.'</a> <!--:: 
