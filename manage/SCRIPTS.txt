@@ -3,5 +3,8 @@
 
 -- --------------------------------------------------------
 INSERT INTO `scripts` (`name`, `script`, `coment`) VALUES
+('LANGUAGEFLAGS', '$tx = flags();', 'Показва знаменца за смяна на езика');
+-- --------------------------------------------------------
+INSERT INTO `scripts` (`name`, `script`, `coment`) VALUES
 ('USERAGENTSTRING', '$tx = $_SERVER[''HTTP_USER_AGENT''];', 'Показва стринга на юзърейджънта');
 -- --------------------------------------------------------

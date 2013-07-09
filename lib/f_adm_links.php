@@ -65,7 +65,7 @@ na = "'.$adm_pth.'new_record.php?t=pages&menu_group='.$page_data['menu_group'].
 document.location=na;
 }
 --></script>
-<p style="position:fixed; font-size:80%; margin:0; padding:0; border-style:solid; border-color:grey; border-width:0 0 1px 0; z-index:100;">
+<p style="position:fixed; font-size:80%; margin:0; padding:0; opacity:0.7; background-color:white; color:0; border-style:solid; border-color:grey; border-width:0 0 1px 0; z-index:100;">&nbsp;
 <a href="'.$pth.'">Home</a> :: '.$enmch.'
 <a href="'.$pth.'index.php?pid='.$lpid.'&amp;'.$edit_name.'='.urlencode($edit_value).'">'.$lpid.'</a> :: 
 <a href="'.$adm_pth.'edit_file.php">File system</a> :: 
@@ -74,7 +74,7 @@ document.location=na;
 <a href="'.$mphp.'" target="_blank">phpMyAdmin</a> :: 
 <a href="'.$adm_pth.'showenv.php?AAAAAAA" target="_blank">$_SERVER</a> :: 
 <a href="'.$go.'">'.$gon.'</a> <!--:: 
-<a hr  ="'.$adm_pth.'dump_data.php">Dump</a-->'.$w3c.'
+<a hr  ="'.$adm_pth.'dump_data.php">Dump</a-->'.$w3c.'&nbsp; 
 </p>';
   }
 }

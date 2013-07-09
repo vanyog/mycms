@@ -40,4 +40,20 @@ mysql_query("SET NAMES 'cp1251';",$l);
 return $l;
 }
 
+// С цел, четене от таблици с друг префикс:
+$temp_prefix = ''; // Променлива, която съхранява оригиналния префикс
+
+// Функция, която задава нов префикс и съхранява оригиналния
+function set_prefix($np){
+global $tn_prefix, $temp_prefix;
+$temp_prefix = $tn_prefix;
+$tn_prefix = $np;
+}
+
+// Функция, която възстановява оригиналния префикс
+function restore_prefix(){
+global $tn_prefix, $temp_prefix;
+$tn_prefix = $temp_prefix;
+}
+
 </script>

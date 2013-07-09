@@ -57,6 +57,7 @@ function flags(){
 global $language, $languages, $dont_translate, $pth;
 $ls = array_keys($languages);
 $r = "";
+$how = stored_value('flag_setting','flag');
 if (!$dont_translate) foreach($ls as $l) if ($l!=$language){
   $u = $_SERVER['REQUEST_URI'];
   $h = '';
@@ -66,12 +67,15 @@ if (!$dont_translate) foreach($ls as $l) if ($l!=$language){
      else $h = $u.'&lang='.$l;
   }
   else $h = $u.'?lang='.$l;
-  $r .= '<a href="'.$h.'">
-<img src="'.$pth.'images/flag-'.$l.'.gif" alt="'.$l.'" border="0">
-</a>
-';
+  $r .= "<a href=\"$h\">\n";
+  switch ($how){
+  case 'text': $r .= $languages[$l]."\n"; break;
+  case 'flag&text': $r .= '<img src="'.$pth.'images/flag-'.$l.'.gif" alt="'.$l.'" border="0">'."<br>$languages[$l]\n"; break;
+  default: $r .= '<img src="'.$pth.'images/flag-'.$l.'.gif" alt="'.$l.'" border="0">'."\n"; break;
+  }
+  $r .= "</a>\n";
 }
-return "\n<!--Флагчета за смяна на езика-->$r<!--Край на флагчетата-->\n";
+return "\n<!--Флагчета за смяна на езика-->\n$r<!--Край на флагчетата-->\n";
 }
 
 ?>
