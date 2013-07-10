@@ -20,9 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Показване на съдържанието на таблица от базата данни
 
-$idir = dirname(dirname(__FILE__)).'/';
-
-include($idir.'conf_paths.php'); 
+include('conf_manage.php');
+include_once($idir.'conf_paths.php'); 
 include_once($idir.'lib/f_db_select_m.php');
 include_once($idir.'lib/f_db_tables.php');
 include_once($idir.'lib/f_db_table_field.php');

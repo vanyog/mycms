@@ -36,6 +36,10 @@ if (isset($_GET['pid'])) $page_id = 1*$_GET['pid'];
 
 $idir = dirname(__FILE__).'/';
 
+// Път до фалйа с данните за достъп до базата данни. 
+// Може да е различен от този в $idir, ако е необходимо.
+$ddir = $idir;
+
 if (!file_exists($idir.'conf_database.php')
   ||!file_exists($idir.'conf_paths.php')
 ) 
@@ -77,7 +81,7 @@ return Array (
 'menu_group' => 1,
 'title' => 'error_404_title',
 'content' => 'error_404_content',
-'template_id' => 2,
+'template_id' => 1,
 'options' => ''
 );
 }
