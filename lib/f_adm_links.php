@@ -64,6 +64,12 @@ na = "'.$adm_pth.'new_record.php?t=pages&menu_group='.$page_data['menu_group'].
 '&title=p'.($lpid+1).'_title&content=p'.($lpid+1).'_content&template_id='.$page_data['template_id'].'";
 document.location=na;
 }
+function hide(){
+if (confirm("Hide this menu?")){
+  deleteAllCookies();
+  window.location.reload();
+}
+}
 --></script>
 <p style="position:fixed; font-size:80%; margin:0; padding:0; opacity:0.7; background-color:white; color:0; border-style:solid; border-color:grey; border-width:0 0 1px 0; z-index:100;">&nbsp;
 <a href="'.$pth.'">Home</a> :: '.$enmch.'
@@ -73,7 +79,8 @@ document.location=na;
 <a href="'.stored_value('cpanel_url').'" target="_blank">cPanel</a> :: 
 <a href="'.$mphp.'" target="_blank">phpMyAdmin</a> :: 
 <a href="'.$adm_pth.'showenv.php?AAAAAAA" target="_blank">$_SERVER</a> :: 
-<a href="'.$go.'">'.$gon.'</a> <!--:: 
+<a href="'.$go.'">'.$gon.'</a> :: 
+<a href="'.$pth.'lib/exit.php">x</a><!--:: 
 <a hr  ="'.$adm_pth.'dump_data.php">Dump</a-->'.$w3c.'&nbsp; 
 </p>';
   }
@@ -83,14 +90,17 @@ document.location=na;
 
 function show_adm_links(){
 global $adm_pth,$adm_name,$adm_value;
+// Не се показват ако има бисквитка noadm = yes
+//print_r($_COOKIE); die;
+if (isset($_COOKIE['noadm']) && ($_COOKIE['noadm']=='yes')) return false;
 // Истина ако се зарежда страница от директорията за администриране
 $a = substr($_SERVER['REQUEST_URI'],0,strlen($adm_pth))==$adm_pth;
 // Линкове за администриране се генерират в случай, че:
 // - сайтът е на локален сървър
 // - сайтът е в режим на редактиране
 // - показва се страница от директорията за администриране
-// - получена е стойност $_GET[$adm_name] = $adm_value.
-// - има бисквитка с име $adm_name и стойност $adm_value.
+// - получена е стойност $_GET[$adm_name] = $adm_value
+// - има бисквитка с име $adm_name и стойност $adm_value
 return is_local() || in_edit_mode() || $a || query_or_cookie($adm_name,$adm_value);
 }
 

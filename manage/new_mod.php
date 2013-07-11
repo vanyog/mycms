@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Създава нов модул с име $_GET['n']
 
-$idir = dirname(dirname(__FILE__)).'/';
+include("conf_manage.php");
 include($idir.'conf_paths.php');
 
 // Име на модула
