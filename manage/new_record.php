@@ -21,8 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Вмъкване на нов запис в таблица $_GET['t']
 // След вмъкване на записа той се отваря за редактиране с edit_record.php
 
-$idir = dirname(dirname(__FILE__)).'/';
-
+include("conf_manage.php"); 
 include($idir."lib/f_db_field_types.php");
 include($idir."lib/f_db_field_names.php");
 include($idir."lib/f_db_table_field.php");

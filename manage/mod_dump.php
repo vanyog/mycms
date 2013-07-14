@@ -23,8 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // при инсталиране на модула. Ако файл content.sql вече съществува,
 // sql заявките се добавят в края му.
 
-$idir = dirname(dirname(__FILE__)).'/';
-
+include("conf_manage.php"); 
 include($idir.'conf_paths.php');
 include($idir.'lib/f_db_select_m.php');
 

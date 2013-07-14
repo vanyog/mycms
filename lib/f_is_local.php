@@ -43,7 +43,7 @@ return $local_host==$_SERVER['HTTP_HOST'];
 // - получи $_GET['im']=='admin'
 
 function in_edit_mode(){
-global $edit_name, $edit_value;
+global $edit_name, $edit_value; // echo "$edit_name, $edit_value"; die;
 return query_or_cookie($edit_name,$edit_value);
 }
 

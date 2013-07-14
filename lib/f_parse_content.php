@@ -49,15 +49,15 @@ $tx = ''; // Html код, който ще замести елемента
 $sc = db_select_1('*','scripts',"`name`='".$tg[0]."'");
 
 if (!$sc){ // Ако няма такъв скрипт се търси модул с това име
-  // Модули се търсят на две места - първо в директория mod
   $f = strtolower($tg[0]);
-  $fn = $pth."mod/$f/f_$f.php"; 
+  $fn = "$mod_pth$f/f_$f.php";
   $afn = $_SERVER['DOCUMENT_ROOT']."$fn"; //echo "$mod_pth $afn"; die;
-  // и второ в директорията, посочена в настройката mod_path, ако е зададена различна от /mod/
+  // Модули се търсят на две места - първо в директорията, посочена в настройката mod_path, ако е зададена различна от mod
   if ( ($mod_pth!='/mod/') && !file_exists($afn) ){
-    $fn = "$mod_pth$f/f_$f.php";
+    $fn = $pth."mod/$f/f_$f.php"; 
     $afn = $_SERVER['DOCUMENT_ROOT']."$fn";
   }
+  // и второ в директорията /mod/
 //  print_r($afn); die;
   if (file_exists($afn)){
     $c = "include_once('$afn');\n";

@@ -25,6 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 $idir = dirname(dirname(dirname(__FILE__))).'/2/';
 
 // Директория с файла conf_database.php
-$ddir = $idir.'_mod/';
+$ddir = $idir;
 
 ?>
