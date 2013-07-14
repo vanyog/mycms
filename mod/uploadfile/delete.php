@@ -18,13 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // Изтриване на качен на сайта файл.
-// Скоро да се добави защита с парола!
 
 if (!isset($_GET['fid'])) die("No upload id");
 
 include("conf_uploadfile.php");
 include($idir.'lib/translation.php');
-//include($idir.'lib/f_db_select_1.php');
+include($idir.'mod/user/f_user.php');
+
+if (!in_edit_mode()) user();
 
 // Номер на записа за файла.
 $fid = 1*$_GET['fid'];

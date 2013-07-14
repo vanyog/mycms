@@ -115,16 +115,16 @@ if ($dt && ($dt['ID']!=$fid)){
   die(translate('uploadfile_fileinuse'));
 }
 // Ако има друг файл на сървъра за този запис, файлът се изтрива.
-if ($fd && file_exists($fd['filename'])) unlink($fd['filename']);
+if ($fd && $_FILES['file']['tmp_name'] && file_exists($fd['filename'])) unlink($fd['filename']);
 
-// Проверка дали има файл на сървъра със същото име, който не се отнася за същия запис.
-if (file_exists($fln) && (!$dt || ($dt['ID']!=$fid)) ){
+// Проверка дали има файл на сървъра със същото име, който вероятно не се отнася за същия запис.
+if (($fln!=$fld) && file_exists($fln) && (!$dt || ($dt['ID']!=$fid)) ){
   header("Content-Type: text/html; charset=windows-1251");
   die(translate('uploadfile_fileexists'));
 }
 
 // Преместване на качения файл в директория за качване на файлове
-if (!move_uploaded_file($_FILES['file']['tmp_name'], $fln)) die('Do not uploaded');
+if ($_FILES['file']['tmp_name'] && !move_uploaded_file($_FILES['file']['tmp_name'], $fln)) die('Do not uploaded');
 
 // Записване на денни в базата
 $w = '';
@@ -135,7 +135,9 @@ if ($fd) {
 else $q = "INSERT INTO `$tn_prefix"."files` SET `date_time_1`=NOW(), `date_time_2`=NOW(), ";
 $q .= "`date_time_3`='".$_POST['timeshow'].
       "', `date_time_4`='".$_POST['timehide'].
-      "', `pid`='$pid', `name`='$fn', `filename`='$fln', `text`='".addslashes($_POST['text'])."'$w;";
+      "', `pid`='$pid', `name`='$fn', ";
+if ($_FILES['file']['tmp_name']) $q .= "`filename`='$fln', ";
+$q .= "`text`='".addslashes($_POST['text'])."'$w;";
 mysql_query($q,$db_link);
 //print_r($q); die;
 header("Location: ".$_POST['referer']);

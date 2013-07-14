@@ -11,8 +11,8 @@ CREATE TABLE IF NOT EXISTS `users` (
   KEY `date_time_1` (`date_time_1`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
-INSERT INTO `content` (`name`,`date_time_1`,`date_time_2`,`language`,`text`) VALUES
-('user_login',NOW(),NOW(),'bg','Влизане в системата'),
-('user_login_button',NOW(),NOW(),'bg','Влизане'),
-('user_password',NOW(),NOW(),'bg','Парола'),
-('user_username',NOW(),NOW(),'bg','Потребителско име');
+INSERT INTO `content` (`name`,`nolink`,`date_time_1`,`date_time_2`,`language`,`text`) VALUES
+('user_login',1,NOW(),NOW(),'bg','Влизане в системата'),
+('user_login_button',1,NOW(),NOW(),'bg','Влизане'),
+('user_password',1,NOW(),NOW(),'bg','Парола'),
+('user_username',1,NOW(),NOW(),'bg','Потребителско име');
