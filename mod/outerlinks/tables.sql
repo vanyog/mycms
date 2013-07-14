@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `outer_links` (
   FULLTEXT KEY `Title` (`Title`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 PACK_KEYS=0 AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
-INSERT INTO `content` (`name`,`no;ink`,`date_time_1`,`date_time_2`,`language`,`text`) VALUES
+INSERT INTO `content` (`name`,`nolink`,`date_time_1`,`date_time_2`,`language`,`text`) VALUES
 ('outerlinks_categories',0,NOW(),NOW(),'bg','категории'),
 ('outerlinks_find',1,NOW(),NOW(),'bg','Търсене'),
 ('outerlinks_found',0,NOW(),NOW(),'bg','намерени връзки'),

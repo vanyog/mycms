@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // която е поддиректория на системата за управление на съдържанието
 
 // Главно директория на системата.
-$idir = dirname(dirname(dirname(__FILE__))).'/2/';
+$idir = dirname(dirname(__FILE__)).'/';
 
 // Директория с файла conf_database.php
 $ddir = $idir;

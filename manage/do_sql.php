@@ -25,7 +25,7 @@ include($idir."lib/usedatabase.php");
 $q = $_POST['sql'];
 
 $q = str_replace('INSERT INTO `scripts`',"INSERT INTO `$tn_prefix"."scripts`",$q);
-mysql_query($q,$db_link);
+if (!mysql_query($q,$db_link)) die("MySQL query error");
 
 header('Location: edit_data.php');
 
