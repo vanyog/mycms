@@ -53,8 +53,8 @@ else {
 
   $enmch = '';
   if ($pth!='/') $enmch = '<a href="/">/</a> :: '."\n";
-  if (!in_admin_path()) $enmch .= '<a href="'.$_SERVER['PHP_SELF'].'?'.set_query_var($edit_name,$edit_value).'">Edit</a></a> :: 
-<a href="'.$_SERVER['PHP_SELF'].'?'.set_query_var($edit_name,'0').'">Normal</a></a> :: 
+  if (!in_admin_path()) $enmch .= '<a href="'.$_SERVER['PHP_SELF'].'?'.set_query_var($edit_name,$edit_value).'">Edit</a> :: 
+<a href="'.$_SERVER['PHP_SELF'].'?'.set_query_var($edit_name,'0').'">Normal</a> :: 
 <a href="" onclick="doNewPage();return false">New page</a> :: ';
 
   return '<script type="text/javascript"><!--

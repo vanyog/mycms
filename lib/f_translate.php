@@ -42,7 +42,7 @@ $content_create_time = '';
 $el = ''; // Линк за редактиране. Показва се ако сайтът е в режим на редактиране.
 if (in_edit_mode()){
   $id = db_select_1('ID','content',"name='$n' AND language='$language'");
-  $el = '<a href="'.$adm_pth.'edit_record.php?t=content&r='.$id['ID'].'">*</a>';
+  $el = '<a href="'.$adm_pth.'edit_record.php?t=content&amp;r='.$id['ID'].'">*</a>';
 }
 
 // Връщан резултат

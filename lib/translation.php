@@ -64,7 +64,7 @@ if (!$dont_translate) foreach($ls as $l) if ($l!=$language){
   if (strpos($u,'?')){
      $p = strpos($u,'lang=');
      if ($p) $h = substr_replace($u,'lang='.$l,$p,7); 
-     else $h = $u.'&lang='.$l;
+     else $h = $u.'&amp;lang='.$l;
   }
   else $h = $u.'?lang='.$l;
   $r .= "<a href=\"$h\">\n";
