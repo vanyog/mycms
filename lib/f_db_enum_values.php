@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Функцията db_enum_values($fn, $tn) връща масив от валидните стойности
 // на полето $fn от таблица $tn ако това поле и от тип enum
 
+global $ddir;
+
 include_once($ddir.'conf_database.php');
 
 function db_enum_values($fn, $tn){

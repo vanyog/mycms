@@ -19,7 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Страница, която се показва при излизане на потребителя, ако не е зададена друга.
 
-$idir = dirname(dirname(dirname(__FILE__))).'/1/';
+$idir = dirname(dirname(dirname(__FILE__))).'/';
+$ddir = $idir;
 
 include($idir."lib/f_translate.php");
 

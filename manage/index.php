@@ -21,17 +21,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 error_reporting(E_ALL); ini_set('display_errors',1);
 
 include_once("conf_manage.php");
-$cfnm = $idir.'conf_paths.php';
-
-if (!file_exists($cfnm)) die("The system is not properly installed. See USAGE.txt for detailes.");
-
 include($idir.'conf_paths.php');
+
+$page_content = '';
 
 $_COOKIE['noadm']='no';
 setcookie($adm_name, $adm_value, time()+60*60*24*30,'/');
 setcookie('noadm', 'no', time()+60*60*24*30,'/');
-
-$page_content = '';
 
 include("build_page.php");
 ?>

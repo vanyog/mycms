@@ -43,7 +43,7 @@ if (in_edit_mode()){
   $rz .= '<a href="'.$adm_pth.'new_record.php?t=menu_items&group='.$i.'&link='.$page_id.
          '&name=p'.$ni.'_link">New</a> '."\n";
 }
-if ($rz) "\n<div id=\"page_menu\">\n$rz</div>\n";
+if ($rz) $rz = "\n<div id=\"page_menu\">\n$rz</div>\n";
 return $rz;
 }
 

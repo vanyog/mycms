@@ -41,6 +41,8 @@ global $tn_prefix, $db_link;
 // Ако е натиснат линк "Изход"
 if (isset($_GET['user'])&&($_GET['user']=='logout')) logout_user();
 $rz = '';
+// Ако още няма никакви потребители в базата данни, се създава нов потребител.
+if (!db_table_field('COUNT(*)','users','1')&&!isset($_GET['user'])) new_user();
 // Ако няма влязъл потребител се отваря страница за влизане.
 if (!isset($_SESSION['user_username'])){
   $rz = get_user($a);
@@ -77,7 +79,7 @@ function get_user($a){
 // Ако формата за влизане вече е попълнена, се обработват изпратените с нея данни
 if (isset($_POST['username'])){ process_user(); return ''; }
 global $idir;
-if (isset($_GET['user']) && ($_GET['user']!='newreg')) $page_title = translate('user_newreg');
+if (isset($_GET['user']) && ($_GET['user']=='newreg')) $page_title = translate('user_newreg');
 else $page_title = translate('user_login');
 $page_content = '<div id="user_login">'."\n<h1>$page_title</h1>\n".user_form()->html();
 if (stored_value('user_showreglink', 'false')=='true')
@@ -151,5 +153,17 @@ $rz = '';
 if (count($_POST)) $rz .= process_record($cp, 'users');
 return $rz.edit_record_form($cp, 'users');
 }
+
+//
+// Нов потребител се създава, ако се отвори страница, в който се използва модул user с параметър user=newreg.
+// Функция new_user() се извиква, когато все още няма нито един потребител.
+// Тя презарежда страницата, като добавя в адреса и праметър user=newreg и това предизвиква показване на форма за 
+// редактиране на нов потребител.
+//
+function new_user(){
+  header('Location: '.set_self_query_var('user','newreg'));
+}
+
+
 
 ?>
