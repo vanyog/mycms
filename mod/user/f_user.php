@@ -47,20 +47,20 @@ if (!isset($_SESSION['user_username'])){
   if ($rz) return $rz;
 }
 // Четене на номера на потребител с име $_SESSION['user_username'] и парола $_SESSION['user_password'].
-$rz = db_table_field('ID','users',
+$rz = db_select_1('ID','users',
       "`username`='".addslashes($_SESSION['user_username'])."' AND `password`='".$_SESSION['user_password']."'");
 // Ако няма такъв потребител - Access denied
 if (!$rz) { session_destroy(); header("Status: 403"); die("Access denied."); }
 else{
   //
   // Ако се редактират данните на потребителя
-  if ($a == 'edit') return edit_user($rz);
+  if ($a == 'edit') return edit_user($rz['ID']);
   // Адрес на страницата, на която да се отиде след влизане.
   $lp = stored_value('user_loginpage','');
   // Ако е зададена се отбелязва часа на влизане и се извършва препращане.
   if ($lp && ($a=='login')){
     $tm = date('Y-m-d H:m:s', $_SESSION['session_start']);
-    mysql_query("UPDATE `$tn_prefix"."users` SET `date_time_2`='$tm' WHERE `ID`=$rz;", $db_link);
+    mysql_query("UPDATE `$tn_prefix"."users` SET `date_time_2`='$tm' WHERE `ID`=".$rz['ID'].";", $db_link);
     header("Location: $lp");
     die;
   }
