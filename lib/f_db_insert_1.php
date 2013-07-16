@@ -17,16 +17,20 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Страница, която се показва при излизане на потребителя, ако не е зададена друга.
+// Функцията db_insert_1($d,$t) вмъква асоциативния масив $d,
+// като 1 запис в таблица $t от базата данни.
 
-$idir = dirname(dirname(dirname(__FILE__))).'/';
-$ddir = $idir;
+include_once($idir.'lib/usedatabase.php');
 
-include($idir."lib/translation.php");
-
-$page_title = translate('user_logouttitle');
-$page_content = "<h1>$page_title</h1>\n".translate('user_logoutcontent');
-
-include($idir."lib/build_page.php");
+function db_insert_1($d,$t){
+global $tn_prefix, $db_link;
+$q = "INSERT INTO `$tn_prefix$t` SET ";
+foreach($d as $n=>$v){
+  if ($v=='NOW()') $q .= "`$n`=$v,";
+  else $q .= "`$n`='$v',";
+}
+$q = substr($q,0,strlen($q)-1).";";
+return mysql_query($q, $db_link);
+}
 
 ?>

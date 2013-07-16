@@ -33,23 +33,25 @@ include_once($idir."lib/o_form.php");
 function edit_record_form($cp, $tn){
 $ft = db_show_columns($tn, '', 'Type'); 
 $fn = db_field_names($tn);
-$ft = array_combine($fn, $ft); // print_r($cp); die;
-$d = db_select_1('*', $tn, "`ID`=".$cp['ID']);
+$ft = array_combine($fn, $ft);
+$d = db_select_1('*', $tn, "`ID`=".$cp['ID']); //print_r($d); die;
 $rz = '';
 $max_size = 80;
+// Съставяне на формата
 $hf = new HTMLForm('hospital_form');
 foreach($cp as $n => $v){
   switch ($n) {
-  case 'ID':
+  case 'ID': // Номерът - скрито поле
     $fi = new FORMInput('', 'ID', 'hidden', $v);
     $hf->add_input($fi);
     break;
   default:
-    preg_match('/([a-z]*)\((.*)\)/', $ft[$n], $tp); //print_r($tp);// die;
+    
+    preg_match('/([a-z]*)\((.*)\)/', $ft[$n], $tp);
     switch ($tp[1]){
     case 'varchar': switch($tp[2]){
       case '255': case '100': case '50': case '20':
-      $t = 'text';
+        $t = 'text';
         if ($n=='password'){
           $vl = '';
           $t = $n;
@@ -59,7 +61,8 @@ foreach($cp as $n => $v){
           $hf->add_input($fi);
           $n = 'password2';
           $v = translate('user_passwordconfirm');
-        } else $vl = htmlspecialchars(stripslashes($d[$n])); 
+        } 
+        else { $vl = htmlspecialchars(stripslashes($d[$n]), ENT_COMPAT, 'cp1251'); }
         $fi =  new FORMInput($v, $n, $t, $vl);
         $fi->size = 80;
         $hf->add_input($fi);
@@ -139,8 +142,10 @@ default:
 }
 // Обновяване данните за потребителя в текущата сесия.
 if ($pu) process_user();
+// Обновяване данните за потребителя в базата данни.
 if ($w) $q = "UPDATE `$tn_prefix"."$tn` SET `date_time_1`=NOW(), $q$w";
 else $q = "INSERT INTO `$tn_prefix"."$tn` SET `date_time_0`=NOW(), `date_time_1`=NOW(), $q;";
+//print_r($q); die;
 if (mysql_query($q,$db_link)) $rz .= '<span class="message">'.translate('dataSaved')."</span>";
 if ($rz) $rz = '<p class="message">'.$rz.'</p>';
 return $rz;

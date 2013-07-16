@@ -33,7 +33,7 @@ include_once($idir.'lib/f_edit_record_form.php');
 // $a = 'edit' означава, че страницата, от която се вика user, е страница за редактиране данните за
 // потребителя и кяеи фръща форма за редактиране на тези данни.
 
-session_start();
+if (!session_id()) session_start();
 
 function user($a = ''){
 global $tn_prefix, $db_link;
@@ -58,7 +58,7 @@ else{
   // Ако се редактират данните на потребителя
   if ($a == 'edit') return edit_user($rz['ID']);
   // Адрес на страницата, на която да се отиде след влизане.
-  $lp = stored_value('user_loginpage','');
+  $lp = stored_value('user_loginpage',''); 
   // Ако е зададена се отбелязва часа на влизане и се извършва препращане.
   if ($lp && ($a=='login')){
     $tm = date('Y-m-d H:m:s', $_SESSION['session_start']);
@@ -95,8 +95,15 @@ else return $page_content;
 function process_user(){
 if (isset($_POST['password2'])); save_user();
 $_SESSION['user_username'] = $_POST['username'];
-if (isset($_POST['password'])) $_SESSION['user_password'] = sha1($_POST['password']); else $_SESSION['user_password'] = '';
+if (isset($_POST['password'])) $_SESSION['user_password'] = pass_encrypt($_POST['password']); else $_SESSION['user_password'] = '';
 $_SESSION['session_start'] = time();
+}
+
+// Кодиране на паролата по един от два начина
+
+function pass_encrypt($p){
+if (stored_value('user_mysqlpass','')=='yes') return '*'.strtoupper(sha1(sha1($p,true)));
+else return sha1($p);
 }
 
 // Запазване на данните за нов потребител
@@ -109,7 +116,7 @@ $u = db_table_field('username', 'users', "`username`='".addslashes($_POST['usern
 if ($u) return;
 $q = "INSERT INTO `$tn_prefix".
      "users` SET `date_time_0`=NOW(), `date_time_1`=NOW(), `username`= '".addslashes($_POST['username']).
-     "', `password`='".sha1($_POST['password'])."';";
+     "', `password`='".pass_encrypt($_POST['password'])."';";
 mysql_query($q,$db_link);
 }
 
@@ -130,9 +137,12 @@ return $guf;
 
 function logout_user(){
 // Адрес на страницата, която се показва след излизане
-$lp = current_pth(__FILE__).'/logout.php';
-$lp = stored_value('user_logoutpage',$lp);
+$lp = current_pth(__FILE__).'logout.php';
+// Евентуално в настройките може да е зададена друга 
+$lp = stored_value('user_logoutpage',$lp); //print_r($lp); die;
+// Прекратяване на сесията
 session_destroy();
+// Пренасочване към страницата след излизане
 header("Location: $lp");
 }
 

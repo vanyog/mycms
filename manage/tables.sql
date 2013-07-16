@@ -14,8 +14,9 @@ CREATE TABLE IF NOT EXISTS `content` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
 INSERT INTO `content` (`ID`, `name`, `date_time_1`, `date_time_2`, `language`, `text`) VALUES
-(1, 'home_page_title', '2011-02-01 15:31:51', '2011-02-01 15:32:10', 'bg', 'Home page'),
-(2, 'home_page_content', '2011-02-01 15:32:24', '2011-02-01 15:32:59', 'bg', '<p>Some Text.</p>');
+(1, 'home_page_title', NOW(), NOW(), 'bg', 'Home page'),
+(2, 'home_page_content', NOW(), NOW(), 'bg', '<p>Some Text.</p>'),
+(3, 'saveData', NOW(), NOW(), 'bg', 'Съхраняване на данните');
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `menu_items` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,

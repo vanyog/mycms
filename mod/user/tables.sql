@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `nw_users` (
+CREATE TABLE IF NOT EXISTS `users` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `date_time_0` datetime NOT NULL,
   `date_time_1` datetime NOT NULL,
@@ -20,19 +20,19 @@ CREATE TABLE IF NOT EXISTS `nw_users` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
 INSERT INTO `content` (`name`,`nolink`,`date_time_1`,`date_time_2`,`language`,`text`) VALUES
-('user_email',0,NOW(),NOW(),'bg','Имейл'),
-('user_firstname',0,NOW(),NOW(),'bg','Име'),
-('user_logaut',0,NOW(),NOW(),'bg','Изход'),
-('user_login',0,NOW(),NOW(),'bg','Влизане в системата'),
-('user_login_button',0,NOW(),NOW(),'bg','Влизане'),
-('user_logoutcontent',0,NOW(),NOW(),'bg','<p>Вие успешно излязохте от системата</p>\r\n<p><a href="/">Начална страница</a></p>'),
-('user_logouttitle',0,NOW(),NOW(),'bg','Изход от системата'),
-('user_newreg',0,NOW(),NOW(),'bg','Нова регистрация'),
-('user_password',0,NOW(),NOW(),'bg','Парола'),
-('user_passwordchanged',0,NOW(),NOW(),'bg','Паролата беше сменена. При следващото влизане използвайте новата парола.'),
-('user_passwordconfirm',0,NOW(),NOW(),'bg','Повторение на паролата'),
-('user_passwordinvalid',0,NOW(),NOW(),'bg','Паролата и нейното повторение не съвпадаха. Паролата не е променена.'),
-('user_secondname',0,NOW(),NOW(),'bg','Презиме'),
-('user_telephone',0,NOW(),NOW(),'bg','Телефон'),
-('user_thirdname',0,NOW(),NOW(),'bg','Фамилия'),
-('user_username',0,NOW(),NOW(),'bg','Потребителско име');
+('user_email',1,NOW(),NOW(),'bg','Имейл'),
+('user_firstname',1,NOW(),NOW(),'bg','Име'),
+('user_logaut',1,NOW(),NOW(),'bg','Изход'),
+('user_login',1,NOW(),NOW(),'bg','Влизане в системата'),
+('user_login_button',1,NOW(),NOW(),'bg','Влизане'),
+('user_logoutcontent',1,NOW(),NOW(),'bg','<p>Вие успешно излязохте от системата</p>\r\n<p><a href="/">Начална страница</a></p>'),
+('user_logouttitle',1,NOW(),NOW(),'bg','Изход от системата'),
+('user_newreg',1,NOW(),NOW(),'bg','Нова регистрация'),
+('user_password',1,NOW(),NOW(),'bg','Парола'),
+('user_passwordchanged',1,NOW(),NOW(),'bg','Паролата беше сменена. При следващото влизане използвайте новата парола.'),
+('user_passwordconfirm',1,NOW(),NOW(),'bg','Повторение на паролата'),
+('user_passwordinvalid',1,NOW(),NOW(),'bg','Паролата и нейното повторение не съвпадаха. Паролата не е променена.'),
+('user_secondname',1,NOW(),NOW(),'bg','Презиме'),
+('user_telephone',1,NOW(),NOW(),'bg','Телефон'),
+('user_thirdname',1,NOW(),NOW(),'bg','Фамилия'),
+('user_username',1,NOW(),NOW(),'bg','Потребителско име');
