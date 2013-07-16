@@ -41,8 +41,12 @@ global $tn_prefix, $db_link;
 // Ако е натиснат линк "Изход"
 if (isset($_GET['user'])&&($_GET['user']=='logout')) logout_user();
 $rz = '';
-// Ако още няма никакви потребители в базата данни, се създава нов потребител.
-if (!db_table_field('COUNT(*)','users','1')&&!isset($_GET['user'])) new_user();
+// $c - брой на потребителите
+$c = db_table_field('COUNT(*)','users','1');
+// Грешка - значи няма таблица.
+if ($c===false) die("'users' table is not set up.");
+// Ако няма потребители, се създава нов потребител.
+if ( !$c && (!isset($_GET['user']) || ($_GET['user']!='newreg')) ){ new_user(); }
 // Ако няма влязъл потребител се отваря страница за влизане.
 if (!isset($_SESSION['user_username'])){
   $rz = get_user($a);
@@ -171,7 +175,8 @@ return $rz.edit_record_form($cp, 'users');
 // редактиране на нов потребител.
 //
 function new_user(){
-  header('Location: '.set_self_query_var('user','newreg'));
+  $l = set_self_query_var('user','newreg',false);
+  header("Location: $l");
 }
 
 

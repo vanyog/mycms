@@ -38,7 +38,7 @@ $d = db_select_1('*', $tn, "`ID`=".$cp['ID']); //print_r($d); die;
 $rz = '';
 $max_size = 80;
 // Съставяне на формата
-$hf = new HTMLForm('hospital_form');
+$hf = new HTMLForm('editrecord_form');
 foreach($cp as $n => $v){
   switch ($n) {
   case 'ID': // Номерът - скрито поле

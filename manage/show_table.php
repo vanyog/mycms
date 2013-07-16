@@ -124,7 +124,7 @@ foreach($r as $rc){
      if ($t=='pages') $v1 .= '<input type="button" value="->" onclick="doOpen('.$v.');"> ';
      $v = $v1;
    }
-   else $v = htmlspecialchars(stripslashes($v));
+   else $v = htmlspecialchars(stripslashes($v), ENT_COMPAT, 'cp1251');
    $page_content .= "<td><code><pre>$v</pre></code></td>\n";
  }
  $page_content .= '</tr>';

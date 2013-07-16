@@ -37,7 +37,7 @@ if ($fn[0]=='`') $fn = substr($fn,1,strlen($fn)-2);
 $q="SELECT $fn FROM $tn_prefix$tb WHERE $whr;";
 $r=mysql_query($q,$db_link);
 if (!$r){
-  if (!$def) echo $q.'<br>'; 
+  if (!($def===false)) echo $q.'<br>'; 
   return $def;
 }
 $rc=mysql_fetch_assoc($r);
