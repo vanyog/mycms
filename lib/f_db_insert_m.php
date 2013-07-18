@@ -17,26 +17,34 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Функцията db_insert_1($d,$t) вмъква асоциативния масив $d,
-// като един запис в таблица $t от базата данни.
+// Функцията db_insert_m($d,$t) вмъква асоциативния масив $d,
+// като един записи в таблица $t от базата данни.
+// Всеки елемент на масива е асоциативен масив съдържащ стойности на полета за един запис.
 // Ако към функцията е изпратен трети параметър $y = true
-// вместо функцията само връща SQL заявката, без да вмъква запис.
-// Ако $y = false функцията връща номера на вмъкнатия запис.
+// функцията връща SQL заявката, без да вмъква запис.
+// Ако $y = false функцията връща броя на вмъкнатите записи.
 
 include_once($idir.'lib/usedatabase.php');
 
-function db_insert_1($d,$t,$y=false){
+function db_insert_m($d,$t,$y=false){
 global $tn_prefix, $db_link;
-$q = "INSERT INTO `$tn_prefix$t` SET ";
-foreach($d as $n=>$v){
-  if ($v=='NOW()') $q .= "`$n`=$v,";
-  else $q .= "`$n`='$v',";
+$q = "INSERT INTO `$tn_prefix$t` (";
+$ka = array_keys($d[0]);
+foreach($ka as $k) $q .= "`$k`, ";
+$q = substr($q,0,strlen($q)-2).") VALUES\n";
+$c = 0;
+foreach($d as $r){
+ $q .= "(";
+ foreach($r as $n=>$v) 
+   if ($v=='NOW()') $q .= "$v,";
+   else $q .= "'$v',";
+ $q = substr($q,0,strlen($q)-1)."),\n";
 }
-$q = substr($q,0,strlen($q)-1).";";
+$q = substr($q,0,strlen($q)-2).";";
 if ($y) return $q;
 else{
  mysql_query($q,$db_link);
- return mysql_insert_id($db_link);
+ return $c;
 }
 }
 

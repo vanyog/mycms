@@ -27,6 +27,7 @@ include_once($idir."lib/f_is_local.php");
 include_once($idir.'lib/f_set_query_var.php');
 include_once($idir.'lib/f_db_select_1.php');
 include_once($idir.'lib/f_db_table_exists.php');
+include_once($idir.'lib/f_parse_content.php');
 
 function adm_links(){
 global $pth, $adm_pth, $edit_name, $edit_value, $web_host, $local_host, 
@@ -80,6 +81,7 @@ if (confirm("Hide this menu?")){
 <a href="'.$mphp.'" target="_blank">phpMyAdmin</a> :: 
 <a href="'.$adm_pth.'showenv.php?AAAAAAA" target="_blank">$_SERVER</a> :: 
 <a href="'.$go.'">'.$gon.'</a> :: 
+'.parse_content('<!--$$_CONTENT_custome_link_$$-->').'
 <a href="'.$pth.'lib/exit.php">x</a><!--:: 
 <a hr  ="'.$adm_pth.'dump_data.php">Dump</a-->'.$w3c.'&nbsp; 
 </p>';

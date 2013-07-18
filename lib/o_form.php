@@ -140,6 +140,7 @@ class FormSelect {
 public $caption = '';
 public $name = '';
 public $options = array();
+public $values = 'v';
 public $selected = -1;
 public $js = '';
 
@@ -158,7 +159,10 @@ else $rz = "<tr>
 foreach($this->options as $i => $v){
   $sl = '';
   if ($i==$this->selected) $sl = ' selected';
-  $rz .= "<option value=\"$v\"$sl>$v\n";
+  switch($this->values){
+  case 'v': $rz .= "<option value=\"$v\"$sl>$v\n"; break;
+  case 'k': $rz .= "<option value=\"$i\"$sl>$v\n"; break;
+  }
 }
 $rz .= "</select>";
 if ($it) $rz .= "</td>

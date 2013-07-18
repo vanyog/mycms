@@ -30,9 +30,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 include_once("usedatabase.php");
 
-function db_select_m($fn,$tb,$whr){
+function db_select_m($fn,$tb,$whr,$y=false){
 global $db_link, $tn_prefix;
-$q="SELECT $fn FROM `$tn_prefix$tb` WHERE $whr;"; //echo "$q<br>";
+$q="SELECT $fn FROM `$tn_prefix$tb` WHERE $whr;"; 
+if ($y) echo "$q<br>";
 $dbr=mysql_query($q,$db_link);
 $r=array();
 if (!$dbr) return $r; 
