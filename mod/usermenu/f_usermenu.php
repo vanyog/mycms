@@ -75,12 +75,12 @@ else return '<div id="user_menu">'."\n".$rz."</div>\n";
 }
 
 // Проверява дали менюто на страницата е подменю на разрешеното меню
-function in_that_branch($i,$j){
+function in_that_branch($pi,$j){
 $rz = false;
 do{
- $pi = db_table_field('parent', 'menu_tree', "`group`=$i");
+ $pi = db_table_field('parent', 'menu_tree', "`group`=$pi");
  $rz = $pi==$j;
-} while ( !($rz || (pi==0)) );
+} while ( !($rz || ($pi==0)) );
 //echo "$rz $pi"; die;
 return $rz;
 }
