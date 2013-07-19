@@ -17,7 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Модул за проверяване правата на потребителите.
+// Проверяване правата на влязъл потребител и показване на меню с позволените му действия.
+// Когато $nom=false (по подразбиране) се показва меню с разрешените на влезлия потребител действия.
+// Ако $nom=true само се проверяват правата без да се показва меню.
 
 include_once($idir."lib/f_db_select_m.php");
 include_once($idir."lib/f_edit_normal_links.php");
@@ -25,20 +27,24 @@ include_once($idir."lib/f_edit_normal_links.php");
 if (!session_id()) session_start();
 
 function usermenu($nom = false){
-// $nom - параметър, който ако е false, кара функцията да не показва меню и в този случай
-// тя само установява стойности на глобалните променливи $can_edit, $can_create и $can_manage
+
 global $page_data, $can_edit, $can_create, $can_manage, $pth, $page_header;
+
 // Ако в сесията няма данни за потребител, връща празен стринг.
 if (!isset($_SESSION['user_username'])||!isset($_SESSION['user_password'])) return '';
+
 // $id - номер на влязъл потребител
 $id = db_select_1('ID','users', 
       "`username`='".addslashes($_SESSION['user_username'])."' AND `password`='".$_SESSION['user_password']."'");
+
 // Ако няма потребител със запазените в сесията име и парола, връща празен стринг.
 if (!$id) return '';
 $id = $id['ID'];
+
 // Четене на правата на потребителя
 $p = db_select_m('*', 'permissions', "`user_id`=$id");
 $rz = '';
+
 // Установяване на правата от различните типове
 $can_edit = false; // Право на потребителя да редактира надписите по страницата 
 $can_create = false; // Право на потребителя да съдава/изтрива страници в дадения раздел(подменю) на сайта
@@ -55,6 +61,7 @@ case 'module':
   $can_manage[$q['object']]=$q['yes_no'];
   break;
 }
+
 // Съставяне на менюто
 $pt = current_pth(__FILE__);
 if ($can_create){
@@ -74,7 +81,9 @@ if ($nom) return '';
 else return '<div id="user_menu">'."\n".$rz."</div>\n";
 }
 
+//
 // Проверява дали менюто на страницата е подменю на разрешеното меню
+//
 function in_that_branch($pi,$j){
 $rz = false;
 do{

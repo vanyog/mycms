@@ -17,17 +17,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Страница, която се показва при излизане на потребителя, ако не е зададена друга.
+// Съставя адрес към текущо изпалнявания php скрипт $_SERVER['PHP_SELF']
+// с параметри, от които се премахва параметър с име $n.
+// Ако съставеният адрес ще се използва за пренасочване, а не като htef атрибут,
+// трябва да се подаде и трети параметър $a = false, за да не се замества & с &amp;.
 
-$idir = dirname(dirname(dirname(__FILE__))).'/';
-$ddir = $idir;
-
-include($idir."lib/translation.php");
-
-$page_title = translate('user_logouttitle');
-$page_content = "<h1>$page_title</h1>\n".translate('user_logoutcontent').'
-<a href="'.$pth.'">'.translate('home_page_title',false).'</a>';
-
-include($idir."lib/build_page.php");
+function unset_self_query_var($n, $a = true){
+$r = $_GET;
+if (isset($r[$n])) unset($r[$n]);
+$rz = http_build_query($r);
+if ($a) $rz = str_replace('&','&amp;',$rz);
+if ($rz) $rz = '?'.$rz;
+return $_SERVER['PHP_SELF'].$rz;
+}
 
 ?>

@@ -18,12 +18,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Функцията translate($n) връща текст с име $n на езика, определен с глобалната променлива $language.
+// Функцията translate($n,$elink) връща текст с име $n на езика, определен с глобалната променлива $language.
 
 // Ако в таблица `content` на базата данни няма такъв текст,
 // на локален сървър или в режим на редактиране 
 // на мястото на текста се показва хипервръзка към страница за вмъкване на текст,
 // но на онлайн сървър в работен режим, функцията връща текст на подразбиращия се език.
+
+// Ако вторият параметър $elink = false, в режим на редактиране в края на надписа не се показва линк за редактиране,
+// иначе този ленк не се показва ако полето от записа на надписа nolink е 1.
 
 include_once($idir."conf_paths.php");
 include_once($idir."lib/f_is_local.php");
@@ -33,7 +36,7 @@ include_once($idir."lib/f_parse_content.php");
 $content_date_time    = '';// Променлива, която съдържа датата и часа на последната редакция на върнатия текст 
 $content_create_time = ''; // Променлива, която съдържа датата и часа на първото въвеждане на върнатия текст 
 
-function translate($n){
+function translate($n, $elink=true){
 global $language, $adm_pth, $default_language, $content_date_time, $content_create_time;
 
 $content_date_time = '';
@@ -55,7 +58,7 @@ if ($r){ // Ако има такъв запис
   $content_date_time = $r['date_time_2'];
   $t = stripslashes($r['text']);
   $rz = parse_content(apply_filters($n,$t));
-  if (!isset($r['nolink']) || !$r['nolink']) $rz .= $el;
+  if ((!isset($r['nolink']) || !$r['nolink']) && $elink) $rz .= $el;
 }
 else if (is_local() || in_edit_mode())
          // На локелен сървър или в режим на редактиране се показва името на стринга като линк,

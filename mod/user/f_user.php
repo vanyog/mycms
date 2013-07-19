@@ -21,6 +21,7 @@ include_once($idir.'lib/translation.php');
 include_once($idir.'lib/o_form.php');
 include_once($idir.'lib/f_db_table_field.php');
 include_once($idir.'lib/f_set_self_query_var.php');
+include_once($idir.'lib/f_unset_self_query_var.php');
 include_once($idir.'lib/f_edit_record_form.php');
 
 // Функцията user() проверява дали има влязъл с парола потребител.
@@ -32,6 +33,7 @@ include_once($idir.'lib/f_edit_record_form.php');
 // влизане става препращане към адрес stored_value('user_loginpage',''), ако е зададен такъв.
 // $a = 'edit' означава, че страницата, от която се вика user, е страница за редактиране данните за
 // потребителя и кяеи фръща форма за редактиране на тези данни.
+// $a = 'enter' означава, ако няма влязъл потребител да се показва линк "Вход".
 
 if (!session_id()) session_start();
 
@@ -49,6 +51,9 @@ if ($c===false) die("'users' table is not set up.");
 if ( !$c && (!isset($_GET['user']) || ($_GET['user']!='newreg')) ){ new_user(); }
 // Ако няма влязъл потребител се отваря страница за влизане.
 if (!isset($_SESSION['user_username'])){
+  // но ако $a == 'enter' се показва хипервръзка "Вход"
+  // освен ако не е изпратен параметър user=enter или все още няма регистрирани потребители.
+  if ( ($a == 'enter') && $c && (!isset($_GET['user'])||($_GET['user']!='enter')) ) return enter_link();
   $rz = get_user($a);
   if ($rz) return $rz;
 }
@@ -101,6 +106,11 @@ if (isset($_POST['password2'])); save_user();
 $_SESSION['user_username'] = $_POST['username'];
 if (isset($_POST['password'])) $_SESSION['user_password'] = pass_encrypt($_POST['password']); else $_SESSION['user_password'] = '';
 $_SESSION['session_start'] = time();
+// Премахване на параметър $_GET['user']=='enter' и презареждане на страницата
+if (isset($_GET['user'])&&($_GET['user']=='enter')){
+  $l = unset_self_query_var('user',true); //echo $l; die;
+  header('Location: '.$l);
+}
 }
 
 // Кодиране на паролата по един от два начина
@@ -137,7 +147,7 @@ return $guf;
 }
 
 
-// Унищожава сесията и пренасочва към страницата за излизане
+// Унищожава сесията и пренасочва към страницата след излизане
 
 function logout_user(){
 // Адрес на страницата, която се показва след излизане
@@ -179,6 +189,14 @@ function new_user(){
   header("Location: $l");
 }
 
-
+//
+// Функция, която връща html код на хипервръзка "Вход"
+//
+function enter_link(){
+// Адрес на страницата за влизане
+$ep = stored_value('user_loginpage');
+if (!$ep) $ep = set_self_query_var('user','enter');
+return '<a href="'.$ep.'">'.translate("user_enter").'</a>';
+}
 
 ?>
