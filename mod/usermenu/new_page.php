@@ -22,14 +22,22 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 $idir = dirname(dirname(dirname(__FILE__))).'/';
 $ddir = $idir;
 
+include("f_usermenu.php");
+
 include_once($idir."lib/translation.php");
 include_once($idir."lib/f_db_insert_1.php");
 include_once($idir."lib/f_db_insert_m.php");
-include_once($idir."lib/f_parse_content.php");
+//include_once($idir."lib/f_parse_content.php");
 include_once($idir."lib/o_form.php");
 
+// Номер на страницата от която е изпратена заявка за нова страница
+$page_id = 1*$_GET['p'];
+
+// Данни на страницата от която е изпратена заявка за нова страница
+$page_data = db_select_1('*','pages',"ID=$page_id");
+
 // Проверяване правата на потребителя
-$tx = parse_content('<!--$$_USERMENU_$$-->');
+$tx = usermenu(true);
 
 // Ако потребителят няма право да създава нова страница - край.
 if (!$can_create) echo die("Your have no permission to create new page here.");
@@ -37,11 +45,8 @@ if (!$can_create) echo die("Your have no permission to create new page here.");
 // Обработка на изпратени данни
 if (count($_POST)) process_data();
 
-// Номер на менюто на страницата
-$mi = 1*$_GET['m'];
-
 // Позиция  на новата страница в менюто - по подразбиране най-отволу.
-$pz = db_table_field('place', 'menu_item', "`ID`=$mi ORDER BY `place` DESC")+10;
+$pz = db_table_field('place', 'menu_item', "`ID`=".$page_data['ID']." ORDER BY `place` DESC")+10;
 
 // Създаване на форма за попълване на данни за нова страница 
 $pf = new HTMLForm('new_page_fotm');
@@ -74,23 +79,23 @@ include($idir."lib/build_page.php");
 //
 // Обработка на изпратени данни
 //
-function process_data(){ // print_r($_POST); die;
-global $pth;
+function process_data(){
+global $pth, $page_data;  // print_r($page_data); die;
 // Предполагаем номер на новата страница
 $pi = db_table_field('MAX(`ID`)', 'pages', '1')+1;
 // Данни за таблица 'pages'
 $d1 = array(
-  'menu_group'=>1*$_GET['m'],
+  'menu_group'=>$page_data['menu_group'],
   'title'=>"p$pi"."_title",
   'content'=>"p$pi"."_content",
-  'template_id'=>1*$_GET['t'],
+  'template_id'=>$page_data['template_id'],
 );
 // Записване в таблицата
 $pi = db_insert_1($d1,'pages');
 // Данни за записа в таблица 'menu_items'
 $d2 = array (
   'place'=>1*$_POST['place'], 
-  'group'=>1*$_GET['m'], 
+  'group'=>$page_data['menu_group'], 
   'name'=>"p$pi"."_link",
   'link'=>$pi
 );

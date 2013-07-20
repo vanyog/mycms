@@ -25,7 +25,7 @@ INSERT INTO `content` (`name`,`nolink`,`date_time_1`,`date_time_2`,`language`,`t
 ('user_logaut',1,NOW(),NOW(),'bg','Изход'),
 ('user_login',1,NOW(),NOW(),'bg','Влизане в системата'),
 ('user_login_button',1,NOW(),NOW(),'bg','Влизане'),
-('user_logoutcontent',1,NOW(),NOW(),'bg','<p>Вие успешно излязохте от системата</p>\r\n<p><a href="/">Начална страница</a></p>'),
+('user_logoutcontent',1,NOW(),NOW(),'bg','<p>Вие успешно излязохте от системата</p>'),
 ('user_logouttitle',1,NOW(),NOW(),'bg','Изход от системата'),
 ('user_newreg',1,NOW(),NOW(),'bg','Нова регистрация'),
 ('user_password',1,NOW(),NOW(),'bg','Парола:'),
@@ -36,4 +36,5 @@ INSERT INTO `content` (`name`,`nolink`,`date_time_1`,`date_time_2`,`language`,`t
 ('user_telephone',1,NOW(),NOW(),'bg','Телефон:'),
 ('user_thirdname',1,NOW(),NOW(),'bg','Фамилия:'),
 ('user_username',1,NOW(),NOW(),'bg','Потребителско име:'),
+('user_enter',1,NOW(),NOW(),'bg','Вход'),
 ('user_login_button',1,NOW(),NOW(),'en','Log in');

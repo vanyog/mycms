@@ -86,7 +86,9 @@ return Array (
 'title' => 'error_404_title',
 'content' => 'error_404_content',
 'template_id' => 1,
-'options' => ''
+'options' => '',
+'tcount'=>0,
+'dcount'=>0
 );
 }
 

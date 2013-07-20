@@ -31,13 +31,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 include_once("usedatabase.php");
 
-function db_table_field($fn,$tb,$whr,$def = false){
+function db_table_field($fn, $tb, $whr ,$def = '', $y = false){
 global $db_link,$tn_prefix;
 if ($fn[0]=='`') $fn = substr($fn,1,strlen($fn)-2);
 $q="SELECT $fn FROM $tn_prefix$tb WHERE $whr;";
 $r=mysql_query($q,$db_link);
 if (!$r){
-  if (!($def===false)) echo $q.'<br>'; 
+  if ($y===true) echo $q.'<br>'; 
   return $def;
 }
 $rc=mysql_fetch_assoc($r);

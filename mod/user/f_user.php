@@ -48,13 +48,13 @@ $c = db_table_field('COUNT(*)','users','1');
 // Грешка - значи няма таблица.
 if ($c===false) die("'users' table is not set up.");
 // Ако няма потребители, се създава нов потребител.
-if ( !$c && (!isset($_GET['user']) || ($_GET['user']!='newreg')) ){ new_user(); }
+if ( !$c && (!isset($_GET['user']) || ($_GET['user']!='newreg')) ){ return new_user($a); }
 // Ако няма влязъл потребител се отваря страница за влизане.
 if (!isset($_SESSION['user_username'])){
   // но ако $a == 'enter' се показва хипервръзка "Вход"
   // освен ако не е изпратен параметър user=enter или все още няма регистрирани потребители.
   if ( ($a == 'enter') && $c && (!isset($_GET['user'])||($_GET['user']!='enter')) ) return enter_link();
-  $rz = get_user($a);
+  $rz = get_user($a,$c);
   if ($rz) return $rz;
 }
 // Четене на номера на потребител с име $_SESSION['user_username'] и парола $_SESSION['user_password'].
@@ -84,17 +84,24 @@ return $rz;
 
 // Функцията get_user() връща HTML код с форма за влизане/регистриране на потребител
 
-function get_user($a){
+function get_user($a,$c){
 // Ако формата за влизане вече е попълнена, се обработват изпратените с нея данни
 if (isset($_POST['username'])){ process_user(); return ''; }
 global $idir;
+// Заглавие на страницата за влизане/създаване на потребител
 if (isset($_GET['user']) && ($_GET['user']=='newreg')) $page_title = translate('user_newreg');
 else $page_title = translate('user_login');
-$page_content = '<div id="user_login">'."\n<h1>$page_title</h1>\n".user_form()->html();
+// Ако няма още нито един потребител - надпис, който съобщава това
+$m = '';
+if (!$c) $m = translate('user_firstuser');
+// Съдържание на страницата
+$page_content = '<div id="user_login">'."\n<h1>$page_title</h1>\n$m\n".user_form()->html();
 if (stored_value('user_showreglink', 'false')=='true')
    $page_content .= '<p><a href="'.set_self_query_var('user','newreg').'">'.translate('user_newreg')."</a></p>";
 $page_content .= "\n</div>";
+// Ако страницата не се вмъква в шаблон се показва с build_page.php,
 if ($a != 'login'){ include($idir.'lib/build_page.php'); die; }
+// иначе се връща нейното съдържание за да се вмъкне в шаблона.
 else return $page_content;
 }
 
@@ -184,7 +191,10 @@ return $rz.edit_record_form($cp, 'users');
 // Тя презарежда страницата, като добавя в адреса и праметър user=newreg и това предизвиква показване на форма за 
 // редактиране на нов потребител.
 //
-function new_user(){
+function new_user($a){
+  // Ако трябва да се показва само линк "Вход", се връща този линк
+  if (($a=='enter')&&!(isset($_GET['user'])&&($_GET['user']=='enter'))) return enter_link();
+  // В противен случай се изпраща параметър user=newreg и страницата се презарежда
   $l = set_self_query_var('user','newreg',false);
   header("Location: $l");
 }
