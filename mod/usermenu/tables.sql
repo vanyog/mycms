@@ -18,4 +18,7 @@ INSERT INTO `content` (`name`,`nolink`,`date_time_1`,`date_time_2`,`language`,`t
 ('usermenu_menupos',1,NOW(),NOW(),'bg','Позиция в менюто:'),
 ('usermenu_newpagecontent',1,NOW(),NOW(),'bg','Съдържание на страницата:'),
 ('usermenu_newpagesubmit',1,NOW(),NOW(),'bg','Създаване и отваряне на страницата'),
-('usermenu_newpagetitle',1,NOW(),NOW(),'bg','Заглавие:');
+('usermenu_texttoedit',1,NOW(),NOW(),'bg','Text:'),
+('usermenu_back',1,NOW(),NOW(),'bg','Връщане обратно'),
+('usermenu_newpagetitle',1,NOW(),NOW(),'bg','Заглавие:'),
+('usermenu_edittext',1,NOW(),NOW(),'bg','Редактиране на текст');

@@ -37,4 +37,5 @@ INSERT INTO `content` (`name`,`nolink`,`date_time_1`,`date_time_2`,`language`,`t
 ('user_thirdname',1,NOW(),NOW(),'bg','Фамилия:'),
 ('user_username',1,NOW(),NOW(),'bg','Потребителско име:'),
 ('user_enter',1,NOW(),NOW(),'bg','Вход'),
+('user_firstuser',1,NOW(),NOW(),'bg','<p>На сайта все още няма регистрирани потребители. Сега ше регистрирате първия потребител.</p>'),
 ('user_login_button',1,NOW(),NOW(),'en','Log in');

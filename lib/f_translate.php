@@ -37,7 +37,7 @@ $content_date_time    = '';// Променлива, която съдържа датата и часа на последн
 $content_create_time = ''; // Променлива, която съдържа датата и часа на първото въвеждане на върнатия текст 
 
 function translate($n, $elink=true){
-global $language, $adm_pth, $default_language, $content_date_time, $content_create_time;
+global $language, $pth, $adm_pth, $default_language, $content_date_time, $content_create_time, $can_edit, $page_data;
 
 $content_date_time = '';
 $content_create_time = '';
@@ -45,7 +45,9 @@ $content_create_time = '';
 $el = ''; // Линк за редактиране. Показва се ако сайтът е в режим на редактиране.
 if (in_edit_mode()){
   $id = db_select_1('ID','content',"name='$n' AND language='$language'");
-  $el = '<a href="'.$adm_pth.'edit_record.php?t=content&amp;r='.$id['ID'].'">*</a>';
+  if ($can_edit) $h = $pth.'mod/usermenu/edit_text.php?i='.$id['ID'].'&amp;pid='.$page_data['ID'];
+  else $h = $adm_pth.'edit_record.php?t=content&amp;r='.$id['ID'];
+  $el = '<a href="'.$h.'">*</a>';
 }
 
 // Връщан резултат

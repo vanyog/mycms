@@ -31,14 +31,23 @@ include_once($idir."lib/f_db_enum_values.php");
 include_once($idir."lib/o_form.php");
 
 function edit_record_form($cp, $tn){
-$ft = db_show_columns($tn, '', 'Type'); 
+// Прочитане типовете на полетата на таблицата
+$ft = db_show_columns($tn, '', 'Type');
+// Прочитане имената на полетата на таблицата 
 $fn = db_field_names($tn);
+// Съставяне на нов асоциативен масив с ключове имената на полетата и стойности - типовете им
 $ft = array_combine($fn, $ft);
+// Прочитане на записа, който ще се редактира
 $d = db_select_1('*', $tn, "`ID`=".$cp['ID']); //print_r($d); die;
+// Връщан резултат
 $rz = '';
+// Максимална дължина на текстовите полета
 $max_size = 80;
+// Максимален брой редове на текстовите области
+$max_lines = 25;
 // Съставяне на формата
 $hf = new HTMLForm('editrecord_form');
+// Добавяне на елементи за всяко от полетата, които ще се редактират
 foreach($cp as $n => $v){
   switch ($n) {
   case 'ID': // Номерът - скрито поле
@@ -46,8 +55,9 @@ foreach($cp as $n => $v){
     $hf->add_input($fi);
     break;
   default:
-    
+    // Анализиране типа на полетата
     preg_match('/([a-z]*)\((.*)\)/', $ft[$n], $tp);
+    if (count($tp)<2) $tp[1] = $ft[$n];
     switch ($tp[1]){
     case 'varchar': switch($tp[2]){
       case '255': case '100': case '50': case '20':
@@ -69,6 +79,14 @@ foreach($cp as $n => $v){
         break;
       default: die("Unknown subtype of '$ft[$n]'");
       }
+      break;
+    case 'text':
+      $vl = stripslashes($d[$n]);
+      $la = explode("\n", $vl);
+      $lc = count($la);
+      if ($lc<3) $lc = 3;
+      if ($lc>$max_lines) $lc = $max_lines;
+      $hf->add_input( new FormTextArea($cp[$n], $n, $max_size, $lc, $vl) );
       break;
     case 'int':
       $vl = $d[$n];
@@ -103,15 +121,19 @@ return $rz;
 // Записване на попълнените във формата данни
 
 function process_record($cp, $tn){
-global $tn_prefix, $db_link; 
+global $tn_prefix, $db_link;
+// Прочитане типовете на полетата на таблицата
 $ft = db_field_types($tn);
+// Прочитане имената на полетата на таблицата 
 $fn = db_field_names($tn);
+// Съставяне на нов асоциативен масив с ключове имената на полетата и стойности - типовете им
 $ft = array_combine($fn, $ft); //print_r($ft); die;
-$k = array_keys($cp); // Масив от имената на полетата за които се очаква да са изпратени данни.
+$k = array_keys($cp); // Масив от имената на полетата, за които са изпратени данни.
 $rz = ''; // Връщан резултат - надпис, относно резултата от запазването на данните.
 $q = ''; // SQL заявка, която се генерира.
 $w = ''; // WHERE частта на SQL заявката.
 $pu = false; // Дали да се обновят данните за потребителя в текущата сесия.
+// Използва се, когато се редактира записът с данни на текущия потребител.
 foreach($k as $n) switch($n){
 case 'ID':
   // Ако не е изпратен номер на запис, не се прави нищо.
@@ -142,9 +164,9 @@ default:
 }
 // Обновяване данните за потребителя в текущата сесия.
 if ($pu) process_user();
-// Обновяване данните за потребителя в базата данни.
-if ($w) $q = "UPDATE `$tn_prefix"."$tn` SET `date_time_1`=NOW(), $q$w";
-else $q = "INSERT INTO `$tn_prefix"."$tn` SET `date_time_0`=NOW(), `date_time_1`=NOW(), $q;";
+// Обновяване данните в базата данни.
+if ($w) $q = "UPDATE `$tn_prefix"."$tn` SET `date_time_2`=NOW(), $q$w";
+else $q = "INSERT INTO `$tn_prefix"."$tn` SET `date_time_1`=NOW(), `date_time_1`=NOW(), $q;";
 //print_r($q); die;
 if (mysql_query($q,$db_link)) $rz .= '<span class="message">'.translate('dataSaved')."</span>";
 if ($rz) $rz = '<p class="message">'.$rz.'</p>';

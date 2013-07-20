@@ -13,12 +13,14 @@ CREATE TABLE IF NOT EXISTS `content` (
   FULLTEXT KEY `text` (`text`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
-INSERT INTO `content` (`ID`, `name`, `date_time_1`, `date_time_2`, `language`, `text`) VALUES
-(1, 'home_page_title', NOW(), NOW(), 'bg', 'Начална страница'),
-(2, 'home_page_content', NOW(), NOW(), 'bg', '<p>Текст на страницата.</p>'),
-(3, 'p1_link', NOW(), NOW(), 'bg', 'Начало'),
-(4, 'saveData', NOW(), NOW(), 'bg', 'Съхраняване на данните'),
-(5, 'dataSaved', NOW(), NOW(), 'bg', 'Данните бяха съхранени.');
+INSERT INTO `content` (`name`, `nolink`, `date_time_1`, `date_time_2`, `language`, `text`) VALUES
+('home_page_title', 0, NOW(), NOW(), 'bg', 'Начална страница'),
+('home_page_content', 0, NOW(), NOW(), 'bg', '<p>Текст на страницата.</p>'),
+('error_404_title', 0, NOW(), NOW(), 'bg', 'Грешен номер на страница'),
+('error_404_content', 0, NOW(), NOW(), 'bg', '<p>На сайта няма страница с такъв номер.</p>'),
+('p1_link', NOW(), 0, NOW(), 'bg', 'Начало'),
+('saveData', NOW(), 1, NOW(), 'bg', 'Съхраняване на данните'),
+('dataSaved', NOW(), 1, NOW(), 'bg', 'Данните бяха съхранени.');
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `menu_items` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
