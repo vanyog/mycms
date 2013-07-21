@@ -54,7 +54,7 @@ $can_create = false; // Право на потребителя да съдава/изтрива страници в дадени
 $can_manage = array(); // Права за администриране на модули
 
 foreach($p as $q) switch($q['type']) {
-case 'menu': // print_r($page_data); die;
+case 'menu':// print_r($page_data); die;
   $can_create = in_that_branch($page_data['menu_group'], $q['object']) && $q['yes_no'];
   $can_edit = $can_create;
   break;
@@ -88,10 +88,11 @@ else return '<div id="user_menu">'."\n".$rz."</div>\n";
 //
 // Проверява дали менюто на страницата е подменю на разрешеното меню
 //
-function in_that_branch($pi,$j){
+function in_that_branch($pi,$j){// echo "$pi $j<br>";
+if ($pi==$j) return true;
 $rz = false;
 do{
- $pi = db_table_field('parent', 'menu_tree', "`group`=$pi");
+ $pi = db_table_field('parent', 'menu_tree', "`group`=$pi");// print_r($pi);// die;
  $rz = $pi==$j;
 } while ( !($rz || ($pi==0)) );
 //echo "$rz $pi"; die;

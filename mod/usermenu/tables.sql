@@ -21,4 +21,6 @@ INSERT INTO `content` (`name`,`nolink`,`date_time_1`,`date_time_2`,`language`,`t
 ('usermenu_texttoedit',1,NOW(),NOW(),'bg','Text:'),
 ('usermenu_back',1,NOW(),NOW(),'bg','Връщане обратно'),
 ('usermenu_newpagetitle',1,NOW(),NOW(),'bg','Заглавие:'),
-('usermenu_edittext',1,NOW(),NOW(),'bg','Редактиране на текст');
+('usermenu_edittext',1,NOW(),NOW(),'bg','Редактиране на текст'),
+('usermenu_newmenu',1,NOW(),NOW(),'bg','Нов раздел:'),
+('usermenu_cantdelindex',1,NOW(),NOW(),'bg','Не можете да изтриете главната страница на раздел, докато в този раздел има други страници.');

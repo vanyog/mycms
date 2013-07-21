@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `menu_items` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
 INSERT INTO `menu_items` (`ID`, `place`, `group`, `name`, `link`) VALUES
-(1, 10, 0, 'p1_link', '1');
+(1, 10, 1, 'p1_link', '1');
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `menu_tree` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `menu_tree` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
 INSERT INTO `menu_tree` (`ID`, `group`, `parent`, `index_page`) VALUES
-(1, 0, 0, 1);
+(1, 1, 0, 1);
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `options` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `pages` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
 INSERT INTO `pages` (`ID`, `menu_group`, `title`, `content`, `template_id`, `hidden`, `options`) VALUES
-(1, 0, 'home_page_title', 'home_page_content', 1, 1, '');
+(1, 1, 'home_page_title', 'home_page_content', 1, 1, '');
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `scripts` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,

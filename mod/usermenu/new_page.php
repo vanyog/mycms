@@ -51,6 +51,8 @@ $pz = db_table_field('place', 'menu_item', "`ID`=".$page_data['ID']." ORDER BY `
 // Създаване на форма за попълване на данни за нова страница 
 $pf = new HTMLForm('new_page_fotm');
 
+$pf->add_input( new FormInput(translate('usermenu_newmenu'), 'newmenu', 'checkbox'));
+
 $ti = new FormSelect(translate('usermenu_language'), 'lang', $languages);
 $ti->values = 'k';
 $pf->add_input( $ti );
@@ -80,27 +82,59 @@ include($idir."lib/build_page.php");
 // Обработка на изпратени данни
 //
 function process_data(){
-global $pth, $page_data;  // print_r($page_data); die;
+global $pth, $page_data;//  print_r($_POST); die;
+
+// Дали се създава нов раздел
+$newmenu = isset($_POST['newmenu'])&&($_POST['newmenu']=='on');
+
 // Предполагаем номер на новата страница
 $pi = db_table_field('MAX(`ID`)', 'pages', '1')+1;
+
+// Номер на менюто на новата страница
+$mg1 = $page_data['menu_group']; // На старото меню
+$mg2 = $mg1; // На новото меню, ако се създава нов раздел
+if ($newmenu) $mg2 = db_table_field('MAX(`group`)', 'menu_items', '1')+1;
+
 // Данни за таблица 'pages'
 $d1 = array(
-  'menu_group'=>$page_data['menu_group'],
+  'menu_group'=>$mg2,
   'title'=>"p$pi"."_title",
   'content'=>"p$pi"."_content",
   'template_id'=>$page_data['template_id'],
 );
 // Записване в таблицата
 $pi = db_insert_1($d1,'pages');
+
 // Данни за записа в таблица 'menu_items'
 $d2 = array (
   'place'=>1*$_POST['place'], 
-  'group'=>$page_data['menu_group'], 
+  'group'=>$mg2, 
   'name'=>"p$pi"."_link",
   'link'=>$pi
 );
 // Записване в таблицата
 $pp = db_insert_1($d2,'menu_items');
+
+// Ако се създава нов раздел се създава препратка към страницата и в старото меню
+if ($newmenu){
+  // Данни за записа в таблица 'menu_items'
+  $d2 = array (
+    'place'=>1*$_POST['place'] - 5, 
+    'group'=>$mg1, 
+    'name'=>"p$pi"."_link",
+    'link'=>$pi
+  );
+  // Записване в таблицата
+ $pp = db_insert_1($d2,'menu_items');
+  // Данни за таблица 'menu_tree'
+  $dt = array(
+    'group'=>$mg2,
+    'parent'=>$mg1,
+    'index_page'=>$pi
+  );
+ $pn = db_insert_1($dt,'menu_tree');
+}
+
 // Данни за записите в таблица 'content'
 $d3 = array (
 // Надписа върху линка в менюто
@@ -127,6 +161,7 @@ array('name'=>$d1['content'],
 );
 // Записване в таблицата
 db_insert_m($d3,'content');
+
 $l = 'Location: '.$pth.'index.php?pid='.$pi;
 header($l); 
 }

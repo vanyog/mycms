@@ -45,27 +45,43 @@ usermenu(true);
 // Ако потребителят няма право да изтрива страницата - край.
 if (!$can_create || !$can_edit) echo die("Your have no permission to delete this page.");
 
-// Изтриване
+// Номер на главната страница на раздела
+$pid = 0;
+
+// Ако е главна страница на раздел
+$p = db_select_1('*', 'menu_tree', "`index_page`=".$page_data['ID']." AND `group`=".$page_data['menu_group']);// print_r($p); die;
+if ($p){
+  // Брой на страниците от раздела
+  $c = db_table_field('COUNT(*)', 'pages', "`menu_group`=".$page_data['menu_group']);
+  // Ако има и други страници - не се изтрива, край.
+  if ($c>1) die(translate('usermenu_cantdelindex'));
+  // Изтриване на записа от таблица 'menu_tree'
+  $q = "DELETE FROM `$tn_prefix"."menu_tree` WHERE `group`=".$page_data['menu_group'].";";
+  mysql_query($q,$db_link);
+  $pid = db_table_field('index_page', 'menu_tree', "`group`=".$p['parent']);
+}
+
+// Изтриване на страницата
 $q = "DELETE FROM `$tn_prefix"."pages` WHERE `ID`=$page_id;";
 //echo "$q<br>";
 mysql_query($q,$db_link);
 
 // Данни за менюто
 $m = db_select_1('*', 'menu_items', "`group`=".$page_data['menu_group']." AND `link`=".$page_data['ID']);
-// Изтриване
-$q = "DELETE FROM `$tn_prefix"."menu_items` WHERE `group`=".$page_data['menu_group']." AND `link`=".$page_data['ID'].";";
+// Изтриване на препратките от всички менюта, които сочат към страницата
+$q = "DELETE FROM `$tn_prefix"."menu_items` WHERE `link`=".$page_data['ID'].";";
 //echo "$q<br>";
 mysql_query($q,$db_link);
 
 // Данни за надписите
 $t = db_select_m('*', 'content', "`name`='".$m['name']."' OR `name`='".$page_data['title']."' OR `name`='".$page_data['content']."'");
-// Изтриване
+// Изтриване на надписите
 $q = "DELETE FROM `$tn_prefix"."content` WHERE `name`='".$m['name']."' OR `name`='".$page_data['title']."' OR `name`='".$page_data['content']."';";
 //echo "$q<br>";
 mysql_query($q,$db_link);
 
 // Връщане към главната страница на раздела
-$pid = db_table_field('index_page', 'menu_tree', "`group`=".$page_data['menu_group']);
+if (!$pid) $pid = db_table_field('index_page', 'menu_tree', "`group`=".$page_data['menu_group']);
 header("Location: $pth"."index.php?pid=$pid");
 
 ?>
