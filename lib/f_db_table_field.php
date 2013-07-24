@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // за предпочитане е да се използва функцията db_select_1(),
 // която в такъв случай връща false без да се генерира грешка
 
-include_once("usedatabase.php");
+include_once($idir."lib/usedatabase.php");
 
 function db_table_field($fn, $tb, $whr ,$def = '', $y = false){
 global $db_link,$tn_prefix;

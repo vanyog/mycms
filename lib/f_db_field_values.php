@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Връща неповтарящите се стойности от поле $fn на таблица $tn,
 // отговарящи на условие $wh
 
-include_once("f_db_select_m.php");
+include_once($idir."lib/f_db_select_m.php");
 
 function db_field_values($fn,$tn,$wh, $lm = ''){
 $d = db_select_m( "`$fn`", $tn, "$wh GROUP BY `$fn` ORDER BY `$fn` $lm" );// print_r($d);

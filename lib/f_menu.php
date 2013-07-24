@@ -25,14 +25,14 @@ include_once($idir."lib/f_is_local.php");
 include_once($idir.'conf_paths.php');
 include_once($idir.'lib/f_db_select_m.php');
 
-function menu($i){
-global $pth, $adm_pth, $page_id;
+function menu($i, $id = 'page_menu'){
+global $ind_fl, $adm_pth, $page_id;
 $d = db_select_m('*','menu_items',"`group`=$i ORDER BY `place`");
 $rz = '';
 foreach($d as $m){
   $lnn = 1*$m['link'];
   $ln = $m['link'];
-  if ($lnn) $ln = $pth.'index.php?pid='.$lnn;
+  if ($lnn) $ln = $ind_fl.'?pid='.$lnn;
   $pl = '';
   if (in_edit_mode()) $pl = $m['place'];
   if ($page_id!=$lnn) $rz .= '<a href="'.$ln.'">'.$pl.translate($m['name']).'</a> '."\n";
@@ -43,7 +43,7 @@ if (in_edit_mode()){
   $rz .= '<a href="'.$adm_pth.'new_record.php?t=menu_items&group='.$i.'&link='.$page_id.
          '&name=p'.$ni.'_link">New</a> '."\n";
 }
-if ($rz) $rz = "\n<div id=\"page_menu\">\n$rz</div>\n";
+if ($rz) $rz = "\n<div id=\"$id\">\n$rz</div>\n";
 return $rz;
 }
 

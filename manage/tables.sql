@@ -20,7 +20,8 @@ INSERT INTO `content` (`name`, `nolink`, `date_time_1`, `date_time_2`, `language
 ('error_404_content', 0, NOW(), NOW(), 'bg', '<p>На сайта няма страница с такъв номер.</p>'),
 ('p1_link', NOW(), 0, NOW(), 'bg', 'Начало'),
 ('saveData', NOW(), 1, NOW(), 'bg', 'Съхраняване на данните'),
-('dataSaved', NOW(), 1, NOW(), 'bg', 'Данните бяха съхранени.');
+('dataSaved', NOW(), 1, NOW(), 'bg', 'Данните бяха съхранени.'),
+('month_names', NOW(), 1, NOW(), 'bg', '$month = array(\'\',\'януари\',\'февруари\',\'март\',\'април\',\'май\',\'юни\',\'юли\',\'август\',\'септември\',\'октомври\',\'ноември\',\'декември\');');
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `menu_items` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
@@ -54,19 +55,19 @@ CREATE TABLE IF NOT EXISTS `options` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=cp1251 AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
-INSERT INTO `options` (`ID`, `name`, `value`) VALUES
-(1, 'languages', '$languages = array(''bg'' => ''Български'' /*, ''en'' => ''English''*/ );'),
-(2, 'default_language', 'bg'),
-(3, 'admin_path', 'manage'),
-(4, 'adm_name', 'admin'),
-(5, 'adm_value', 'on'),
-(6, 'edit_name', 'edit'),
-(7, 'edit_value', 'on'),
-(8, 'host_web', 'mysite.org'),
-(9, 'host_local', 'localhost'),
-(10, 'phpmyadmin_web', 'http://mysite.org/phpmyadmin'),
-(11, 'phpmyadmin_local', 'http://localhost/phpmyadmin'),
-(12, 'mod_path', '/_mod');
+INSERT INTO `options` (`name`, `value`) VALUES
+('languages', '$languages = array(''bg'' => ''Български'' /*, ''en'' => ''English''*/ );'),
+('default_language', 'bg'),
+('admin_path', 'manage'),
+('adm_name', 'admin'),
+('adm_value', 'on'),
+('edit_name', 'edit'),
+('edit_value', 'on'),
+('host_web', 'mysite.org'),
+('host_local', 'localhost'),
+('phpmyadmin_web', 'http://mysite.org/phpmyadmin'),
+('phpmyadmin_local', 'http://localhost/phpmyadmin'),
+('mod_path', '/_mod');
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pages` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
