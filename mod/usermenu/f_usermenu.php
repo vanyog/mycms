@@ -82,7 +82,7 @@ if (confirm("'.translate('usermenu_confirdeleting').'")) document.location = "'.
 }
 if ($can_edit) $rz .= edit_normal_link();
 if ($nom) return '';
-else return '<div id="user_menu">'."\n".$rz."</div>\n";
+else return '<div id="user_menu">'."\n".$rz."\n</div>";
 }
 
 //
