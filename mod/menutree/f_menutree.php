@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include_once($idir.'lib/f_db_select_1.php');
 
 function menutree(){
-global $pth, $ind_pth, $page_id, $page_data;
+global $pth, $page_id, $page_data;
 //global $p; // print_r($p);
 $rz = '';
 // „етене записа на менюто на страницата
@@ -34,16 +34,16 @@ $pg = db_select_1('*','pages','ID='.$pr['index_page']);
 // јко главната страница е текуща се показва без линк
 if ($page_id==$pg['ID']) $rz = translate($pg['title']);
 // иначе се показва с линк
-else $rz = '<a href="'.$ind_pth.'index.php?pid='.$pg['ID'].'">'.translate($pg['title']).'</a>'.$rz;
+else $rz = '<a href="'.$pth.'index.php?pid='.$pg['ID'].'">'.translate($pg['title']).'</a>'.$rz;
 // јко менюто има родители се добав€т и те.
 while ($pr['parent'])
 {
   $pr = db_select_1('*','menu_tree',"`group`=".$pr['parent']); // print_r($pr); echo "<br>";
   $pg = db_select_1('*','pages','ID='.$pr['index_page']);
-  if ($rz) $rz = " >> \n".$rz;
-  $rz = '<a href="'.$ind_pth.'index.php?pid='.$pg['ID'].'">'.translate($pg['title']).'</a>'.$rz;
+  if ($rz) $rz = ' >> '.$rz;
+  $rz = '<a href="'.$pth.'index.php?pid='.$pg['ID'].'">'.translate($pg['title']).'</a>'.$rz;
 }
-return '<p id="menu_tree">'."\n$rz\n</p>";
+return $rz;
 }
 
 ?>
