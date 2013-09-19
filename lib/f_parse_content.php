@@ -26,7 +26,8 @@ include_once($idir.'lib/f_translate.php');
 include_once($idir.'lib/f_adm_links.php');
 
 function parse_content($cnt){
-global $page_options, $page_data, $content_date_time, $body_adds, $page_header, $idir, $pth, $adm_pth, $apth, $mod_pth, $idir;
+global $page_options, $page_data, $content_date_time, $body_adds, $page_header, 
+       $idir, $pth, $adm_pth, $apth, $mod_apth, $mod_pth, $idir;
 
 $l = strlen($cnt);
 $str1 = '<!--$$_'; // Означение за начало на замествания елемент
