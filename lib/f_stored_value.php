@@ -17,14 +17,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-include_once('f_db_table_field.php');
-include_once('f_db_select_1.php');
+include_once($idir.'lib/f_db_table_field.php');
+include_once($idir.'lib/f_db_select_1.php');
 
 // Функцията stored_value($n,$def=false) чете полето `value` от таблица $tn_prifix.'options'
 // Ако не съществува такъв запис, връща стойността $def.
 
-function stored_value($n,$def = false){
-  return db_table_field('value','options',"`name`='$n'",$def);
+function stored_value($n, $def = false){
+  return db_table_field('value', 'options',"`name`='$n'", $def);
 }
 
 // Функцията store_value($n,$v) записва стойността $v в запис с `name`=$n на таблица $tn_prifix.'options'

@@ -17,9 +17,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+// ¬ режим на администриране функци€та pagestat() показва бро€ на посещени€та на страницата -
+// общи€ брой и за ден€, както и линк "page stats", който отвар€ страница с таблица на статистиката 
+// на посещени€та на страниците от сайта
+
 function pagestat(){
-global $pth, $page_data;
+global $page_data;
 if (!show_adm_links()) return '';
-return 'Total '.$page_data['tcount'].' Today '.$page_data['dcount'].' See <a href="'.$pth.'page_stat/page_stats.php">page stats</a>';}
+$pth = current_pth(__FILE__);
+return 'Total '.$page_data['tcount'].' Today '.$page_data['dcount'].' See <a href="'.$pth.'page_stats.php">page stats</a>';}
 
 ?>

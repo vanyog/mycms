@@ -1,5 +1,4 @@
 <?php
-
 /*
 MyCMS - a simple Content Management System
 Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>
@@ -18,7 +17,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Функцията adm_links() генерира html код за показване на някои линкове за администриране
+// Функцията adm_links() генерира html код за показване на някои линкове за администриране.
+
+// По подразбиране след реда с линкове се вмъква празен ред.
+// Това отмества цялата страница надолу и прави ленковете по-лесно четими, но на страници,
+// съдържащи елементи с position:absolute се нарушава положението на тези елементи. Тогава се
+// се зададава настройка adm_links_over = 1, за да не се вмъкне празен ред. 
 
 $idir = dirname(dirname(__FILE__)).'/';
 
@@ -27,6 +31,7 @@ include_once($idir."lib/f_is_local.php");
 include_once($idir.'lib/f_set_query_var.php');
 include_once($idir.'lib/f_db_select_1.php');
 include_once($idir.'lib/f_db_table_exists.php');
+include_once($idir.'lib/f_parse_content.php');
 
 function adm_links(){
 global $pth, $adm_pth, $edit_name, $edit_value, $web_host, $local_host, 
@@ -53,19 +58,25 @@ else {
 
   $enmch = '';
   if ($pth!='/') $enmch = '<a href="/">/</a> :: '."\n";
-  if (!in_admin_path()) $enmch .= '<a href="'.$_SERVER['PHP_SELF'].'?'.set_query_var($edit_name,$edit_value).'">Edit</a></a> :: 
-<a href="'.$_SERVER['PHP_SELF'].'?'.set_query_var($edit_name,'0').'">Normal</a></a> :: 
+  if (!in_admin_path()) $enmch .= '<a href="'.$_SERVER['PHP_SELF'].'?'.set_query_var($edit_name,$edit_value).'">Edit</a> :: 
+<a href="'.$_SERVER['PHP_SELF'].'?'.set_query_var($edit_name,'0').'">Normal</a> :: 
 <a href="" onclick="doNewPage();return false">New page</a> :: ';
 
-  return '<script type="text/javascript"><!--
+  $rz = '<script type="text/javascript"><!--
 function doNewPage(){
 if (confirm("Do you want to create new page?"))
 na = "'.$adm_pth.'new_record.php?t=pages&menu_group='.$page_data['menu_group'].
 '&title=p'.($lpid+1).'_title&content=p'.($lpid+1).'_content&template_id='.$page_data['template_id'].'";
 document.location=na;
 }
+function hide(){
+if (confirm("Hide this menu?")){
+  deleteAllCookies();
+  window.location.reload();
+}
+}
 --></script>
-<p style="position:fixed; font-size:80%; margin:0; padding:0; border-style:solid; border-color:grey; border-width:0 0 1px 0; z-index:100;">
+<p id="adm_links">&nbsp;
 <a href="'.$pth.'">Home</a> :: '.$enmch.'
 <a href="'.$pth.'index.php?pid='.$lpid.'&amp;'.$edit_name.'='.urlencode($edit_value).'">'.$lpid.'</a> :: 
 <a href="'.$adm_pth.'edit_file.php">File system</a> :: 
@@ -73,9 +84,13 @@ document.location=na;
 <a href="'.stored_value('cpanel_url').'" target="_blank">cPanel</a> :: 
 <a href="'.$mphp.'" target="_blank">phpMyAdmin</a> :: 
 <a href="'.$adm_pth.'showenv.php?AAAAAAA" target="_blank">$_SERVER</a> :: 
-<a href="'.$go.'">'.$gon.'</a> <!--:: 
-<a hr  ="'.$adm_pth.'dump_data.php">Dump</a-->'.$w3c.'
+<a href="'.$go.'">'.$gon.'</a><!--:: 
+<a hr  ="'.$adm_pth.'dump_data.php">Dump</a-->'.$w3c.' :: 
+'.parse_content('<!--$$_CONTENT_custome_link_$$-->').'
+<a href="'.$pth.'lib/exit.php">x</a>&nbsp; 
 </p>';
+  if (stored_value('adm_links_over',0)!=1) $rz .= '<p>&nbsp;</p>';
+  return $rz;
   }
 }
 
@@ -83,14 +98,17 @@ document.location=na;
 
 function show_adm_links(){
 global $adm_pth,$adm_name,$adm_value;
+// Не се показват ако има бисквитка noadm = yes
+//print_r($_COOKIE); die;
+if (isset($_COOKIE['noadm']) && ($_COOKIE['noadm']=='yes')) return false;
 // Истина ако се зарежда страница от директорията за администриране
 $a = substr($_SERVER['REQUEST_URI'],0,strlen($adm_pth))==$adm_pth;
 // Линкове за администриране се генерират в случай, че:
 // - сайтът е на локален сървър
 // - сайтът е в режим на редактиране
 // - показва се страница от директорията за администриране
-// - получена е стойност $_GET[$adm_name] = $adm_value.
-// - има бисквитка с име $adm_name и стойност $adm_value.
+// - получена е стойност $_GET[$adm_name] = $adm_value
+// - има бисквитка с име $adm_name и стойност $adm_value
 return is_local() || in_edit_mode() || $a || query_or_cookie($adm_name,$adm_value);
 }
 

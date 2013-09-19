@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Ако шаблонът има един или повече родители го вмъква в тях и след това извиква
 // функцията parse_content()
 
-include_once('translation.php');
+include_once($idir.'lib/translation.php');
 
 function parse_template($p){
 global $content_date_time;

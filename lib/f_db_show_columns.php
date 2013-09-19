@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 if (!isset($idir)) $idir = dirname(dirname(__FILE__)).'/';
 
-include_once("usedatabase.php");
+include_once($idir."lib/usedatabase.php");
 
 function db_show_columns($tn, $fn = '', $in = ''){
 global $tn_prefix, $db_link;

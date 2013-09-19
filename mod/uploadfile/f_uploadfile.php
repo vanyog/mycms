@@ -31,7 +31,7 @@ global $mod_pth, $page_id;
 if (!isset($page_id)) $page_id = 1*$_GET['pid'];
 $pid = $page_id;
 
-// Разпадаме на параметъра на име и номер.
+// Разпадаме на параметъра на име, номер и опция за показване на текста.
 $na = explode(',',$n);
 
 // Ако е изпратен и номер на страница - коригиране на $n и $pid
@@ -43,7 +43,7 @@ $rz = '';
 // Четене на данните за файла
 $fr = db_select_1('*','files',"`pid`=$pid AND `name`='$n'");
 
-$ne = false; // Флаг, който е истина, ако файла се намира в DOCUMENT_ROOT
+$ne = true; // Флаг, който ако е истина файла не се показва
 $imgs = array('jpg','gif','png'); // Разширения на файлове - изображения
 
 // $show_text - Дали да се показва текст
@@ -55,11 +55,27 @@ if (!$fr){ // Ако няма данни за файл - надпис "Няма качен файл" или нищо
   $fid = 0;
 }
 else {
+  // Проверка дали файла не идва от друг сарвър
   $l = strlen($_SERVER['DOCUMENT_ROOT']);
-  $ne = $_SERVER['DOCUMENT_ROOT'] != substr($fr['filename'], 0, $l);
+  $or = stored_value('uploadfile_otherroot'); // document_root деректорията на другия сървър, зададена с настройката uploadfile_otherroot
+  if ($or){ 
+    $l = strlen($or);
+    $ne = $or != substr($fr['filename'], 0, $l); // Истина, ако файлът не е бил в document_root на другия сървър
+  }
+  if ($ne){
+    $l = strlen($_SERVER['DOCUMENT_ROOT']);
+    $ne = $_SERVER['DOCUMENT_ROOT'] != substr($fr['filename'], 0, $l); // Истина ако не е в document_root и на този сървър
+  }
+  // href - атрибут на файла
   $f = substr($fr['filename'], $l, strlen($fr['filename'])-$l);
-  // Ако няма файл или е извън DOCUMENT_ROOT
-  if (!$fr['filename'] || $ne){ // Показване на надпис "Няма качен файл" или нищо
+  // Дали файлът е във време за показване
+  $t1 = strtotime($fr['date_time_3']);
+  $t2 = strtotime($fr['date_time_4']);
+  $t3 = time()+3600;
+  $cs = ( (!$t1 || ($t3>$t1)) && (!$t2 || ($t3<$t2)) );
+//  echo "$t1<br>".date("Y-m-d H:i:s", $t3)."<br>$t2<br><br>";
+  // Ако няма файл или е извън DOCUMENT_ROOT, или не е във време за показване
+  if (!$fr['filename'] || $ne || !$cs){ // Показване на надпис "Няма качен файл" или нищо
     if ($show_text) $rz .= stripslashes($fr['text']);
   }
   else { // Показване на картинка или хипервръзка към файла

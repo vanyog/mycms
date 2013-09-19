@@ -20,8 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Вмъкване на съдържание в таблица content
 
-$idir = dirname(dirname(__FILE__)).'/';
-
+include("conf_manage.php"); 
 include($idir."lib/usedatabase.php");
 
 $n = $_GET['n']; // Име на записа

@@ -27,18 +27,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 error_reporting(E_ALL); ini_set('display_errors',1);
 
 include('conf_manage.php');
+
+// Ако няма conf_database.php файл, показване на форма за създаването му
 if (!file_exists($idir.'conf_database.php')) create_conf_database();
+
 include($idir.'conf_paths.php');
 
 $p = 'tables.sql';
 
-// Ако не е изпратено име на модул
+// Ако е изпратено име на модул, $p е .sql файл за инсталирането му 
 if (isset($_GET['m'])) $p = $_SERVER['DOCUMENT_ROOT'].$mod_pth.$_GET['m']."/$p";
+
+// Ако не е изпратено име на модул, се инсталира самата система
 else create_conf_database();
 
 header("Content-Type: text/html; charset=windows-1251");
 
-if (!file_exists($p)) die("$p file not found");
+if (!file_exists($p)){ // Ако .sql файл не е в директория $mod_pth се проверява в директория 'mod'
+  $p = $_SERVER['DOCUMENT_ROOT'].$pth.'mod/'.$_GET['m']."/tables.sql";
+  if (!file_exists($p)) die("$p file not found");
+}
 
 $fc = file_get_contents($p);
 
@@ -49,30 +57,33 @@ $fc = str_replace('INSERT INTO `',   "INSERT INTO `$tn_prefix",$fc);
 $fa = explode('-- --------------------------------------------------------',$fc);
 
 foreach($fa as $q){
-  echo "$q<p>";
+//  echo "$q<p>";
   mysql_query($q,$db_link);
 }
 
 echo '<p>Success</p>
 
-<p><a href="'.dirname($_SERVER['PHP_SELF']).'">Go next</a></p>';
+<p><a href="'.$pth.'">Go next</a></p>';
 
-
+// 
+// Функция, показваща форма за въвеждане на данните, които трябва
+// да се запишат във файл conf_database.php.
+//
 function create_conf_database(){
 global $idir;
 include_once($idir.'lib/o_form.php');
 // Ако файл conf_database.php вече съществува
 if (file_exists($idir.'conf_database.php')){
-// Ако вече е отговорено да се продължи
-if (isset($_POST['continue'])&&($_POST['continue']=='yes')) return;
-// Показва се бутон за продължаване
-$f = new HTMLForm('pform'); $f->astable = false;
-$i = new FormInput('','continue','hidden','yes'); $f->add_input($i);
-$i = new FormInput('Or click the button to ','','submit','continue'); $f->add_input($i);
-echo '<p>File '.$idir.'<strong>conf_database.php</strong>'.' exists.</p>
-<p>Remove it to start a new instalation.</p>
-'.$f->html();
-die;
+  // Ако вече е отговорено да се продължи
+  if (isset($_POST['continue'])&&($_POST['continue']=='yes')) return;
+  // Показва се бутон за продължаване
+  $f = new HTMLForm('pform'); $f->astable = false;
+  $i = new FormInput('','continue','hidden','yes'); $f->add_input($i);
+  $i = new FormInput('Click the button to ','','submit','continue'); $f->add_input($i);
+  echo '<p>File '.$idir.'<strong>conf_database.php</strong>'.' exists.</p>
+  '.$f->html().'
+  <p>Or remove it to start a new instalation.</p>';
+  die;
 }
 $f = new HTMLForm('pform');
 $i = new FormInput('Database','database','text'); $f->add_input($i);
@@ -86,8 +97,13 @@ if (count($_POST)) process_data();
 else { echo $f->html(); die; }
 }
 
+//
+// Функция за обработка на изпратените с $_POST данни,
+// която създава conf_database.php файла.
+//
 function process_data(){
 global $idir;
+// Съдържание на conf_database.php файла
 $s = '<?php
 /*
 MyCMS - a simple Content Management System
@@ -102,6 +118,7 @@ $password ="'.$_POST['password'].'";
 $tn_prefix = "'.$_POST['prefix'].'";
 ?>
 ';
+// Ако директорията е забранена за запи - съобщение
 if (!is_writable($idir)) {
   echo "<p>Can't write to file ".$idir.'<strong>conf_database.php</strong>'.'</p>
 <p>Please, create it manually with the following content:</p>
@@ -109,6 +126,7 @@ if (!is_writable($idir)) {
   echo '<textarea rows="20" cols="100">'.htmlentities($s).'</textarea>';
   die;
 }
+// Записване на файла
 $f = fopen($idir.'conf_database.php','w');
 if ($f){
   fwrite($f,$s);

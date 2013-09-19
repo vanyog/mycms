@@ -26,7 +26,8 @@ include_once($idir.'lib/f_translate.php');
 include_once($idir.'lib/f_adm_links.php');
 
 function parse_content($cnt){
-global $page_options, $page_data, $content_date_time, $body_adds, $page_header, $idir, $adm_pth, $apth, $mod_pth, $idir;
+global $page_options, $page_data, $body_adds, $page_header, $content_date_time, 
+       $idir, $pth, $adm_pth, $apth, $mod_pth, $mod_apth;
 
 $l = strlen($cnt);
 $str1 = '<!--$$_'; // Означение за начало на замествания елемент
@@ -49,15 +50,15 @@ $tx = ''; // Html код, който ще замести елемента
 $sc = db_select_1('*','scripts',"`name`='".$tg[0]."'");
 
 if (!$sc){ // Ако няма такъв скрипт се търси модул с това име
-  // Модули се търсят на две места - първо в директория mod
   $f = strtolower($tg[0]);
-  $fn = "$idir/mod/$f/f_$f.php"; 
-  $afn = $_SERVER['DOCUMENT_ROOT']."$fn";
-  // и второ в директорията, посочена в настройката mod_path, ако е зададена различна от /mod/
+  $fn = "$mod_pth$f/f_$f.php";
+  $afn = $_SERVER['DOCUMENT_ROOT']."$fn"; //echo "$mod_pth $afn"; die;
+  // Модули се търсят на две места - първо в директорията, посочена в настройката mod_path, ако е зададена различна от mod
   if ( ($mod_pth!='/mod/') && !file_exists($afn) ){
-    $fn = "$mod_pth$f/f_$f.php";
+    $fn = $pth."mod/$f/f_$f.php"; 
     $afn = $_SERVER['DOCUMENT_ROOT']."$fn";
   }
+  // и второ в директорията /mod/
 //  print_r($afn); die;
   if (file_exists($afn)){
     $c = "include_once('$afn');\n";

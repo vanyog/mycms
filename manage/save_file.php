@@ -18,8 +18,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-include("../conf_paths.php");
-include("ta_ctag.php");
+include("conf_manage.php");
+include($idir."conf_paths.php");
+include(dirname(__FILE__)."/ta_ctag.php");
 
 $fn = $_POST['file'];
 $afn = $apth.$fn;

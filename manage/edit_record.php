@@ -18,8 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-$idir = dirname(dirname(__FILE__)).'/';
-
+include("conf_manage.php");
 include_once($idir.'conf_paths.php');
 include_once($idir.'lib/f_db_select_1.php');
 include_once($idir.'lib/f_db_field_types.php');

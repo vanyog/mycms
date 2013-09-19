@@ -19,17 +19,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Създава нов модул с име $_GET['n']
 
-$idir = dirname(dirname(__FILE__)).'/';
+include("conf_manage.php");
 include($idir.'conf_paths.php');
 
 // Име на модула
 $mf = strtolower($_GET['n']);
 
 // Име на директорията на модула
-$md = $_SERVER['DOCUMENT_ROOT'].$mod_pth.$mf; //echo "$md<br>";
+$md = $_SERVER['DOCUMENT_ROOT'].$mod_pth.$mf; //echo "$md<br>"; die;
 
 // Създаване на директорията, ако не съществува
-if (!file_exists($md)) if (!mkdir($md)) die("Can't create directory: $md");
+if (!file_exists($md)) if (!mkdir($md, 0755, true)) die("Can't create directory: $md");
 
 // Име на файла с модулната функция
 $ff = "$md/f_$mf.php";
@@ -38,7 +38,7 @@ $ff = "$md/f_$mf.php";
 $fc = '<?php
 /*
 MyCMS - a simple Content Management System
-Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>
+Copyright (C) 2013  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

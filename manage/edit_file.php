@@ -20,8 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Този скрипт генерира страница за редактиране на файловете на сайта
 
-include("../conf_paths.php");
-include("../lib/f_strip_last_name.php");
+include("conf_manage.php");
+include_once($idir."conf_paths.php");
+include_once($idir."lib/f_strip_last_name.php");
 
 $f = ''; // Име на файла или директорията, които ще се редактират
 if (isset($_GET['f'])) $f = remove_dots($_GET['f']);

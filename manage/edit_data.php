@@ -1,5 +1,4 @@
 <?php
-
 /*
 MyCMS - a simple Content Management System
 Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>
@@ -20,8 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Страница, която показва информация за таблиците от базата данни.
 
-$idir = dirname(dirname(__FILE__)).'/';
-
+include("conf_manage.php");
 include($idir."conf_paths.php");
 include($idir."lib/f_db_tables.php");
 include($idir."lib/f_db_field_names.php");
@@ -29,7 +27,7 @@ include($idir."lib/f_db_field_names.php");
 $tl = db_tables();
 
 $page_content = '<p> Database: <strong>'.$database.'</strong> </p>
-<p>Tables:</p>
+<p>Tables:  <strong>'.$tn_prefix.'</strong></p>
 <table>';
 
 $pl = strlen($tn_prefix);
@@ -42,7 +40,17 @@ foreach($fn as $n) $page_content .= "   $n";
 $page_content .= "</td></tr>\n";
 }
  
-$page_content .= '</table>';
+$page_content .= '</table><br>
+<form method="post" action="do_sql.php">
+<table>
+<tr>
+<td valign="top" align="right">
+SQL:<br><br>
+<input type="submit" value="mysql_query">
+</td>
+<td><textarea name="sql" cols="60" rows="4"></textarea></td></tr>
+</table>
+</form>';
 
 include_once("build_page.php");
 ?>

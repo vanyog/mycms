@@ -34,20 +34,33 @@ if (phpversion()>'5.0') date_default_timezone_set("Europe/Sofia");
 $page_id = 1;
 if (isset($_GET['pid'])) $page_id = 1*$_GET['pid'];
 
+// Път до директорията на системата
 $idir = dirname(__FILE__).'/';
 
-if (!file_exists($idir.'conf_database.php')
-  ||!file_exists($idir.'conf_paths.php')
+// Път до файл conf_database.php с данни за достъп до базата данни. 
+// Може да е различен от този в $idir, ако е необходимо.
+$ddir = $idir;
+
+if (
+  !file_exists($idir.'conf_database.php')
+  || !file_exists($idir.'conf_paths.php')
 ) 
-   die('Системата все още не е правилно инсталирана и конфигурирана. Вижте файл USAGE.txt.');
-   
-include('lib/f_db_select_1.php');
-include('lib/f_db_select_m.php');
-include('lib/f_parse_template.php');
-include_once('lib/translation.php');
+die('Системата все още не е правилно инсталирана и конфигурирана. Вижте файл USAGE.txt.');
+
+include($idir.'lib/f_db_select_1.php');
+include($idir.'lib/f_db_select_m.php');
+include($idir.'lib/f_parse_template.php');
+include_once($idir.'lib/translation.php');
+
+// Адрес на индексния файл
+$ind_fl = $_SERVER['PHP_SELF'];
 
 $page_header = ''; // Добавки към хедъра на страницата
 $body_adds   = ''; // Добавки към body тага
+
+$can_edit = false;     // Право на потребителя да редактира надписите по страницата
+$can_create = false;   // Право на потребителя да съдава/изтрива страници в дадения раздел(подменю) на сайта
+$can_manage = array(); // Права за администриране на модули
 
 // Чете се описанието на страницата от таблица $tn_prefix.'pages'
 $page_data = db_select_1('*','pages',"ID=$page_id");
@@ -77,8 +90,10 @@ return Array (
 'menu_group' => 1,
 'title' => 'error_404_title',
 'content' => 'error_404_content',
-'template_id' => 2,
-'options' => ''
+'template_id' => 1,
+'options' => '',
+'tcount'=>0,
+'dcount'=>0
 );
 }
 
@@ -95,9 +110,9 @@ mysql_query($q,$db_link);
 
 // Ако започва нов ден се записват данните за изминалото денонощие в таблица $tn_prefix.'visit_history'
 function new_day(){
-global $apth, $tn_prefix, $db_link;
+global $apth, $tn_prefix, $db_link, $idir;
 // чете се последната дата от таблица $tn_prefix.'options'
-include_once('lib/f_stored_value.php');
+include_once($idir.'lib/f_stored_value.php');
 $td = stored_value('today');
 $d = getdate();
 // ако не се е сменила датата не се прави нищо

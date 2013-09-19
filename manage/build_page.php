@@ -1,5 +1,4 @@
 <?php
-
 /*
 MyCMS - a simple Content Management System
 Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>

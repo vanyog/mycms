@@ -26,11 +26,16 @@ function menutree(){
 global $pth, $page_id, $page_data;
 //global $p; // print_r($p);
 $rz = '';
+// Четене записа на менюто на страницата
 $pr = db_select_1('*','menu_tree',"`group`=".$page_data['menu_group']);
 if (!$pr) return $rz;
+// Четене записа на главната страница на менюто
 $pg = db_select_1('*','pages','ID='.$pr['index_page']);
+// Ако главната страница е текуща се показва без линк
 if ($page_id==$pg['ID']) $rz = translate($pg['title']);
+// иначе се показва с линк
 else $rz = '<a href="'.$pth.'index.php?pid='.$pg['ID'].'">'.translate($pg['title']).'</a>'.$rz;
+// Ако менюто има родители се добавят и те.
 while ($pr['parent'])
 {
   $pr = db_select_1('*','menu_tree',"`group`=".$pr['parent']); // print_r($pr); echo "<br>";

@@ -19,12 +19,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Страница, която се показва при излизане на потребителя, ако не е зададена друга.
 
-$idir = dirname(dirname(dirname(__FILE__))).'/1/';
+$idir = dirname(dirname(dirname(__FILE__))).'/';
+$ddir = $idir;
 
-include($idir."lib/f_translate.php");
+include($idir."lib/translation.php");
 
 $page_title = translate('user_logouttitle');
-$page_content = "<h1>$page_title</h1>\n".translate('user_logoutcontent');
+$page_content = "<h1>$page_title</h1>\n".translate('user_logoutcontent').'
+<a href="'.$pth.'">'.translate('home_page_title',false).'</a>';
 
 include($idir."lib/build_page.php");
 

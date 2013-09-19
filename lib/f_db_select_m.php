@@ -28,11 +28,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Ключовете на масива за даден запис са имената на полетата,
 // а стойностите - съдържанието на полетата от таблицата.
 
-include_once("usedatabase.php");
+include_once($idir."lib/usedatabase.php");
 
-function db_select_m($fn,$tb,$whr){
+function db_select_m($fn,$tb,$whr,$y=false){
 global $db_link, $tn_prefix;
-$q="SELECT $fn FROM `$tn_prefix$tb` WHERE $whr;"; //echo "$q<br>";
+$q="SELECT $fn FROM `$tn_prefix$tb` WHERE $whr;"; 
+if ($y) echo "$q<br>";
 $dbr=mysql_query($q,$db_link);
 $r=array();
 if (!$dbr) return $r; 

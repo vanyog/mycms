@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 function set_query_var($n,$v){
 $r = $_GET;
 $r[$n] = $v;
-return http_parse_query($r);
+return str_replace('&','&amp;',http_build_query($r));
 }
 
 function http_parse_query( $array = NULL, $convention = '%s' ){
@@ -39,7 +39,7 @@ if( count( $array ) == 0 ){
       } else {
         $key = urlencode( $key );
         $value = urlencode( $value );
-        $query .= sprintf( $convention, $key ) . "=$value&";
+        $query .= sprintf( $convention, $key ) . "=$value&amp;";
       }
     }
   }

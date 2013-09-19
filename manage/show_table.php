@@ -20,9 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Показване на съдържанието на таблица от базата данни
 
-$idir = dirname(dirname(__FILE__)).'/';
-
-include($idir.'conf_paths.php'); 
+include('conf_manage.php');
+include_once($idir.'conf_paths.php'); 
 include_once($idir.'lib/f_db_select_m.php');
 include_once($idir.'lib/f_db_tables.php');
 include_once($idir.'lib/f_db_table_field.php');
@@ -125,7 +124,7 @@ foreach($r as $rc){
      if ($t=='pages') $v1 .= '<input type="button" value="->" onclick="doOpen('.$v.');"> ';
      $v = $v1;
    }
-   else $v = htmlspecialchars(stripslashes($v));
+   else $v = htmlspecialchars(stripslashes($v), ENT_COMPAT, 'cp1251');
    $page_content .= "<td><code><pre>$v</pre></code></td>\n";
  }
  $page_content .= '</tr>';

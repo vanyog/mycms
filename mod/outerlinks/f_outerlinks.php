@@ -28,7 +28,7 @@ return outer_links();
 // ----------------------------------------------
 function outer_links(){
 global $tn_prefix, $db_link;
-$pth = current_pth(__FILE__);
+$pth = '/_new/';
 
 // Общ брой на връзките
 $lc = db_table_field('COUNT(*)','outer_links',"`link`>''");
@@ -71,19 +71,25 @@ $rz .= link_tree($lid);
 
 // Четене и показване на (под)категориите
 $ca = db_select_m('*','outer_links',"`up`=$lid AND `link`='' ORDER BY `place`");
-foreach($ca as $c) 
- $rz .= edit_radio($c['ID'],$c['place']).'<img src="'.$pth.'folder.gif" alt=""> <a href="'.
- set_self_query_var('lid',$c['ID']).'">'.stripslashes($c['Title'])."</a><br>\n";
+foreach($ca as $c){// print_r($c); die;
+ $rz .= '<p>'.edit_radio($c['ID'],$c['place']).'<img src="'.$pth.'folder.gif" alt=""> <a href="'.
+        set_self_query_var('lid',$c['ID']).'">'.stripslashes($c['Title'])."</a>";
+ if ($c['Comment']) $rz .= ' - '.stripslashes($c['Comment']);
+ $rz .= "</p>\n";
+}
 
 // Четене и показване на линковете
 $la = db_select_m('*','outer_links',"`up`=$lid AND `link`>'' ORDER BY `place`");
-foreach($la as $l) 
- $rz .= edit_radio($l['ID'],$l['place']).'<img src="'.$pth.'go.gif" alt=""> <a href="'.
- set_self_query_var('lid',$l['ID']).'" title="'.$l['link'].
- '" target="_blank">'.stripslashes($l['Title'])."</a><br>\n";
+foreach($la as $l){
+ $rz .= '<p>'.edit_radio($l['ID'],$l['place']).'<img src="'.$pth.'go.gif" alt=""> <a href="'.
+        set_self_query_var('lid',$l['ID']).'" title="'.$l['link'].
+        '" target="_blank">'.stripslashes($l['Title'])."</a>";
+ if ($l['Comment']) $rz .= ' - '.stripslashes($l['Comment']);
+ $rz .= "</p>\n";
+}
 
 // Показване на формата за търсене
-$rz .= '</p>
+$rz .= '
 '.end_edit_form($lid).search_link_form().'
 </div>';
 return $rz;
@@ -92,19 +98,21 @@ return $rz;
 // Показване пътя до началната страница
 // ------------------------------------
 function link_tree($lid){
-if (!$lid) return "<p>\n";
-$rz = ""; $lk = '';
+if (!$lid) return "\n";
+$rz = ""; $lk = ''; $cm = '';
 do {
   $l = db_select_1('*','outer_links',"`ID`=$lid");
   $lid = $l['up'];
   if ($rz) $rz = " > ".$rz;
   if ($lk) $rz = '<a href="'.$lk.'">'.$l['Title']."</a>".$rz;
-  else $rz = $l['Title'].$rz;
+  else{ $rz = $l['Title'].$rz; $cm = $l['Comment']; }
   $lk = set_self_query_var('lid',$l['up']);
 } while ($lid);
 if ($rz) $rz = " > ".$rz;
 if ($lk) $rz = '<a href="'.$lk.'">'.translate('outerlinks_home')."</a>".$rz;
-return "<p class=\"link_tree\">\n".$rz."\n</p>\n<p>";
+$rz = "<p class=\"link_tree\">\n".$rz."\n</p>\n";
+if ($cm) $rz .= "<p>$cm</p>\n";
+return "$rz\n<p>";
 }
 
 // Показване резултат от търсене
@@ -150,18 +158,20 @@ foreach($ra as $r){
 }
 return '<p class="link_tree"><a href="/_new/index.php?pid=29">'.translate('outerlinks_home').'</a>   '
 .translate('outerlinks_found')." ".count($ra)."</p>
-<p>$rz1$rz2</p>".search_link_form();
+$rz1$rz2".search_link_form();
 }
 
 // Показване формата за търсене
 // ----------------------------
 function search_link_form(){
 global $page_id;
-return '<form method="POST" action="'.$_SERVER['PHP_SELF'].'?pid='.$page_id.'"><p>'.translate('outerlinks_searchin').' 
+return '<form method="POST" action="'.$_SERVER['PHP_SELF'].'?pid='.$page_id.'">
+<p class="search">'.translate('outerlinks_searchin').' 
 <input type="radio" name="search_by" value="keyword" checked> '.translate('outerlinks_intitles').' 
 <input type="radio" name="search_by" value="url"> '.translate('outerlinks_inurls').' 
 <input type="text" name="search_for">
-<input type="submit" value="'.translate('outerlinks_find').'"></p></form>';
+<input type="submit" value="'.translate('outerlinks_find').'">
+</p></form>';
 }
 
 // Начало на формата за редактиране
@@ -195,6 +205,7 @@ else return '
 Place: <input type="text" name="place" size="5"> 
 Group: <input type="text" name="up" size="5" value="'.$i.'"></p>
 <p>Title: <input type="text" name="title" size="100"></p>
+<p>Comment: <textarea name="comment" cols="83" rows="4" style="vertical-align:top"></textarea></p>
 <input type="submit" value="Add/Update"> 
 <input type="button" value="Delete" onclick="doDelete_link();">
 </form>';
@@ -226,10 +237,11 @@ else {
   $q1 = "INSERT INTO$q0 SET `date_time_1`=NOW(), "; $q2 = ''; $q3 = ';';
   if ($id) { $q1 = "UPDATE$q0 SET "; $q3 = "WHERE `ID`=$id;"; }
 
-  if ($_POST['link'])  $q2 .= "`link`='".addslashes($_POST['link'])."', ";
-  if ($_POST['title']) $q2 .= "`Title`='".addslashes($_POST['title'])."', ";
-  if ($_POST['up'])    $q2 .= "`up`=".(1*$_POST['up']).", ";
-  if ($_POST['place']) $q2 .= "`place`=".(1*$_POST['place']).", ";
+  if ($_POST['link'])    $q2 .= "`link`='".addslashes($_POST['link'])."', ";
+  if ($_POST['title'])   $q2 .= "`Title`='".addslashes($_POST['title'])."', ";
+  if ($_POST['comment']) $q2 .= "`Comment`='".addslashes($_POST['comment'])."', ";
+  if ($_POST['up'])      $q2 .= "`up`=".(1*$_POST['up']).", ";
+  if ($_POST['place'])   $q2 .= "`place`=".(1*$_POST['place']).", ";
   else if (!$id) $q2 .= "`place`=".(db_table_field('MAX(`place`)', 'outer_links', '1')+10).", ";
   if (!$q2) return;
   $q = $q1.substr($q2,0,strlen($q2)-2)." ".$q3;

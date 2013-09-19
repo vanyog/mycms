@@ -27,8 +27,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Настоящия скрипт променя отново стойностите на поле place през 10
 // и трябва да се използва след като са извършвани премествания.
 
-include("../conf_paths.php");
-include("../f_db_select_m.php");
+include("conf_manage.php"); 
+include($idir."conf_paths.php");
+include($idir."lib/f_db_select_m.php");
 
 $t = $_GET['t']; // Име на таблицата
 

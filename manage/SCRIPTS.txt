@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Този файл съдържа колекция от SQL заявки, които добавят в таблица $tn_prefix.'scripts'
 скриптове за генериране на различно съдържание
 
@@ -8,3 +9,15 @@ INSERT INTO `scripts` (`name`, `script`, `coment`) VALUES
 INSERT INTO `scripts` (`name`, `script`, `coment`) VALUES
 ('USERAGENTSTRING', '$tx = $_SERVER[''HTTP_USER_AGENT''];', 'Показва стринга на юзърейджънта');
 -- --------------------------------------------------------
+=======
+Този файл съдържа колекция от SQL заявки, които добавят в таблица $tn_prefix.'scripts'
+скриптове за генериране на различно съдържание
+
+-- --------------------------------------------------------
+INSERT INTO `scripts` (`name`, `script`, `coment`) VALUES
+('LANGUAGEFLAGS', '$tx = flags();', 'Показва знаменца за смяна на езика');
+-- --------------------------------------------------------
+INSERT INTO `scripts` (`name`, `script`, `coment`) VALUES
+('USERAGENTSTRING', '$tx = $_SERVER[''HTTP_USER_AGENT''];', 'Показва стринга на юзърейджънта');
+-- --------------------------------------------------------
+>>>>>>> a72a4be4ffa9a80348d1fd87624a3a35be02a861

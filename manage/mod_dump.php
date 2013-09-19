@@ -23,8 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // при инсталиране на модула. Ако файл content.sql вече съществува,
 // sql заявките се добавят в края му.
 
-$idir = dirname(dirname(__FILE__)).'/';
-
+include("conf_manage.php"); 
 include($idir.'conf_paths.php');
 include($idir.'lib/f_db_select_m.php');
 
@@ -33,24 +32,35 @@ if (!isset($_GET['m'])) die("Parameter m=Mod_Name is not posted");
 
 $d = db_select_m('*','content',"`name` LIKE '".$_GET['p']."%'");
 
-$q = "INSERT INTO `content` (`name`,`date_time_1`,`date_time_2`,`language`,`text`) VALUES
+$q = "INSERT INTO `content` (`name`,`nolink`,`date_time_1`,`date_time_2`,`language`,`text`) VALUES
 (";
 
 foreach($d as $i=>$a){
- $q .= "'".$a['name']."',NOW(),NOW(),'".$a['language']."','".str_replace("\r\n",'\r\n',$a['text'])."'";
+ $q .= "'".$a['name']."',".$a['nolink'].",NOW(),NOW(),'".$a['language']."','".str_replace("\r\n",'\r\n',$a['text'])."'";
  if ($i==count($d)-1) $q .= ");"; else $q .= "),\n(";
 }
 
-$fn = $_SERVER['DOCUMENT_ROOT'].$mod_pth.$_GET['m'].'/tables.sql';
+// Проверка дали модулът е в $mod_pth или в 'mod'
+$fd = $_SERVER['DOCUMENT_ROOT'].$mod_pth.$_GET['m'];
+if (!file_exists($fd)) $fd = $_SERVER['DOCUMENT_ROOT'].$pth.'mod/'.$_GET['m'];
+if (!file_exists($fd)) die("Directory does not exists $d");
 
-if (file_exists($fn)) {
-  $f = fopen($fn, 'a');
-  fwrite($f, "-- --------------------------------------------------------\n");
+$fn = $fd.'/tables.sql';
+
+// Ако файлът не е достъпен за запис
+if (!is_writable($fn)){
+  echo "<p>File $fn is not writeble. Write to it manually.</p>
+  <textarea cols=\"130\" rows=\"18\">$q</textarea>";
 }
-else $f = fopen($fn,"w");
-fwrite($f,$q);
-fclose($f);
-
-echo $q;
+else {
+  if (file_exists($fn)) {
+    $f = fopen($fn, 'a');
+    fwrite($f, "-- --------------------------------------------------------\n");
+  }
+  else $f = fopen($fn,"w");
+  fwrite($f,$q);
+  fclose($f);
+  echo $q;
+}
 
 ?>

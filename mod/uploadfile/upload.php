@@ -22,11 +22,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 if (!isset($_GET['fid'])) die("No upload id");
 if (!isset($_GET['fn' ])) die("No upload name");
 
-$idir = dirname(dirname(dirname(__FILE__))).'/';
-
+include("conf_uploadfile.php"); 
 include($idir.'lib/translation.php');
 include($idir.'lib/o_form.php');
-include_once($mod_apth.'user/f_user.php');
+include_once($idir.'mod/user/f_user.php');
 
 // Проверка дали има влязъл потребител
 if (!in_edit_mode()) user('new');
@@ -43,11 +42,19 @@ $fn = addslashes($_GET['fn']);
 
 // Надпис върху хипервръзката на файла
 $ftx = '';
+// Дата на показване
+$tshow = '';
+// Дата на скриване
+$thide = '';
 
 // Четене на данните за файла от таблица $tn_prefix.'files'.
 $fd = db_select_1('*','files',"`pid`='$pid' AND `name`='$fn'");
 
-if ($fd) $ftx = htmlspecialchars(stripslashes($fd['text']), ENT_COMPAT, 'cp1251');
+if ($fd){
+  $ftx = htmlspecialchars(stripslashes($fd['text']), ENT_COMPAT, 'cp1251');
+  $tshow = $fd['date_time_3'];
+  $thide = $fd['date_time_4'];
+}
 
 // Ако са изпратени данни се обработват.
 if (count($_POST) && !isset($_POST['password'])) process_data();
@@ -63,13 +70,24 @@ else {
 // Показване форма за качване на файл.
 // 
 function show_form(){
-global $ftx, $page_content;
+global $ftx, $tshow, $thide, $page_content;
 
 $page_content = '<h1>'.translate('uploadfile_upladpagetitle')."</h1>\n";
 
 $uf = new HTMLForm('uploadform');
-$tx = new FormInput(translate('uploadfile_linktext'), 'text', 'text', $ftx);  $tx->size = 80;  $uf->add_input( $tx );
-$fl = new FormInput(translate('uploadfile_file'), 'file', 'file');            $fl->size = 70;  $uf->add_input($fl);
+
+$uf->add_input( new FormInput('', 'referer', 'hidden', $_SERVER['HTTP_REFERER']) );
+$uf->add_input( new FormInput(translate('uploadfile_timeshow'), 'timeshow', 'text', $tshow) );
+$uf->add_input( new FormInput(translate('uploadfile_timehide'), 'timehide', 'text', $thide) );
+
+$tx = new FormInput(translate('uploadfile_linktext'), 'text', 'text', $ftx);
+$tx->size = 80;
+$uf->add_input( $tx );
+
+$fl = new FormInput(translate('uploadfile_file'), 'file', 'file');
+$fl->size = 70;
+$uf->add_input($fl);
+
 $uf->add_input(new FormInput('', '', 'submit', translate('uploadfile_submit')) );
 
 $page_content .= $uf->html();
@@ -97,25 +115,32 @@ if ($dt && ($dt['ID']!=$fid)){
   die(translate('uploadfile_fileinuse'));
 }
 // Ако има друг файл на сървъра за този запис, файлът се изтрива.
-if ($fd && file_exists($fd['filename'])) unlink($fd['filename']);
+if ($fd && $_FILES['file']['tmp_name'] && file_exists($fd['filename'])) unlink($fd['filename']);
 
-// Проверка дали има файл на сървъра със същото име, който не се отнася за същия запис.
-if (file_exists($fln) && (!$dt || ($dt['ID']!=$fid)) ){
+// Проверка дали има файл на сървъра със същото име, който вероятно не се отнася за същия запис.
+if (($fln!=$fld) && file_exists($fln) && (!$dt || ($dt['ID']!=$fid)) ){
   header("Content-Type: text/html; charset=windows-1251");
   die(translate('uploadfile_fileexists'));
 }
 
 // Преместване на качения файл в директория за качване на файлове
-if (!move_uploaded_file($_FILES['file']['tmp_name'], $fln)) die('Do not uploaded');
+if ($_FILES['file']['tmp_name'] && !move_uploaded_file($_FILES['file']['tmp_name'], $fln)) die('Do not uploaded');
 
 // Записване на денни в базата
 $w = '';
-if ($fd) { $q = "UPDATE `"; $w = "WHERE `ID`=$fid"; }
-else $q = "INSERT INTO `";
-$q .= $tn_prefix."files` SET `pid`='$pid', `name`='$fn', `filename`='$fln', `text`='".addslashes($_POST['text'])."' $w;";
+if ($fd) {
+  $q = "UPDATE `$tn_prefix"."files` SET `date_time_2`=NOW(), ";
+  $w = " WHERE `ID`=$fid";
+}
+else $q = "INSERT INTO `$tn_prefix"."files` SET `date_time_1`=NOW(), `date_time_2`=NOW(), ";
+$q .= "`date_time_3`='".$_POST['timeshow'].
+      "', `date_time_4`='".$_POST['timehide'].
+      "', `pid`='$pid', `name`='$fn', ";
+if ($_FILES['file']['tmp_name']) $q .= "`filename`='$fln', ";
+$q .= "`text`='".addslashes($_POST['text'])."'$w;";
 mysql_query($q,$db_link);
 //print_r($q); die;
-header("Location: $pth"."index.php?pid=$pid");
+header("Location: ".$_POST['referer']);
 }
 
 ?>

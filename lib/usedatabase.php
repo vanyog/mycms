@@ -21,9 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Този файл инициализира променливата $db_link
 // която се използва в mysql_query($q,$db_link);
 
-if (!file_exists($idir."conf_database.php")) die("Database is not configured");
+if (!isset($ddir) || !file_exists($ddir."conf_database.php")) die("Database is not configured");
 
-include($idir."conf_database.php");
+include_once($ddir."conf_database.php");
 
 $db_link = get_db_link($user, $password, $database);
 
@@ -38,6 +38,22 @@ if (!mysql_select_db($database,$l)){
 mysql_query("SET NAMES 'cp1251';",$l);
 //mysql_query("SET CHARACTER SET 'cp1251';",$l);
 return $l;
+}
+
+// С цел, четене от таблици с друг префикс:
+$temp_prefix = ''; // Променлива, която съхранява оригиналния префикс
+
+// Функция, която задава нов префикс и съхранява оригиналния
+function set_prefix($np){
+global $tn_prefix, $temp_prefix;
+$temp_prefix = $tn_prefix;
+$tn_prefix = $np;
+}
+
+// Функция, която възстановява оригиналния префикс
+function restore_prefix(){
+global $tn_prefix, $temp_prefix;
+$tn_prefix = $temp_prefix;
 }
 
 </script>

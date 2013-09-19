@@ -18,8 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Показва данните от масива във вид на таблица
-// Елементите на масива трябва да са асоциирани масиви
+// Показва данните от масива $da във вид на таблица
+// Елементите на масива трябва да са асоциирани масиви с еднакви ключове
 
 function view_table($da,$id=''){
 if ($id) $id = " id=\"$id\"";
