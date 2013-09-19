@@ -1,5 +1,4 @@
 <?php
-
 /*
 MyCMS - a simple Content Management System
 Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>
@@ -18,7 +17,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Функцията adm_links() генерира html код за показване на някои линкове за администриране
+// Функцията adm_links() генерира html код за показване на някои линкове за администриране.
+
+// По подразбиране след реда с линкове се вмъква празен ред.
+// Това отмества цялата страница надолу и прави ленковете по-лесно четими, но на страници,
+// съдържащи елементи с position:absolute се нарушава положението на тези елементи. Тогава се
+// се зададава настройка adm_links_over = 1, за да не се вмъкне празен ред. 
 
 $idir = dirname(dirname(__FILE__)).'/';
 
@@ -58,7 +62,7 @@ else {
 <a href="'.$_SERVER['PHP_SELF'].'?'.set_query_var($edit_name,'0').'">Normal</a> :: 
 <a href="" onclick="doNewPage();return false">New page</a> :: ';
 
-  return '<script type="text/javascript"><!--
+  $rz = '<script type="text/javascript"><!--
 function doNewPage(){
 if (confirm("Do you want to create new page?"))
 na = "'.$adm_pth.'new_record.php?t=pages&menu_group='.$page_data['menu_group'].
@@ -72,7 +76,7 @@ if (confirm("Hide this menu?")){
 }
 }
 --></script>
-<p style="position:fixed; font-size:80%; margin:0; padding:0; opacity:0.7; background-color:white; color:0; border-style:solid; border-color:grey; border-width:0 0 1px 0; z-index:100;">&nbsp;
+<p id="adm_links">&nbsp;
 <a href="'.$pth.'">Home</a> :: '.$enmch.'
 <a href="'.$pth.'index.php?pid='.$lpid.'&amp;'.$edit_name.'='.urlencode($edit_value).'">'.$lpid.'</a> :: 
 <a href="'.$adm_pth.'edit_file.php">File system</a> :: 
@@ -80,11 +84,13 @@ if (confirm("Hide this menu?")){
 <a href="'.stored_value('cpanel_url').'" target="_blank">cPanel</a> :: 
 <a href="'.$mphp.'" target="_blank">phpMyAdmin</a> :: 
 <a href="'.$adm_pth.'showenv.php?AAAAAAA" target="_blank">$_SERVER</a> :: 
-<a href="'.$go.'">'.$gon.'</a> :: 
+<a href="'.$go.'">'.$gon.'</a><!--:: 
+<a hr  ="'.$adm_pth.'dump_data.php">Dump</a-->'.$w3c.' :: 
 '.parse_content('<!--$$_CONTENT_custome_link_$$-->').'
-<a href="'.$pth.'lib/exit.php">x</a><!--:: 
-<a hr  ="'.$adm_pth.'dump_data.php">Dump</a-->'.$w3c.'&nbsp; 
+<a href="'.$pth.'lib/exit.php">x</a>&nbsp; 
 </p>';
+  if (stored_value('adm_links_over',0)!=1) $rz .= '<p>&nbsp;</p>';
+  return $rz;
   }
 }
 

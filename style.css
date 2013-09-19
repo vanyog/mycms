@@ -7,4 +7,5 @@ a { text-decoration:none; }
 
 #main { padding-right:180px; }
 #right { width:160px; height:600px; border:solid 1px grey; float:right; }
+#adm_links { position:fixed; font-size:80%; margin:0; padding:0; opacity:0.7; background-color:white; color:0; border-style:solid; border-color:grey; border-width:0 0 1px 0; z-index:100; }
 

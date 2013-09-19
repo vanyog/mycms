@@ -22,14 +22,22 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 $idir = dirname(dirname(dirname(__FILE__))).'/';
 $ddir = $idir;
 
+include("f_usermenu.php");
+
 include_once($idir."lib/translation.php");
 include_once($idir."lib/f_db_insert_1.php");
 include_once($idir."lib/f_db_insert_m.php");
-include_once($idir."lib/f_parse_content.php");
+//include_once($idir."lib/f_parse_content.php");
 include_once($idir."lib/o_form.php");
 
+// Номер на страницата от която е изпратена заявка за нова страница
+$page_id = 1*$_GET['p'];
+
+// Данни на страницата от която е изпратена заявка за нова страница
+$page_data = db_select_1('*','pages',"ID=$page_id");
+
 // Проверяване правата на потребителя
-$tx = parse_content('<!--$$_USERMENU_$$-->');
+$tx = usermenu(true);
 
 // Ако потребителят няма право да създава нова страница - край.
 if (!$can_create) echo die("Your have no permission to create new page here.");
@@ -37,14 +45,13 @@ if (!$can_create) echo die("Your have no permission to create new page here.");
 // Обработка на изпратени данни
 if (count($_POST)) process_data();
 
-// Номер на менюто на страницата
-$mi = 1*$_GET['m'];
-
 // Позиция  на новата страница в менюто - по подразбиране най-отволу.
-$pz = db_table_field('place', 'menu_item', "`ID`=$mi ORDER BY `place` DESC")+10;
+$pz = db_table_field('place', 'menu_item', "`ID`=".$page_data['ID']." ORDER BY `place` DESC")+10;
 
 // Създаване на форма за попълване на данни за нова страница 
 $pf = new HTMLForm('new_page_fotm');
+
+$pf->add_input( new FormInput(translate('usermenu_newmenu'), 'newmenu', 'checkbox'));
 
 $ti = new FormSelect(translate('usermenu_language'), 'lang', $languages);
 $ti->values = 'k';
@@ -74,28 +81,60 @@ include($idir."lib/build_page.php");
 //
 // Обработка на изпратени данни
 //
-function process_data(){ // print_r($_POST); die;
-global $pth;
+function process_data(){
+global $pth, $page_data;//  print_r($_POST); die;
+
+// Дали се създава нов раздел
+$newmenu = isset($_POST['newmenu'])&&($_POST['newmenu']=='on');
+
 // Предполагаем номер на новата страница
 $pi = db_table_field('MAX(`ID`)', 'pages', '1')+1;
+
+// Номер на менюто на новата страница
+$mg1 = $page_data['menu_group']; // На старото меню
+$mg2 = $mg1; // На новото меню, ако се създава нов раздел
+if ($newmenu) $mg2 = db_table_field('MAX(`group`)', 'menu_items', '1')+1;
+
 // Данни за таблица 'pages'
 $d1 = array(
-  'menu_group'=>1*$_GET['m'],
+  'menu_group'=>$mg2,
   'title'=>"p$pi"."_title",
   'content'=>"p$pi"."_content",
-  'template_id'=>1*$_GET['t'],
+  'template_id'=>$page_data['template_id'],
 );
 // Записване в таблицата
 $pi = db_insert_1($d1,'pages');
+
 // Данни за записа в таблица 'menu_items'
 $d2 = array (
   'place'=>1*$_POST['place'], 
-  'group'=>1*$_GET['m'], 
+  'group'=>$mg2, 
   'name'=>"p$pi"."_link",
   'link'=>$pi
 );
 // Записване в таблицата
 $pp = db_insert_1($d2,'menu_items');
+
+// Ако се създава нов раздел се създава препратка към страницата и в старото меню
+if ($newmenu){
+  // Данни за записа в таблица 'menu_items'
+  $d2 = array (
+    'place'=>1*$_POST['place'] - 5, 
+    'group'=>$mg1, 
+    'name'=>"p$pi"."_link",
+    'link'=>$pi
+  );
+  // Записване в таблицата
+ $pp = db_insert_1($d2,'menu_items');
+  // Данни за таблица 'menu_tree'
+  $dt = array(
+    'group'=>$mg2,
+    'parent'=>$mg1,
+    'index_page'=>$pi
+  );
+ $pn = db_insert_1($dt,'menu_tree');
+}
+
 // Данни за записите в таблица 'content'
 $d3 = array (
 // Надписа върху линка в менюто
@@ -122,6 +161,7 @@ array('name'=>$d1['content'],
 );
 // Записване в таблицата
 db_insert_m($d3,'content');
+
 $l = 'Location: '.$pth.'index.php?pid='.$pi;
 header($l); 
 }

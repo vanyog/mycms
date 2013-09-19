@@ -57,13 +57,13 @@ $fc = str_replace('INSERT INTO `',   "INSERT INTO `$tn_prefix",$fc);
 $fa = explode('-- --------------------------------------------------------',$fc);
 
 foreach($fa as $q){
-  echo "$q<p>";
+//  echo "$q<p>";
   mysql_query($q,$db_link);
 }
 
 echo '<p>Success</p>
 
-<p><a href="'.dirname($_SERVER['PHP_SELF']).'">Go next</a></p>';
+<p><a href="'.$pth.'">Go next</a></p>';
 
 // 
 // Функция, показваща форма за въвеждане на данните, които трябва
@@ -79,10 +79,10 @@ if (file_exists($idir.'conf_database.php')){
   // Показва се бутон за продължаване
   $f = new HTMLForm('pform'); $f->astable = false;
   $i = new FormInput('','continue','hidden','yes'); $f->add_input($i);
-  $i = new FormInput('Or click the button to ','','submit','continue'); $f->add_input($i);
+  $i = new FormInput('Click the button to ','','submit','continue'); $f->add_input($i);
   echo '<p>File '.$idir.'<strong>conf_database.php</strong>'.' exists.</p>
-  <p>Remove it to start a new instalation.</p>
-  '.$f->html();
+  '.$f->html().'
+  <p>Or remove it to start a new instalation.</p>';
   die;
 }
 $f = new HTMLForm('pform');

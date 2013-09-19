@@ -25,7 +25,8 @@ $ddir = $idir;
 include($idir."lib/translation.php");
 
 $page_title = translate('user_logouttitle');
-$page_content = "<h1>$page_title</h1>\n".translate('user_logoutcontent');
+$page_content = "<h1>$page_title</h1>\n".translate('user_logoutcontent').'
+<a href="'.$pth.'">'.translate('home_page_title',false).'</a>';
 
 include($idir."lib/build_page.php");
 

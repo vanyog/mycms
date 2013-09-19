@@ -22,6 +22,7 @@ error_reporting(E_ALL); ini_set('display_errors',1);
 date_default_timezone_set("Europe/Sofia");
 
 $idir = dirname(dirname(dirname(__FILE__))).'/';
+$ddir = $idir;
 
 include($idir.'lib/f_db_select_m.php');
 include($idir.'lib/f_db_table_field.php');

@@ -113,20 +113,28 @@ public $rows = '';
 public $text = '';
 public $js = '';
 
+private $ckbutton = '';
+
 function __construct($c,$n,$cl=100,$r=10,$t=''){
+global $mod_pth, $page_header;
 $this->caption = $c;
 $this->name = $n;
 $this->cols = $cl;
 $this->rows = $r;
 $this->text = $t;
+// Домавяне на бутон за зареждане на CKEditor.
+$ckp = stored_value('ckeditor_file',$mod_pth.'ckeditor/ckeditor.js');
+$cka = $_SERVER['DOCUMENT_ROOT'].$ckp;
+if (file_exists($cka)){
+  $page_header .= "   <script type=\"text/javascript\" src=\"$ckp\"></script>\n";
+  $this->ckbutton = '<input type="button" value="CKEditor" onclick="CKEDITOR.replace(\''.$this->name.'\');"><br>';
+}
 }
 
 public function html($it){
-if (!$it) $rz = "$this->caption <textarea name=\"$this->name\" cols=\"$this->cols\" rows=\"$this->rows\">$this->text</textarea>";
-else $rz = "<tr>
-<th>$this->caption</th>
-<td><textarea name=\"$this->name\" cols=\"$this->cols\" rows=\"$this->rows\">$this->text</textarea></td>
-</tr>";
+$rz = "$this->ckbutton<textarea name=\"$this->name\" id=\"$this->name\" cols=\"$this->cols\" rows=\"$this->rows\">$this->text</textarea>";
+if (!$it) $rz = "$this->caption $rz<br>\n";
+else $rz = "<tr>\n<th>$this->caption</th>\n<td>$rz</td>\n</tr>";
 return $rz;
 }
 

@@ -17,34 +17,44 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Модул за проверяване правата на потребителите.
+// Проверяване правата на влязъл потребител и показване на меню с позволените му действия.
+// Когато $nom=false (по подразбиране) се показва меню с разрешените на влезлия потребител действия.
+// Ако $nom=true само се проверяват правата без да се показва меню.
 
+include_once($idir."conf_paths.php");
+//include_once($idir."lib/f_db_select_1.php");
 include_once($idir."lib/f_db_select_m.php");
+//include_once($idir."lib/f_db_table_field.php");
 include_once($idir."lib/f_edit_normal_links.php");
 
 if (!session_id()) session_start();
 
 function usermenu($nom = false){
-// $nom - параметър, който ако е false, кара функцията да не показва меню и в този случай
-// тя само установява стойности на глобалните променливи $can_edit, $can_create и $can_manage
+
 global $page_data, $can_edit, $can_create, $can_manage, $pth, $page_header;
+
 // Ако в сесията няма данни за потребител, връща празен стринг.
 if (!isset($_SESSION['user_username'])||!isset($_SESSION['user_password'])) return '';
+
 // $id - номер на влязъл потребител
 $id = db_select_1('ID','users', 
       "`username`='".addslashes($_SESSION['user_username'])."' AND `password`='".$_SESSION['user_password']."'");
+
 // Ако няма потребител със запазените в сесията име и парола, връща празен стринг.
 if (!$id) return '';
 $id = $id['ID'];
+
 // Четене на правата на потребителя
-$p = db_select_m('*', 'permissions', "`user_id`=$id");
+$p = db_select_m('*', 'permissions', "`user_id`=$id");// print_r($p); die;
 $rz = '';
+
 // Установяване на правата от различните типове
 $can_edit = false; // Право на потребителя да редактира надписите по страницата 
 $can_create = false; // Право на потребителя да съдава/изтрива страници в дадения раздел(подменю) на сайта
 $can_manage = array(); // Права за администриране на модули
+
 foreach($p as $q) switch($q['type']) {
-case 'menu': 
+case 'menu':// print_r($page_data); die;
   $can_create = in_that_branch($page_data['menu_group'], $q['object']) && $q['yes_no'];
   $can_edit = $can_create;
   break;
@@ -55,10 +65,11 @@ case 'module':
   $can_manage[$q['object']]=$q['yes_no'];
   break;
 }
+
 // Съставяне на менюто
 $pt = current_pth(__FILE__);
 if ($can_create){
- $rz .= '<a href="'.$pt.'new_page.php?m='.$page_data['menu_group'].'&amp;t='.$page_data['template_id']."\">New page</a><br>\n";
+ $rz .= '<a href="'.$pt.'new_page.php?p='.$page_data['ID']."\">New page</a><br>\n";
  // Главната страница на сайта не може да се трие
  if ($can_edit && ($page_data['ID']>1)){
   $page_header = '<script type="text/javascript"><!--
@@ -71,16 +82,19 @@ if (confirm("'.translate('usermenu_confirdeleting').'")) document.location = "'.
 }
 if ($can_edit) $rz .= edit_normal_link();
 if ($nom) return '';
-else return '<div id="user_menu">'."\n".$rz."</div>\n";
+else return '<div id="user_menu">'."\n".$rz."\n</div>";
 }
 
+//
 // Проверява дали менюто на страницата е подменю на разрешеното меню
-function in_that_branch($i,$j){
+//
+function in_that_branch($pi,$j){// echo "$pi $j<br>";
+if ($pi==$j) return true;
 $rz = false;
 do{
- $pi = db_table_field('parent', 'menu_tree', "`group`=$i");
+ $pi = db_table_field('parent', 'menu_tree', "`group`=$pi");// print_r($pi);// die;
  $rz = $pi==$j;
-} while ( !($rz || (pi==0)) );
+} while ( !($rz || ($pi==0)) );
 //echo "$rz $pi"; die;
 return $rz;
 }

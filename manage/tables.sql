@@ -13,11 +13,15 @@ CREATE TABLE IF NOT EXISTS `content` (
   FULLTEXT KEY `text` (`text`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
-INSERT INTO `content` (`ID`, `name`, `date_time_1`, `date_time_2`, `language`, `text`) VALUES
-(1, 'home_page_title', NOW(), NOW(), 'bg', 'Home page'),
-(2, 'home_page_content', NOW(), NOW(), 'bg', '<p>Some Text.</p>'),
-(3, 'saveData', NOW(), NOW(), 'bg', 'Съхраняване на данните'),
-(4, 'dataSaved', NOW(), NOW(), 'bg', 'Данните бяха съхранени.');
+INSERT INTO `content` (`name`, `nolink`, `date_time_1`, `date_time_2`, `language`, `text`) VALUES
+('home_page_title', 0, NOW(), NOW(), 'bg', 'Начална страница'),
+('home_page_content', 0, NOW(), NOW(), 'bg', '<p>Текст на страницата.</p>'),
+('error_404_title', 0, NOW(), NOW(), 'bg', 'Грешен номер на страница'),
+('error_404_content', 0, NOW(), NOW(), 'bg', '<p>На сайта няма страница с такъв номер.</p>'),
+('p1_link', NOW(), 0, NOW(), 'bg', 'Начало'),
+('saveData', NOW(), 1, NOW(), 'bg', 'Съхраняване на данните'),
+('dataSaved', NOW(), 1, NOW(), 'bg', 'Данните бяха съхранени.'),
+('month_names', NOW(), 1, NOW(), 'bg', '$month = array(\'\',\'януари\',\'февруари\',\'март\',\'април\',\'май\',\'юни\',\'юли\',\'август\',\'септември\',\'октомври\',\'ноември\',\'декември\');');
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `menu_items` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
@@ -29,6 +33,9 @@ CREATE TABLE IF NOT EXISTS `menu_items` (
   KEY `group` (`group`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
+INSERT INTO `menu_items` (`ID`, `place`, `group`, `name`, `link`) VALUES
+(1, 10, 1, 'p1_link', '1');
+-- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `menu_tree` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `group` int(11) NOT NULL,
@@ -36,10 +43,10 @@ CREATE TABLE IF NOT EXISTS `menu_tree` (
   `index_page` int(11) NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `group` (`group`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
 INSERT INTO `menu_tree` (`ID`, `group`, `parent`, `index_page`) VALUES
-(1, 0, 0, 1);
+(1, 1, 0, 1);
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `options` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
@@ -48,19 +55,19 @@ CREATE TABLE IF NOT EXISTS `options` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=cp1251 AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
-INSERT INTO `options` (`ID`, `name`, `value`) VALUES
-(1, 'languages', '$languages = array(''bg'' => ''Български'' /*, ''en'' => ''English''*/ );'),
-(2, 'default_language', 'bg'),
-(3, 'admin_path', 'manage'),
-(4, 'adm_name', 'admin'),
-(5, 'adm_value', 'on'),
-(6, 'edit_name', 'edit'),
-(7, 'edit_value', 'on'),
-(8, 'host_web', 'mysite.org'),
-(9, 'host_local', 'localhost'),
-(10, 'phpmyadmin_web', 'http://mysite.org/phpmyadmin'),
-(11, 'phpmyadmin_local', 'http://localhost/phpmyadmin'),
-(12, 'mod_path', '/_mod');
+INSERT INTO `options` (`name`, `value`) VALUES
+('languages', '$languages = array(''bg'' => ''Български'' /*, ''en'' => ''English''*/ );'),
+('default_language', 'bg'),
+('admin_path', 'manage'),
+('adm_name', 'admin'),
+('adm_value', 'on'),
+('edit_name', 'edit'),
+('edit_value', 'on'),
+('host_web', 'mysite.org'),
+('host_local', 'localhost'),
+('phpmyadmin_web', 'http://mysite.org/phpmyadmin'),
+('phpmyadmin_local', 'http://localhost/phpmyadmin'),
+('mod_path', '/_mod');
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pages` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
@@ -73,10 +80,10 @@ CREATE TABLE IF NOT EXISTS `pages` (
   `dcount` int(11) NOT NULL DEFAULT '0',
   `tcount` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
-INSERT INTO `pages` (`ID`, `menu_group`, `title`, `content`, `template_id`, `hidden`, `options`, `dcount`, `tcount`) VALUES
-(1, 0, 'home_page_title', 'home_page_content', 1, 1, '', 1, 2);
+INSERT INTO `pages` (`ID`, `menu_group`, `title`, `content`, `template_id`, `hidden`, `options`) VALUES
+(1, 1, 'home_page_title', 'home_page_content', 1, 1, '');
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `scripts` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
@@ -85,17 +92,19 @@ CREATE TABLE IF NOT EXISTS `scripts` (
   `coment` text NOT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
 INSERT INTO `scripts` (`ID`, `name`, `script`, `coment`) VALUES
 (1, 'ADMINMENU', 'include_once("f_adm_links.php"); $tx = adm_links();', 'Показва линкове за администриране на сайта'),
-(2, 'PAGETITLE', '$tx = translate($page_data[''title'']);', 'Заглавие на страницата'),
+(2, 'PAGETITLE', '$tx = translate($page_data[''title'']);', 'Заглавие на страницата, показвано между таговете <h1></h1>.'),
 (3, 'CONTENT', 'if (isset($tg[1])) $tx = translate($tg[1]);\r\nelse $tx = translate($page_data[''content'']);', 'Показване съдържанието на страницата и ли надпис със зададено име.'),
 (4, 'MENU', 'include_once(''f_menu.php'');\r\n$tx = menu($page_data[''menu_group'']);', 'Показване на група от хипервръзки (меню)'),
 (5, 'BODYADDS', '$tx = $body_adds;', 'Вмъква добавките към <body> тага'),
+(6, 'PAGEHEADER', '$tx = $page_header;', 'Вмъква добавките към хедъра на страницата'),
+(7, 'HEADTITLE', '$tx = translate($page_data[''title''],false);', 'Заглавие на страницата, без линк за редактиране, показвано между таговете <title></title>.'),
 (6, 'PAGEHEADER', '$tx = $page_header;', 'Вмъква добавките към хедъра на страницата');
 -- --------------------------------------------------------
-CREATE TABLE IF NOT EXISTS `n3_templates` (
+CREATE TABLE IF NOT EXISTS `templates` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `parent` int(11) DEFAULT NULL,
   `template` text NOT NULL,
@@ -104,7 +113,7 @@ CREATE TABLE IF NOT EXISTS `n3_templates` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
 INSERT INTO `templates` (`ID`, `parent`, `template`, `comment`) VALUES
-(1, 0, '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">\r\n\r\n<head>\r\n  <title><!--$$_PAGETITLE_$$--></title>\r\n  <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1251">\r\n  <link href="style.css" rel="stylesheet" type="text/css">\r\n<!--$$_PAGEHEADER_$$-->\r\n</head>\r\n<body<!--$$_BODYADDS_$$-->>\r\n\r\n<!--$$_ADMINMENU_$$-->\r\n\r\n<!--$$_MENU_$$-->\r\n\r\n<h1><!--$$_PAGETITLE_$$--></h1>\r\n<!--$$_CONTENT_$$-->\r\n\r\n<p id="powered_by">Powered by <a href="https://github.com/vanyog/mycms/wiki" target="_blank">MyCMS</a> <!--$$_PAGESTAT_$$--></p>\r\n</body>\r\n</html>\r\n\r\n','Шаблон по подразбиране');
+(1, 0, '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">\r\n\r\n<head>\r\n  <title><!--$$_HEADTITLE_$$--></title>\r\n  <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1251">\r\n  <link href="style.css" rel="stylesheet" type="text/css">\r\n<!--$$_PAGEHEADER_$$-->\r\n</head>\r\n<body<!--$$_BODYADDS_$$-->>\r\n\r\n<!--$$_ADMINMENU_$$-->\r\n\r\n<!--$$_MENU_$$-->\r\n\r\n<h1><!--$$_PAGETITLE_$$--></h1>\r\n<!--$$_CONTENT_$$-->\r\n\r\n<p id="powered_by">Направено с <a href="https://github.com/vanyog/mycms/wiki" target="_blank">MyCMS</a> <!--$$_PAGESTAT_$$--></p>\r\n</body>\r\n</html>\r\n\r\n','Шаблон по подразбиране');
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `visit_history` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,

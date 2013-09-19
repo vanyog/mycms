@@ -21,6 +21,7 @@ include_once($idir.'lib/translation.php');
 include_once($idir.'lib/o_form.php');
 include_once($idir.'lib/f_db_table_field.php');
 include_once($idir.'lib/f_set_self_query_var.php');
+include_once($idir.'lib/f_unset_self_query_var.php');
 include_once($idir.'lib/f_edit_record_form.php');
 
 // Функцията user() проверява дали има влязъл с парола потребител.
@@ -32,6 +33,7 @@ include_once($idir.'lib/f_edit_record_form.php');
 // влизане става препращане към адрес stored_value('user_loginpage',''), ако е зададен такъв.
 // $a = 'edit' означава, че страницата, от която се вика user, е страница за редактиране данните за
 // потребителя и кяеи фръща форма за редактиране на тези данни.
+// $a = 'enter' означава, ако няма влязъл потребител да се показва линк "Вход".
 
 if (!session_id()) session_start();
 
@@ -46,10 +48,13 @@ $c = db_table_field('COUNT(*)','users','1');
 // Грешка - значи няма таблица.
 if ($c===false) die("'users' table is not set up.");
 // Ако няма потребители, се създава нов потребител.
-if ( !$c && (!isset($_GET['user']) || ($_GET['user']!='newreg')) ){ new_user(); }
+if ( !$c && (!isset($_GET['user']) || ($_GET['user']!='newreg')) ){ return new_user($a); }
 // Ако няма влязъл потребител се отваря страница за влизане.
 if (!isset($_SESSION['user_username'])){
-  $rz = get_user($a);
+  // но ако $a == 'enter' се показва хипервръзка "Вход"
+  // освен ако не е изпратен параметър user=enter или все още няма регистрирани потребители.
+  if ( ($a == 'enter') && $c && (!isset($_GET['user'])||($_GET['user']!='enter')) ) return enter_link();
+  $rz = get_user($a,$c);
   if ($rz) return $rz;
 }
 // Четене на номера на потребител с име $_SESSION['user_username'] и парола $_SESSION['user_password'].
@@ -79,17 +84,24 @@ return $rz;
 
 // Функцията get_user() връща HTML код с форма за влизане/регистриране на потребител
 
-function get_user($a){
+function get_user($a,$c){
 // Ако формата за влизане вече е попълнена, се обработват изпратените с нея данни
 if (isset($_POST['username'])){ process_user(); return ''; }
 global $idir;
+// Заглавие на страницата за влизане/създаване на потребител
 if (isset($_GET['user']) && ($_GET['user']=='newreg')) $page_title = translate('user_newreg');
 else $page_title = translate('user_login');
-$page_content = '<div id="user_login">'."\n<h1>$page_title</h1>\n".user_form()->html();
+// Ако няма още нито един потребител - надпис, който съобщава това
+$m = '';
+if (!$c) $m = translate('user_firstuser');
+// Съдържание на страницата
+$page_content = '<div id="user_login">'."\n<h1>$page_title</h1>\n$m\n".user_form()->html();
 if (stored_value('user_showreglink', 'false')=='true')
    $page_content .= '<p><a href="'.set_self_query_var('user','newreg').'">'.translate('user_newreg')."</a></p>";
 $page_content .= "\n</div>";
+// Ако страницата не се вмъква в шаблон се показва с build_page.php,
 if ($a != 'login'){ include($idir.'lib/build_page.php'); die; }
+// иначе се връща нейното съдържание за да се вмъкне в шаблона.
 else return $page_content;
 }
 
@@ -101,6 +113,11 @@ if (isset($_POST['password2'])); save_user();
 $_SESSION['user_username'] = $_POST['username'];
 if (isset($_POST['password'])) $_SESSION['user_password'] = pass_encrypt($_POST['password']); else $_SESSION['user_password'] = '';
 $_SESSION['session_start'] = time();
+// Премахване на параметър $_GET['user']=='enter' и презареждане на страницата
+if (isset($_GET['user'])&&($_GET['user']=='enter')){
+  $l = unset_self_query_var('user',true); //echo $l; die;
+  header('Location: '.$l);
+}
 }
 
 // Кодиране на паролата по един от два начина
@@ -137,7 +154,7 @@ return $guf;
 }
 
 
-// Унищожава сесията и пренасочва към страницата за излизане
+// Унищожава сесията и пренасочва към страницата след излизане
 
 function logout_user(){
 // Адрес на страницата, която се показва след излизане
@@ -174,11 +191,22 @@ return $rz.edit_record_form($cp, 'users');
 // Тя презарежда страницата, като добавя в адреса и праметър user=newreg и това предизвиква показване на форма за 
 // редактиране на нов потребител.
 //
-function new_user(){
+function new_user($a){
+  // Ако трябва да се показва само линк "Вход", се връща този линк
+  if (($a=='enter')&&!(isset($_GET['user'])&&($_GET['user']=='enter'))) return enter_link();
+  // В противен случай се изпраща параметър user=newreg и страницата се презарежда
   $l = set_self_query_var('user','newreg',false);
   header("Location: $l");
 }
 
-
+//
+// Функция, която връща html код на хипервръзка "Вход"
+//
+function enter_link(){
+// Адрес на страницата за влизане
+$ep = stored_value('user_loginpage');
+if (!$ep) $ep = set_self_query_var('user','enter');
+return '<a href="'.$ep.'">'.translate("user_enter").'</a>';
+}
 
 ?>

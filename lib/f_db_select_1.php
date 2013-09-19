@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Ключовете на масива са имената на полетата,
 // а стойностите - съдържанието на полетата от таблицата.
 
-include_once("usedatabase.php");
+include_once($idir."lib/usedatabase.php");
 
 function db_select_1($fn,$tb,$whr,$y = false){
 global $db_link, $tn_prefix;

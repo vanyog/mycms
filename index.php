@@ -34,21 +34,26 @@ if (phpversion()>'5.0') date_default_timezone_set("Europe/Sofia");
 $page_id = 1;
 if (isset($_GET['pid'])) $page_id = 1*$_GET['pid'];
 
+// Път до директорията на системата
 $idir = dirname(__FILE__).'/';
 
 // Път до файл conf_database.php с данни за достъп до базата данни. 
 // Може да е различен от този в $idir, ако е необходимо.
 $ddir = $idir;
 
-if (!file_exists($idir.'conf_database.php')
-  ||!file_exists($idir.'conf_paths.php')
+if (
+  !file_exists($idir.'conf_database.php')
+  || !file_exists($idir.'conf_paths.php')
 ) 
-   die('Системата все още не е правилно инсталирана и конфигурирана. Вижте файл USAGE.txt.');
-   
+die('Системата все още не е правилно инсталирана и конфигурирана. Вижте файл USAGE.txt.');
+
 include($idir.'lib/f_db_select_1.php');
 include($idir.'lib/f_db_select_m.php');
 include($idir.'lib/f_parse_template.php');
 include_once($idir.'lib/translation.php');
+
+// Адрес на индексния файл
+$ind_fl = $_SERVER['PHP_SELF'];
 
 $page_header = ''; // Добавки към хедъра на страницата
 $body_adds   = ''; // Добавки към body тага
@@ -86,7 +91,9 @@ return Array (
 'title' => 'error_404_title',
 'content' => 'error_404_content',
 'template_id' => 1,
-'options' => ''
+'options' => '',
+'tcount'=>0,
+'dcount'=>0
 );
 }
 

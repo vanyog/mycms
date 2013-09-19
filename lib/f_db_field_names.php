@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-include_once("usedatabase.php");
+include_once($idir."lib/usedatabase.php");
 
 function db_field_names($t){
 global $db_link,$tn_prefix;

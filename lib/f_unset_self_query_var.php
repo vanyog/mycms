@@ -1,8 +1,7 @@
 <?php
-
 /*
 MyCMS - a simple Content Management System
-Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>
+Copyright (C) 2013  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,16 +17,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Връща неповтарящите се стойности от поле $fn на таблица $tn,
-// отговарящи на условие $wh
+// Съставя адрес към текущо изпалнявания php скрипт $_SERVER['PHP_SELF']
+// с параметри, от които се премахва параметър с име $n.
+// Ако съставеният адрес ще се използва за пренасочване, а не като htef атрибут,
+// трябва да се подаде и трети параметър $a = false, за да не се замества & с &amp;.
 
-include_once($idir."lib/f_db_select_m.php");
-
-function db_field_values($fn,$tn,$wh, $lm = ''){
-$d = db_select_m( "`$fn`", $tn, "$wh GROUP BY `$fn` ORDER BY `$fn` $lm" );// print_r($d);
-$rz = array();
-foreach($d as $r) $rz[] = $r[$fn];
-return $rz;
+function unset_self_query_var($n, $a = true){
+$r = $_GET;
+if (isset($r[$n])) unset($r[$n]);
+$rz = http_build_query($r);
+if ($a) $rz = str_replace('&','&amp;',$rz);
+if ($rz) $rz = '?'.$rz;
+return $_SERVER['PHP_SELF'].$rz;
 }
 
 ?>

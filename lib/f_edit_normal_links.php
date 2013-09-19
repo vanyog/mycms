@@ -19,6 +19,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 // Хипервръзка "Edit/Normal" за превключване от режим на редактиране към нормален режим.
 
+include_once($idir."lib/f_is_local.php");
+include_once($idir."lib/f_set_query_var.php");
+
 function edit_normal_link(){
 global $edit_name, $edit_value;
 if (in_edit_mode()) 
