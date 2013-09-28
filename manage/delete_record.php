@@ -26,7 +26,7 @@ $id = $_GET['r'];
 
 $q = "DELETE FROM `$tn_prefix$t` WHERE `ID`=$id;";
 //echo $q;
-mysql_query($q,$db_link);
+mysqli_query($db_link,$q);
 
 $l = 'Location: show_table.php?t='.$t;
 //echo $l;

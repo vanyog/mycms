@@ -53,9 +53,9 @@ foreach($fn as $i => $n){
 $q = substr($q,0,strlen($q)-2).";";
 //echo $q; die;
 
-mysql_query($q,$db_link);
+mysqli_query($db_link,$q);
 
-$i = mysql_insert_id($db_link);
+$i = mysqli_insert_id($db_link);
 
 header('Location: '.$adm_pth.'edit_record.php?t='.$tb.'&r='.$i);
 

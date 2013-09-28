@@ -23,9 +23,9 @@ include_once($idir."lib/usedatabase.php");
 function db_tables(){
 global $db_link;
 $q = "SHOW TABLES;";
-$rs = mysql_query($q,$db_link);
+$rs = mysqli_query($db_link,$q);
 $rz = array();
-while ($a = mysql_fetch_array($rs)){
+while ($a = mysqli_fetch_array($rs)){
  $rz[] = $a[0];
 }
 return $rz;

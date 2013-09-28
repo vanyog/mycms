@@ -43,7 +43,7 @@ foreach($d as $r){
 $q = substr($q,0,strlen($q)-2).";";
 if ($y) return $q;
 else{
- mysql_query($q,$db_link);
+ mysqli_query($db_link,$q);
  return $c;
 }
 }

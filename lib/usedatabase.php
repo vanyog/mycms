@@ -28,14 +28,14 @@ include_once($ddir."conf_database.php");
 $db_link = get_db_link($user, $password, $database);
 
 function get_db_link($user, $password, $database){
-$l = mysql_connect("localhost",$user,$password);
-if (!$l){
+$l = mysqli_connect("localhost",$user,$password,$database);
+/*if (!$l){
  echo '<p>Не се получава връзка с MySQL сървъра!'; die;
 }
 if (!mysql_select_db($database,$l)){
  echo '<P>Не може да бъде избрана база данни.'; die;
-}
-mysql_query("SET NAMES 'cp1251';",$l);
+}*/
+mysqli_query($l,"SET NAMES 'cp1251';");
 //mysql_query("SET CHARACTER SET 'cp1251';",$l);
 return $l;
 }

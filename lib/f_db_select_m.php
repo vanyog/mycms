@@ -34,13 +34,13 @@ function db_select_m($fn,$tb,$whr,$y=false){
 global $db_link, $tn_prefix;
 $q="SELECT $fn FROM `$tn_prefix$tb` WHERE $whr;"; 
 if ($y) echo "$q<br>";
-$dbr=mysql_query($q,$db_link);
+$dbr=mysqli_query($db_link,$q);
 $r=array();
 if (!$dbr) return $r; 
-while ( $rc=mysql_fetch_assoc($dbr) ){
+while ( $rc=mysqli_fetch_assoc($dbr) ){
  $r[]=$rc; //print_r($rc);
 }
-mysql_free_result($dbr);
+mysqli_free_result($dbr);
 return $r;
 }
 

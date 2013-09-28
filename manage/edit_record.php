@@ -32,7 +32,7 @@ if (isset($_SERVER['HTTP_REFERER']) && (strpos( $_SERVER['HTTP_REFERER'], $_SERV
 $t = $_GET['t'];
 $id = 1*$_GET['r'];
 
-$ft = db_field_types($t);
+$ft = db_field_types($t);//print_r($ft); die;
 $r = db_select_1('*',$t,"ID=$id");
 
 $page_content = '<script type="text/javascript"><!--
@@ -53,8 +53,8 @@ if ($r) foreach($r as $k => $v){
  switch ($ft[$i]){
  case 'blob'    : $page_content .= '<p>'.$k.':<br>'.editor($k,stripslashes($v)).'</p>'."\n"; break;
  case 'datetime': $page_content .= '<p>'.$k.':<br><input type="text" name="'.$k.'" value="'.$v.'"></p>'."\n"; break;
- case 'int'     : $page_content .= '<p>'.$k.':<br><input type="text" name="'.$k.'" value="'.$v.'"></p>'."\n"; break;
- case 'string'  : $v = stripslashes($v); $v = str_replace('"','&quot;',$v);
+ case 3     : $page_content .= '<p>'.$k.':<br><input type="text" name="'.$k.'" value="'.$v.'"></p>'."\n"; break;
+ case 253   : $v = stripslashes($v); $v = str_replace('"','&quot;',$v);
     $page_content .= '<p>'.$k.':<br><input type="text" name="'.$k.'" value="'.$v.'"></p>'."\n"; 
     break;
  default: $page_content .= '<p>Unknown type '.$ft[$i].'</p>';

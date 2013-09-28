@@ -33,10 +33,10 @@ function db_select_1($fn,$tb,$whr,$y = false){
 global $db_link, $tn_prefix;
 $q="SELECT $fn FROM `$tn_prefix$tb` WHERE $whr LIMIT 1;";
 if ($y) echo "$q<br>";
-$r=mysql_query($q,$db_link);
+$r=mysqli_query($db_link,$q);
 if (!$r) return false;
-$rc=mysql_fetch_assoc($r);
-mysql_free_result($r);
+$rc=mysqli_fetch_assoc($r);
+mysqli_free_result($r);
 return $rc;
 }
 
