@@ -30,10 +30,10 @@ include_once($idir."lib/f_db_insert_m.php");
 //include_once($idir."lib/f_parse_content.php");
 include_once($idir."lib/o_form.php");
 
-// Номер на страницата от която е изпратена заявка за нова страница
+// Номер на страницата, от която е изпратена заявка за нова страница
 $page_id = 1*$_GET['p'];
 
-// Данни на страницата от която е изпратена заявка за нова страница
+// Данни на страницата, от която е изпратена заявка за нова страница
 $page_data = db_select_1('*','pages',"ID=$page_id");
 
 // Проверяване правата на потребителя
@@ -162,7 +162,7 @@ array('name'=>$d1['content'],
 // Записване в таблицата
 db_insert_m($d3,'content');
 
-$l = 'Location: '.$pth.'index.php?pid='.$pi;
+//$l = 'Location: '.$pth.'index.php?pid='.$pi;
 header($l); 
 }
 

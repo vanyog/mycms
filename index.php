@@ -105,7 +105,7 @@ include_once($idir."lib/f_adm_links.php");
 if (!$p['ID'] || show_adm_links()) return '';
 new_day();
 $q = "UPDATE `$tn_prefix"."pages` SET dcount = dcount+1 WHERE `ID`=".$p['ID'].";";
-mysql_query($q,$db_link);
+mysqli_query($db_link,$q);
 }
 
 // јко започва нов ден се записват данните за изминалото денонощие в таблица $tn_prefix.'visit_history'
@@ -129,7 +129,7 @@ foreach($dt as $r){
 store_value('today',$d['mday']);
 // нулира се бро€ на посещени€та в таблица $tn_prefix.'pages'
 $q = "UPDATE `$tn_prefix"."pages` SET tcount = tcount + dcount, dcount = 0;";
-mysql_query($q,$db_link);
+mysqli_query($db_link,$q);
 }
 
 ?>

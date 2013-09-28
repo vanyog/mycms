@@ -51,10 +51,12 @@ f.submit();
 $i = 0;
 if ($r) foreach($r as $k => $v){
  switch ($ft[$i]){
- case 'blob'    : $page_content .= '<p>'.$k.':<br>'.editor($k,stripslashes($v)).'</p>'."\n"; break;
- case 'datetime': $page_content .= '<p>'.$k.':<br><input type="text" name="'.$k.'" value="'.$v.'"></p>'."\n"; break;
- case 3     : $page_content .= '<p>'.$k.':<br><input type="text" name="'.$k.'" value="'.$v.'"></p>'."\n"; break;
- case 253   : $v = stripslashes($v); $v = str_replace('"','&quot;',$v);
+ case 252: $page_content .= '<p>'.$k.':<br>'.editor($k,stripslashes($v)).'</p>'."\n"; break;
+ case 12 : $page_content .= '<p>'.$k.':<br><input type="text" name="'.$k.'" value="'.$v.'"></p>'."\n"; break;
+ case 1  :
+ case 3  : 
+ case 254: $page_content .= '<p>'.$k.':<br><input type="text" name="'.$k.'" value="'.$v.'"></p>'."\n"; break;
+ case 253: $v = stripslashes($v); $v = str_replace('"','&quot;',$v);
     $page_content .= '<p>'.$k.':<br><input type="text" name="'.$k.'" value="'.$v.'"></p>'."\n"; 
     break;
  default: $page_content .= '<p>Unknown type '.$ft[$i].'</p>';

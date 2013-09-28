@@ -34,7 +34,7 @@ global $tn_prefix, $db_link;
 $r = db_select_1('*','options',"`name`='$n'");
 if ($r) { $q = 'UPDATE'; $w = " WHERE `name`='$n';";} else { $q = 'INSERT INTO'; $w = ", `name`='$n';"; }
 $q .= " `$tn_prefix"."options` SET `value`='$v'$w";
-mysql_query($q,$db_link);
+mysqli_query($db_link,$q);
 }
 
 ?>

@@ -58,7 +58,7 @@ $fa = explode('-- --------------------------------------------------------',$fc)
 
 foreach($fa as $q){
 //  echo "$q<p>";
-  mysql_query($q,$db_link);
+  mysqli_query($db_link,$q);
 }
 
 echo '<p>Success</p>

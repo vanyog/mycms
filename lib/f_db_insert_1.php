@@ -35,8 +35,8 @@ foreach($d as $n=>$v){
 $q = substr($q,0,strlen($q)-1).";";
 if ($y) return $q;
 else{
- mysql_query($q,$db_link);
- return mysql_insert_id($db_link);
+ mysqli_query($db_link,$q);
+ return mysqli_insert_id($db_link);
 }
 }
 

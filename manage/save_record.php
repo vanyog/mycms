@@ -37,7 +37,7 @@ default: $q2 .= " `$k`='".addslashes($v)."',";
 
 $q = $q1.substr($q2,0,strlen($q2)-1).$q3.';';
 
-mysql_query($q,$db_link);
+mysqli_query($db_link,$q);
 
 session_start();
 

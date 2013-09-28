@@ -138,7 +138,7 @@ if ($u) return;
 $q = "INSERT INTO `$tn_prefix".
      "users` SET `date_time_0`=NOW(), `date_time_1`=NOW(), `username`= '".addslashes($_POST['username']).
      "', `password`='".pass_encrypt($_POST['password'])."';";
-mysql_query($q,$db_link);
+mysqli_query($db_link,$q);
 }
 
 // Връща обект форма за влизане/регистриране на потребител
