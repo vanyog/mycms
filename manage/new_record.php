@@ -57,6 +57,8 @@ mysqli_query($db_link,$q);
 
 $i = mysqli_insert_id($db_link);
 
+if (!$i) die("Can't create new record");
+
 header('Location: '.$adm_pth.'edit_record.php?t='.$tb.'&r='.$i);
 
 ?>

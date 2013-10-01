@@ -22,7 +22,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // По подразбиране след реда с линкове се вмъква празен ред.
 // Това отмества цялата страница надолу и прави ленковете по-лесно четими, но на страници,
 // съдържащи елементи с position:absolute се нарушава положението на тези елементи. Тогава се
-// се зададава настройка adm_links_over = 1, за да не се вмъкне празен ред. 
+// се зададава настройка adm_links_over = 1, за да не се вмъкне празен ред.
+
+// adm_links_custom - допълнителен, зададен от администратора текст (линкове)
+// adm_links_cpanel - адрес на панел за управление на хостинга
 
 $idir = dirname(dirname(__FILE__)).'/';
 
@@ -51,10 +54,12 @@ else {
   }
   else {
     if (substr($_SERVER['REQUEST_URI'],0,strlen($adm_pth))==$adm_pth) $w3c = '';
-    else $w3c = ' :: 
-<a href="http://validator.w3.org/check?uri='.urlencode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).'">w3c</a>';
+    else $w3c = ' :: <a href="http://validator.w3.org/check?uri='.
+         urlencode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).'">w3c</a>';
   }
   $go = 'http://'.$go.$_SERVER['REQUEST_URI'];
+  
+  $clink = stored_value('adm_links_custom','');
 
   $enmch = '';
   if ($pth!='/') $enmch = '<a href="/">/</a> :: '."\n";
@@ -81,12 +86,12 @@ if (confirm("Hide this menu?")){
 <a href="'.$pth.'index.php?pid='.$lpid.'&amp;'.$edit_name.'='.urlencode($edit_value).'">'.$lpid.'</a> :: 
 <a href="'.$adm_pth.'edit_file.php">File system</a> :: 
 <a href="'.$adm_pth.'edit_data.php">Database</a> :: 
-<a href="'.stored_value('cpanel_url').'" target="_blank">cPanel</a> :: 
+<a href="'.stored_value('adm_links_cpanel').'" target="_blank">cPanel</a> :: 
 <a href="'.$mphp.'" target="_blank">phpMyAdmin</a> :: 
 <a href="'.$adm_pth.'showenv.php?AAAAAAA" target="_blank">$_SERVER</a> :: 
 <a href="'.$go.'">'.$gon.'</a><!--:: 
 <a hr  ="'.$adm_pth.'dump_data.php">Dump</a-->'.$w3c.' :: 
-'.parse_content('<!--$$_CONTENT_custome_link_$$-->').'
+'.$clink.'
 <a href="'.$pth.'lib/exit.php">x</a>&nbsp; 
 </p>';
   if (stored_value('adm_links_over',0)!=1) $rz .= '<p>&nbsp;</p>';

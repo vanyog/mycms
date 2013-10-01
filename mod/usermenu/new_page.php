@@ -162,7 +162,7 @@ array('name'=>$d1['content'],
 // Записване в таблицата
 db_insert_m($d3,'content');
 
-//$l = 'Location: '.$pth.'index.php?pid='.$pi;
+$l = 'Location: '.$pth.'index.php?pid='.$pi;
 header($l); 
 }
 

@@ -45,7 +45,7 @@ if (
   !file_exists($idir.'conf_database.php')
   || !file_exists($idir.'conf_paths.php')
 ) 
-die('Системата все още не е правилно инсталирана и конфигурирана. Вижте файл USAGE.txt.');
+die('Системата все още не е правилно инсталирана и конфигурирана. Вижте файл <a href="http://vanyog.com/_new/index.php?pid=91">USAGE.txt</a>.');
 
 include($idir.'lib/f_db_select_1.php');
 include($idir.'lib/f_db_select_m.php');

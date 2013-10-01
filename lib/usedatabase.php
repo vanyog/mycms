@@ -29,12 +29,9 @@ $db_link = get_db_link($user, $password, $database);
 
 function get_db_link($user, $password, $database){
 $l = mysqli_connect("localhost",$user,$password,$database);
-/*if (!$l){
+if (!$l){
  echo '<p>Не се получава връзка с MySQL сървъра!'; die;
 }
-if (!mysql_select_db($database,$l)){
- echo '<P>Не може да бъде избрана база данни.'; die;
-}*/
 mysqli_query($l,"SET NAMES 'cp1251';");
 //mysql_query("SET CHARACTER SET 'cp1251';",$l);
 return $l;
