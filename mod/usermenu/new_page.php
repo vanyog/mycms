@@ -34,7 +34,7 @@ include_once($idir."lib/o_form.php");
 $page_id = 1*$_GET['p'];
 
 // Данни на страницата, от която е изпратена заявка за нова страница
-$page_data = db_select_1('*','pages',"ID=$page_id");
+$page_data = db_select_1('*','pages',"`ID`=$page_id");
 
 // Проверяване правата на потребителя
 $tx = usermenu(true);
@@ -45,8 +45,8 @@ if (!$can_create) echo die("Your have no permission to create new page here.");
 // Обработка на изпратени данни
 if (count($_POST)) process_data();
 
-// Позиция  на новата страница в менюто - по подразбиране най-отволу.
-$pz = db_table_field('place', 'menu_item', "`ID`=".$page_data['ID']." ORDER BY `place` DESC")+10;
+// Позиция  на новата страница в менюто - по подразбиране най-отдолу.
+$pz = db_table_field('MAX(`place`)', '`menu_items`', "1")+10;
 
 // Създаване на форма за попълване на данни за нова страница 
 $pf = new HTMLForm('new_page_fotm');

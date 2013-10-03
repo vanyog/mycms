@@ -168,7 +168,7 @@ if ($pu) process_user();
 if ($w) $q = "UPDATE `$tn_prefix"."$tn` SET `date_time_2`=NOW(), $q$w";
 else $q = "INSERT INTO `$tn_prefix"."$tn` SET `date_time_1`=NOW(), `date_time_1`=NOW(), $q;";
 //print_r($q); die;
-if (mysql_query($q,$db_link)) $rz .= '<span class="message">'.translate('dataSaved')."</span>";
+if (mysqli_query($db_link,$q)) $rz .= '<span class="message">'.translate('dataSaved')."</span>";
 if ($rz) $rz = '<p class="message">'.$rz.'</p>';
 return $rz;
 }

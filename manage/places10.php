@@ -38,13 +38,13 @@ $i = 1;
 $r = db_select_m('ID', $t, '1 ORDER BY `place` ASC');
 foreach($r as $r1){
   $q = "UPDATE `$tn_prefix$t` SET `place`=$i WHERE ID=".$r1['ID'].";";
-  mysql_query($q,$db_link);
+  mysqli_query($db_link,$q);
   $i++;
 }
 
 // Умножаване на стойностите по 10
 $q = "UPDATE `$tn_prefix$t` SET `place` = `place` * 10;";
-$q = mysql_query($q,$db_link);
+$q = mysqli_query($db_link,$q);
 
 // Връщане на страницата, извикала скрипта
 header('Location: '.$_SERVER['HTTP_REFERER']);

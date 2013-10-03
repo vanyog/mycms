@@ -32,7 +32,7 @@ if (!$pr) return $rz;
 // Четене записа на главната страница на менюто
 $pg = db_select_1('*','pages','ID='.$pr['index_page']);
 // Ако главната страница е текуща се показва без линк
-if ($page_id==$pg['ID']) $rz = translate($pg['title']);
+if ($page_id==$pg['ID']) $rz = '<span>'.translate($pg['title']).'</span>';
 // иначе се показва с линк
 else $rz = '<a href="'.$pth.'index.php?pid='.$pg['ID'].'">'.translate($pg['title']).'</a>'.$rz;
 // Ако менюто има родители се добавят и те.
@@ -43,7 +43,9 @@ while ($pr['parent'])
   if ($rz) $rz = ' >> '.$rz;
   $rz = '<a href="'.$pth.'index.php?pid='.$pg['ID'].'">'.translate($pg['title']).'</a>'.$rz;
 }
-return $rz;
+return '<div id="menu_tree">
+'.$rz.'
+</div>';
 }
 
 ?>

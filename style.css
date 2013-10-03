@@ -3,19 +3,48 @@ code { padding:0; margin: 0; }
 pre  { padding:0; margin: 0; }
 td { padding: 0 5px 0 5px; }
 a { text-decoration:none; }
+div { padding:5px; }
 .red { color:red; }
 
 #adm_links { position:fixed; font-size:80%; margin:0; padding:0; opacity:0.7; background-color:white; color:0; border-style:solid; border-color:grey; border-width:0 0 1px 0; z-index:100; }
+
+#page_menu{
+  width:170px;
+  float:left;
+}
+
+#page_menu a{
+  display:block;
+}
 
 #all_page{
   width:1000px;
   margin-left:auto; margin-right:auto;
   background-color:yellow;
-  padding:5px;
 }
 
 #user_frame{
   position:absolute;
-  top:30px;
+  top:50px;
 }
 
+#menu_tree{
+  border-bottom: solid black 1px;
+}
+
+#main_frame{
+  border-left:solid black 1px;
+  float:right;
+  width:800px;
+}
+
+#powered_by{
+  text-align:center;
+  border-top: solid black 1px;
+  clear:both;
+}
+
+#powered_by p{
+  margin:0;
+  padding:0;
+}

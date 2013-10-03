@@ -26,9 +26,9 @@ global $tn_prefix, $db_link;
 $lk = '';
 if ($fn) $lk = " LIKE '$fn'";
 $q = "SHOW COLUMNS FROM `$tn_prefix$tn`$lk;";
-$r = mysql_query($q,$db_link);
+$r = mysqli_query($db_link,$q);
 $rz = array();
-while ( $a = mysql_fetch_assoc($r) ) if ($in) $rz[] = $a[$in]; else $rz[] = $a;
+while ( $a = mysqli_fetch_assoc($r) ) if ($in) $rz[] = $a[$in]; else $rz[] = $a;
 return $rz;
 }
 
