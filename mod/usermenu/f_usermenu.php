@@ -70,8 +70,13 @@ case 'module':
 $pt = current_pth(__FILE__);
 if ($can_create){
  $rz .= '<a href="'.$pt.'new_page.php?p='.$page_data['ID']."\">New page</a><br>\n";
- // Главната страница на сайта не може да се трие
- if ($can_edit && ($page_data['ID']>1)){
+ // Брой на страниците в раздела
+ $gc = db_table_field('COUNT(*)','menu_items','`group`='.$page_data['menu_group']);
+ // Индекс на главната страница на раздела
+ $mi = db_table_field('index_page','menu_tree','`group`='.$page_data['menu_group']);
+ // Главната страница на сайта и главната страница на раздел, в който има и други страници,
+ // не могат да се трият
+ if ($can_edit && ($page_data['ID']>1) && ( ($gc==1)||($mi!=$page_data['ID']) ) ){
   $page_header = '<script type="text/javascript"><!--
 function confirm_page_deleting(){
 if (confirm("'.translate('usermenu_confirdeleting').'")) document.location = "'.$pt.'delete_page.php?pid='.$page_data['ID'].'";

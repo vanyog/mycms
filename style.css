@@ -48,3 +48,9 @@ div { padding:5px; }
   margin:0;
   padding:0;
 }
+
+#flags{
+  width:50;
+  text-align:right;
+  float:right;
+}

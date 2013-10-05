@@ -38,9 +38,6 @@ $page_data = db_select_1('*', 'pages', "`ID`=$page_id");
 // Проверяване правата на потребителя
 usermenu(true);
 
-//if ($can_create) echo "can create<br>";
-//if ($can_edit) echo "can edit<br>";
-//die;
 
 // Ако потребителят няма право да изтрива страницата - край.
 if (!$can_create || !$can_edit) echo die("Your have no permission to delete this page.");
@@ -57,28 +54,28 @@ if ($p){
   if ($c>1) die(translate('usermenu_cantdelindex'));
   // Изтриване на записа от таблица 'menu_tree'
   $q = "DELETE FROM `$tn_prefix"."menu_tree` WHERE `group`=".$page_data['menu_group'].";";
-  mysql_query($q,$db_link);
+  mysqli_query($db_link,$q);
   $pid = db_table_field('index_page', 'menu_tree', "`group`=".$p['parent']);
 }
 
 // Изтриване на страницата
 $q = "DELETE FROM `$tn_prefix"."pages` WHERE `ID`=$page_id;";
 //echo "$q<br>";
-mysql_query($q,$db_link);
+mysqli_query($db_link,$q);
 
 // Данни за менюто
 $m = db_select_1('*', 'menu_items', "`group`=".$page_data['menu_group']." AND `link`=".$page_data['ID']);
 // Изтриване на препратките от всички менюта, които сочат към страницата
 $q = "DELETE FROM `$tn_prefix"."menu_items` WHERE `link`=".$page_data['ID'].";";
 //echo "$q<br>";
-mysql_query($q,$db_link);
+mysqli_query($db_link,$q);
 
 // Данни за надписите
 $t = db_select_m('*', 'content', "`name`='".$m['name']."' OR `name`='".$page_data['title']."' OR `name`='".$page_data['content']."'");
 // Изтриване на надписите
 $q = "DELETE FROM `$tn_prefix"."content` WHERE `name`='".$m['name']."' OR `name`='".$page_data['title']."' OR `name`='".$page_data['content']."';";
 //echo "$q<br>";
-mysql_query($q,$db_link);
+mysqli_query($db_link,$q);
 
 // Връщане към главната страница на раздела
 if (!$pid) $pid = db_table_field('index_page', 'menu_tree', "`group`=".$page_data['menu_group']);

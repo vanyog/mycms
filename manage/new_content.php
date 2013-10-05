@@ -28,9 +28,9 @@ $l = $_GET['l']; // ≈зик на записа
 
 $q = "INSERT INTO $tn_prefix"."content SET name='$n', language='$l', date_time_1=NOW(), date_time_2=NOW();";
 
-mysql_query($q,$db_link);
+mysqli_query($db_link,$q);
 
-$i = mysql_insert_id($db_link);
+$i = mysqli_insert_id($db_link);
 
 header('Location: '.$adm_pth.'edit_record.php?t=content&r='.$i);
 
