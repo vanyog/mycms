@@ -1,4 +1,4 @@
-body { font-family: arial, sans-serif; }
+body { font-family: arial, sans-serif; background-color:#680000; }
 code { padding:0; margin: 0; }
 pre  { padding:0; margin: 0; }
 td { padding: 0 5px 0 5px; }
@@ -20,13 +20,17 @@ div { padding:5px; }
 #all_page{
   width:1000px;
   margin-left:auto; margin-right:auto;
-  background-color:yellow;
+  background-color:#FFFFCC;
+  box-shadow: 0px 0px 20px 1px #FFFF00;
 }
 
 #user_frame{
   position:absolute;
   top:50px;
+  color:#D0D0D0;
 }
+
+#user_frame a{ color:white; }
 
 #menu_tree{
   border-bottom: solid black 1px;
@@ -36,6 +40,7 @@ div { padding:5px; }
   border-left:solid black 1px;
   float:right;
   width:800px;
+  min-height:600px;
 }
 
 #powered_by{

@@ -123,7 +123,7 @@ $dt = db_select_m('ID,dcount','pages','`dcount`>0');
 // записват се броя посещения на всяка страница в таблица $tn_prefix.'visit_history'
 foreach($dt as $r){
   $q = "INSERT INTO `$tn_prefix"."visit_history` SET `page_id`=".$r['ID'].", `date`='$dd', `count`=".$r['dcount'].";";
-  mysql_query($q,$db_link);
+  mysqli_query($db_link,$q);
 }
 // записва се последната датата в таблица $tn_prefix.'options'
 store_value('today',$d['mday']);
