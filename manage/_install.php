@@ -43,7 +43,8 @@ else create_conf_database();
 
 header("Content-Type: text/html; charset=windows-1251");
 
-if (!file_exists($p)){ // Ако .sql файл не е в директория $mod_pth се проверява в директория 'mod'
+// Ако .sql файл не е в директория $mod_pth се проверява в директория 'mod'
+if (!file_exists($p)){
   $p = $_SERVER['DOCUMENT_ROOT'].$pth.'mod/'.$_GET['m']."/tables.sql";
   if (!file_exists($p)) die("$p file not found");
 }
@@ -103,6 +104,11 @@ else { echo $f->html(); die; }
 //
 function process_data(){
 global $idir;
+// Създаване на базата данни, ако не съществува
+$db_link = mysqli_connect("localhost",$_POST['user'],$_POST['password']);
+if (!$db_link) die("Failed to connect to MySQL: " . mysqli_connect_error());
+$q = "CREATE DATABASE IF NOT EXISTS `".$_POST['database']."` COLLATE=utf8_unicode_ci;";
+if (!mysqli_query($db_link,$q)) die("Error creating database: " . mysqli_error($db_link));
 // Съдържание на conf_database.php файла
 $s = '<?php
 /*
@@ -118,7 +124,7 @@ $password ="'.$_POST['password'].'";
 $tn_prefix = "'.$_POST['prefix'].'";
 ?>
 ';
-// Ако директорията е забранена за запи - съобщение
+// Ако директорията е забранена за запис - съобщение
 if (!is_writable($idir)) {
   echo "<p>Can't write to file ".$idir.'<strong>conf_database.php</strong>'.'</p>
 <p>Please, create it manually with the following content:</p>
