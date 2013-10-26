@@ -6,7 +6,18 @@ a { text-decoration:none; }
 div { padding:5px; }
 .red { color:red; }
 
-#adm_links { position:fixed; font-size:80%; margin:0; padding:0; opacity:0.7; background-color:white; color:0; border-style:solid; border-color:grey; border-width:0 0 1px 0; z-index:100; }
+#adm_links {
+  position:fixed;
+  font-size:80%;
+  margin:0; padding:0;
+  opacity:0.7;
+  background-color:white;
+  color:black;
+  border-style:solid;
+  border-color:grey;
+  border-width:0 0 1px 0;
+  z-index:100;
+}
 
 #page_menu{
   width:170px;

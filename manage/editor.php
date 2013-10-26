@@ -33,14 +33,22 @@ if (file_exists($ckep)){
   $ckeb = '
 <input type="button" onclick="CKEDITOR.replace( \'editor1\' );" value="CKEditor">';
 }
-return '
+// Брой на textarea елементите
+static $tec = 0;
+// Ако още няма textarea елементи се извежда javascript-ът
+if (!$tec){
+$js = '
 <script type="text/javascript"><!--
+var tefc;
+function onTeFocus(){
+tefc = document.activeElement;
+}
 function doInsertTag(){
 var t = prompt("Enter a html tag to be inserted");
 insert_tag(t,t);
 }
 function insert_tag(t1,t2){
-var te = document.forms.edit_form.'.$n.';
+var te = tefc;
 te.focus();
 var s = te.selectionStart;
 var e = te.selectionEnd;
@@ -53,7 +61,7 @@ te.selectionStart = s;
 te.selectionEnd = e;  
 }
 function insert_text(t1){
-var te = document.forms.edit_form.'.$n.';
+var te = tefc;
 te.focus();
 var s = te.selectionStart;
 var e = te.selectionEnd;
@@ -64,7 +72,7 @@ te.selectionStart = s;
 te.selectionEnd = e;  
 }
 function insert_2_texts(t1,t2){
-var te = document.forms.edit_form.'.$n.';
+var te = tefc;
 te.focus();
 var s = te.selectionStart;
 var e = te.selectionEnd;
@@ -81,10 +89,14 @@ var tag_a2 ="a";
 var tag_s1 = "<script type=\"text/javascript\"><!--\n";
 var tag_s2 = "\n--><"+"/script>";
 --></script>
-'.
+';
+} else $js = '';
+$tec += 1;
+// Връщане на резултата
+return $js.
 
-'<input type="button" value="tag" onclick="doInsertTag();">'.
-make_tag_button('a','tag_a1','tag_a2').'
+'<input type="button" value="tag" onclick="doInsertTag();">'.'
+'.make_tag_button('a','tag_a1','tag_a2').'
 '.make_insert_button('php','<?php\n// Copyright: Vanyo Georgiev info@vanyog.com\n\n?>\n').'
 '.make_insert_2_button('case','\'case \\\'\'','\'\\\': break;\'').'
 '.make_insert_2_button('include','\'include(\\\'\'','\'\\\');\'').'
@@ -92,7 +104,7 @@ make_tag_button('a','tag_a1','tag_a2').'
 '.make_insert_2_button('print_r','\'print_r($\'','\'); die;\'').'
 '.make_insert_2_button('<!--$$_','\'<!--$$_\'','\'_$$-->\'').'
 '.make_insert_2_button('javascript','tag_s1','tag_s2').$ckeb.'
-<textarea id="editor1" cols="120" name="'.$n.'" rows="22" style="font-size:120%;">'.
+<textarea id="editor'.$tec.'" cols="120" name="'.$n.'" rows="22" style="font-size:120%;" onfocus="onTeFocus();">'.
 str_replace($ta_ctag,$ta_fctag,$tx).$ta_ctag;
 
 }
