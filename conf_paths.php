@@ -48,6 +48,7 @@ $ckpth = stored_value('ckeditor_path',$adm_pth.'ckeditor/');
 
 // Директория с модули
 $mod_pth = stored_value('mod_path',$pth.'mod').'/';
+if ($mod_pth[0]!='/') $mod_pth = $pth.$mod_pth;
 
 // Абсолютна директория до директорията с модули
 $mod_apth = $_SERVER['DOCUMENT_ROOT'].$mod_pth;

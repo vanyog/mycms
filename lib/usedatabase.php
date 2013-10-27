@@ -33,7 +33,6 @@ if (!$l){
  echo '<p>Не се получава връзка с MySQL сървъра!'; die;
 }
 mysqli_query($l,"SET NAMES 'cp1251';");
-//mysql_query("SET CHARACTER SET 'cp1251';",$l);
 return $l;
 }
 
