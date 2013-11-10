@@ -27,8 +27,9 @@ public $astable = true;
 public $action = '';
 private $ins = array();
 
-function __construct($n){
+function __construct($n,$at=true){
 $this->name = $n;
+$this->astable = $at;
 }
 
 function add_input($in){
