@@ -66,8 +66,9 @@ if ($r) foreach($r as $k => $v){
 
 $page_content .= '
 <input type="submit" value="Save"> 
-<input type="button" value="Save & Close" onclick="saveAndClose();"> 
-<input type="button" value="Cancel" onclick="document.location=\''.$adm_pth.'show_table.php?t='.$t.'\'">
+<input type="button" value="Save & Go back" onclick="saveAndClose();"> 
+<input type="button" value="Table" onclick="document.location=\''.$adm_pth.'show_table.php?t='.$t.'\'">
+<input type="button" value="Cancel" onclick="document.location=\''.$_SESSION['http_referer'].'\'">
 </form>';
 
 include("build_page.php");
