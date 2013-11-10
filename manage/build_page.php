@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-include($idir."lib/f_adm_links.php");
+include_once($idir."lib/f_adm_links.php");
 
 if (!isset($page_header)) $page_header = '';
 $page_header .= '<link href="'.$adm_pth.'style.css" rel="stylesheet" type="text/css">';
