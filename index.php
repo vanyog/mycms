@@ -51,6 +51,7 @@ include($idir.'lib/f_db_select_1.php');
 include($idir.'lib/f_db_select_m.php');
 include($idir.'lib/f_parse_template.php');
 include_once($idir.'lib/translation.php');
+include_once($idir.'lib/f_page_cache.php');
 
 // Адрес на индексния файл
 $ind_fl = $_SERVER['PHP_SELF'];
@@ -75,8 +76,11 @@ count_visits($page_data);
 $page_options = '';
 if ($page_data['options']) { $page_options = explode(' ',$page_data['options']); }
 
+// Четене на html кода на страницата от кеша
+$cnt = page_cache();
+
 // Попълване със съдържание на елементите в шаблона
-$cnt = parse_template($page_data);
+if (!$cnt) $cnt = parse_template($page_data);
 
 // Изпращане на страницата
 echo $cnt;
