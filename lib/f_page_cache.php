@@ -29,13 +29,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 function page_cache(){
 global $page_data;
 // Страницата не подлежи на кеширане
-if ($page_data['donotcache']) return '';
+if (count($_POST) || (count($_GET)>1) || !isset($page_data['donotcache']) || $page_data['donotcache']) return '';
 $t = stored_value('cache_time');
 // Не е зададено време за кеширане, или то е 0
 if (!$t) return '';
 // Четене на данните от кеш таблицата
 $d = db_select_1('*','page_cache','`page_ID`='.$page_data['ID']);
-return $t;
+if (!$d) return '';
+else{
+  $td = time() - strtotime($d['date_time_1']);
+  if ($td > ($t*60)) return '';
+  else return $d['text'];
+}
+}
+
+function save_cache($cnt){
+global $page_data, $tn_prefix, $db_link;
+$id = db_table_field('page_ID','page_cache',"`page_ID`=".$page_data['ID']);
+if (!$id) $q = "INSERT INTO `$tn_prefix"."page_cache` SET ";
+else $q = "UPDATE `$tn_prefix"."page_cache` SET ";
+$q .= "`page_ID`=".$page_data['ID'].", `date_time_1`=NOW(), `text`='".addslashes($cnt)."'";
+if ($id) $q .= " WHERE `page_ID`=$id;";
+else $q .';';
+mysqli_query($db_link,$q);
 }
 
 ?>

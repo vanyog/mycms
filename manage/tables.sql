@@ -67,7 +67,8 @@ INSERT INTO `options` (`name`, `value`) VALUES
 ('host_local', 'localhost'),
 ('phpmyadmin_web', 'http://mysite.org/phpmyadmin'),
 ('phpmyadmin_local', 'http://localhost/phpmyadmin'),
-('mod_path', '/_mod');
+('mod_path', '/_mod'),
+('cache_time', '10');
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pages` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
@@ -94,14 +95,15 @@ CREATE TABLE IF NOT EXISTS `scripts` (
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
-INSERT INTO `scripts` (`ID`, `name`, `script`, `coment`) VALUES
-(1, 'ADMINMENU', 'include_once("f_adm_links.php"); $tx = adm_links();', 'Показва линкове за администриране на сайта'),
-(2, 'PAGETITLE', '$tx = translate($page_data[''title'']);', 'Заглавие на страницата, показвано между таговете <h1></h1>.'),
-(3, 'CONTENT', 'if (isset($tg[1])) $tx = translate($tg[1]);\r\nelse $tx = translate($page_data[''content'']);', 'Показване съдържанието на страницата и ли надпис със зададено име.'),
-(4, 'MENU', 'include_once(''f_menu.php'');\r\n$tx = menu($page_data[''menu_group'']);', 'Показване на група от хипервръзки (меню)'),
-(5, 'BODYADDS', '$tx = $body_adds;', 'Вмъква добавките към <body> тага'),
-(6, 'PAGEHEADER', '$tx = $page_header;', 'Вмъква добавките към хедъра на страницата'),
-(7, 'HEADTITLE', '$tx = translate($page_data[''title''],false);', 'Заглавие на страницата, без линк за редактиране, показвано между таговете <title></title>.');
+INSERT INTO `scripts` (`name`, `script`, `coment`) VALUES
+('ADMINMENU', 'include_once("f_adm_links.php"); $tx = adm_links();', 'Показва линкове за администриране на сайта'),
+('PAGETITLE', '$tx = translate($page_data[''title'']);', 'Заглавие на страницата, показвано между таговете <h1></h1>.'),
+('CONTENT', 'if (isset($tg[1])) $tx = translate($tg[1]);\r\nelse $tx = translate($page_data[''content'']);', 'Показване съдържанието на страницата и ли надпис със зададено име.'),
+('MENU', 'include_once(''f_menu.php'');\r\n$tx = menu($page_data[''menu_group'']);', 'Показване на група от хипервръзки (меню)'),
+('BODYADDS', '$tx = $body_adds;', 'Вмъква добавките към <body> тага'),
+('PAGEHEADER', '$tx = $page_header;', 'Вмъква добавките към хедъра на страницата'),
+('HEADTITLE', '$tx = translate($page_data[''title''],false);', 'Заглавие на страницата, без линк за редактиране, показвано между таговете <title></title>.'),
+('LANGUAGEFLAGS', '$tx = flags();', 'Показва флагчета за смяна на езика');
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `templates` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
@@ -131,3 +133,11 @@ CREATE TABLE IF NOT EXISTS `filters` (
   `filters` varchar(255) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+-- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `page_cache` (
+  `page_ID` int(11) NOT NULL,
+  `date_time_1` datetime NOT NULL,
+  `text` mediumtext COLLATE utf8_bin NOT NULL,
+  UNIQUE KEY `page_ID` (`page_ID`),
+  FULLTEXT KEY `text` (`text`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;

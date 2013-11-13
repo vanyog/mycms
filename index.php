@@ -79,8 +79,14 @@ if ($page_data['options']) { $page_options = explode(' ',$page_data['options']);
 // Четене на html кода на страницата от кеша
 $cnt = page_cache();
 
-// Попълване със съдържание на елементите в шаблона
-if (!$cnt) $cnt = parse_template($page_data);
+// Ако страницата не е извлечена от кеша се генерира
+if (!$cnt){
+ // Попълване със съдържание на елементите в шаблона
+ $cnt = parse_template($page_data);
+ // Записване в кеша
+ $t = stored_value('cache_time');
+ if ($t) save_cache($cnt);
+}
 
 // Изпращане на страницата
 echo $cnt;
