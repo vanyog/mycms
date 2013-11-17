@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 function page_cache(){
 global $page_data;
 // —траницата не подлежи на кеширане
+if ( (count($_GET)==1) && !isset($_GET['pid']) ) return '';
 if (count($_POST) || (count($_GET)>1) || !isset($page_data['donotcache']) || $page_data['donotcache']) return '';
 $t = stored_value('cache_time');
 // Ќе е зададено време за кеширане, или то е 0
