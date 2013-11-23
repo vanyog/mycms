@@ -24,20 +24,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Таблицата е от базата данни, определена от променливата $db_link,
 // дефинирана в usedatabase.php.
 
-// Ако няма запис отговарящ на условието възниква грешка,
-// затова ако не е сигурно, че в таблицата има запис, отговарящ на условието $whr 
-// за предпочитане е да се използва функцията db_select_1(),
-// която в такъв случай връща false без да се генерира грешка
-
 include_once($idir."lib/usedatabase.php");
 
-function db_table_field($fn, $tb, $whr ,$def = '', $y = false){
+function db_table_field($fn, $tb, $whr, $def = '', $y = false){
 global $db_link,$tn_prefix;
 if ($fn[0]=='`') $fn = substr($fn,1,strlen($fn)-2);
 $q="SELECT $fn FROM $tn_prefix$tb WHERE $whr;";
+if ($y===true) echo $q.'<br>'; 
 $r=mysqli_query($db_link,$q);
 if (!$r){
-  if ($y===true) echo $q.'<br>'; 
   return $def;
 }
 $rc=mysqli_fetch_assoc($r);
