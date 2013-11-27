@@ -58,7 +58,7 @@ if (unlink($afn)){
     $q = "UPDATE `$tn_prefix"."files` SET `filename`='' WHERE `ID`=$fid;";
   else
     $q = "DELETE FROM `$tn_prefix"."files` WHERE `ID`=$fid;";
-  mysql_query($q,$db_link);
+  mysqli_query($db_link,$q);
   
   // Препращане към страницата с линк към файла
   header("Location: ".$_SERVER['HTTP_REFERER']);

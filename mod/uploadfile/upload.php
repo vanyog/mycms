@@ -138,7 +138,7 @@ $q .= "`date_time_3`='".$_POST['timeshow'].
       "', `pid`='$pid', `name`='$fn', ";
 if ($_FILES['file']['tmp_name']) $q .= "`filename`='$fln', ";
 $q .= "`text`='".addslashes($_POST['text'])."'$w;";
-mysql_query($q,$db_link);
+mysqli_query($db_link,$q);
 //print_r($q); die;
 header("Location: ".$_POST['referer']);
 }
