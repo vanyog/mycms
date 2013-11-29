@@ -1,17 +1,18 @@
 CREATE TABLE IF NOT EXISTS `content` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
-  `nolink` tinyint(1) NOT NULL,
+  `nolink` tinyint(1) NOT NULL DEFAULT '0',
   `date_time_1` datetime NOT NULL,
   `date_time_2` datetime NOT NULL,
   `language` varchar(5) CHARACTER SET latin1 NOT NULL DEFAULT 'bg',
-  `text` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `text` mediumtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `date_time_1` (`date_time_1`),
   KEY `date_time_2` (`date_time_2`),
   KEY `name` (`name`),
+  KEY `language` (`language`),
   FULLTEXT KEY `text` (`text`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
 INSERT INTO `content` (`name`, `nolink`, `date_time_1`, `date_time_2`, `language`, `text`) VALUES
 ('home_page_title', 0, NOW(), NOW(), 'bg', 'Начална страница'),

@@ -74,12 +74,14 @@ public $size = '';
 public $id = '';
 public $js = '';
 public $max_file_size = '5000000';
+public $textAfter = '';
 
-function __construct($c,$n,$t,$v = ''){
+function __construct($c,$n,$t,$v = '',$ta = ''){
 $this->caption = $c;
 $this->name = $n;
 $this->type = $t;
 $this->value = $v;
+$this->textAfter = $ta;
 }
 
 public function set_event($e,$js){
@@ -95,7 +97,8 @@ if ($this->size) $rz .= " size=\"$this->size\"";
 if ($this->id) $rz .= " id=\"$this->id\"";
 if ($this->js) $rz .= " $this->js";
 $rz .= "$this->checked>";
-if ($this->type=='file') $rz .= '<input type="hidden" name="MAX_FILE_SIZE" value="'.$this->max_file_size.'">'; 
+if ($this->type=='file') $rz .= '<input type="hidden" name="MAX_FILE_SIZE" value="'.$this->max_file_size.'">';
+if ($this->textAfter) $rz .= ' '.$this->textAfter;
 if (!$it) $rz .= "\n";
 else $rz .= "</td></tr>\n";
 return $rz;

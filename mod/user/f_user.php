@@ -34,23 +34,26 @@ include_once($idir.'lib/f_edit_record_form.php');
 // $a = 'login' означава, че страницата, от която се вика user, е специална страница за влизане и след успешно
 // влизане става препращане към адрес stored_value('user_loginpage',''), ако е зададен такъв.
 // $a = 'edit' означава, че страницата, от която се вика user, е страница за редактиране данните за
-// потребителя и кяеи фръща форма за редактиране на тези данни.
+// потребителя и връща форма за редактиране на тези данни.
 // $a = 'enter' означава, ако няма влязъл потребител да се показва линк "Вход".
 // $a = 'create' връща форма за създаване на нов потребител, при условие, че има влязъл потребите,
 // с право да създава други потребители.
 
 if (!session_id()) session_start();
 
+
 function user($a = ''){
-global $tn_prefix, $db_link;
+global $tn_prefix, $db_link, $user_table;
 //if (show_adm_links()) return '';
 // Ако е натиснат линк "Изход"
 if (isset($_GET['user'])&&($_GET['user']=='logout')) logout_user();
 $rz = '';
-// $c - брой на потребителите
-$c = db_table_field('COUNT(*)','users','1');
-// Грешка - значи няма таблица 'users'.
-if ($c===false) die("'users' table is not set up.");
+// Име на таблицата с данни за потребители
+$user_table = stored_value('user_table','users');
+// $c - брой на записите с потребители в таблица $user_table
+$c = db_table_field('COUNT(*)',$user_table,'1');// print_r($c); die;
+// Грешка - значи няма таблица $user_table.
+if ($c===false) die("Table '$user_table' is not set up.");
 // Ако няма потребители, се създава нов потребител.
 if ( !$c && (!isset($_GET['user']) || ($_GET['user']!='newreg')) ){ return new_user($a); }
 // Ако няма влязъл потребител се отваря страница за влизане.
@@ -62,7 +65,7 @@ if (!isset($_SESSION['user_username'])){
   if ($rz) return $rz;
 }
 // Четене на номера на потребител с име $_SESSION['user_username'] и парола $_SESSION['user_password'].
-$rz = db_select_1('ID','users',
+$rz = db_select_1('ID',$user_table,
       "`username`='".addslashes($_SESSION['user_username'])."' AND `password`='".$_SESSION['user_password']."'");
 // Ако няма такъв потребител - Access denied
 if (!$rz) { session_destroy(); header("Status: 403"); die("Access denied."); }
@@ -137,9 +140,11 @@ else return sha1($p);
 
 function save_user(){
 global $tn_prefix, $db_link;
+// Име на таблицата с данни за потребители
+$user_table = stored_value('user_table','users');
 if ( !isset($_GET['user']) || ($_GET['user']!='newreg') || ($_POST['password2']!=$_POST['password']) || !$_POST['username'] )
    return;
-$u = db_table_field('username', 'users', "`username`='".addslashes($_POST['username'])."'");
+$u = db_table_field('username', $user_table, "`username`='".addslashes($_POST['username'])."'");
 if ($u) return;
 $q = "INSERT INTO `$tn_prefix".
      "users` SET `date_time_0`=NOW(), `date_time_1`=NOW(), `username`= '".addslashes($_POST['username']).
@@ -176,6 +181,8 @@ header("Location: $lp");
 // Връща форма за редактиране данните на потребителя
 
 function edit_user($id){
+// Име на таблицата с данни за потребители
+$user_table = stored_value('user_table','users');
 $cp = array(
 'ID'=>$id,
 'username'=>translate('user_username'),
@@ -187,8 +194,8 @@ $cp = array(
 'telephone'=>translate('user_telephone')
 );
 $rz = '';
-if (count($_POST)) $rz .= process_record($cp, 'users');
-return $rz.edit_record_form($cp, 'users');
+if (count($_POST)) $rz .= process_record($cp, $user_table);
+return $rz.edit_record_form($cp, $user_table);
 }
 
 //
@@ -196,7 +203,7 @@ return $rz.edit_record_form($cp, 'users');
 // Тя презарежда страницата, като добавя в адреса и праметър user=newreg и това предизвиква показване на форма за 
 // редактиране на нов потребител.
 //
-function new_user($a){ print_r($_SESSION); die;
+function new_user($a){// print_r($_SESSION); die;
   // Ако трябва да се показва само линк "Вход", се връща този линк
   if (($a=='enter')&&!(isset($_GET['user'])&&($_GET['user']=='enter'))) return enter_link();
   // В противен случай се изпраща параметър user=newreg и страницата се презарежда
@@ -211,8 +218,10 @@ function new_user($a){ print_r($_SESSION); die;
 function create_user(){
 if (count($_POST)) save_user();
 global $idir;
+// Име на таблизата с данни за потребители
+$user_table = stored_value('user_table','users');
 // Номер на потребителя
-$i = db_table_field('ID','users',"`username`='".$_SESSION['user_username']."' AND `password`='".$_SESSION['user_password']."'");
+$i = db_table_field('ID',$user_table,"`username`='".$_SESSION['user_username']."' AND `password`='".$_SESSION['user_password']."'");
 // Проверка дали потребителят има всички права
 $p = db_table_field('yes_no','permissions',"`type`='all' AND `user_id`=$i");
 // Ако няма всички права, проверка дали няма право над модул user
