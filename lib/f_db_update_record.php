@@ -17,22 +17,25 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Функцията db_insert_1($d,$t) вмъква асоциативния масив $d,
-// като един запис в таблица $t от базата данни.
+// Функцията db_update_record($d,$t) опреснява записа в таблица $t
+// с дънните от масив $d.
+// Масивът $d трябва да съдържа $d['ID'] - номер на записа
+
 // Ако към функцията е изпратен трети параметър $y = true
-// вместо функцията само връща SQL заявката, без да вмъква запис.
-// Ако $y = false функцията връща номера на вмъкнатия запис.
+// функцията само връща SQL заявка, без да вмъква запис.
 
 include_once($idir.'lib/usedatabase.php');
 
-function db_insert_1($d,$t,$y=false){
+function db_update_record($d,$t,$y=false){
 global $tn_prefix, $db_link;
-$q = "INSERT INTO `$tn_prefix$t` SET ";
+if (!isset($d['ID'])) die('Няма номер на запис $d[\'ID\'] във функция db_update_record.');
+$q = "UPDATE `$tn_prefix$t` SET ";
 foreach($d as $n=>$v){
+  if ($n=='ID') continue;
   if ($v=='NOW()') $q .= "`$n`=$v,";
   else $q .= "`$n`='".addslashes($v)."',";
 }
-$q = substr($q,0,strlen($q)-1).";";
+$q = substr($q,0,strlen($q)-1)." WHERE `ID`=".$d['ID'].";";
 if ($y) return $q;
 else{
  mysqli_query($db_link,$q);

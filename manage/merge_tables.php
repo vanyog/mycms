@@ -28,6 +28,7 @@ include('conf_manage.php');
 include($idir.'lib/f_db_select_1.php');
 include($idir.'lib/f_db_select_m.php');
 include($idir.'lib/f_db_insert_1.php');
+include($idir.'lib/f_db_update_record.php');
 include($idir.'lib/o_form.php');
 
 if (!isset($_GET['t1'])) die('Липсва параметър t1=ИмеНаПърваТаблица');
@@ -61,6 +62,7 @@ $sk = 0;
 
 // За всеки прочетен запис
 if ($c) foreach($d as $r){
+//  echo $r['ID'].':'.$r[$fn]."<br>";
   // Ако е избрано пропускане
   if (!(strpos($_SESSION['records_to_skip'], ",".$r['ID']."," )===false)){ $sk++; continue; }
   // Прочитат се всички записи от втората таблица, на които поле $fn съвпада със същото поле на поредния запис от първата таблица
@@ -69,7 +71,7 @@ if ($c) foreach($d as $r){
   if (!count($d2)) {
     $r1 = $r;
     unset($r1['ID']);
-    $i = db_insert_1($r1,$t2);
+    $i = db_insert_1($r1,$t2);// echo "$i <br>";
   }
   // Иначе сравнява записите
   else{
@@ -108,6 +110,7 @@ foreach($r1 as $f => $v){
     print_r($r2); echo "<br>";
     die("Двете таблици нямат еднаква структура");
   }
+//  echo $r1[$f].' -- '.$r2[$f].'<br>';
   if ( ($f!='ID') && ($r1[$f]!=$r2[$f]) ) return false;
 }
 return true;
@@ -136,6 +139,7 @@ return $rz.$f->html();
 // Обработка на изпратените с $_POST данни
 //
 function process_post(){
+if (!isset($_SESSION['records_to_skip'])) $_SESSION['records_to_skip'] = '';
 if (!count($_POST)) return '';
 global $t1,$t2;
 $id1 = 1*$_POST['id1'];
@@ -151,9 +155,13 @@ case 'skip':
   $_SESSION['records_to_skip'] .= "$id1,";
 //  print_r($_SESSION); die;
   break;
-  case 'terminate':
+case 'terminate':
   unset($_SESSION['records_to_skip']);
   die("Сливането беше прекратено.");
+  break;
+case 'update':
+  $r1['ID']=1*$_POST['id2'];
+  db_update_record($r1,$t2);
   break;
 default: die("Непознато действие ".$_POST['what']);
 }

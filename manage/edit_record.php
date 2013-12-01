@@ -64,11 +64,14 @@ if ($r) foreach($r as $k => $v){
  $i++;
 }
 
+$rfr = $adm_pth.'show_table.php?t='.$t;
+if (isset($_SESSION['http_referer'])) $rfr = $_SESSION['http_referer'];
+
 $page_content .= '
 <input type="submit" value="Save"> 
 <input type="button" value="Save & Go back" onclick="saveAndClose();"> 
 <input type="button" value="Table" onclick="document.location=\''.$adm_pth.'show_table.php?t='.$t.'\'">
-<input type="button" value="Cancel" onclick="document.location=\''.$_SESSION['http_referer'].'\'">
+<input type="button" value="Cancel" onclick="document.location=\''.$rfr.'\'">
 </form>';
 
 include("build_page.php");
