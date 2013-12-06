@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS `permissions` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
-  `type` enum('page','menu','module') COLLATE cp1251_bulgarian_ci NOT NULL DEFAULT 'page',
+  `type` enum('all','page','menu','module') COLLATE cp1251_bulgarian_ci NOT NULL DEFAULT 'page',
   `object` varchar(20) COLLATE cp1251_bulgarian_ci NOT NULL,
   `yes_no` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`ID`),
