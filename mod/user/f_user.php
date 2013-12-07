@@ -68,7 +68,7 @@ if ( !$c && (!isset($_GET['user']) || ($_GET['user']!='newreg')) ){ return new_u
 if (!isset($_SESSION['user_username'])){
   // но ако $a == 'enter' се показва хипервръзка "Вход"
   // освен ако не е изпратен параметър user=enter или все още няма регистрирани потребители,
-  // тогава се показва форма за влизане.
+  // тогава също се показва форма за влизане.
   if ( ($a == 'enter') && $c && (!isset($_GET['user'])||($_GET['user']!='enter')) ) return enter_link();
   $rz = get_user($a,$c);
   if ($rz) return $rz;
@@ -78,8 +78,15 @@ if (!isset($_SESSION['user_username'])){
 $rz = db_select_1('ID',$user_table,
       "`username`='".addslashes($_SESSION['user_username'])."' AND `password`='".$_SESSION['user_password']."'");
 
-// Ако няма такъв потребител - Access denied
-if (!$rz) { session_destroy(); header("Status: 403"); die("Access denied."); }
+// Ако няма такъв потребител - пробване на други функции за влизане
+if (!$rz) {
+  // Четене на списъка с други функции за четене данни на потребители
+  $ts = stored_value('user_types');
+  if ($ts){
+    print_r($ts); die;
+  }
+  if (!$rz) { session_destroy(); header("Status: 403"); die("Access denied."); } 
+}
 else{
   // Ако се редактират данните на потребителя.
   if ($a == 'edit') return edit_user($rz['ID']);
@@ -171,7 +178,7 @@ if ( !isset($_GET['user']) || ($_GET['user']!='newreg') || ($_POST['password2']!
 $u = db_table_field('username', $user_table, "`username`='".addslashes($_POST['username'])."'");
 if ($u) return;
 $q = "INSERT INTO `$tn_prefix".
-     "users` SET `date_time_0`=NOW(), `date_time_1`=NOW(), `username`= '".addslashes($_POST['username']).
+     "$user_table` SET `date_time_0`=NOW(), `date_time_1`=NOW(), `username`= '".addslashes($_POST['username']).
      "', `password`='".pass_encrypt($_POST['password'])."';";
 mysqli_query($db_link,$q);
 $l = unset_self_query_var('user','newreg');

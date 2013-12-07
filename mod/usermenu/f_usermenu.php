@@ -36,8 +36,11 @@ global $page_data, $can_edit, $can_create, $can_manage, $pth, $page_header;
 // Ако в сесията няма данни за потребител, връща празен стринг.
 if (!isset($_SESSION['user_username'])||!isset($_SESSION['user_password'])) return '';
 
+// Име на таблицата с данни за потребители
+$user_table = stored_value('user_table','users');
+
 // $id - номер на влязъл потребител
-$id = db_select_1('ID','users', 
+$id = db_select_1('ID',$user_table, 
       "`username`='".addslashes($_SESSION['user_username'])."' AND `password`='".$_SESSION['user_password']."'");
 
 // Ако няма потребител със запазените в сесията име и парола, връща празен стринг.
