@@ -22,10 +22,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Ако $nom=true само се проверяват правата без да се показва меню.
 
 include_once($idir."conf_paths.php");
-//include_once($idir."lib/f_db_select_1.php");
 include_once($idir."lib/f_db_select_m.php");
-//include_once($idir."lib/f_db_table_field.php");
+include_once($idir."lib/f_mod_list.php");
 include_once($idir."lib/f_edit_normal_links.php");
+include_once($idir."lib/f_mod_path.php");
 
 if (!session_id()) session_start();
 
@@ -54,6 +54,17 @@ $can_create = false; // Право на потребителя да съдава/изтрива страници в дадени
 $can_manage = array(); // Права за администриране на модули
 
 foreach($p as $q) switch($q['type']) {
+case 'all': 
+  $can_edit = $q['yes_no'];
+  $can_create = $q['yes_no'];
+  $ml = mod_list(true);
+  foreach($ml as $m){
+    if (file_exists($m."f_menu_items.php")) {
+      $n = pathinfo($m,PATHINFO_FILENAME);
+      $can_manage[$n] = $q['yes_no'];
+    }
+  }
+  break;
 case 'menu':// print_r($page_data); die;
   $can_create = in_that_branch($page_data['menu_group'], $q['object']) && $q['yes_no'];
   $can_edit = $can_create;
@@ -66,10 +77,12 @@ case 'module':
   break;
 }
 
+if ($nom) return '';
+
 // Съставяне на менюто
 $pt = current_pth(__FILE__);
 if ($can_create){
- $rz .= '<a href="'.$pt.'new_page.php?p='.$page_data['ID']."\">New page</a><br>\n";
+ $rz .= '<a href="'.$pt.'new_page.php?p='.$page_data['ID']."\">Page New</a><br>\n";
  // Брой на страниците в раздела
  $gc = db_table_field('COUNT(*)','menu_items','`group`='.$page_data['menu_group']);
  // Индекс на главната страница на раздела
@@ -82,12 +95,16 @@ function confirm_page_deleting(){
 if (confirm("'.translate('usermenu_confirdeleting').'")) document.location = "'.$pt.'delete_page.php?pid='.$page_data['ID'].'";
 }
 --></script>';
-  $rz .= '<a href="" onclick="confirm_page_deleting();return false;">Delete page</a><br>'."\n";
+  $rz .= '<a href="" onclick="confirm_page_deleting();return false;">Page Delete</a><br>'."\n";
  }
 }
-if ($can_edit) $rz .= edit_normal_link();
-if ($nom) return '';
-else return '<div id="user_menu">'."\n".$rz."\n</div>";
+if ($can_edit) $rz .= edit_normal_link()."<br>\n";
+foreach($can_manage as $m=>$yn){
+  $fn = dirname(mod_path($m)).'/f_menu_items.php';
+  include_once($fn);
+  eval('$rz .= '.$m.'_menu_items();');
+}
+return '<div id="user_menu">'."\n".$rz."\n</div>";
 }
 
 //

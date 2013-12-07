@@ -80,7 +80,7 @@ foreach($cp as $n => $v){
       default: die("Unknown subtype of '$ft[$n]'");
       }
       break;
-    case 'text':
+    case 'text': case 'mediumtext':
       $vl = stripslashes($d[$n]);
       $la = explode("\n", $vl);
       $lc = count($la);

@@ -25,9 +25,9 @@ include_once($idir."lib/f_set_query_var.php");
 function edit_normal_link(){
 global $edit_name, $edit_value;
 if (in_edit_mode()) 
-  return '<a href="'.$_SERVER['PHP_SELF'].'?'.set_query_var($edit_name,'0').'" title="Switch to normal mode">Normal</a>';
+  return '<a href="'.$_SERVER['PHP_SELF'].'?'.set_query_var($edit_name,'0').'" title="Switch to normal mode">Page Normal</a>';
 else
-  return '<a href="'.$_SERVER['PHP_SELF'].'?'.set_query_var($edit_name,$edit_value).'" title="Switch to edit mode">Edit</a>';
+  return '<a href="'.$_SERVER['PHP_SELF'].'?'.set_query_var($edit_name,$edit_value).'" title="Switch to edit mode">Page Edit</a>';
 }
 
 ?>

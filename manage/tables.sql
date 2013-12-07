@@ -68,7 +68,7 @@ INSERT INTO `options` (`name`, `value`) VALUES
 ('host_local', 'localhost'),
 ('phpmyadmin_web', 'http://mysite.org/phpmyadmin'),
 ('phpmyadmin_local', 'http://localhost/phpmyadmin'),
-('mod_path', '/_mod'),
+('mod_path', '_mod'),
 ('cache_time', '10');
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pages` (

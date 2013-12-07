@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include_once($idir.'lib/translation.php');
 include_once($idir.'lib/o_form.php');
 include_once($idir.'lib/f_db_table_field.php');
+include_once($idir.'lib/f_db_delete_from.php');
 include_once($idir.'lib/f_set_self_query_var.php');
 include_once($idir.'lib/f_unset_self_query_var.php');
 include_once($idir.'lib/f_edit_record_form.php');
@@ -28,9 +29,12 @@ include_once($idir.'lib/f_edit_record_form.php');
 // Ако няма такъв, показва форма за влизане и
 // ако потребителското име или паролата са невалидни предизвиква "Access denied."
 // Ако потребителското име и паролата са валидни връща препратка "Изход".
-// Ако е изпратен параметър $_GET['user']='newreg' се показва форма за въвеждане на данни за нов потребител,
-// при условия, че има влязъл потребител с право да създава други потребители.
-// Ако е изпратен параметър $_GET['user']='logout' се предизвиква излизане на потребителя. 
+
+// $_GET['user']='newreg' - показва форма за въвеждане на данни за нов потребител,
+// при условие, че има влязъл потребител с право да създава други потребители. (`type`='module', `object`='user')
+// $_GET['user']='logout' - предизвиква излизане на потребителя.
+// $_GET['user']='delete' - показва форма за изтриване на потребител.
+
 // $a = 'login' означава, че страницата, от която се вика user, е специална страница за влизане и след успешно
 // влизане става препращане към адрес stored_value('user_loginpage',''), ако е зададен такъв.
 // $a = 'edit' означава, че страницата, от която се вика user, е страница за редактиране данните за
@@ -41,49 +45,66 @@ include_once($idir.'lib/f_edit_record_form.php');
 
 if (!session_id()) session_start();
 
-
 function user($a = ''){
 global $tn_prefix, $db_link, $user_table;
-//if (show_adm_links()) return '';
+
 // Ако е натиснат линк "Изход"
 if (isset($_GET['user'])&&($_GET['user']=='logout')) logout_user();
 $rz = '';
+
 // Име на таблицата с данни за потребители
 $user_table = stored_value('user_table','users');
+
 // $c - брой на записите с потребители в таблица $user_table
 $c = db_table_field('COUNT(*)',$user_table,'1');// print_r($c); die;
+
 // Грешка - значи няма таблица $user_table.
 if ($c===false) die("Table '$user_table' is not set up.");
+
 // Ако няма потребители, се създава нов потребител.
 if ( !$c && (!isset($_GET['user']) || ($_GET['user']!='newreg')) ){ return new_user($a); }
+
 // Ако няма влязъл потребител се отваря страница за влизане.
 if (!isset($_SESSION['user_username'])){
   // но ако $a == 'enter' се показва хипервръзка "Вход"
-  // освен ако не е изпратен параметър user=enter или все още няма регистрирани потребители.
+  // освен ако не е изпратен параметър user=enter или все още няма регистрирани потребители,
+  // тогава се показва форма за влизане.
   if ( ($a == 'enter') && $c && (!isset($_GET['user'])||($_GET['user']!='enter')) ) return enter_link();
   $rz = get_user($a,$c);
   if ($rz) return $rz;
 }
+
 // Четене на номера на потребител с име $_SESSION['user_username'] и парола $_SESSION['user_password'].
 $rz = db_select_1('ID',$user_table,
       "`username`='".addslashes($_SESSION['user_username'])."' AND `password`='".$_SESSION['user_password']."'");
+
 // Ако няма такъв потребител - Access denied
 if (!$rz) { session_destroy(); header("Status: 403"); die("Access denied."); }
 else{
   // Ако се редактират данните на потребителя.
   if ($a == 'edit') return edit_user($rz['ID']);
-  // Отбилязване часа на влизане
+
+  // Отбелязване на часа и IP адреса на влизане
   $tm = date('Y-m-d H:m:s', $_SESSION['session_start']);
-  mysqli_query($db_link, "UPDATE `$tn_prefix"."users` SET `date_time_2`='$tm' WHERE `ID`=".$rz['ID'].";");
+  $q = "UPDATE `$tn_prefix"."$user_table` SET `date_time_2`='$tm', `IP`='".$_SERVER['REMOTE_ADDR'].
+       "' WHERE `ID`=".$rz['ID'].";";
+  mysqli_query($db_link, $q);
+
   // Ако е изпратен параметър за създаване на нов потребител.
   if ( ($a=='create') || (isset($_GET['user']) && ($_GET['user']=='newreg')) ) create_user();
+
+  // Ако е изпратен параметър за изтриване на потребител.
+  if ( ($a=='delete') || (isset($_GET['user']) && ($_GET['user']=='delete')) ) delete_user($a);
+
   // Адрес на страницата, на която да се отиде след влизане.
   $lp = stored_value('user_loginpage',''); 
+
   // Ако е зададена се извършва препращане.
   if ($lp && ($a=='login')){
     header("Location: $lp");
     die;
   }
+
   // Ако не е зададена се връща линк "Изход".
   else $rz = '<span class="user">'.$_SESSION['user_username'].
        ' <a href="'.set_self_query_var('user','logout').'">'.translate('user_logaut').'</a></span>';
@@ -91,7 +112,9 @@ else{
 return $rz;
 }
 
+//
 // Функцията get_user() връща HTML код с форма за влизане/регистриране на потребител
+//
 
 function get_user($a,$c){
 // Ако формата за влизане вече е попълнена, се обработват изпратените с нея данни
@@ -142,25 +165,30 @@ function save_user(){
 global $tn_prefix, $db_link;
 // Име на таблицата с данни за потребители
 $user_table = stored_value('user_table','users');
-if ( !isset($_GET['user']) || ($_GET['user']!='newreg') || ($_POST['password2']!=$_POST['password']) || !$_POST['username'] )
-   return;
+if ( !isset($_GET['user']) || ($_GET['user']!='newreg') || ($_POST['password2']!=$_POST['password']) || 
+     !$_POST['username']
+   ) return;
 $u = db_table_field('username', $user_table, "`username`='".addslashes($_POST['username'])."'");
 if ($u) return;
 $q = "INSERT INTO `$tn_prefix".
      "users` SET `date_time_0`=NOW(), `date_time_1`=NOW(), `username`= '".addslashes($_POST['username']).
      "', `password`='".pass_encrypt($_POST['password'])."';";
-return mysqli_query($db_link,$q);
+mysqli_query($db_link,$q);
+$l = unset_self_query_var('user','newreg');
+header("Location: $l");
 }
 
 // Връща обект форма за влизане/регистриране на потребител
 
 function user_form($c){
+if (!$c && isset($_GET['user']) && ($_GET['user']=='newreg')) $sb = translate('user_savenew');
+else $sb = translate('user_login_button');
 $guf = new HTMLForm('login_form');
 $guf->add_input( new FORMInput(translate('user_username'),'username','text') );
 $guf->add_input( new FORMInput(translate('user_password'),'password','password') );
 if (!$c && isset($_GET['user']) && ($_GET['user']=='newreg'))
   $guf->add_input( new FORMInput(translate('user_passwordconfirm'),'password2','password') );
-$guf->add_input( new FORMInput('','','submit',translate('user_login_button')) );
+$guf->add_input( new FORMInput('','','submit',$sb) );
 return $guf;
 }
 
@@ -218,22 +246,14 @@ function new_user($a){// print_r($_SESSION); die;
 function create_user(){
 if (count($_POST)) save_user();
 global $idir;
-// Име на таблизата с данни за потребители
-$user_table = stored_value('user_table','users');
-// Номер на потребителя
-$i = db_table_field('ID',$user_table,"`username`='".$_SESSION['user_username']."' AND `password`='".$_SESSION['user_password']."'");
-// Проверка дали потребителят има всички права
-$p = db_table_field('yes_no','permissions',"`type`='all' AND `user_id`=$i");
-// Ако няма всички права, проверка дали няма право над модул user
-if (!$p) $p = db_table_field('yes_no','permissions',"`type`='module' AND `object`='user' AND `user_id`=$i");
-// Ако няма и това право - надпис
-if (!$p) die(translate('user_cnnotcreate'));
+if (!can_manage_users()) die(translate('user_cnnotcreate'));
 $page_title = translate('user_newreg');
 $page_content = '<div id="user_login">'."\n<h1>$page_title</h1>\n".user_form(0)->html();
 include($idir.'lib/build_page.php');
 die;
 }
 
+//
 // Функция, която връща html код на хипервръзка "Вход"
 //
 function enter_link(){
@@ -241,6 +261,65 @@ function enter_link(){
 $ep = stored_value('user_loginpage');
 if (!$ep) $ep = set_self_query_var('user','enter');
 return '<a href="'.$ep.'">'.translate("user_enter").'</a>';
+}
+
+//
+// Функция за изтриване на потребител
+//
+function delete_user($a){
+global $idir;
+if (!can_manage_users()) die(translate('user_cnnotcreate'));
+if (isset($_SESSION['user_to_delete'])) { do_delete_user(); return ''; }
+if (count($_POST)){ process_delete_user(); return; }
+$f = new HTMLForm('del_user_form');
+$f->add_input( new FormInput(translate('user_username'),'username','text') );
+$f->add_input( new FormInput('','','submit',translate('user_delete')) );
+$page_content = $f->html();
+if ($a=='delete') return $page_content;
+else { include($idir.'lib/build_page.php'); die; }
+}
+
+//
+// Връща true ако потребителят има право да управлява регистрациите на други потребители.
+//
+function can_manage_users(){
+// Име на таблицата с данни за потребители
+$user_table = stored_value('user_table','users');
+// Номер на потребителя
+$i = db_table_field('ID',$user_table,"`username`='".$_SESSION['user_username'].
+        "' AND `password`='".$_SESSION['user_password']."'");
+// Проверка дали потребителят има всички права
+$p = db_table_field('yes_no','permissions',"`type`='all' AND `user_id`=$i");
+if ($p) return true;
+// Ако няма всички права, проверка дали няма право над модул user
+$p = db_table_field('yes_no','permissions',"`type`='module' AND `object`='user' AND `user_id`=$i");
+if ($p) return true; else return false;
+}
+
+//
+// Изпълнява се, когато е изпратено потребителско име на потребител за изтриване
+//
+function process_delete_user(){
+if (!isset($_POST['username'])) return;
+// Име на таблицата с данни за потребители
+$user_table = stored_value('user_table','users');
+// Четене на номера на потребителя за изтриване
+$p = db_table_field('`ID`', $user_table, "`username`='".addslashes($_POST['username'])."'");
+if (!$p) return;
+$_SESSION['user_to_delete'] = $p;
+header('Location: '.$_SERVER['REQUEST_URI']);
+}
+
+//
+// Изтрива потребител с потребителско име 
+//
+function do_delete_user(){
+// Име на таблицата с данни за потребители
+$user_table = stored_value('user_table','users');
+db_delete_from($user_table, $_SESSION['user_to_delete']);
+unset($_SESSION['user_to_delete']);
+$l = unset_self_query_var('user');
+header('Location: '.$l);
 }
 
 ?>

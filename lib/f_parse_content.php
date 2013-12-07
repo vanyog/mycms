@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 include_once($idir.'lib/f_translate.php');
 include_once($idir.'lib/f_adm_links.php');
+include_once($idir.'lib/f_mod_path.php');
 
 function parse_content($cnt){
 global $page_options, $page_data, $body_adds, $page_header, $content_date_time, 
@@ -51,17 +52,9 @@ $sc = db_select_1('*','scripts',"`name`='".$tg[0]."'");
 
 if (!$sc){ // Ако няма такъв скрипт се търси модул с това име
   $f = strtolower($tg[0]);
-  $fn = "$mod_pth$f/f_$f.php";
-  $afn = $_SERVER['DOCUMENT_ROOT']."$fn"; //echo "$mod_pth $afn"; die;
-  // Модули се търсят на две места - първо в директорията, посочена в настройката mod_path, ако е зададена различна от mod
-  if ( ($mod_pth!='/mod/') && !file_exists($afn) ){
-    $fn = $pth."mod/$f/f_$f.php"; 
-    $afn = $_SERVER['DOCUMENT_ROOT']."$fn";
-  }
-  // и второ в директорията /mod/
-//  print_r($afn); die;
-  if (file_exists($afn)){
-    $c = "include_once('$afn');\n";
+  $fn = mod_path($f);
+  if ($fn){
+    $c = "include_once('$fn');\n";
     if (isset($tg[1])) $c .= '$tx = '."$f('$tg[1]');";
     else $c .= '$tx = '."$f();";
     eval($c); // Изпълнява се модула
