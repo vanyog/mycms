@@ -46,7 +46,7 @@ include_once($idir.'lib/f_edit_record_form.php');
 if (!session_id()) session_start();
 
 function user($a = ''){
-global $tn_prefix, $db_link, $user_table;
+global $tn_prefix, $db_link, $user_table, $mod_apth;
 
 // Ако е натиснат линк "Изход"
 if (isset($_GET['user'])&&($_GET['user']=='logout')) logout_user();
@@ -83,7 +83,14 @@ if (!$rz) {
   // Четене на списъка с други функции за четене данни на потребители
   $ts = stored_value('user_types');
   if ($ts){
-    print_r($ts); die;
+    $ta = explode(',',$ts);
+    foreach($ta as $f){
+      $fn = $mod_apth.'f_'.$f.'.php';
+      if (file_exists($fn)){
+         include_once($fn);
+         eval("$f();");
+      }
+    }
   }
   if (!$rz) { session_destroy(); header("Status: 403"); die("Access denied."); } 
 }
