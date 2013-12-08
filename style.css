@@ -21,37 +21,16 @@ div { padding:5px; }
 
 #page_menu{
   width:170px;
-  float:left;
 }
 
 #page_menu a{
   display:block;
 }
 
-#all_page{
-  width:1000px;
-  margin-left:auto; margin-right:auto;
-  background-color:#FFFFCC;
-  box-shadow: 0px 0px 20px 1px #FFFF00;
-}
-
-#user_frame{
-  position:absolute;
-  top:50px;
-  color:#D0D0D0;
-}
-
 #user_frame a{ color:white; }
 
 #menu_tree{
   border-bottom: solid black 1px;
-}
-
-#main_frame{
-  border-left:solid black 1px;
-  float:right;
-  width:800px;
-  min-height:600px;
 }
 
 #powered_by{
@@ -63,10 +42,4 @@ div { padding:5px; }
 #powered_by p{
   margin:0;
   padding:0;
-}
-
-#flags{
-  width:50;
-  text-align:right;
-  float:right;
 }

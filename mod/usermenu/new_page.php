@@ -24,10 +24,10 @@ $ddir = $idir;
 
 include("f_usermenu.php");
 
+include_once($idir."conf_paths.php");
 include_once($idir."lib/translation.php");
 include_once($idir."lib/f_db_insert_1.php");
 include_once($idir."lib/f_db_insert_m.php");
-//include_once($idir."lib/f_parse_content.php");
 include_once($idir."lib/o_form.php");
 
 // Номер на страницата, от която е изпратена заявка за нова страница
@@ -46,7 +46,7 @@ if (!$can_create) echo die("Your have no permission to create new page here.");
 if (count($_POST)) process_data();
 
 // Позиция  на новата страница в менюто - по подразбиране най-отдолу.
-$pz = db_table_field('MAX(`place`)', '`menu_items`', "1")+10;
+$pz = db_table_field('MAX(`place`)', 'menu_items', "1")+10;
 
 // Създаване на форма за попълване на данни за нова страница 
 $pf = new HTMLForm('new_page_fotm');
