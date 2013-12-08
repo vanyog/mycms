@@ -88,7 +88,8 @@ if (!$rz) {
       $fn = $mod_apth.'f_'.$f.'.php';
       if (file_exists($fn)){
          include_once($fn);
-         eval("$f();");
+         eval('$rz = '."$f();");
+         if ($rz) break;
       }
     }
   }
@@ -157,7 +158,14 @@ else return $page_content;
 function process_user(){
 if (isset($_POST['password2'])) save_user();
 $_SESSION['user_username'] = $_POST['username'];
-if (isset($_POST['password'])) $_SESSION['user_password'] = pass_encrypt($_POST['password']); else $_SESSION['user_password'] = '';
+if (isset($_POST['password'])){
+  $_SESSION['user_password']     = pass_encrypt($_POST['password']);
+  $_SESSION['user_password_raw'] = $_POST['password'];
+}
+else{
+  $_SESSION['user_password'] = '';
+  $_SESSION['user_password_raw'] = '';
+}
 $_SESSION['session_start'] = time();
 // Премахване на параметър $_GET['user']=='enter' и презареждане на страницата
 if (isset($_GET['user'])&&($_GET['user']=='enter')){
