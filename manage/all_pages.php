@@ -27,8 +27,11 @@ $ids = db_select_m('ID','pages','1 ORDER BY `ID` DESC');
 
 $page_content = '<table><tr>';
 
+$c = 0;
 foreach($ids as $id){
+  $c++;
   $page_content .= '<td><a href="'.$pth.'index.php?pid='.$id['ID'].'" target="_blank">'.$id['ID'].'</a></td>';
+  if (!($c % 10)) $page_content .= "</tr>\n<tr>";
 }
 
 $page_content .= '</tr></table>';

@@ -30,10 +30,6 @@ header("Content-Type: text/html; charset=windows-1251");
 
 if (phpversion()>'5.0') date_default_timezone_set("Europe/Sofia");
 
-// Номер на страницата
-$page_id = 1;
-if (isset($_GET['pid'])) $page_id = 1*$_GET['pid'];
-
 // Път до директорията на системата
 $idir = dirname(__FILE__).'/';
 
@@ -47,9 +43,10 @@ if (
 ) 
 die('Системата все още не е правилно инсталирана и конфигурирана. Вижте файл <a href="http://vanyog.com/_new/index.php?pid=91">USAGE.txt</a>.');
 
-include($idir.'lib/f_db_select_1.php');
-include($idir.'lib/f_db_select_m.php');
-include($idir.'lib/f_parse_template.php');
+include_once($idir.'lib/f_db_select_1.php');
+include_once($idir.'lib/f_db_select_m.php');
+include_once($idir.'lib/f_parse_template.php');
+include_once($idir.'lib/f_stored_value.php');
 include_once($idir.'lib/translation.php');
 include_once($idir.'lib/f_page_cache.php');
 
@@ -62,6 +59,10 @@ $body_adds   = ''; // Добавки към body тага
 $can_edit = false;     // Право на потребителя да редактира надписите по страницата
 $can_create = false;   // Право на потребителя да съдава/изтрива страници в дадения раздел(подменю) на сайта
 $can_manage = array(); // Права за администриране на модули
+
+// Номер на страницата
+$page_id = stored_value('main_index_pageid',1);
+if (isset($_GET['pid'])) $page_id = 1*$_GET['pid'];
 
 // Чете се описанието на страницата от таблица $tn_prefix.'pages'
 $page_data = db_select_1('*','pages',"ID=$page_id");

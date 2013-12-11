@@ -53,11 +53,12 @@ else return $default_language;
 
 // Връща html код за показване на знаменца, за други езици
 
-function flags(){
+function flags($a = ''){
 global $language, $languages, $dont_translate, $pth;
 $ls = array_keys($languages);
 $r = "";
 $how = stored_value('flag_setting','flag');
+if ($a) $how = $a;
 if (!$dont_translate) foreach($ls as $l) if ($l!=$language){
   $u = $_SERVER['REQUEST_URI'];
   $h = '';
