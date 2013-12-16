@@ -61,7 +61,7 @@ $l = db_select_1('*','outer_links',"`ID`=$lid");
 if (isset($l['link']) && $l['link']>''){
  if (!show_adm_links()){ // Броят се кликванията само ако посетителят не е администратор
    $q = "UPDATE `$tn_prefix"."outer_links` SET clicked = clicked+1 WHERE `ID`=".$l['ID'].";";
-   mysql_query($q,$db_link);
+   mysqli_query($db_link,$q);
  }
  header('Location: '.$l['link']);
 }
@@ -247,7 +247,7 @@ else {
   $q = $q1.substr($q2,0,strlen($q2)-2)." ".$q3;
 }
 //print_r($q); die;
-mysql_query($q,$db_link);
+mysqli_query($db_link,$q);
 
 }
 
