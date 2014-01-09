@@ -21,11 +21,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Когато $nom=false (по подразбиране) се показва меню с разрешените на влезлия потребител действия.
 // Ако $nom=true само се проверяват правата без да се показва меню.
 
-include_once($idir."conf_paths.php");
+//include_once($idir."conf_paths.php");
 include_once($idir."lib/f_db_select_m.php");
 include_once($idir."lib/f_mod_list.php");
 include_once($idir."lib/f_edit_normal_links.php");
-include_once($idir."lib/f_mod_path.php");
+//include_once($idir."lib/f_mod_path.php");
 
 if (!session_id()) session_start();
 

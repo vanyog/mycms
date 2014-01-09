@@ -41,10 +41,13 @@ global $pth, $adm_pth, $edit_name, $edit_value, $web_host, $local_host,
        $phpmyadmin_site, $phpmyadmin_local, $page_data;
 if ( !show_adm_links() ) return '';
 else {
-
   // $lpid - Ќомер на най-новата страница на сайта
   if (db_table_exists('pages')) $lpid = db_select_1('ID','pages','1 ORDER by `ID` DESC');
   if (isset($lpid['ID'])) $lpid = $lpid['ID']; else $lpid = 1;
+
+  // Ќомера на предишна и следваща страница
+  $ppid = $page_data['ID']-1; if ($ppid<1) $ppid = 1;
+  $npid = $ppid+2; if ($npid>$lpid) $npid = $lpid;
 
   $mphp = $phpmyadmin_site;
   $go = $local_host; $gon = 'go to LOCAL';
@@ -83,6 +86,8 @@ if (confirm("Hide this menu?")){
 --></script>
 <p id="adm_links">&nbsp;
 <a href="'.$pth.'">Home</a> :: '.$enmch.'
+<a href="'.$pth.'index.php?pid='.$ppid.'">&lt;</a>  
+<a href="'.$pth.'index.php?pid='.$npid.'">&gt;</a> 
 <a href="'.$pth.'index.php?pid='.$lpid.'&amp;'.$edit_name.'='.urlencode($edit_value).'">'.$lpid.'</a> :: 
 <a href="'.$adm_pth.'edit_file.php">File system</a> :: 
 <a href="'.$adm_pth.'edit_data.php">Database</a> :: 

@@ -28,26 +28,38 @@ include_once($idir.'lib/f_db_select_m.php');
 function menu($i, $id = 'page_menu'){
 global $ind_fl, $adm_pth, $page_id, $page_data;
 $d = db_select_m('*','menu_items',"`group`=$i ORDER BY `place`");
-$rz = '';  $once = false;
+$rz = ''; // Връщания резултат
+$once = false; // Флаг, който се използва за да се покаже само веднъж различно точката от менюто на текущата страница
+$sm = ''; // Изскачащо подменю, ако има такова
+$si = 1; // Номер на изскачащото подменю
+$lk = stored_value('menu_aslink'); // Дали точката на текущата страница да се покаже като линк
+$pp = stored_value('menu_popup'); // Дали да се показва изскачащо миню
 foreach($d as $m){
   $lnn = 1*$m['link'];
   $ln = $m['link']; 
   if ($lnn) $ln = $ind_fl.'?pid='.$lnn;
   $pl = '';
   if (in_edit_mode()) $pl = $m['place'];
-  if ($once || !is_parrent_menu($i, $m['link']))
-     $rz .= '<a href="'.$ln.'">'.$pl.translate($m['name']).'</a> '."\n";
+  $js = '';
+  $sm1 = '';
+  if ($pp && ($i==$page_data['menu_group'])) $sm1 = submenu($m,$si);
+  if ($pp && ($i==$page_data['menu_group'])) $js = ' onMouseOver="show_layer('.$si.',this);"';
+  if ($once || !is_parrent_menu($i, $m['link'])) {
+     $rz .= "<a href=\"$ln\"$js>".$pl.translate($m['name']).'</a> '."\n";
+  }
   else {
      $once = true;
-     $rz .= '<span>'.$pl.translate($m['name'])."</span> \n";
+     if ($lk) $rz .= '<a href="'.$ln.'" class="current"'.$js.'>'.$pl.translate($m['name']).'</a> '."\n";
+     else $rz .= '<span class="current">'.$pl.translate($m['name'])."</span> \n";
   }
+  if ($sm1){ $sm .= $sm1; }  $si++;
 }
 if (in_edit_mode()){
   $ni = db_table_field('MAX(`ID`)','menu_items','1')+1;
   $rz .= "id $i ".'<a href="'.$adm_pth.'new_record.php?t=menu_items&group='.$i.'&link='.$page_id.
          '&name=p'.$ni.'_link">New</a> '."\n";
 }
-if ($rz) $rz = "\n<div id=\"$id\">\n$rz</div>\n";
+if ($rz) $rz = "\n$sm<div id=\"$id\">\n$rz</div>\n";
 return $rz;
 }
 
@@ -125,6 +137,25 @@ global $page_id;
   }
 //  echo "-$i-<br>";
   return false;
+}
+
+//
+// Изскачащо подменю
+//
+function submenu($m,$si){
+// Четене номера на меню, което има за родител $m
+$sm = db_select_1('*','menu_tree','`parent`='.$m['group'].' AND `index_page`='.$m['link']);
+if (!$sm) return '';
+// Четене на точките от намереното меню
+$sd = db_select_m('*','menu_items','`group`='.$sm['group'].' ORDER BY `place` ASC');
+// Съставяне на изскачащото меню
+$rz = "<div id=\"Layer$si\">\n";
+foreach($sd as $d){
+  $a = translate($d['name']);
+  $rz .= "<a href=\"index.php?pid=".$d['link']."\">$a</a> \n";
+}
+$rz .= "</div>\n";
+return $rz;
 }
 
 ?>
