@@ -28,11 +28,22 @@ include_once($idir."lib/f_db_insert_1.php");
 // Този скрипт се използва на многоезични сайтове за превеждане на съдържанието.
 // Намира първият непреведен стринг и показва форма за превеждането му.
 
+// С цел намиране и превеждане на определени стрингове може да се изпрати
+// параметър $_GET['p'], чиято стойност е част, която трябва да се среща в имената на 
+// стринговете за превеждане.
+
+
 // Обработват се изпратените данни, ако има такива
 if (count($_POST)) process_trans();
 
+// Добавка в WHERE частта на sql заявката за немиране на стрингове
+$w = '';
+
+// Ако има параметър 
+if (isset($_GET['p'])) $w = " AND `name` LIKE '%".$_GET['p']."%'"; 
+
 // Четат се иманата на всички стрингове на езика по подразбиране.
-$na = db_select_m('name','content',"`language`='$default_language'"); //print_r($na); die;
+$na = db_select_m('name','content',"`language`='$default_language'$w"); //print_r($na); die;
 
 // Кодовете на всички останали езици без езика по подразбиране
 $la = $languages;
@@ -69,10 +80,13 @@ global $languages, $default_language;
   $f->add_input(new FormInput('','name','hidden',$n1));
   $f->add_input(new FormSelect('Not editable','nolink',array('0','1')));
   $f->add_input(new FormInput('','language','hidden',$l));
-  $f->add_input(new FormTextArea('Text in '.$languages[$l],'text',100,15,$d['text']));
+  $f->add_input(new FormTextArea('Text in '.$languages[$l],'text',100,15,
+                                  str_replace('&','&amp;',stripslashes($d['text']))) );
   $f->add_input(new FormInput('','','submit','Save'));
   return "<p>String name: '".$d['name']."'<br>\nIn ".$languages[$default_language].
-         ":</p>\n".'<textarea id="deflang" cols="100" rows="10"  disabled="disabled">'.stripslashes($d['text'])."</textarea>\n".$f->html();
+         ":</p>\n".'<textarea id="deflang" cols="100" rows="10"  disabled="disabled">'.
+         str_replace('&','&amp;',stripslashes($d['text'])).
+         "</textarea>\n".$f->html();
 }
 
 //
@@ -96,7 +110,7 @@ global $la;
 function process_trans(){
   $_POST['date_time_1']='NOW()';
   $_POST['date_time_2']='NOW()';
-  echo db_insert_1($_POST,'content');
+  db_insert_1($_POST,'content');
 }
 
 ?>

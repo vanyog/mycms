@@ -1,7 +1,7 @@
 <?php
 /*
 MyCMS - a simple Content Management System
-Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>
+Copyright (C) 2013  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,19 +22,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include('conf_manage.php');
 include_once($idir.'conf_paths.php');
 include_once($idir.'lib/f_db_select_m.php');
+include_once($idir.'lib/f_db_table_field.php');
 
-$ids = db_select_m('ID','pages','1 ORDER BY `ID` DESC');
+$ln = '';
+if (isset($_GET['lang'])) $ln = $_GET['lang'];
+
+$pd = db_select_m('ID,content','pages','1 ORDER BY `ID` ASC');
 
 $page_content = '<table><tr>';
 
+$rz = '';
 $c = 0;
-foreach($ids as $id){
+foreach($pd as $p){
+  if ($ln) { 
+    $cn = db_table_field('text','content',"`name`='".$p['content']."' AND `language`='$ln'");
+    if (!$cn) continue;
+  }
   $c++;
-  $page_content .= '<td><a href="'.$pth.'index.php?pid='.$id['ID'].'" target="_blank">'.$id['ID'].'</a></td>';
-  if (!($c % 10)) $page_content .= "</tr>\n<tr>";
+  $rz = '<td><a href="'.$pth.'index.php?pid='.$p['ID'].'" target="_blank">'.$p['ID'].'</a></td>'.$rz;
+  if (!($c % 10)) $rz = "</tr>\n<tr>$rz";
 }
 
-$page_content .= '</tr></table>';
+$page_content .= $rz.'</tr></table>';
 
 include('build_page.php');
 
