@@ -24,8 +24,8 @@ include_once($idir.'conf_paths.php');
 include_once($idir.'lib/f_db_select_m.php');
 include_once($idir.'lib/f_db_table_field.php');
 
-$ln = '';
-if (isset($_GET['lang'])) $ln = $_GET['lang'];
+$ln = ''; $lnl = '';
+if (isset($_GET['lang'])) { $ln = $_GET['lang']; $lnl = '&lang='.$ln; }
 
 $pd = db_select_m('ID,content','pages','1 ORDER BY `ID` ASC');
 
@@ -39,7 +39,7 @@ foreach($pd as $p){
     if (!$cn) continue;
   }
   $c++;
-  $rz = '<td><a href="'.$pth.'index.php?pid='.$p['ID'].'" target="_blank">'.$p['ID'].'</a></td>'.$rz;
+  $rz = '<td><a href="'.$pth.'index.php?pid='.$p['ID'].$lnl.'" target="_blank">'.$p['ID'].'</a></td>'.$rz;
   if (!($c % 10)) $rz = "</tr>\n<tr>$rz";
 }
 
