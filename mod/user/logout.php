@@ -24,9 +24,22 @@ $ddir = $idir;
 
 include($idir."lib/translation.php");
 
+session_start();
+
+// Номер на началната страница на сайта
+$i = stored_value('main_index_pageid',1);
+// Име на заглавието на началната страница
+$n = db_table_field('title','pages',"`ID`=$i");
+
 $page_title = translate('user_logouttitle');
+
 $page_content = "<h1>$page_title</h1>\n".translate('user_logoutcontent').'
-<a href="'.$pth.'">'.translate('home_page_title',false).'</a>';
+<p>'.translate('user_backto').'<br>
+'.translate('user_homеpage').'
+<a href="'.$pth.'index.php?pid='.$i.'">'.translate($n,false).'</a><br>
+';
+if (isset($_SESSION['user_returnpage'])) $page_content .= '<a href="'.$_SESSION['user_returnpage'].'">'.translate('user_lastpage').'</a>';
+$page_content .= '</p>';
 
 include($idir."lib/build_page.php");
 

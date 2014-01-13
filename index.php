@@ -59,6 +59,7 @@ $body_adds   = ''; // Добавки към body тага
 $can_edit = false;     // Право на потребителя да редактира надписите по страницата
 $can_create = false;   // Право на потребителя да съдава/изтрива страници в дадения раздел(подменю) на сайта
 $can_manage = array(); // Права за администриране на модули
+$can_visit = true;     // Право на влязъл потребител да вижда съдържанието на страницата.
 
 // Номер на страницата
 $page_id = stored_value('main_index_pageid',1);
@@ -87,6 +88,13 @@ if (!$cnt){
  // Записване в кеша
  $t = stored_value('cache_time');
  if ($t) save_cache($cnt);
+}
+
+// Ако страницата не е достъпна за потребителя се генерира Access denied
+if (!$can_visit) {
+  if (session_id()) session_destroy();
+  header("Status: 403");
+  die("Access denied by index.php.");
 }
 
 // Изпращане на страницата

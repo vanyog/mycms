@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+global $can_visit;
+
 include_once($idir.'lib/translation.php');
 include_once($idir.'lib/o_form.php');
 include_once($idir.'lib/f_db_table_field.php');
@@ -27,8 +29,12 @@ include_once($idir.'lib/f_edit_record_form.php');
 
 // Функцията user() проверява дали има влязъл с парола потребител.
 // Ако няма такъв, показва форма за влизане и
-// ако потребителското име или паролата са невалидни предизвиква "Access denied."
-// Ако потребителското име и паролата са валидни връща препратка "Изход".
+// ако потребителското име или паролата не са валидни предизвиква "Access denied."
+// Ако потребителското име и паролата са валидни връща потребителското име и препратка "Изход".
+
+// Въпреки успешното влизане функцията прави $can_visit = false или според
+// стойността на настройката user_can_visit, така че, дори и да е влязъл, потребителят
+// може да види резултат Access denied ако няма други права за работа със страницата.
 
 // $_GET['user']='newreg' - показва форма за въвеждане на данни за нов потребител,
 // при условие, че има влязъл потребител с право да създава други потребители. (`type`='module', `object`='user')
@@ -46,7 +52,8 @@ include_once($idir.'lib/f_edit_record_form.php');
 if (!session_id()) session_start();
 
 function user($a = ''){
-global $tn_prefix, $db_link, $user_table, $mod_apth;
+
+global $tn_prefix, $db_link, $user_table, $mod_apth, $can_visit;
 
 // Ако е натиснат линк "Изход"
 if (isset($_GET['user'])&&($_GET['user']=='logout')) logout_user();
@@ -89,11 +96,12 @@ if (!$rz) {
       if (file_exists($fn)){
          include_once($fn);
          eval('$rz = '."$f();");
-         if ($rz) break;
+         if ($rz){ $can_visit = stored_value('user_can_visit',false); break; }
       }
     }
   }
-  if (!$rz) { session_destroy(); header("Status: 403"); die("Access denied."); } 
+  // Ако никоя функция не е намерила номер на валиден потребител - Access denied.
+  if (!$rz) { session_destroy(); header("Status: 403"); die("Access denied by user module."); } 
 }
 else{
   // Ако се редактират данните на потребителя.
@@ -121,8 +129,11 @@ else{
   }
 
   // Ако не е зададена се връща линк "Изход".
-  else $rz = '<span class="user">'.$_SESSION['user_username'].
+  else{
+    $can_visit = user_can_visit($rz['ID']);
+    $rz = '<span class="user">'.$_SESSION['user_username'].
        ' <a href="'.set_self_query_var('user','logout').'">'.translate('user_logaut').'</a></span>';
+  }
 }
 return $rz;
 }
@@ -222,8 +233,13 @@ function logout_user(){
 $lp = current_pth(__FILE__).'logout.php';
 // Евентуално в настройките може да е зададена друга 
 $lp = stored_value('user_logoutpage',$lp); //print_r($lp); die;
-// Прекратяване на сесията
-session_destroy();
+// Унищожаване променливите на сесията
+unset($_SESSION['user_username']);
+unset($_SESSION['user_password']);
+unset($_SESSION['user_password_raw']);
+unset($_SESSION['session_start']);
+// Запазване на страницата за връщане
+if (isset($_SERVER['HTTP_REFERER'])) $_SESSION['user_returnpage'] = $_SERVER['HTTP_REFERER'];
 // Пренасочване към страницата след излизане
 header("Location: $lp");
 }
@@ -342,6 +358,18 @@ db_delete_from($user_table, $_SESSION['user_to_delete']);
 unset($_SESSION['user_to_delete']);
 $l = unset_self_query_var('user');
 header('Location: '.$l);
+}
+
+//
+// Установява дали потребителят има право да види съдържанието на страницата
+//
+function user_can_visit($i){
+global $page_id;
+$rz = db_table_field('yes_no','permissions',"`user_id`=$i AND `type`='visit' AND `object`=$page_id", false);
+if (!($rz===false)) return $rz;
+$rz = db_table_field('yes_no','permissions',"`user_id`=0 AND `type`='visit' AND `object`=$page_id", false);
+if (!($rz===false)) return $rz;
+return stored_value('user_can_visit',false);
 }
 
 ?>

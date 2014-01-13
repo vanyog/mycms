@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Когато $nom=false (по подразбиране) се показва меню с разрешените на влезлия потребител действия.
 // Ако $nom=true само се проверяват правата без да се показва меню.
 
+global $can_visit;
+
 //include_once($idir."conf_paths.php");
 include_once($idir."lib/f_db_select_m.php");
 include_once($idir."lib/f_mod_list.php");
@@ -31,7 +33,7 @@ if (!session_id()) session_start();
 
 function usermenu($nom = false){
 
-global $page_data, $can_edit, $can_create, $can_manage, $pth, $page_header;
+global $page_data, $can_edit, $can_create, $can_manage, $can_visit, $pth, $page_header;
 
 // Ако в сесията няма данни за потребител, връща празен стринг.
 if (!isset($_SESSION['user_username'])||!isset($_SESSION['user_password'])) return '';
@@ -52,9 +54,9 @@ $p = db_select_m('*', 'permissions', "`user_id`=$id");// print_r($p); die;
 $rz = '';
 
 // Установяване на правата от различните типове
-$can_edit = false; // Право на потребителя да редактира надписите по страницата 
-$can_create = false; // Право на потребителя да съдава/изтрива страници в дадения раздел(подменю) на сайта
-$can_manage = array(); // Права за администриране на модули
+$can_edit = false;    // Право на потребителя да редактира надписите по страницата 
+$can_create = false;  // Право на потребителя да съдава/изтрива страници в дадения раздел(подменю) на сайта
+$can_manage = array();// Права за администриране на модули
 
 foreach($p as $q) switch($q['type']) {
 case 'all': 
@@ -67,16 +69,20 @@ case 'all':
       $can_manage[$n] = $q['yes_no'];
     }
   }
+  $can_visit = true;
   break;
 case 'menu':// print_r($page_data); die;
   $can_create = in_that_branch($page_data['menu_group'], $q['object']) && $q['yes_no'];
   $can_edit = $can_create;
+  if ($can_create) $can_visit = true;
   break;
 case 'page':
   if ($q['object']==$page_data['ID']) $can_edit = $q['yes_no'];
+  if ($can_edit) $can_visit = true;
   break;
 case 'module':
   $can_manage[$q['object']]=$q['yes_no'];
+  if ($q['yes_no']) $can_visit = true;
   break;
 }
 

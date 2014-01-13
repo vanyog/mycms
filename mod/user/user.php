@@ -17,13 +17,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-//
-// Връща меню с препратки към страници за извършване на действия с потребители
-//
-function user_menu_items(){
-$p = current_pth(__FILE__);
-return '<a href="'.$p.'user.php?user=newreg">User new</a><br>
-<a href="'.$p.'user.php?user=">User delete</a>'."\n";
-}
+$idir = dirname(dirname(dirname(__FILE__))).'/';
+$ddir = $idir;
+
+include('f_user.php');
+include('../usermenu/f_usermenu.php');
+
+$page_content = user();
+$page_content = usermenu().$page_content;
+
+include($idir.'lib/build_page.php');
 
 ?>
