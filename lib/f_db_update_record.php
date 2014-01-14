@@ -32,7 +32,7 @@ if (!isset($d['ID'])) die('Няма номер на запис $d[\'ID\'] във функция db_update_
 $q = "UPDATE `$tn_prefix$t` SET ";
 foreach($d as $n=>$v){
   if ($n=='ID') continue;
-  if ($v=='NOW()') $q .= "`$n`=$v,";
+  if ( ($v=='NOW()') || ($v=='NULL') ) $q .= "`$n`=$v,";
   else $q .= "`$n`='".addslashes($v)."',";
 }
 $q = substr($q,0,strlen($q)-1)." WHERE `ID`=".$d['ID'].";";

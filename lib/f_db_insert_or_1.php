@@ -37,7 +37,7 @@ $id = db_table_field('ID',$t,$w);
 if ($id) $q = "UPDATE `$tn_prefix$t` SET ";
 else $q = "INSERT INTO `$tn_prefix$t` SET ";
 foreach($d as $n=>$v){
-  if ($v=='NOW()') $q .= "`$n`=$v,";
+  if ( ($v=='NOW()') || ($v=='NULL') ) $q .= "`$n`=$v,";
   else $q .= "`$n`='".addslashes($v)."',";
 }
 $q = substr($q,0,strlen($q)-1);
