@@ -39,7 +39,7 @@ foreach($d as $m){
   $ln = $m['link']; 
   if ($lnn) $ln = $ind_fl.'?pid='.$lnn;
   $pl = '';
-  if (in_edit_mode()) $pl = $m['place'];
+  if (in_edit_mode()) $pl = $m['place'].".";
   $js = '';
   $sm1 = '';
   if ($pp && ($i==$page_data['menu_group'])) $sm1 = submenu($m,$si);

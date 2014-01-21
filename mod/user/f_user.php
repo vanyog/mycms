@@ -153,7 +153,7 @@ else $page_title = translate('user_login');
 $m = '';
 if (!$c) $m = translate('user_firstuser');
 // Съдържание на страницата
-$page_content = '<div id="user_login">'."\n<h1>$page_title</h1>\n$m\n".user_form($c)->html();
+$page_content = '<div id="user_login">'."\n".user_form($c,"<h1>$page_title</h1>\n$m\n")->html();
 if (stored_value('user_showreglink', 'false')=='true')
    $page_content .= '<p><a href="'.set_self_query_var('user','newreg').'">'.translate('user_newreg')."</a></p>";
 $page_content .= "\n</div>";
@@ -213,10 +213,10 @@ header("Location: $l");
 
 // Връща обект форма за влизане/регистриране на потребител
 
-function user_form($c){
+function user_form($c,$t = ''){
 if (!$c && isset($_GET['user']) && ($_GET['user']=='newreg')) $sb = translate('user_savenew');
 else $sb = translate('user_login_button');
-$guf = new HTMLForm('login_form');
+$guf = new HTMLForm('login_form',true,$t);
 $guf->add_input( new FORMInput(translate('user_username'),'username','text') );
 $guf->add_input( new FORMInput(translate('user_password'),'password','password') );
 if (!$c && isset($_GET['user']) && ($_GET['user']=='newreg'))
@@ -365,6 +365,8 @@ header('Location: '.$l);
 //
 function user_can_visit($i){
 global $page_id;
+$rz = db_table_field('yes_no','permissions',"`user_id`=$i AND `type`='all'", false);
+if (!($rz===false)) return $rz;
 $rz = db_table_field('yes_no','permissions',"`user_id`=$i AND `type`='visit' AND `object`=$page_id", false);
 if (!($rz===false)) return $rz;
 $rz = db_table_field('yes_no','permissions',"`user_id`=0 AND `type`='visit' AND `object`=$page_id", false);

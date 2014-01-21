@@ -25,11 +25,18 @@ public $name = '';
 public $method = 'post';
 public $astable = true;
 public $action = '';
+public $text = '';
 private $ins = array();
 
-function __construct($n,$at=true){
+// $n - name атрибут на формата
+// $at - дали да се показва в таблица
+// $tx - текст, който се показва между <form> тага и първия елемент на формата
+
+function __construct($n,$at=true,$tx = ''){
 $this->name = $n;
 $this->astable = $at;
+if ($at){ if ($tx) $this->text = "<tr><td colspan=\"2\">$tx</td></tr>"; }
+else $this->text = $tx;
 }
 
 function add_input($in){
@@ -44,11 +51,12 @@ var f = document.forms["'.$this->name.'"];
 var l = f.length;
 var r = 1;
 for(i=0;i<l-1;i++) r = r*f.elements[i].value.length;
-if (r) f.submit(); else alert("Please, fill in all boxes");
+if (r) f.submit(); else alert("'.translate('fillin_all').'");
 }
 ';
 $rz = "<form enctype=\"multipart/form-data\" name=\"$this->name\" id=\"$this->name\" method=\"$this->method\" action=\"$this->action\">\n";
-if ($this->astable) $rz .= "<table>\n"; 
+if ($this->astable) $rz .= "<table>\n";
+$rz .= $this->text; 
 foreach($this->ins as $i){
   $rz .= $i->html($this->astable);
   if (!(strpos($i->js, 'ifNotEmpty_'.$this->name.'()')===false)) $js .= $js1; 
@@ -199,15 +207,16 @@ $this->public_key = $pk;
 }
 
 public function html($it){
+global $language;
 $rz = '';
 if ($it) $rz = "<tr>\n<th>";
 $rz .= $this->caption;
 if ($it) $rz .= "</th>\n<td>"; else $rz .= " ";
 $rz .= '<script type="text/javascript"
-  src="http://www.google.com/recaptcha/api/challenge?k='.$this->public_key.'">
+  src="http://www.google.com/recaptcha/api/challenge?k='.$this->public_key.'&amp;hl='.$language.'">
 </script>
 <noscript>
-  <iframe src="http://www.google.com/recaptcha/api/noscript?k='.$this->public_key.'"
+  <iframe src="http://www.google.com/recaptcha/api/noscript?k='.$this->public_key.'&hl='.$language.'"
     height="300" width="500" frameborder="0"></iframe><br>
   <textarea name="recaptcha_challenge_field" rows="3" cols="40">
   </textarea>
