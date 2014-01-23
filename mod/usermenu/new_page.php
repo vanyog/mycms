@@ -93,7 +93,7 @@ $pi = db_table_field('MAX(`ID`)', 'pages', '1')+1;
 // Номер на менюто на новата страница
 $mg1 = $page_data['menu_group']; // На старото меню
 $mg2 = $mg1; // На новото меню, ако се създава нов раздел
-if ($newmenu) $mg2 = db_table_field('MAX(`group`)', 'menu_items', '1')+1;
+if ($newmenu) $mg2 = db_table_field('MAX(`menu_group`)', 'pages', '1')+1;
 
 // Данни за таблица 'pages'
 $d1 = array(

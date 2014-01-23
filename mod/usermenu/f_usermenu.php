@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Когато $nom=false (по подразбиране) се показва меню с разрешените на влезлия потребител действия.
 // Ако $nom=true само се проверяват правата без да се показва меню.
 
-global $can_visit;
+global $can_visit, $can_manage;
 
 //include_once($idir."conf_paths.php");
 include_once($idir."lib/f_db_select_m.php");
@@ -64,10 +64,9 @@ case 'all':
   $can_create = $q['yes_no'];
   $ml = mod_list(true);
   foreach($ml as $m){
-    if (file_exists($m."f_menu_items.php")) {
-      $n = pathinfo($m,PATHINFO_FILENAME);
-      $can_manage[$n] = $q['yes_no'];
-    }
+    $n = pathinfo($m,PATHINFO_FILENAME);
+    $yn = db_table_field('yes_no','permissions',"`user_id`=$id AND `type`='module' AND `object`='$n'",0);
+    $can_manage[$n] = ($yn===false) ||  ($yn==1);
   }
   $can_visit = true;
   break;
@@ -108,10 +107,12 @@ if (confirm("'.translate('usermenu_confirdeleting').'")) document.location = "'.
  }
 }
 if ($can_edit) $rz .= edit_normal_link()."<br>\n";
-foreach($can_manage as $m=>$yn){
+foreach($can_manage as $m=>$yn) if( $yn) {
   $fn = dirname(mod_path($m)).'/f_menu_items.php';
-  include_once($fn);
-  eval('$rz .= '.$m.'_menu_items();');
+  if (file_exists($fn)){
+    include_once($fn);
+    eval('$rz .= '.$m.'_menu_items();');
+  }
 }
 return '<div id="user_menu">'."\n".$rz."\n</div>";
 }

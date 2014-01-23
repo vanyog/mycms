@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // +  за качване на файл и 
 // -  за изтриване на качения файл.
 
+global $can_manage;
+
 function uploadfile($n){
 global $mod_pth, $page_id;
 
@@ -95,7 +97,7 @@ else {
 }
 
 // В режим на редактиране се показват знаци + - за качване-изтриване на файла
-if (in_edit_mode()){
+if (in_edit_mode() || can_upload()){
   $cp = current_pth(__FILE__);
   $rz .= ' <a href="'.$cp."upload.php?pid=$pid&amp;fid=$fid&amp;fn=$n"."\" title=\"Update\">+</a>\n";
   if ( isset($fr['filename']) && $fr['filename'] && !$ne ) 
@@ -104,6 +106,12 @@ if (in_edit_mode()){
 }
 
 return $rz;
+}
+
+// Проверяване дали потребителят има право да качва, сменя и изтрива файлове
+function can_upload(){
+global $can_manage;
+return isset($can_manage['uploadfile']) && ($can_manage['uploadfile']==1);
 }
 
 ?>

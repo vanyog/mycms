@@ -94,6 +94,7 @@ if (confirm("Hide this menu?")){
 <a href="'.stored_value('adm_links_cpanel').'" target="_blank">cPanel</a> :: 
 <a href="'.$mphp.'" target="_blank">phpMyAdmin</a> :: 
 <a href="'.$adm_pth.'showenv.php?AAAAAAA" target="_blank">$_SERVER</a> :: 
+<a href="https://github.com/vanyog/mycms/wiki" target="_blank">Help</a> :: 
 <a href="'.$go.'">'.$gon.'</a><!--:: 
 <a hr  ="'.$adm_pth.'dump_data.php">Dump</a-->'.$w3c.' :: 
 '.$clink.'
