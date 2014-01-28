@@ -81,12 +81,14 @@ foreach($cp as $n => $v){
       }
       break;
     case 'text': case 'mediumtext':
-      $vl = stripslashes($d[$n]);
+      $vl = str_replace('&', '&amp;', stripslashes($d[$n]) );
+      $ms = '';
+      if (!(strpos($vl,'<!--$$_')===false)) $ms = '<p class="message">'.translate('edit_record_form_$$').'</p>';
       $la = explode("\n", $vl);
       $lc = count($la);
       if ($lc<3) $lc = 3;
       if ($lc>$max_lines) $lc = $max_lines;
-      $hf->add_input( new FormTextArea($cp[$n], $n, $max_size, $lc, $vl) );
+      $hf->add_input( new FormTextArea($cp[$n].$ms, $n, $max_size, $lc, $vl) );
       break;
     case 'int':
       $vl = $d[$n];

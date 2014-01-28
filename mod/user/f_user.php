@@ -108,6 +108,7 @@ else{
   if ($a == 'edit') return edit_user($rz['ID']);
 
   // Отбелязване на часа и IP адреса на влизане
+  if (!isset($_SESSION['session_start'])) $_SESSION['session_start'] = time();
   $tm = date('Y-m-d H:m:s', $_SESSION['session_start']);
   $q = "UPDATE `$tn_prefix"."$user_table` SET `date_time_2`='$tm', `IP`='".$_SERVER['REMOTE_ADDR'].
        "' WHERE `ID`=".$rz['ID'].";";
@@ -308,7 +309,7 @@ function delete_user($a){
 global $idir;
 if (!can_manage_users()) die(translate('user_cnnotcreate'));
 if (isset($_SESSION['user_to_delete'])) { do_delete_user(); return ''; }
-if (count($_POST)){ process_delete_user(); return; }
+if (count($_POST)){ return process_delete_user(); }
 $f = new HTMLForm('del_user_form');
 $f->add_input( new FormInput(translate('user_username'),'username','text') );
 $f->add_input( new FormInput('','','submit',translate('user_delete')) );
@@ -343,7 +344,7 @@ if (!isset($_POST['username'])) return;
 $user_table = stored_value('user_table','users');
 // Четене на номера на потребителя за изтриване
 $p = db_table_field('`ID`', $user_table, "`username`='".addslashes($_POST['username'])."'");
-if (!$p) return;
+if (!$p) return translate('user_nutodelete');
 $_SESSION['user_to_delete'] = $p;
 header('Location: '.$_SERVER['REQUEST_URI']);
 }

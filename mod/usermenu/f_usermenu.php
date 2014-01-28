@@ -18,8 +18,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // Проверяване правата на влязъл потребител и показване на меню с позволените му действия.
+
 // Когато $nom=false (по подразбиране) се показва меню с разрешените на влезлия потребител действия.
 // Ако $nom=true само се проверяват правата без да се показва меню.
+// $nom = 'logout' - добавяне на линк "Изход" в менюто
+
+
 
 global $can_visit, $can_manage;
 
@@ -27,6 +31,7 @@ global $can_visit, $can_manage;
 include_once($idir."lib/f_db_select_m.php");
 include_once($idir."lib/f_mod_list.php");
 include_once($idir."lib/f_edit_normal_links.php");
+include_once($idir."mod/user/f_user.php");
 //include_once($idir."lib/f_mod_path.php");
 
 if (!session_id()) session_start();
@@ -55,18 +60,19 @@ $rz = '';
 
 // Установяване на правата от различните типове
 $can_edit = false;    // Право на потребителя да редактира надписите по страницата 
-$can_create = false;  // Право на потребителя да съдава/изтрива страници в дадения раздел(подменю) на сайта
+$can_create = false;  // Право на потребителя да създава/изтрива страници в дадения раздел(подменю) на сайта
 $can_manage = array();// Права за администриране на модули
 
 foreach($p as $q) switch($q['type']) {
-case 'all': 
+case 'all':
   $can_edit = $q['yes_no'];
   $can_create = $q['yes_no'];
   $ml = mod_list(true);
   foreach($ml as $m){
     $n = pathinfo($m,PATHINFO_FILENAME);
-    $yn = db_table_field('yes_no','permissions',"`user_id`=$id AND `type`='module' AND `object`='$n'",0);
-    $can_manage[$n] = ($yn===false) ||  ($yn==1);
+    $yn = db_select_m('yes_no','permissions',"`user_id`=$id AND `type`='module' AND `object`='$n'");
+    if (!count($yn)){ $can_manage[$n] = $q['yes_no']; }
+    else { $can_manage[$n] = $yn[0]['yes_no']; }
   }
   $can_visit = true;
   break;
@@ -85,7 +91,7 @@ case 'module':
   break;
 }
 
-if ($nom) return '';
+if ($nom===true) return '';
 
 // Съставяне на менюто
 $pt = current_pth(__FILE__);
@@ -114,11 +120,12 @@ foreach($can_manage as $m=>$yn) if( $yn) {
     eval('$rz .= '.$m.'_menu_items();');
   }
 }
+if ($rz && ($nom == 'logout')) $rz .= user('enter')."<br>\n";
 return '<div id="user_menu">'."\n".$rz."\n</div>";
 }
 
 //
-// Проверява дали менюто на страницата е подменю на разрешеното меню
+// Проверява дали менюто на страницата е подменю на разрешеното за редактиране от потребителя меню
 //
 function in_that_branch($pi,$j){// echo "$pi $j<br>";
 if ($pi==$j) return true;

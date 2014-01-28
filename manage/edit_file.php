@@ -126,7 +126,7 @@ else { // Ако е файл се показва форма за редактиране на съдържанието му
 include("editor.php");
 
 $fc = array();
-$can_edit = array('php','txt','css','js','html','sql');
+$can_edit = array('php','txt','css','js','html','sql','htaccess','');
 $e = pathinfo($d,PATHINFO_EXTENSION);
 if (is_file($d) && in_array($e,$can_edit)) $fc=file($d);
 else {

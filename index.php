@@ -104,16 +104,18 @@ echo $cnt;
 
 // Връща страница, която показва надпис, че няма страница с такъв номер
 function page404(){
-return Array (
+$rz = Array (
 'ID' => 0,
 'menu_group' => 1,
 'title' => 'error_404_title',
 'content' => 'error_404_content',
-'template_id' => 1,
+'template_id' => stored_value('error_404_template',1),
 'options' => '',
 'tcount'=>0,
 'dcount'=>0
 );
+//print_r($rz); die;
+return $rz;
 }
 
 // Брои посещенията

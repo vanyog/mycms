@@ -18,11 +18,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // Функцията db_update_record($d,$t) опреснява записа в таблица $t
-// с дънните от масив $d.
+// с данните от масив $d.
 // Масивът $d трябва да съдържа $d['ID'] - номер на записа
 
 // Ако към функцията е изпратен трети параметър $y = true
-// функцията само връща SQL заявка, без да вмъква запис.
+// функцията връща SQL заявка, без да вмъква запис,
+// иначе връща номера на опреснения запис.
 
 include_once($idir.'lib/usedatabase.php');
 
@@ -39,7 +40,7 @@ $q = substr($q,0,strlen($q)-1)." WHERE `ID`=".$d['ID'].";";
 if ($y) return $q;
 else{
  mysqli_query($db_link,$q);
- return mysqli_insert_id($db_link);
+ return $d['ID'];
 }
 }
 
