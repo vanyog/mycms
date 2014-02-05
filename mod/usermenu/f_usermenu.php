@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Когато $nom=false (по подразбиране) се показва меню с разрешените на влезлия потребител действия.
 // Ако $nom=true само се проверяват правата без да се показва меню.
-// $nom = 'logout' - добавяне на линк "Изход" в менюто
+// $nom = адрес на страница за излизане
 
 
 
@@ -47,12 +47,12 @@ if (!isset($_SESSION['user_username'])||!isset($_SESSION['user_password'])) retu
 $user_table = stored_value('user_table','users');
 
 // $id - номер на влязъл потребител
-$id = db_select_1('ID',$user_table, 
+$ud = db_select_1('*',$user_table, 
       "`username`='".addslashes($_SESSION['user_username'])."' AND `password`='".$_SESSION['user_password']."'");
 
 // Ако няма потребител със запазените в сесията име и парола, връща празен стринг.
-if (!$id) return '';
-$id = $id['ID'];
+if (!$ud) return '';
+$id = $ud['ID'];
 
 // Четене на правата на потребителя
 $p = db_select_m('*', 'permissions', "`user_id`=$id");// print_r($p); die;
@@ -120,7 +120,10 @@ foreach($can_manage as $m=>$yn) if( $yn) {
     eval('$rz .= '.$m.'_menu_items();');
   }
 }
-if ($rz && ($nom == 'logout')) $rz .= user('enter')."<br>\n";
+if (strlen($nom)&&!strlen($ud['type'])){
+  $rz .= '<span class="user">'.$_SESSION['user_username'].
+         ' <a href="'.$nom.'">'.translate('user_logaut').'</a></span>'."<br>\n";
+}
 return '<div id="user_menu">'."\n".$rz."\n</div>";
 }
 

@@ -22,8 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // на посещенията на страниците от сайта
 
 function pagestat(){
-global $page_data;
-if (!show_adm_links()) return '';
+global $page_data, $can_edit;
+if ( !(show_adm_links() || $can_edit) ) return '';
 $pth = current_pth(__FILE__);
 return 'Total '.$page_data['tcount'].' Today '.$page_data['dcount'].' See <a href="'.$pth.'page_stats.php">page stats</a>';}
 

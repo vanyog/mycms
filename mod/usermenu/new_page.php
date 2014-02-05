@@ -53,7 +53,7 @@ $pf = new HTMLForm('new_page_fotm');
 
 $pf->add_input( new FormInput(translate('usermenu_newmenu'), 'newmenu', 'checkbox'));
 
-$ti = new FormSelect(translate('usermenu_language'), 'lang', $languages);
+$ti = new FormSelect(translate('usermenu_language'), 'lang', $languages, $language);
 $ti->values = 'k';
 $pf->add_input( $ti );
 
@@ -72,7 +72,7 @@ $pf->add_input(new FormTextArea(translate('usermenu_newpagecontent'), 'content',
 $pf->add_input( new FormInput('','','submit',translate('usermenu_newpagesubmit')) );
 
 $page_content = '<h1>'.translate('usermenu_createnewpage').'</h1>'.$pf->html();
-$page_header = '<style><!--
+$page_header .= '<style><!--
 th { text-align: right; vertical-align:top; }
 --></style>';
 
@@ -93,7 +93,12 @@ $pi = db_table_field('MAX(`ID`)', 'pages', '1')+1;
 // Номер на менюто на новата страница
 $mg1 = $page_data['menu_group']; // На старото меню
 $mg2 = $mg1; // На новото меню, ако се създава нов раздел
-if ($newmenu) $mg2 = db_table_field('MAX(`menu_group`)', 'pages', '1')+1;
+if ($newmenu){ // Номерът на новото меню - с 1 по-голям от най-големия, зададен номер на меню
+// както в таблица 'pages' така и в таблича 'menu_items'
+  $mg2 = db_table_field('MAX(`menu_group`)', 'pages', '1')+1;
+  $mg3 = db_table_field('MAX(`group`)', 'menu_items', '1')+1;
+  if ($mg3>$mg2) $mg2 = $mg3;
+}
 
 // Данни за таблица 'pages'
 $d1 = array(

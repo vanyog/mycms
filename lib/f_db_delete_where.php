@@ -1,5 +1,4 @@
- <?php
-
+<?php
 /*
 MyCMS - a simple Content Management System
 Copyright (C) 2013  Vanyo Georgiev <info@vanyog.com>
@@ -18,22 +17,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Дублиране на един запис от таблица на базата данни
+// Изтрива всички записи от таблица $t, които отговарят на условието $w
 
-include('conf_manage.php');
-include($idir.'lib/f_db_select_1.php');
-include($idir.'lib/f_db_insert_1.php');
+function db_delete_where($t,$w){
+global $tn_prefix, $db_link;
+$q = "DELETE FROM `$tn_prefix"."$t` WHERE $w;";
+mysqli_query($db_link, $q);
+}
 
-$t = $_GET['t'];  // Таблица
-$id = 1*($_GET['r']); // `ID` на записа
-
-// Четене на записа
-$d = db_select_1('*', $t, "`ID`=$id");
-unset($d['ID']);
-unset($d['username']);
-db_insert_1($d, $t);
-
-$l = 'Location: show_table.php?t='.$t;
-//echo $l;
-header($l);
 ?>

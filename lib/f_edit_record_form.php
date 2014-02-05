@@ -31,6 +31,7 @@ include_once($idir."lib/f_db_enum_values.php");
 include_once($idir."lib/o_form.php");
 
 function edit_record_form($cp, $tn){
+global $countries;
 // Прочитане типовете на полетата на таблицата
 $ft = db_show_columns($tn, '', 'Type');
 // Прочитане имената на полетата на таблицата 
@@ -38,11 +39,13 @@ $fn = db_field_names($tn);
 // Съставяне на нов асоциативен масив с ключове имената на полетата и стойности - типовете им
 $ft = array_combine($fn, $ft);
 // Прочитане на записа, който ще се редактира
-$d = db_select_1('*', $tn, "`ID`=".$cp['ID']); //print_r($d); die;
+$d = db_select_1('*', $tn, "`ID`=".$cp['ID']);// print_r($d); die;
 // Връщан резултат
 $rz = '';
 // Максимална дължина на текстовите полета
 $max_size = 80;
+// Максимален брой стълбове на текстовите области
+$max_cols = 60;
 // Максимален брой редове на текстовите области
 $max_lines = 25;
 // Съставяне на формата
@@ -59,26 +62,29 @@ foreach($cp as $n => $v){
     preg_match('/([a-z]*)\((.*)\)/', $ft[$n], $tp);
     if (count($tp)<2) $tp[1] = $ft[$n];
     switch ($tp[1]){
-    case 'varchar': switch($tp[2]){
-      case '255': case '100': case '50': case '20':
-        $t = 'text';
-        if ($n=='password'){
-          $vl = '';
-          $t = $n;
-          $fi =  new FORMInput($v, $n, $t, $vl);
-          if ($tp[2]<$max_size) $fi->size = $tp[2];
-          else $fi->size = $max_size;
-          $hf->add_input($fi);
-          $n = 'password2';
-          $v = translate('user_passwordconfirm');
-        } 
-        else { $vl = htmlspecialchars(stripslashes($d[$n]), ENT_COMPAT, 'cp1251'); }
-        $fi =  new FORMInput($v, $n, $t, $vl);
-        $fi->size = 80;
+    case 'varchar':
+      $t = 'text';
+      if ($n=='country'){
+        if (isset($countries[$d[$n]])) $vl = $countries[$d[$n]];
+        else $vl = 'Bulgaria';
+        $fi = formCountrySelect($v, $n, $vl );
         $hf->add_input($fi);
         break;
-      default: die("Unknown subtype of '$ft[$n]'");
       }
+      if ($n=='password'){
+        $vl = '';
+        $t = $n;
+        $fi =  new FORMInput($v, $n, $t, $vl);
+        if ($tp[2]<$max_size) $fi->size = $tp[2];
+        else $fi->size = $max_size;
+        $hf->add_input($fi);
+        $n = 'password2';
+        $v = translate('user_passwordconfirm');
+      } 
+      else { $vl = htmlspecialchars(stripslashes($d[$n]), ENT_COMPAT, 'cp1251'); }
+      $fi =  new FORMInput($v, $n, $t, $vl);
+      $fi->size = 80;
+      $hf->add_input($fi);
       break;
     case 'text': case 'mediumtext':
       $vl = str_replace('&', '&amp;', stripslashes($d[$n]) );
@@ -88,7 +94,9 @@ foreach($cp as $n => $v){
       $lc = count($la);
       if ($lc<3) $lc = 3;
       if ($lc>$max_lines) $lc = $max_lines;
-      $hf->add_input( new FormTextArea($cp[$n].$ms, $n, $max_size, $lc, $vl) );
+      $fi = new FormTextArea($cp[$n].$ms, $n, $max_cols, $lc, $vl);
+      $fi->ckbutton = false;
+      $hf->add_input( $fi );
       break;
     case 'int':
       $vl = $d[$n];

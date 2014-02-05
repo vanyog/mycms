@@ -110,8 +110,9 @@ return $rz;
 
 // Проверяване дали потребителят има право да качва, сменя и изтрива файлове
 function can_upload(){
-global $can_manage;
-return isset($can_manage['uploadfile']) && ($can_manage['uploadfile']==1);
+global $can_manage, $can_edit;
+if ($can_edit) return in_edit_mode();
+else return isset($can_manage['uploadfile']) && ($can_manage['uploadfile']==1);
 }
 
 ?>

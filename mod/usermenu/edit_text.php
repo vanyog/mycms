@@ -25,6 +25,7 @@ $ddir = $idir;
 include("f_usermenu.php");
 include_once($idir."lib/translation.php");
 include_once($idir."lib/f_edit_record_form.php");
+include_once($idir."lib/f_db_insert_1.php");
 
 // Номер на страницата, на която е текста
 $page_id = 1*$_GET['pid'];
@@ -40,16 +41,27 @@ if (!$can_edit) die('You have no permission to edit this text');
 
 $page_header = '<link href="'.$pth.'_style.css" rel="stylesheet" type="text/css">'."\n";
 
+// Номер на записа от таблица content
+$i = 1*$_GET['i'];
+
 $cp = array(
 'ID' => 1*$_GET['i'],
 'text' => translate('usermenu_texttoedit')
 );
 
+
 $page_content = '<h1>'.translate('usermenu_edittext')."</h1>\n";
 
 // Обработване на изпратени данни
-if (count($_POST)){ 
-  $page_content .= process_record($cp, 'content');
+if (count($_POST)){
+  if ($i) process_record($cp, 'content');
+  else db_insert_1(array(
+'name' => addslashes($_GET['i']),
+'date_time_1'=>'NOW()',
+'date_time_2'=>'NOW()',
+'language' => addslashes($_GET['lang']),
+'text' => addslashes($_POST['text'])
+), 'content');
   header('Location: '.$_SESSION['http_referer']);
 }
 else if (isset($_SERVER['HTTP_REFERER'])) $_SESSION['http_referer'] = $_SERVER['HTTP_REFERER'];

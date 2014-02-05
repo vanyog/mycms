@@ -132,11 +132,18 @@ else{
   // Ако не е зададена се връща линк "Изход".
   else{
     $can_visit = user_can_visit($rz['ID']);
-    $rz = '<span class="user">'.$_SESSION['user_username'].
-       ' <a href="'.set_self_query_var('user','logout').'">'.translate('user_logaut').'</a></span>';
+    $rz = user_logout_link();
   }
 }
 return $rz;
+}
+
+//
+// Връща потребителското име на влезлия потребител и линк "Изход"
+
+function user_logout_link(){
+return '<span class="user">'.$_SESSION['user_username'].
+       ' <a href="'.set_self_query_var('user','logout').'">'.translate('user_logaut').'</a></span>';
 }
 
 //
@@ -165,7 +172,7 @@ else return $page_content;
 }
 
 // Функцията process_user() обработва данните за влизане на потребителя - 
-// присвоява ги на съответните променливи на сесията
+// присвоява ги на съответните променливи на сесията и презарежда страницата
 
 function process_user(){
 if (isset($_POST['password2'])) save_user();
@@ -189,7 +196,9 @@ if (isset($_GET['user'])&&($_GET['user']=='enter')){
 // Кодиране на паролата по един от два начина
 
 function pass_encrypt($p){
+// Ако е зададена опция - както се кодират с mysql функцията password()
 if (stored_value('user_mysqlpass','')=='yes') return '*'.strtoupper(sha1(sha1($p,true)));
+// Иначе така:
 else return sha1($p);
 }
 
@@ -230,10 +239,10 @@ return $guf;
 // Унищожава сесията и пренасочва към страницата след излизане
 
 function logout_user(){
-// Адрес на страницата, която се показва след излизане
+// Адрес на страницата, която по подразбиране се показва след излизане
 $lp = current_pth(__FILE__).'logout.php';
 // Евентуално в настройките може да е зададена друга 
-$lp = stored_value('user_logoutpage',$lp); //print_r($lp); die;
+$lp = stored_value('user_logoutpage',$lp);
 // Унищожаване променливите на сесията
 unset($_SESSION['user_username']);
 unset($_SESSION['user_password']);
@@ -258,8 +267,9 @@ $cp = array(
 'firstname'=>translate('user_firstname'),
 'secondname'=>translate('user_secondname'),
 'thirdname'=>translate('user_thirdname'),
+'country'=>translate('user_country'),
 'telephone'=>translate('user_telephone')
-);
+);print_r($cp); die;
 $rz = '';
 if (count($_POST)) $rz .= process_record($cp, $user_table);
 return $rz.edit_record_form($cp, $user_table);
@@ -303,23 +313,47 @@ return '<a href="'.$ep.'">'.translate("user_enter").'</a>';
 }
 
 //
-// Функция за изтриване на потребител
+// Функция за показване форма за изтриване на потребител
 //
 function delete_user($a){
 global $idir;
 if (!can_manage_users()) die(translate('user_cnnotcreate'));
-if (isset($_SESSION['user_to_delete'])) { do_delete_user(); return ''; }
-if (count($_POST)){ return process_delete_user(); }
+//if (isset($_SESSION['user_to_delete'])) { do_delete_user(); return ''; }
+$ms = '';
+if (count($_POST)){ $ms = process_delete_user(); }
 $f = new HTMLForm('del_user_form');
 $f->add_input( new FormInput(translate('user_username'),'username','text') );
 $f->add_input( new FormInput('','','submit',translate('user_delete')) );
-$page_content = $f->html();
+$page_content = '<p class="message">'.$ms.'</p>'.$f->html().
+'<a href="'.unset_self_query_var('user').'">'.translate('user_finish').'</a>';
 if ($a=='delete') return $page_content;
 else { include($idir.'lib/build_page.php'); die; }
 }
 
 //
-// Връща true ако потребителят има право да управлява регистрациите на други потребители.
+// Изпълнява се, когато е изпратено потребителско име на потребител за изтриване
+//
+function process_delete_user(){
+// Прекратяване ако:
+if (!isset($_POST['username']) // Не е азпратено потребителско име за изтриване.
+  || ($_POST['username']==$_SESSION['user_username']) // Влезлият потребител иска да изтрие себе си.
+) return;
+// Име на таблицата с данни за потребители
+$user_table = stored_value('user_table','users');
+// Четене на номера на потребителя за изтриване
+$p = db_table_field('`ID`', $user_table, "`username`='".addslashes($_POST['username'])."'",0);
+// Прекратявана, ако номера е невалиден
+if (!$p) return translate('user_nutodelete');
+// Изтриване на потребителя
+$r = db_delete_from($user_table, $p);
+if ($r===false) return translate('user_ddeletefaild').' "'.$_POST['username'].'".';
+// Изтроване на правата на потребителя
+db_delete_from('permissions', "`user_id`=$p");
+return translate('user_deleteok').' "'.$_POST['username'].'".';
+}
+
+//
+// Връща true ако влезлият в момента потребител има право да управлява регистрациите на други потребители.
 //
 function can_manage_users(){
 // Име на таблицата с данни за потребители
@@ -330,26 +364,13 @@ $i = db_table_field('ID',$user_table,"`username`='".$_SESSION['user_username'].
 // Проверка дали потребителят има всички права
 $p = db_table_field('yes_no','permissions',"`type`='all' AND `user_id`=$i");
 if ($p) return true;
-// Ако няма всички права, проверка дали няма право над модул user
+// Ако няма всички права, проверка дали има право за модул user
 $p = db_table_field('yes_no','permissions',"`type`='module' AND `object`='user' AND `user_id`=$i");
 if ($p) return true; else return false;
 }
 
 //
-// Изпълнява се, когато е изпратено потребителско име на потребител за изтриване
-//
-function process_delete_user(){
-if (!isset($_POST['username'])) return;
-// Име на таблицата с данни за потребители
-$user_table = stored_value('user_table','users');
-// Четене на номера на потребителя за изтриване
-$p = db_table_field('`ID`', $user_table, "`username`='".addslashes($_POST['username'])."'");
-if (!$p) return translate('user_nutodelete');
-$_SESSION['user_to_delete'] = $p;
-header('Location: '.$_SERVER['REQUEST_URI']);
-}
-
-//
+// В момента тази функция не се използва
 // Изтрива потребител с потребителско име 
 //
 function do_delete_user(){

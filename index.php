@@ -71,9 +71,6 @@ if (!$page_data)
    if (is_local()) die('<a href="'.$adm_pth.'new_record.php?t=pages&ID='.$page_id.'">Click here</a> to create a page.');
    else $page_data = page404();
 
-// Броят се показванията на страницата
-count_visits($page_data);
-
 // Масив с опции
 $page_options = '';
 if ($page_data['options']) { $page_options = explode(' ',$page_data['options']); }
@@ -96,6 +93,9 @@ if (!$can_visit) {
   header("Status: 403");
   die("Access denied by index.php.");
 }
+
+// Броят се показванията на страницата
+count_visits($page_data);
 
 // Изпращане на страницата
 echo $cnt;
@@ -120,10 +120,10 @@ return $rz;
 
 // Брои посещенията
 function count_visits($p){
-global $tn_prefix, $db_link, $idir;
+global $tn_prefix, $db_link, $idir, $can_edit;
 include_once($idir."lib/f_adm_links.php");
-// Ако се показват линкове за администриране не се брои нищо
-if (!$p['ID'] || show_adm_links()) return '';
+// Ако се показват линкове за администриране, или меню за редактиране на страниците, не се брои нищо
+if ( ($p['ID']==0) || show_adm_links() || $can_edit ) return '';
 new_day();
 $q = "UPDATE `$tn_prefix"."pages` SET dcount = dcount+1 WHERE `ID`=".$p['ID'].";";
 mysqli_query($db_link,$q);

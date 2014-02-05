@@ -62,10 +62,15 @@ if ($r){ // Ако има такъв запис
   $rz = parse_content(apply_filters($n,$t));
   if ((!isset($r['nolink']) || !$r['nolink']) && $elink) $rz .= $el;
 }
-else if (is_local() || in_edit_mode())
+else if (is_local() || in_edit_mode()){
          // На локелен сървър или в режим на редактиране се показва името на стринга като линк,
          // който отваря форма за въвеждане на липсващия надпис
-         return "<a href=\"$adm_pth"."new_content.php?n=$n&l=$language\">$n</a>";
+         if ($can_edit) $h = $pth.'mod/usermenu/edit_text.php?i='.$n.
+             '&amp;lang='.$language.
+             '&amp;pid='.$page_data['ID'];
+         else $h = $adm_pth."new_content.php?n=$n&l=$language";
+         return "<a href=\"$h\">$n</a>";
+       }
        else { // На отдалечен сървър в работен режим
          // Четене на записа на езика по подразбиране
          $r = db_select_1('*','content',"`name`='$n' AND `language`='$default_language'");
