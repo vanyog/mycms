@@ -17,11 +17,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Функцията edit_record_form($cp, $tn) връща html код на
-// форма за редактиране на запис от базата данни.
+// Функцията edit_record_form($cp, $tn, $ck = true) връща html код на
+// форма за редактиране на запис от таблица $tn на базата данни.
 // Параметърът $cp e асоциативен масив с ключове - имената на полетата,
 // и стойности - пояснителни надписи, които се поставят пред тези полета във формата.
 // В този масив трябва да има и елемент 'ID'=>НомерНаЗаписа, който се редактира.
+// $ck определя дали пред textarea полетата да се показва бутон за включване на CKEditor
 
 include_once($idir."lib/f_db_field_names.php");
 include_once($idir."lib/f_db_field_types.php");
@@ -30,7 +31,7 @@ include_once($idir."lib/f_db_show_columns.php");
 include_once($idir."lib/f_db_enum_values.php");
 include_once($idir."lib/o_form.php");
 
-function edit_record_form($cp, $tn){
+function edit_record_form($cp, $tn, $ck = true){
 global $countries;
 // Прочитане типовете на полетата на таблицата
 $ft = db_show_columns($tn, '', 'Type');
@@ -62,7 +63,7 @@ foreach($cp as $n => $v){
     preg_match('/([a-z]*)\((.*)\)/', $ft[$n], $tp);
     if (count($tp)<2) $tp[1] = $ft[$n];
     switch ($tp[1]){
-    case 'varchar':
+    case 'varchar': case 'datetime':
       $t = 'text';
       if ($n=='country'){
         if (isset($countries[$d[$n]])) $vl = $countries[$d[$n]];
@@ -95,7 +96,7 @@ foreach($cp as $n => $v){
       if ($lc<3) $lc = 3;
       if ($lc>$max_lines) $lc = $max_lines;
       $fi = new FormTextArea($cp[$n].$ms, $n, $max_cols, $lc, $vl);
-      $fi->ckbutton = false;
+      if (!$ck) $fi->ckbutton = '';
       $hf->add_input( $fi );
       break;
     case 'int':

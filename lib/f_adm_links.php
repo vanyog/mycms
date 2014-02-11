@@ -46,8 +46,10 @@ else {
   if (isset($lpid['ID'])) $lpid = $lpid['ID']; else $lpid = 1;
 
   // Ќомера на предишна и следваща страница
-  $ppid = $page_data['ID']-1; if ($ppid<1) $ppid = 1;
-  $npid = $ppid+2; if ($npid>$lpid) $npid = $lpid;
+  $ppid = db_table_field('ID', "pages", "`ID`<".$page_data['ID']." ORDER BY `ID` DESC LIMIT 1");
+  if (!$ppid) $ppid = 1;
+  $npid = db_table_field('ID', "pages", "`ID`>".$page_data['ID']." ORDER BY `ID` ASC LIMIT 1");
+  if (!$npid) $npid = $lpid;
 
   $mphp = $phpmyadmin_site;
   $go = $local_host; $gon = 'go to LOCAL';

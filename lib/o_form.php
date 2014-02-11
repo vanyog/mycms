@@ -46,11 +46,16 @@ $this->action = $_SERVER['REQUEST_URI'];
 
 public function html(){
 $js = '';
+// JavaScript функция, която проверява дали всички текстови полета във формата са попълнени.
+// За да се изпълни, на бутона на формата трябва да се присвои ->js = ' onclick="ifNotEmpty_имеНаФорма();"';
 $js1 = 'function ifNotEmpty_'.$this->name.'(){
 var f = document.forms["'.$this->name.'"];
 var l = f.length;
 var r = 1;
-for(i=0;i<l-1;i++) r = r*f.elements[i].value.length;
+for(i=0;i<l-1;i++){
+  var e = f.elements[i];
+  if ((e.type=="text")||(e.type=="textarea")) r = r*e.value.length;
+}
 if (r) f.submit(); else alert("'.translate('fillin_all').'");
 }
 ';
@@ -137,7 +142,8 @@ $this->text = $t;
 $ckp = stored_value('ckeditor_file',$mod_pth.'ckeditor/ckeditor.js');
 $cka = $_SERVER['DOCUMENT_ROOT'].$ckp;
 if (file_exists($cka)){
-  $page_header .= "   <script type=\"text/javascript\" src=\"$ckp\"></script>\n";
+  $sc = "   <script type=\"text/javascript\" src=\"$ckp\"></script>\n";
+  if (strpos($page_header,$sc)===false) $page_header .= $sc;
   $this->ckbutton = '<input type="button" value="CKEditor" onclick="CKEDITOR.replace(\''.$this->name.'\');"><br>';
 }
 }
@@ -171,10 +177,10 @@ $this->selected = $s;
 }
 
 public function html($it){
-if (!$it) $rz = "$this->caption <select name=\"$this->name\">";
+if (!$it) $rz = "$this->caption <select name=\"$this->name\"$this->js>";
 else $rz = "<tr>
 <th>$this->caption</th>
-<td><select name=\"$this->name\">\n";
+<td><select name=\"$this->name\"$this->js>\n";
 foreach($this->options as $i => $v){
   $sl = '';
   if ($i==$this->selected) $sl = ' selected';
