@@ -57,20 +57,28 @@ function do_site_search(){
 function site_search_result(){
 global $language, $pth;
   if (!session_id()) session_start();
+  if (!isset($_SESSION['text_to_search'])) return translate('sitesearch_notext');
   $ts = $_SESSION['text_to_search'];
+  // Разпадане на текста за търсене на думи
   $wa = explode(' ',$ts);
+  // Търсене имената на стрингове, в които се срещат всички думи
   $q = where_part($wa,'AND');
   $r = db_select_m('name','content',"$q AND `language`='$language'");
+  // Ако не бъдат открити се търсят имената на стрингове, в които се срещат само отделните думи
   if (!count($r)){
     $q = where_part($wa,'OR');
     $r = db_select_m('name','content',"$q AND `language`='$language'");
   }
-  $nf = '<p>'.translate('sitesearch_notfound').'</p>';
+  $nf = '<p>'.translate('sitesearch_notfound').'"'.$_SESSION['text_to_search'].'"'.'</p>';
   if (!count($r)) return $nf;
+  // Четене номерата на стрениците, които имат за съдържание, намерените стрингове
   $q = '';
   foreach($r as $i)
     if ($q) $q .= " OR `content`='".$i['name']."'"; 
     else $q .= "`content`='".$i['name']."'";
+  // Допълнително условие, което ограничава страниците да не се показват в резултата
+  $w = stored_value('sitesearch_restr');
+  if ($w) $q = "( $q )$w";
   $pa = db_select_m('`ID`,`title`','pages',$q);
   if (!count($pa)) return $nf;
   $rz  = '<p>'.translate('sitesearch_searchfor').": \"$ts\"<br>\n";
