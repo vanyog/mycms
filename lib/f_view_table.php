@@ -18,20 +18,37 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Показва данните от масива $da във вид на таблица
+// Връща html код представящ данните от масива $da във вид на таблица
 // Елементите на масива трябва да са асоциирани масиви с еднакви ключове
+// Вторият параметър е стойността на id атрибут на <table> тага.
+// Третият параметър е асоциативен масив с ключове - имена на полета
+// и стойности - надписи, които да се сложат в антетката на таблицата.
 
-function view_table($da,$id=''){
+function view_table($da,$id='',$n=''){
 if ($id) $id = " id=\"$id\"";
-$rz = "<table$id>";
-foreach($da as $i=>$d){
-  if ($i==0){ // Антетка на таблицата
-    $rz .= '<tr>';
-    foreach($d as $k=>$l) $rz .= "<th>$k</th>";
-    $rz .= "</tr>\n";
+if ( !is_array($n)){
+  if (count($da)) {
+    $n = array_keys($da[0]);
+    $n = array_combine($n,$n);
   }
+  else $n = array();
+}
+
+
+$rz = "<table$id>
+<tr>";
+// Първи ред - антетка на таблицата
+foreach($n as $k=>$v){
+  $rz .= "<th>$v</th>";
+}
+$rz .= "</tr>\n";
+foreach($da as $i=>$d){
   $rz .= '<tr>';
-  foreach($d as $k=>$l) $rz .= "<td>".stripslashes($l)."</td>";
+  foreach($n as $k=>$v){
+    if ($k=='email') $vl = '<a href="mailto:'.$d[$k].'">'.$d[$k].'</a>';
+    else $vl = stripslashes($d[$k]);
+    $rz .= "<td>$vl</td>";
+  }
   $rz .= "</tr>\n";
 }
 $rz .= '</table>';

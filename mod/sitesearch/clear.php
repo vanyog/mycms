@@ -17,25 +17,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Функцията db2user_date_time($dts) преформатира сринг, съдържащ дата-час,
-// извлечени от MySQL база данни във формат: dd mmmm yyyy hh:mm
+// Унищожава променлива $_SESSION['text_to_search'] и се връща на страницата,
+// от която е извикан
 
-function db2user_date_time($dts){
-$c = translate('month_names'); //print_r($c); die;
-eval($c);
-if (substr($dts,11,8)=="00:00:00") $t = '';
-else {
-  $h = (1*substr($dts,11,2));
-  if ($h<10) $t = ' &nbsp;'; else $t = ' ';
-  $t .= $h.substr($dts,13,3);
-  if (1*substr($dts,17,2)) $t .= substr($dts,16,3);
-}
-$d = 1*substr($dts,8,2);
-if ($d<10) $d = '&nbsp;'.$d;
-return $t.' '.
-  $d.' '.
-  $month[1*substr($dts,5,2)].' '.
-  substr($dts,0,4);
-}
+session_start();
+unset($_SESSION['text_to_search']);
+if (isset($_SERVER['HTTP_REFERER'])) header('Location: '.$_SERVER['HTTP_REFERER']);
+else echo("'text_to_search' variable have been unset.");
 
 ?>

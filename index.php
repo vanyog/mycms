@@ -97,6 +97,9 @@ if (!$can_visit) {
 // Броят се показванията на страницата
 count_visits($page_data);
 
+// Оцветяване на търсени думи
+$cnt = colorize($cnt);
+
 // Изпращане на страницата
 echo $cnt;
 
@@ -151,6 +154,33 @@ store_value('today',$d['mday']);
 // нулира се броя на посещенията в таблица $tn_prefix.'pages'
 $q = "UPDATE `$tn_prefix"."pages` SET tcount = tcount + dcount, dcount = 0;";
 mysqli_query($db_link,$q);
+}
+
+// Оцветяване на търсени думи
+
+function colorize($cnt){
+if (isset($_SESSION['text_to_search'])){
+  // На страницата за показване на резултата от търсене думите не се оцветяват
+  $a = $_SERVER['REQUEST_URI'];
+  if ($a==stored_value('sitesearch_resultpage')) return $cnt;
+
+  $wa = explode(' ',$_SESSION['text_to_search']);
+  for($i=0;$i<count($wa);$i++) $wa[$i] = to_regex($wa[$i]);
+  $pt = '/(>[^<]*?[^a-zA-Zа-яА-Я<]*)('.implode('|',$wa).')([^\wа-яА-Я])/is'; 
+  $rp = '\1<span class="searched">\2</span>\3';
+  $ca = explode('<body',$cnt);
+  $ca[1] = preg_replace($pt, $rp, $ca[1]);
+  $cnt = implode('<body',$ca);
+}
+return $cnt;
+}
+
+function to_regex($w){
+$w1 = mb_strtoupper($w);
+$w2 = mb_strtolower($w);
+$rz = '';
+for($i=0;$i<strlen($w1);$i++) $rz .= '['.$w1[$i].$w2[$i].']';
+return $rz;
 }
 
 ?>

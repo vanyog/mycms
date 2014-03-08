@@ -17,11 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Чете надписите с имена, започващи с $_GET['p'] и съставя
-// content.sql файл в директория 'mod'.$_GET['m'], с който 
-// надписите да се импортират в таблица $tn_prefix.'content'
-// при инсталиране на модула. Ако файл content.sql вече съществува,
-// sql заявките се добавят в края му.
+// Чете надписите с имена, започващи с $_GET['p'] и добавя
+// поредица от sql заявки във файл tables.sql в директорията
+// на модул с име $_GET['m'].
 
 include("conf_manage.php"); 
 include($idir.'conf_paths.php');
@@ -49,6 +47,7 @@ $fn = $fd.'/tables.sql';
 
 // Ако файлът не е достъпен за запис
 if (!is_writable($fn)){
+  header("Content-Type: text/html; charset=windows-1251");
   echo "<p>File $fn is not writeble. Write to it manually.</p>
   <textarea cols=\"130\" rows=\"18\">$q</textarea>";
 }

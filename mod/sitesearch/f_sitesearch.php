@@ -36,23 +36,38 @@ if (isset($_POST['text'])) do_site_search();
 $f = new HTMLForm('site_search_form',false);
 $f->add_input(new FormInput('','text','text'));
 $f->add_input(new FormInput('','','submit',translate('sitesearch_submit')));
+if (!session_id()) session_start();
+if (isset($_SESSION['text_to_search'])){
+  // Бутон "Последен резултат"
+  $p = stored_value('sitesearch_resultpage');
+  $b = new FormInput('','','button',translate('sitesearch_last'));
+  $b->js = 'onclick="document.location=\''.$p.'\';"';
+  $f->add_input( $b );
+  // Бетон "Почистване"
+  $p = current_pth(__FILE__).'clear.php';
+  $b = new FormInput('','','button',translate('sitesearch_clear'));
+  $b->js = 'onclick="document.location=\''.$p.'\';"';
+  $f->add_input( $b );
+}
 return $f->html();
 }
 
 //
 // Тези функция записва изпратеният за търсене стринг в $_SESSION
 // и прави пренасочване към страницата за показване на резултат.
+//
 function do_site_search(){
-  if (!$_POST['text']) return;
+  if (!trim($_POST['text'])) return;
   if (!session_id()) session_start();
-  $_SESSION['text_to_search']=$_POST['text'];
+  $_SESSION['text_to_search']=trim($_POST['text']);
+  $_SESSION['sitesearch_saved']=0;
   $l = stored_value('sitesearch_resultpage');
   if (!$l) $l = current_pth(__FILE__).'result.php';
   header("Location: $l");
 }
 
 //
-// Функция, която връща резултатът от търсенето
+// Функция, която връща резултата от търсенето
 //
 function site_search_result(){
 global $language, $pth;
@@ -61,6 +76,8 @@ global $language, $pth;
   $ts = $_SESSION['text_to_search'];
   // Разпадане на текста за търсене на думи
   $wa = explode(' ',$ts);
+  // Запазване на статистика за думите, по които се търси
+  site_search_stat($wa);
   // Търсене имената на стрингове, в които се срещат всички думи
   $q = where_part($wa,'AND');
   $r = db_select_m('name','content',"$q AND `language`='$language'");
@@ -79,13 +96,15 @@ global $language, $pth;
   // Допълнително условие, което ограничава страниците да не се показват в резултата
   $w = stored_value('sitesearch_restr');
   if ($w) $q = "( $q )$w";
-  $pa = db_select_m('`ID`,`title`','pages',$q);
+  $pa = db_select_m('`ID`,`title`','pages',"$q GROUP BY `content`");
   if (!count($pa)) return $nf;
   $rz  = '<p>'.translate('sitesearch_searchfor').": \"$ts\"<br>\n";
   $rz .= translate('sitesearch_count').': '.count($pa)."</p>\n";
   foreach($pa as $p){
     $t = db_table_field('text','content',"`name`='".$p['title']."' AND `language`='$language'");
-    $rz .= "<a href=\"$pth"."index.php?pid=".$p['ID']."\">$t</a><br>\n";
+    if (!$t) $t = "No title";
+    $mi = stored_value('sitesearch_indexfile', $pth."index.php");
+    $rz .= "<a href=\"$mi"."?pid=".$p['ID']."\">$t</a><br>\n";
   }
   return $rz;
 }
@@ -100,10 +119,41 @@ function where_part($wa,$o){
   foreach($wa as $w){
     $w1 = addslashes(trim($w));
     if ($w){
-       if ($q) $q .= " $o `text` LIKE '%$w1%'";
-       else $q .= "`text` LIKE '%$w1%'";
+//       if ($q) $q .= " $o `text` LIKE '%$w1%'";
+//       else $q .= "`text` LIKE '%$w1%'";
+
+//       if ($q) $q .= " $o MATCH (`text`) AGAINST ('$w1')";
+//       else $q .= "MATCH (`text`) AGAINST ('$w1')";
+
+       if ($q) $q .= " $o `text` REGEXP '".$w1."'";
+       else $q .= "`text` REGEXP '".'[[:<:]]'.$w1.'[[:>:]]'."'";
     }
   }
   return $q;
 }
+
+// Запазване на статистика за думите, по които се търси
+// Осъществява се ако има опция sitesearch_stat със стойност 1
+
+function site_search_stat($wa){
+// Ако няма опция sitesearch_stat - край
+if (!stored_value('sitesearch_stat')) return;
+// В режим на администриране или редактиране - край
+global $can_edit;
+if ( show_adm_links() || $can_edit ) return;
+// Ако думите вече са запазени - край
+if ($_SESSION['sitesearch_saved']) return;
+global $db_link,$tn_prefix;
+foreach($wa as $w){
+ $w1 = addslashes(trim($w));
+ // Номер на думата, ако вече е запазена
+ $id = db_table_field('ID', 'sitesearch_words', "`word`='$w1'");
+ if ($id){ $q1 = "UPDATE `$tn_prefix"."sitesearch_words` SET "; $q2 = " WHERE `ID`=$id;"; }
+ else { $q1 = "INSERT INTO `$tn_prefix"."sitesearch_words` SET `date_time_1`=NOW(), "; $q2 = ';'; }
+ $q = $q1."`date_time_2`=NOW(), `word`='$w1', `count`=`count`+1, `IP`='".$_SERVER['REMOTE_ADDR']."'".$q2;
+ mysqli_query($db_link,$q);
+}
+$_SESSION['sitesearch_saved']=1;
+}
+
 ?>

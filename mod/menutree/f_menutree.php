@@ -51,7 +51,7 @@ while ($pr['parent'])
   $psd[] = $pr['parent'];
   $pr = db_select_1('*','menu_tree',"`group`=".$pr['parent']); // print_r($pr); echo "<br>";
   $pg = db_select_1('*','pages','ID='.$pr['index_page']);
-  if ($rz) $rz = ' >> '.$rz;
+  if ($rz) $rz = ' &gt;&gt; '.$rz;
   $rz = '<a href="'.$pth.'index.php?pid='.$pg['ID'].'">'.translate($pg['title']).'</a>'.$rz;
 }
 return '<div id="menu_tree">

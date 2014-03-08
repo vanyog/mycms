@@ -21,18 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include("ta_ctag.php");
 
 function editor($n,$tx){
-global $ta_ctag, $ta_fctag, $page_header, $ckpth;
+global $ta_ctag, $ta_fctag, $page_header;
 $tx = str_replace('&','&amp;',$tx);
-// Път до основния файл на CKEditor
-$ckep = $_SERVER['DOCUMENT_ROOT'].$ckpth.'ckeditor.js';
-// HTML код за показване на бутон за включване на CKEditor
-$ckeb = '';
-// Проверка дали CKEditor съществува
-if (file_exists($ckep)){
-  $page_header .= '<script type="text/javascript" src="'.$ckpth.'ckeditor.js"></script>';
-  $ckeb = '
-<input type="button" onclick="CKEDITOR.replace( \'editor1\' );" value="CKEditor">';
-}
 // Брой на textarea елементите
 static $tec = 0;
 // Ако още няма textarea елементи се извежда javascript-ът
@@ -103,7 +93,7 @@ return $js.
 '.make_insert_2_button('include_once','\'include_once(\\\'\'','\'\\\');\'').'
 '.make_insert_2_button('print_r','\'print_r($\'','\'); die;\'').'
 '.make_insert_2_button('<!--$$_','\'<!--$$_\'','\'_$$-->\'').'
-'.make_insert_2_button('javascript','tag_s1','tag_s2').$ckeb.'
+'.make_insert_2_button('javascript','tag_s1','tag_s2').ckeb($tec).'
 <textarea id="editor'.$tec.'" cols="120" name="'.$n.'" rows="22" style="font-size:120%;" onfocus="onTeFocus();">'.
 str_replace($ta_ctag,$ta_fctag,$tx).$ta_ctag;
 
@@ -121,4 +111,16 @@ function make_insert_2_button($n,$t1,$t2){
 return '<input type="button" value="'.$n.'" onclick="insert_2_texts('.$t1.','.$t2.');">';
 }
 
-
+// HTML код за показване на бутон за включване на CKEditor
+function ckeb($n){
+global $page_header, $ckpth;
+// Път до основния файл на CKEditor
+$ckep = $_SERVER['DOCUMENT_ROOT'].$ckpth.'ckeditor.js';
+// Проверка дали CKEditor съществува
+if (file_exists($ckep)){
+  $page_header .= '<script type="text/javascript" src="'.$ckpth.'ckeditor.js"></script>';
+  return '
+<input type="button" onclick="CKEDITOR.replace( \'editor'.$n.'\' );" value="CKEditor">';
+}
+return '';
+}
