@@ -68,9 +68,11 @@ return $rz;
 // $mlk, да се покаже като текуща или не.
 
 function is_parrent_menu($i, $mlk){
-global $page_data;
+global $page_data, $ind_fl;
   // јко $mlk е текущата страница - истина.
   if ($mlk==$page_data['ID']) return true;
+  // јко $mlk не е число, а друг линк
+  if (!(1*$mlk)) return html_entity_decode($mlk) == $_SERVER['REQUEST_URI'];
   // јко $i е номер на менюто на текущата страница не търси повече - неистина
   // защото менюто на текущата страница, се обхожда ц€лото и се стига до текущата страница.
   if ($i==$page_data['menu_group']) return false;

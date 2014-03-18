@@ -20,8 +20,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Функцията db2user_date_time($dts) преформатира сринг, съдържащ дата-час,
 // извлечени от MySQL база данни във формат: dd mmmm yyyy hh:mm
 
+// За да се изпълнява без грешки, тази функция изисква в таблица $tn_prefix.'content'
+// да има запис с име 'month_names', съдържащ дефиниция на масив $month с имената на 
+// месеците на всеки от езиците, използване на сайта.
+
 function db2user_date_time($dts){
-$c = translate('month_names'); //print_r($c); die;
+$c = translate('month_names',false);// print_r($c); die;
 eval($c);
 if (substr($dts,11,8)=="00:00:00") $t = '';
 else {

@@ -50,7 +50,8 @@ $cp = array(
 );
 
 
-$page_content = '<h1>'.translate('usermenu_edittext')."</h1>\n";
+$page_content = '<h1>'.translate('usermenu_edittext').'</h1>
+<p>Name: '.db_table_field('name','content','`ID`='.(1*$_GET['i']))."</p>\n";
 
 // Обработване на изпратени данни
 if (count($_POST)){

@@ -158,19 +158,24 @@ mysqli_query($db_link,$q);
 
 // Оцветяване на търсени думи
 
+// Част от регулярния израз за намиране на търсените думи
+$word_pattern = '';
+
 function colorize($cnt){
 if (isset($_SESSION['text_to_search'])){
-  // На страницата за показване на резултата от търсене думите не се оцветяват
-  $a = $_SERVER['REQUEST_URI'];
-  if ($a==stored_value('sitesearch_resultpage')) return $cnt;
-
-  $wa = explode(' ',$_SESSION['text_to_search']);
-  for($i=0;$i<count($wa);$i++) $wa[$i] = to_regex($wa[$i]);
-  $pt = '/(>[^<]*?[^a-zA-Zа-яА-Я<]*)('.implode('|',$wa).')([^\wа-яА-Я])/is'; 
-  $rp = '\1<span class="searched">\2</span>\3';
-  $ca = explode('<body',$cnt);
-  $ca[1] = preg_replace($pt, $rp, $ca[1]);
-  $cnt = implode('<body',$ca);
+  // Страници, на които не се прави оцветяване
+  $a = stored_value('sitesearch_nocoleron');
+  if ($a) eval($a);
+  global $page_id, $word_pattern;
+  if (!in_array($page_id,$nocolor)){
+    $ca = explode('<body',$cnt);
+    $wa = array_unique(explode(' ',$_SESSION['text_to_search']));
+    foreach($wa as $w){
+      $word_pattern = to_regex($w);
+      $ca[1] = preg_replace_callback('/>([^<]*?)</is', 'colorize1', $ca[1]);
+    }
+    $cnt = implode('<body',$ca);
+  }
 }
 return $cnt;
 }
@@ -181,6 +186,15 @@ $w2 = mb_strtolower($w);
 $rz = '';
 for($i=0;$i<strlen($w1);$i++) $rz .= '['.$w1[$i].$w2[$i].']';
 return $rz;
+}
+
+function colorize1($a){
+$a1 = trim(str_replace('&nbsp;', ' ', $a[1]));
+if (!$a1) return $a[0];
+global $word_pattern;
+$pt = '/([^a-zA-Zа-яА-Я])('.$word_pattern.')([^a-zA-Zа-яА-Я])/is';
+$rp = '\1<span class="searched">\2</span>\3';
+return preg_replace($pt, $rp, $a[0]);
 }
 
 ?>

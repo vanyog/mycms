@@ -1,7 +1,7 @@
 <?php
 /*
 MyCMS - a simple Content Management System
-Copyright (C) 2014  Vanyo Georgiev <info@vanyog.com>
+Copyright (C) 2013  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,23 +17,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Показване съдържанието на запис от база данни във вид на таблица
-// $d - асоциативен масив с прочетените данни
-// $n - асоциативен масив с надписи за полетата. Ако липсва се показват имената на полетата.
+// Филтър links открива уеб адреси и ги превръща в активни линкове
 
-function view_record($d, $n = ''){
-if ($n==''){
-  $n = array_keys($d);
-  $n = array_combine($n,$n);
+function links($t){
+$pt = '/(?:http:\/\/|www\.)[a-zA-Z\.\/\-0-9_?=&;]*/is';
+return preg_replace_callback($pt,'link_this',$t);
 }
-$rz = '<table class="record_table">'."\n";
-foreach($n as $k=>$v){
-  $vl = '';
-  if (isset($d[$k])) $vl = stripslashes($d[$k]);
-  $rz .= '<tr><th>'.$v.'</th><td>'.$vl.'</td></tr>'."\n";
-}
-$rz .= "</table>\n";
-return $rz;
+
+function link_this($a){
+$u = parse_url($a[0]);
+if (!isset($u['host'])){ $u['host'] = $u['path']; $a[0] = 'http://'.$a[0]; }
+return '<a href="'.$a[0].'" target="_blank">'.$u['host'].'</a>';
 }
 
 ?>

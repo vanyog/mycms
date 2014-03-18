@@ -75,31 +75,35 @@ global $language, $pth;
   if (!isset($_SESSION['text_to_search'])) return translate('sitesearch_notext');
   $ts = $_SESSION['text_to_search'];
   // Разпадане на текста за търсене на думи
-  $wa = explode(' ',$ts);
+  $wa = array_unique(explode(' ',$ts));
   // Запазване на статистика за думите, по които се търси
   site_search_stat($wa);
   // Търсене имената на стрингове, в които се срещат всички думи
   $q = where_part($wa,'AND');
-  $r = db_select_m('name','content',"$q AND `language`='$language'");
+  // Пояснителен надпис
+  $msg = translate('sitesearch_allwords');
+  $r = db_select_m('name','content',"($q) AND `language`='$language'");
   // Ако не бъдат открити се търсят имената на стрингове, в които се срещат само отделните думи
   if (!count($r)){
     $q = where_part($wa,'OR');
-    $r = db_select_m('name','content',"$q AND `language`='$language'");
+    $r = db_select_m('name','content',"($q) AND `language`='$language'");
+    $msg = translate('sitesearch_anyword');
   }
   $nf = '<p>'.translate('sitesearch_notfound').'"'.$_SESSION['text_to_search'].'"'.'</p>';
   if (!count($r)) return $nf;
-  // Четене номерата на стрениците, които имат за съдържание, намерените стрингове
+  // Четене номерата на страниците, които имат за съдържание, намерените стрингове
   $q = '';
   foreach($r as $i)
     if ($q) $q .= " OR `content`='".$i['name']."'"; 
     else $q .= "`content`='".$i['name']."'";
   // Допълнително условие, което ограничава страниците да не се показват в резултата
   $w = stored_value('sitesearch_restr');
-  if ($w) $q = "( $q )$w";
+  if ($w && !in_edit_mode() && !show_adm_links()) $q = "( $q )$w";
   $pa = db_select_m('`ID`,`title`','pages',"$q GROUP BY `content`");
   if (!count($pa)) return $nf;
   $rz  = '<p>'.translate('sitesearch_searchfor').": \"$ts\"<br>\n";
   $rz .= translate('sitesearch_count').': '.count($pa)."</p>\n";
+  $rz .= "<p>$msg</p>\n";
   foreach($pa as $p){
     $t = db_table_field('text','content',"`name`='".$p['title']."' AND `language`='$language'");
     if (!$t) $t = "No title";
@@ -121,12 +125,14 @@ function where_part($wa,$o){
     if ($w){
 //       if ($q) $q .= " $o `text` LIKE '%$w1%'";
 //       else $q .= "`text` LIKE '%$w1%'";
-
-//       if ($q) $q .= " $o MATCH (`text`) AGAINST ('$w1')";
-//       else $q .= "MATCH (`text`) AGAINST ('$w1')";
-
+      if (strlen($w>3)){
+       if ($q) $q .= " $o MATCH (`text`) AGAINST ('$w1')";
+       else $q .= "MATCH (`text`) AGAINST ('$w1')";
+      }
+      else {
        if ($q) $q .= " $o `text` REGEXP '".$w1."'";
        else $q .= "`text` REGEXP '".'[[:<:]]'.$w1.'[[:>:]]'."'";
+      }
     }
   }
   return $q;
