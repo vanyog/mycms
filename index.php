@@ -167,6 +167,8 @@ if (isset($_SESSION['text_to_search'])){
   $a = stored_value('sitesearch_nocoleron');
   if ($a) eval($a);
   global $page_id, $word_pattern;
+  // Дали е възникнала грешка в preg_replace
+  $GLOBALS['preg_error']=false;
   if (!in_array($page_id,$nocolor)){
     $ca = explode('<body',$cnt);
     $wa = array_unique(explode(' ',$_SESSION['text_to_search']));
@@ -184,7 +186,12 @@ function to_regex($w){
 $w1 = mb_strtoupper($w);
 $w2 = mb_strtolower($w);
 $rz = '';
-for($i=0;$i<strlen($w1);$i++) $rz .= '['.$w1[$i].$w2[$i].']';
+for($i=0;$i<strlen($w1);$i++){ 
+  if (in_array($w[$i],array('/','.','^')))
+    $rz .= '\\'.$w[$i];
+  else
+    $rz .= '['.$w1[$i].$w2[$i].']';
+}
 return $rz;
 }
 
@@ -194,7 +201,15 @@ if (!$a1) return $a[0];
 global $word_pattern;
 $pt = '/([^a-zA-Zа-яА-Я])('.$word_pattern.')([^a-zA-Zа-яА-Я])/is';
 $rp = '\1<span class="searched">\2</span>\3';
-return preg_replace($pt, $rp, $a[0]);
+// Ако вече е възникнала грешка с preg_replace - не се вика.
+// Целта е да се избегне многократното показване на съобщение за грешка.
+if ($GLOBALS['preg_error']) return $a[0];
+$rz = preg_replace($pt, $rp, $a[0]);
+if (!$rz){
+  $GLOBALS['preg_error'] = true;
+  return $a[0];
+}
+else return $rz;
 }
 
 ?>

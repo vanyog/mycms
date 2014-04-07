@@ -149,7 +149,7 @@ if (file_exists($cka)){
 }
 
 public function html($it){
-$rz = "$this->ckbutton<textarea name=\"$this->name\" id=\"$this->name\" cols=\"$this->cols\" rows=\"$this->rows\">$this->text</textarea>";
+$rz = "$this->ckbutton<textarea name=\"$this->name\" id=\"$this->name\" cols=\"$this->cols\" rows=\"$this->rows\"$this->js>$this->text</textarea>";
 if (!$it) $rz = "$this->caption $rz<br>\n";
 else $rz = "<tr>\n<th>$this->caption</th>\n<td>$rz</td>\n</tr>";
 return $rz;
@@ -233,6 +233,51 @@ return $rz;
 }
 
 } //class FormSelect
+
+//----- FormCurrencyInput ------------
+
+// Валути
+global $currency;
+$currency = array(
+'BGN'=>'BGN Bulgarian Lev',
+'EUR'=>'EUR Euro'
+);
+
+class FormCurrencyInput{
+
+public $caption = '';
+public $name = '';
+public $name2 = '';
+public $value = '0.00';
+public $currency = 'BGN';
+public $js = '';
+public $cselect = '';
+
+function __construct($c, $n1, $n2, $v = '0.00', $r = 'BGN'){
+$this->caption = $c;
+$this->name = $n1;
+$this->name2 = $n2;
+$this->value = $v;
+$this->currency = $r;
+}
+
+public function html($it){
+global $currency;
+if ($it) $rz = "<tr>\n<th>";
+$rz .= $this->caption;
+if ($it) $rz .= "</th>\n<td>"; else $rz .= " ";
+$rz .= '<INPUT name="'.$this->name.'" type="text" size="5" value="'.$this->value.'"> 
+<select name="'.$this->name2.'">';
+foreach($currency as $k=>$v){
+  if ($k==$this->currency) $sl = ' selected'; else $sl = '';
+  $rz .= "<option value=\"$k\"$sl>$v\n";
+}
+$rz .= '</select>';
+if ($it) $rz .= "<td>\n<tr>\n"; else $rz .= "<br>\n";
+return $rz;
+}
+
+} // class FormCurrencyInput
 
 //----- formCountrySelect ------------
 // Функция, която връща обект от тип FormSelect за избиране на държава
@@ -375,6 +420,7 @@ $countries = array(
 'MD' => 'Moldova, Republic of',
 'MG' => 'Madagascar',
 'MH' => 'Marshall Islands',
+'MK' => 'Macedonia',
 'ML' => 'Mali',
 'MN' => 'Mongolia',
 'MM' => 'Myanmar',
@@ -489,6 +535,19 @@ function formCountrySelect($c,$n,$d){
 global $countries;
 $k = array_search($d,$countries);
 $s = new FormSelect($c,$n,$countries,$k);
+$s->values = 'k';
+return $s;
+}
+
+//
+// Функция formCurrencySelect връща обект от тип FormSelect
+// представляващ падащ списък за избор на валута
+// При необходимост от допълване на списъка, виж http://www.xe.com/iso4217.php
+
+function formCurrencySelect($c,$n,$d = 0){
+global $currency;
+$k = array_search($d, $currency);
+$s = new FormSelect($c, $n, $currency, $k);
 $s->values = 'k';
 return $s;
 }

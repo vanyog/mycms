@@ -78,7 +78,7 @@ global $languages, $default_language;
   $d = db_select_1('*','content',"`name`='$n1' AND `language`='$default_language'");
   $f = new HTMLForm('new_tralslation');
   $f->add_input(new FormInput('','name','hidden',$n1));
-  $f->add_input(new FormSelect('Not editable','nolink',array('0','1')));
+  $f->add_input(new FormSelect('Not editable','nolink',array('0','1'),$d['nolink']));
   $f->add_input(new FormInput('','language','hidden',$l));
   $f->add_input(new FormTextArea('Text in '.$languages[$l],'text',100,15,
                                   str_replace('&','&amp;',stripslashes($d['text']))) );

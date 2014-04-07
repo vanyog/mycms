@@ -72,7 +72,7 @@ else {
     $ne = $_SERVER['DOCUMENT_ROOT'] != substr($fr['filename'], 0, $l);
   }
   // href - атрибут на файла
-  $f = substr($fr['filename'],  $l, strlen($fr['filename'])-$l); //print_r($f); die;
+  $f = substr($fr['filename'],  $l, strlen($fr['filename'])-$l);
   // Дали файлът е във време за показване
   $t1 = strtotime($fr['date_time_3']);
   $t2 = strtotime($fr['date_time_4']);

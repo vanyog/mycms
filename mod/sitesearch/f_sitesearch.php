@@ -34,15 +34,17 @@ function sitesearch($r=''){
 if ($r=='result') return site_search_result();
 if (isset($_POST['text'])) do_site_search();
 $f = new HTMLForm('site_search_form',false);
-$f->add_input(new FormInput('','text','text'));
-$f->add_input(new FormInput('','','submit',translate('sitesearch_submit')));
 if (!session_id()) session_start();
+if (isset($_SESSION['text_to_search'])) $tx = $_SESSION['text_to_search'];
+else $tx = '';
+$f->add_input(new FormInput('','text','text',$tx));
+$f->add_input(new FormInput('','','submit',translate('sitesearch_submit')));
 if (isset($_SESSION['text_to_search'])){
   // Бутон "Последен резултат"
   $p = stored_value('sitesearch_resultpage');
-  $b = new FormInput('','','button',translate('sitesearch_last'));
-  $b->js = 'onclick="document.location=\''.$p.'\';"';
-  $f->add_input( $b );
+//  $b = new FormInput('','','button',translate('sitesearch_last'));
+//  $b->js = 'onclick="document.location=\''.$p.'\';"';
+//  $f->add_input( $b );
   // Бетон "Почистване"
   $p = current_pth(__FILE__).'clear.php';
   $b = new FormInput('','','button',translate('sitesearch_clear'));

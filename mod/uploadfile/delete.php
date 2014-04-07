@@ -25,6 +25,7 @@ include("conf_uploadfile.php");
 include($idir.'lib/translation.php');
 include($idir.'mod/user/f_user.php');
 
+// Слаба проверка! Трябва да се проверят правата на потребителя!
 if (!in_edit_mode()) user();
 
 // Номер на записа за файла.
