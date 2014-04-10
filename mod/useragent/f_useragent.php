@@ -39,10 +39,10 @@ $ip = $_SERVER['REMOTE_ADDR'];
 $ud = db_select_1('ID','user_agents',"`agent`='$ua'");
 if ($ud) $q = "UPDATE `$tn_prefix"."user_agents` SET count = count+1, `date_time_2`=NOW(), `IP`='$ip' WHERE `ID`=".$ud['ID'].";";
 else $q = "INSERT INTO `$tn_prefix"."user_agents` SET `agent`='$ua', `date_time_1`=NOW(), `date_time_2`=NOW(), `IP`='$ip';";
-mysql_query($q,$db_link);
+mysqli_query($db_link,$q);
 $dt = date('Y-m-d H:i:s',time()-365*24*60*60);
 $q1 = "DELETE FROM `$tn_prefix"."user_agents` WHERE `date_time_2`<'$dt';";
-mysql_query($q1,$db_link);
+mysqli_query($db_link,$q1);
 return '';
 }
 
