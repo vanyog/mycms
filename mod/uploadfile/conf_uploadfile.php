@@ -21,6 +21,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 // Прилага се, когато модулът използва друга база данни.
 
 $idir = dirname(dirname(dirname(__FILE__))).'/'; 
-$ddir = $idir.'_mod/';
+$ddir = $idir;
 
 ?>
