@@ -59,7 +59,7 @@ if ($r){ // Ако има такъв запис
   $content_create_time = $r['date_time_1']; 
   $content_date_time = $r['date_time_2'];
   $t = stripslashes($r['text']);
-  $rz = parse_content(apply_filters($n,$t));
+  $rz = apply_filters($n,parse_content($t));
   if ((!isset($r['nolink']) || !$r['nolink']) && $elink) $rz .= $el;
 }
 else if (is_local() || in_edit_mode()){
@@ -82,7 +82,7 @@ else if (is_local() || in_edit_mode()){
          }
          $t = stripslashes($r['text']);
          // Заместват се със съдържание евентуални <!--$$_XXX_$$--> елементи
-         $rz = parse_content(apply_filters($n,$t));
+         $rz = apply_filters($n,parse_content($t));
        }
 
 // Връщане на резултата
