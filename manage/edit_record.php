@@ -54,6 +54,7 @@ if ($r) foreach($r as $k => $v){
  case 252: $page_content .= '<p>'.$k.':<br>'.editor($k,stripslashes($v)).'</p>'."\n"; break;
  case 1  :
  case 3  : 
+ case 4  : 
  case 10 : 
  case 12 : 
  case 254: $page_content .= '<p>'.$k.':<br><input type="text" name="'.$k.'" value="'.$v.'"></p>'."\n"; break;

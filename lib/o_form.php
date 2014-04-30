@@ -86,7 +86,7 @@ public $checked = '';
 public $size = '';
 public $id = '';
 public $js = '';
-public $max_file_size = '5000000';
+public $max_file_size = '50000000';
 public $textAfter = '';
 
 function __construct($c,$n,$t,$v = '',$ta = ''){
