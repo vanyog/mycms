@@ -21,21 +21,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // page_cache() чете html кода на страницата от таблица $tn_prefix.'page_cache'
 // вместо страницата да се генерира наново.
-// јко страницата не подлежи на кеширане, времето за опресн€ване на кеша, зададено с настройката
+// јко страницата не подлежи на кеширане, времето за опресн€ване на кеша в минути, зададено с настройката
 // cache_time е изтекло, или не е зададено, връща празен стринг.
 
 // save_cache($cnt) записва html кова на страницата в таблица $tn_prefix.'page_cache'
 
-function page_cache(){
-global $page_data;
+function page_cache(){ return '';
+global $language, $page_data;
 // —траницата не подлежи на кеширане
-if ( (count($_GET)==1) && !isset($_GET['pid']) ) return '';
-if (count($_POST) || (count($_GET)>1) || !isset($page_data['donotcache']) || $page_data['donotcache']) return '';
+//if ( (count($_GET)==1) && !isset($_GET['pid']) ) return '';
+//if (count($_POST) || (count($_GET)>1) || !isset($page_data['donotcache']) || $page_data['donotcache']) return '';
 $t = stored_value('cache_time');
 // Ќе е зададено време за кеширане, или то е 0
 if (!$t) return '';
 // „етене на данните от кеш таблицата
-$d = db_select_1('*','page_cache','`page_ID`='.$page_data['ID']);
+$d = db_select_1('*', 'page_cache', 
+     '`page_ID`='.$page_data['ID']." AND `name`='".addslashes($_SERVER['REQUEST_URI'])."' AND `language`='$language'");
 if (!$d) return '';
 else{
   $td = time() - strtotime($d['date_time_1']);
@@ -44,12 +45,17 @@ else{
 }
 }
 
-function save_cache($cnt){
-global $page_data, $tn_prefix, $db_link;
+//
+// «аписване html кода на страницата в таблица $tn_prefix.'page_cache'
+
+function save_cache($cnt){print_r($_SESSION); print_r($_COOKIE); die;
+global $language, $page_data, $tn_prefix, $db_link;
 $id = db_table_field('page_ID','page_cache',"`page_ID`=".$page_data['ID']);
 if (!$id) $q = "INSERT INTO `$tn_prefix"."page_cache` SET ";
-else $q = "UPDATE `$tn_prefix"."page_cache` SET ";
-$q .= "`page_ID`=".$page_data['ID'].", `date_time_1`=NOW(), `text`='".addslashes($cnt)."'";
+else      $q = "UPDATE `$tn_prefix"."page_cache` SET ";
+$q .= "`page_ID`=".$page_data['ID'].
+      ", `name`='".addslashes($_SERVER['REQUEST_URI']).
+      "', `language`='$language', `date_time_1`=NOW(), `text`='".addslashes($cnt)."'";
 if ($id) $q .= " WHERE `page_ID`=$id;";
 else $q .';';
 mysqli_query($db_link,$q);

@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // Показва линкове към всички страници на сайта
+// С параметър lang=en показва страниците на английски
 
 $idir = dirname(dirname(__FILE__)).'/';
 $ddir = $idir;
