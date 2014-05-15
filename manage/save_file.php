@@ -34,6 +34,10 @@ if ( !(('/'.$fn == $adm_pth.'edit_file.php') ||
    )
 {
    $fc = str_replace($ta_fctag,$ta_ctag,$fc);
+   $fc = str_replace(chr(60).' !--$$_',chr(60).'!--$$_',$fc); 
+   $fc = str_replace('&lt; !--$$_',chr(60).'!--$$_',$fc);
+   $fc = str_replace('_$$--&gt;','_$$--'.chr(62),$fc);
+
 }
 //echo $afn; die;
 

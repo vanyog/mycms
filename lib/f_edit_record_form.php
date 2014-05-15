@@ -171,7 +171,12 @@ default:
   if ($ft[$n]=='int') 
     if (isset($_POST[$n])) $q .= "`$n`='".(1*$_POST[$n])."'";
     else $q .= "`$n`=0";
-  else $q .= "`$n`='".addslashes($_POST[$n])."'";
+  else {
+    $v1 = str_replace(chr(60).' !--$$_',chr(60).'!--$$_',$_POST[$n]); 
+    $v1 = str_replace('&lt; !--$$_',chr(60).'!--$$_',$v1);
+    $v1 = str_replace('_$$--&gt;','_$$--'.chr(62),$v1);
+    $q .= "`$n`='".addslashes($v1)."'";
+  }
 }
 // ќбнов€ване данните за потребител€ в текущата сеси€.
 if ($pu) process_user();

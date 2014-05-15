@@ -46,30 +46,33 @@ f.submit();
 <input type="hidden" name="table_name" value="'.$t.'">
 <input type="hidden" name="record_id" value="'.$id.'">
 <input type="hidden" name="go_to_close" value="0">
-';
+<table>';
 
 $i = 0;
 if ($r) foreach($r as $k => $v){
+ $page_content .= '<tr>';
  switch ($ft[$i]){
- case 252: $page_content .= '<p>'.$k.':<br>'.editor($k,stripslashes($v)).'</p>'."\n"; break;
+ case 252: $page_content .= '<td class="r">'.$k.':</td><td>'.editor($k,stripslashes($v)).'</td>'."\n"; break;
  case 1  :
  case 3  : 
  case 4  : 
  case 10 : 
  case 12 : 
- case 254: $page_content .= '<p>'.$k.':<br><input type="text" name="'.$k.'" value="'.$v.'"></p>'."\n"; break;
+ case 254: $page_content .= '<td class="r">'.$k.':</td><td><input type="text" name="'.$k.'" value="'.$v.'"></td>'."\n";
+           break;
  case 253: $v = stripslashes($v); $v = str_replace('"','&quot;',$v);
-    $page_content .= '<p>'.$k.':<br><input type="text" name="'.$k.'" value="'.$v.'"></p>'."\n"; 
+    $page_content .= '<td class="r">'.$k.':</td><td><input type="text" name="'.$k.'" value="'.$v.'"></td>'."\n"; 
     break;
- default: $page_content .= '<p>'.$k.'<br>Unknown type '.$ft[$i].'</p>';
+ default: $page_content .= '<td>'.$k.'</td><td>Unknown type '.$ft[$i].'</td>';
  }
+ $page_content .= '</tr>';
  $i++;
 }
 
 $rfr = $adm_pth.'show_table.php?t='.$t;
 if (isset($_SESSION['http_referer'])) $rfr = $_SESSION['http_referer'];
 
-$page_content .= '
+$page_content .= '</table>
 <input type="submit" value="Save"> 
 <input type="button" value="Save & Go back" onclick="saveAndClose();"> 
 <input type="button" value="Table" onclick="document.location=\''.$adm_pth.'show_table.php?t='.$t.'\'">

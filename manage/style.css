@@ -6,3 +6,5 @@ a { text-decoration:none; }
 .red { color:red; }
 
 #adm_links { position:fixed; font-size:80%; margin:0; padding:0; opacity:0.7; background-color:white; color:0; border-style:solid; border-color:grey; border-width:0 0 1px 0; z-index:100; }
+
+.r { text-align:right; vertical-align:top; }

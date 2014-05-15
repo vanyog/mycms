@@ -137,7 +137,7 @@ $this->caption = $c;
 $this->name = $n;
 $this->cols = $cl;
 $this->rows = $r;
-$this->text = $t;
+$this->text = str_replace(chr(60).'!--$$_',chr(60).' !--$$_',$t);
 // Домавяне на бутон за зареждане на CKEditor.
 $ckp = stored_value('ckeditor_file',$mod_pth.'ckeditor/ckeditor.js');
 $cka = $_SERVER['DOCUMENT_ROOT'].$ckp;

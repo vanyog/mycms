@@ -23,6 +23,7 @@ include("ta_ctag.php");
 function editor($n,$tx){
 global $ta_ctag, $ta_fctag, $page_header;
 $tx = str_replace('&','&amp;',$tx);
+$tx = str_replace(chr(60).'!--$$_',chr(60).' !--$$_',$tx);
 // Брой на textarea елементите
 static $tec = 0;
 // Ако още няма textarea елементи се извежда javascript-ът
@@ -92,7 +93,7 @@ return $js.
 '.make_insert_2_button('include','\'include(\\\'\'','\'\\\');\'').'
 '.make_insert_2_button('include_once','\'include_once(\\\'\'','\'\\\');\'').'
 '.make_insert_2_button('print_r','\'print_r($\'','\'); die;\'').'
-'.make_insert_2_button('<!--$$_','\'<!--$$_\'','\'_$$-->\'').'
+'.make_insert_2_button(' !--$$_','\' !--$$_\'','\'_$$-->\'').'
 '.make_insert_2_button('javascript','tag_s1','tag_s2').ckeb($tec).'
 <textarea id="editor'.$tec.'" cols="120" name="'.$n.'" rows="22" style="font-size:120%;" onfocus="onTeFocus();">'.
 str_replace($ta_ctag,$ta_fctag,$tx).$ta_ctag;
