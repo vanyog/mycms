@@ -31,12 +31,12 @@ function db_replace_all($s1, $s2, $f, $t, $y = false){
 $da = db_select_m("ID,$f", $t, "`$f` LIKE '%$s1%'");
 $rz = 0;
 foreach($da as $d){
-$c = 0;
-$d['text'] = str_replace($s1, $s2, stripslashes($d['text']), $c );
-$rz = 1*$rz + 1*$c;
-$r = db_update_record($d,$t,$y);
+  $c = 0;
+  $d[$f] = str_replace($s1, $s2, stripslashes($d[$f]), $c );
+  $rz = 1*$rz + 1*$c;
+  $r = db_update_record($d,$t,$y);
+  if ($y) echo "$r<br>\n";
 }
-if ($y) echo "$r<br>\n";
 return array($rz, count($da));
 }
 

@@ -26,11 +26,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // save_cache($cnt) записва html кова на страницата в таблица $tn_prefix.'page_cache'
 
-function page_cache(){ return '';
+function page_cache(){
+// Случаи, в които не се използва кеш:
+if (in_edit_mode() || show_adm_links() || count($_POST) || isset($_SESSION)) return '';
 global $language, $page_data;
-// Страницата не подлежи на кеширане
-//if ( (count($_GET)==1) && !isset($_GET['pid']) ) return '';
-//if (count($_POST) || (count($_GET)>1) || !isset($page_data['donotcache']) || $page_data['donotcache']) return '';
 $t = stored_value('cache_time');
 // Не е зададено време за кеширане, или то е 0
 if (!$t) return '';
@@ -48,9 +47,14 @@ else{
 //
 // Записване html кода на страницата в таблица $tn_prefix.'page_cache'
 
-function save_cache($cnt){print_r($_SESSION); print_r($_COOKIE); die;
+function save_cache($cnt){
+// Случаи, в които не се запазва кеш
+if (in_edit_mode() || show_adm_links() || count($_POST) || count($_SESSION)) return;
 global $language, $page_data, $tn_prefix, $db_link;
-$id = db_table_field('page_ID','page_cache',"`page_ID`=".$page_data['ID']);
+$id = db_table_field('page_ID','page_cache',
+      "`page_ID`=".$page_data['ID'].
+      " AND `name`='".addslashes($_SERVER['REQUEST_URI']).
+      "' AND `language`='$language'");
 if (!$id) $q = "INSERT INTO `$tn_prefix"."page_cache` SET ";
 else      $q = "UPDATE `$tn_prefix"."page_cache` SET ";
 $q .= "`page_ID`=".$page_data['ID'].

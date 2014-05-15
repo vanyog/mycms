@@ -96,6 +96,7 @@ global $language, $pth;
   // Съобщение, че текстът е прекалено дълъг
   if (strlen($ts)>255){
     unset($_SESSION['text_to_search']);
+    unset($_SESSION['sitesearch_saved']);
     return translate('sitesearch_verylong');
   }
   // Разпадане на текста за търсене на думи

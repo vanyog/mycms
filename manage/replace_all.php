@@ -1,7 +1,7 @@
 <?php
 /*
 MyCMS - a simple Content Management System
-Copyright (C) 2013  Vanyo Georgiev <info@vanyog.com>
+Copyright (C) 2014  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,13 +17,21 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Унищожава променлива $_SESSION['text_to_search'] и се връща на страницата,
-// от която е извикан
+include('conf_manage.php');
+include_once($idir.'lib/f_db_replace_all.php');
 
-session_start();
-unset($_SESSION['text_to_search']);
-unset($_SESSION['sitesearch_saved']);
-if (isset($_SERVER['HTTP_REFERER'])) header('Location: '.$_SERVER['HTTP_REFERER']);
-else echo("'text_to_search' variable have been unset.");
+if (!isset($_GET['s1'])) die('No string to replace s1= is specified.');
+if (!isset($_GET['s2'])) die('No string to replace width s2= is specified.');
+if (!isset($_GET['f'])) die('No field name f= is specified.');
+if (!isset($_GET['t'])) die('No database table name t= is specified.');
+
+$s1 = addslashes($_GET['s1']);
+$s2 = addslashes($_GET['s2']);
+$f  = $_GET['f'];
+$t  = $_GET['t'];
+
+$r = db_replace_all($s1, $s2, $f, $t);
+
+echo $r[0].' raplacements made in '.$r[1].' recordr.';
 
 ?>
