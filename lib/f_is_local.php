@@ -27,13 +27,17 @@ $web_host = stored_value('host_web','mysite.com'); // Домейн на сайта.
 $local_host = stored_value('host_local','localhost'); // Локален домейн на сайта, който не е достъпен през Интернет.
                       // Използва се, когато се създава пробно локално копие на сайта.
 
-$phpmyadmin_site = stored_value('phpmyadmin_web','http://mysite.com/phpmyadmin');   // Адрес на phpMyAdmin за отдалечения сървър
-$phpmyadmin_local = stored_value('phpmyadmin_local','http://localhost/phpmyadmin'); // Адрес на phpMyAdmin за локалния сървър
+// Адрес на phpMyAdmin за отдалечения сървър
+$phpmyadmin_site = stored_value('phpmyadmin_web','http://mysite.com/phpmyadmin');
+
+// Адрес на phpMyAdmin за локалния сървър
+$phpmyadmin_local = stored_value('phpmyadmin_local','http://localhost/phpmyadmin');
 
 // Връща истина, ако сайтът се намира на локален сървър.
 function is_local(){
 global $local_host;
-return $local_host==$_SERVER['HTTP_HOST'];
+if (isset($_SERVER['HTTP_HOST'])) return $local_host==$_SERVER['HTTP_HOST'];
+else return false;
 }
 
 // Функцията in_edit_mode() връща истина ако сайтът е в режим на редактиране

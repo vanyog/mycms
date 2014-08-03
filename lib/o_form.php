@@ -41,7 +41,7 @@ else $this->text = $tx;
 
 function add_input($in){
 $this->ins[] = $in;
-$this->action = $_SERVER['REQUEST_URI'];
+$this->action = str_replace('&','&amp;',$_SERVER['REQUEST_URI']);
 }
 
 public function html(){

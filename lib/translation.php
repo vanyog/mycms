@@ -60,7 +60,7 @@ $r = "";
 $how = stored_value('flag_setting','flag');
 if ($a) $how = $a;
 if (!$dont_translate) foreach($ls as $l) if ($l!=$language){
-  $u = $_SERVER['REQUEST_URI'];
+  $u = str_replace('&','&amp;',$_SERVER['REQUEST_URI']);
   $h = '';
   if (strpos($u,'?')){
      $p = strpos($u,'lang=');

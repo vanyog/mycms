@@ -28,8 +28,18 @@ include_once($idir.'lib/translation.php');
 function parse_template($p){
 global $content_date_time;
 
+// Номер на използвания за показване на страницата шаблон
+$tid = $p['template_id'];
+
+// Ако има параметър за смяна на шаблона template=xx
+if (isset($_GET['template'])){
+  $tid = 1*$_GET['template'];
+  // Шаблонът може да се смени само ако е посочен в опцията 'allowed_templates'
+  if (strpos(stored_value('allowed_templates'), ",$tid,")===false) $tid = $p['template_id'];
+}
+
 // Четене на шаблона на страницата от таблица `templates`
-$t = db_select_1('*','templates',"ID=".$p['template_id']);
+$t = db_select_1('*','templates',"ID=$tid");
 if (!$t) return 'No page template found. May be the system is not installed.';
 $cnt = stripslashes($t['template']);
 

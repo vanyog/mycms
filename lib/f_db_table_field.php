@@ -28,13 +28,13 @@ include_once($idir."lib/usedatabase.php");
 
 function db_table_field($fn, $tb, $whr, $def = '', $y = false){
 global $db_link,$tn_prefix;
-if ($fn[0]=='`') $fn = substr($fn,1,strlen($fn)-2);
 $q="SELECT $fn FROM $tn_prefix$tb WHERE $whr;";
 if ($y===true) echo $q.'<br>'; 
 $r=mysqli_query($db_link,$q);
 if (!$r){
   return $def;
 }
+if ($fn[0]=='`') $fn = substr($fn,1,strlen($fn)-2);
 $rc=mysqli_fetch_assoc($r);
 if (isset($rc[$fn])) return stripslashes($rc[$fn]);
 else return $def;
