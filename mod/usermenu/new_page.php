@@ -63,6 +63,10 @@ $ti = new FormInput(translate('usermenu_linktext'), 'linktext', 'text');
 $ti->size = '50';
 $pf->add_input( $ti );
 
+$ti = new FormInput(translate('usermenu_addtomenu'), 'addtomenu', 'checkbox');
+$ti->checked = "checked";
+$pf->add_input( $ti );
+
 $ti = new FormInput(translate('usermenu_newpagetitle'), 'title', 'text');
 $ti->size = '100';
 $pf->add_input( $ti );
@@ -85,7 +89,10 @@ function process_data(){
 global $pth, $page_data;//  print_r($_POST); die;
 
 // Дали се създава нов раздел
-$newmenu = isset($_POST['newmenu'])&&($_POST['newmenu']=='on');
+$newmenu = isset($_POST['newmenu']) && ($_POST['newmenu']=='on');
+
+// Дали да се създаде линк в менюто
+$addtomenu = isset($_POST['addtomenu']) && ($_POST['addtomenu']=='on');
 
 // Предполагаем номер на новата страница
 $pi = db_table_field('MAX(`ID`)', 'pages', '1')+1;
@@ -118,7 +125,7 @@ $d2 = array (
   'link'=>$pi
 );
 // Записване в таблицата
-$pp = db_insert_1($d2,'menu_items');
+if ($addtomenu || $newmenu) $pp = db_insert_1($d2,'menu_items');
 
 // Ако се създава нов раздел се създава препратка към страницата и в старото меню
 if ($newmenu){
@@ -129,8 +136,8 @@ if ($newmenu){
     'name'=>"p$pi"."_link",
     'link'=>$pi
   );
-  // Записване в таблицата
- $pp = db_insert_1($d2,'menu_items');
+  // Записване в таблицата, ако е изпратен текст за линка в менюто
+ if ($addtomenu) $pp = db_insert_1($d2,'menu_items');
   // Данни за таблица 'menu_tree'
   $dt = array(
     'group'=>$mg2,
@@ -142,13 +149,6 @@ if ($newmenu){
 
 // Данни за записите в таблица 'content'
 $d3 = array (
-// Надписа върху линка в менюто
-array('name'=>$d2['name'],
-      'date_time_1'=>'NOW()',
-      'date_time_2'=>'NOW()',
-      'language'=>addslashes($_POST['lang']),
-      'text'=>addslashes($_POST['linktext'])
-      ),
 // Заглавие на страницата
 array('name'=>$d1['title'],
       'date_time_1'=>'NOW()',
@@ -164,6 +164,14 @@ array('name'=>$d1['content'],
       'text'=>addslashes($_POST['content'])
       )
 );
+// Надпис върху линка в менюто
+if (trim($_POST['linktext'])) 
+  $d3[] = array('name'=>$d2['name'],
+      'date_time_1'=>'NOW()',
+      'date_time_2'=>'NOW()',
+      'language'=>addslashes($_POST['lang']),
+      'text'=>addslashes($_POST['linktext'])
+  );
 // Записване в таблицата
 db_insert_m($d3,'content');
 

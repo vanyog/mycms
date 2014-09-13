@@ -77,7 +77,7 @@ case 'all':
   $can_visit = true;
   break;
 case 'menu':// print_r($page_data); die;
-  $can_create = in_that_branch($page_data['menu_group'], $q['object']) && $q['yes_no'];
+  if (in_that_branch($page_data['menu_group'], $q['object'])) $can_create = $q['yes_no'];
   $can_edit = $can_create;
   if ($can_create) $can_visit = true;
   break;
