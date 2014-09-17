@@ -56,7 +56,7 @@ for(i=0;i<l-1;i++){
   var e = f.elements[i];
   if ((e.type=="text")||(e.type=="textarea")) r = r*e.value.length;
 }
-if (r) f.submit(); else alert("'.translate('fillin_all').'");
+if (r) f.submit(); else alert("'.translate_if('fillin_all', 'All fields mut be filled in.').'");
 }
 ';
 $rz = "<form enctype=\"multipart/form-data\" name=\"$this->name\" id=\"$this->name\" method=\"$this->method\" action=\"$this->action\">\n";
@@ -72,6 +72,11 @@ if ($js) $rz = "<script type=\"text/javascript\">\n$js1</script>\n$rz";
 return $rz;
 }
 
+}
+
+function translate_if($a, $b){
+if (function_exists('translate')) return translate($a);
+else return $b;
 }
 
 //----- FormInput ------------

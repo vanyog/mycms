@@ -82,7 +82,7 @@ function doMakeDir(){
 --></script>';
 
 $page_content .= '<p>Folder: <strong>/'.$f.'</strong> </p>
-<form method="POST" action="'.$adm_pth.'delete_file.php" name="file_form">
+<form method="POST" action="'.$adm_pth.'edit_file.php" name="file_form">
 <table border="1" cellspacing="0">
 <tr>
 ';

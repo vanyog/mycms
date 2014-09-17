@@ -34,7 +34,8 @@ $q = "INSERT INTO `content` (`name`,`nolink`,`date_time_1`,`date_time_2`,`langua
 (";
 
 foreach($d as $i=>$a){
- $q .= "'".$a['name']."',".$a['nolink'].",NOW(),NOW(),'".$a['language']."','".str_replace("\r\n",'\r\n',$a['text'])."'";
+ $q .= "'".$a['name']."',".$a['nolink'].",NOW(),NOW(),'".$a['language']."','".
+       str_replace("'","\'", str_replace("\r\n",'\r\n',$a['text']) )."'";
  if ($i==count($d)-1) $q .= ");"; else $q .= "),\n(";
 }
 
@@ -46,7 +47,7 @@ if (!file_exists($fd)) die("Directory does not exists $d");
 $fn = $fd.'/tables.sql';
 
 // Ако файлът не е достъпен за запис
-if (!is_writable($fn)){
+if (file_exists($fn) && !is_writable($fn)){
   header("Content-Type: text/html; charset=windows-1251");
   echo "<p>File $fn is not writeble. Write to it manually.</p>
   <textarea cols=\"130\" rows=\"18\">$q</textarea>";
