@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+include_once($idir.'lib/f_db_delete_where.php');
+
 // В този файл се дефинират две функции, свързани с кеширането на страници
 
 // page_cache() чете html кода на страницата от таблица $tn_prefix.'page_cache'
@@ -67,7 +69,7 @@ mysqli_query($db_link,$q);
 }
 
 //
-// Връща истина във всички случаи, в които не следва да се прави кеширане
+// Връща истина във всички случаи, в който не следва да се прави кеширане
 
 function do_not_cache(){
 return in_edit_mode() || 
@@ -75,5 +77,21 @@ return in_edit_mode() ||
   (isset($_SESSION) && count($_SESSION)) || 
   (!is_local() && show_adm_links());
 }
+
+//
+// Изчиства кеша за адрес $a
+
+function purge_page_cache($a){
+global $edit_name;
+$b = parse_url($a);
+$c = array(); 
+if (isset($b['query'])) parse_str($b['query'],$c);
+unset($c[$edit_name]);
+$b['query'] = http_build_query($c);
+$d = $b['path'];
+if ($b['query']) $d .= '?'.$b['query'];
+db_delete_where('page_cache',"`name`='$d'");
+}
+
 
 ?>

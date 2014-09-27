@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include("conf_manage.php");
 include($idir."conf_paths.php");
 include_once($idir."lib/usedatabase.php");
+include_once($idir."lib/f_page_cache.php");
+
 
 $t = ''; $r = 0; $gtc = false;
 $q1 = "UPDATE "; $q2 = ' SET'; $q3 = ' WHERE ID='; 
@@ -45,7 +47,10 @@ mysqli_query($db_link,$q);
 
 session_start();
 
-if ($gtc) header('Location: '.$_SESSION['http_referer']);
+if ($gtc){
+  purge_page_cache($_SESSION['http_referer']);
+  header('Location: '.$_SESSION['http_referer']);
+}
 else header('Location: '.$adm_pth.'edit_record.php?t='.$t.'&r='.$r);
 
 ?>
