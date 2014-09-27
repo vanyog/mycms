@@ -23,12 +23,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // вместо страницата да се генерира наново.
 // Ако страницата не подлежи на кеширане, времето за опресняване на кеша в минути, зададено с настройката
 // cache_time е изтекло, или не е зададено, връща празен стринг.
+// Стойност cache_time=-1 означава записът в кеша да се опреснява, само при променяне на страницата.
 
 // save_cache($cnt) записва html кова на страницата в таблица $tn_prefix.'page_cache'
 
 function page_cache(){
 // Случаи, в които не се използва кеш:
-if (in_edit_mode() || count($_POST) || isset($_SESSION)) return '';
+if (do_not_cache()) return '';
 global $language, $page_data;
 $t = stored_value('cache_time');
 // Не е зададено време за кеширане, или то е 0
@@ -39,7 +40,7 @@ $d = db_select_1('*', 'page_cache',
 if (!$d) return '';
 else{
   $td = time() - strtotime($d['date_time_1']);
-  if ($td > ($t*60)) return '';
+  if ( !($t<0) && ($td > ($t*60)) ) return '';
   else return $d['text'];
 }
 }
@@ -49,7 +50,7 @@ else{
 
 function save_cache($cnt){
 // Случаи, в които не се запазва кеш
-if (in_edit_mode() || count($_POST) || isset($_SESSION)) return;
+if (do_not_cache()) return;
 global $language, $page_data, $tn_prefix, $db_link;
 $id = db_table_field('page_ID','page_cache',
       "`page_ID`=".$page_data['ID'].
@@ -63,6 +64,16 @@ $q .= "`page_ID`=".$page_data['ID'].
 if ($id) $q .= " WHERE `page_ID`=$id;";
 else $q .';';
 mysqli_query($db_link,$q);
+}
+
+//
+// Връща истина във всички случаи, в които не следва да се прави кеширане
+
+function do_not_cache(){
+return in_edit_mode() || 
+  count($_POST) || 
+  (isset($_SESSION) && count($_SESSION)) || 
+  (!is_local() && show_adm_links());
 }
 
 ?>
