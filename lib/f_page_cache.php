@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 function page_cache(){
 // Случаи, в които не се използва кеш:
-if (in_edit_mode() || show_adm_links() || count($_POST) || isset($_SESSION)) return '';
+if (in_edit_mode() || count($_POST) || isset($_SESSION)) return '';
 global $language, $page_data;
 $t = stored_value('cache_time');
 // Не е зададено време за кеширане, или то е 0
@@ -49,7 +49,7 @@ else{
 
 function save_cache($cnt){
 // Случаи, в които не се запазва кеш
-if (in_edit_mode() || show_adm_links() || count($_POST) || count($_SESSION)) return;
+if (in_edit_mode() || count($_POST) || isset($_SESSION)) return;
 global $language, $page_data, $tn_prefix, $db_link;
 $id = db_table_field('page_ID','page_cache',
       "`page_ID`=".$page_data['ID'].
