@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include_once($idir.'lib/usedatabase.php');
 
 function db_update_record($d,$t,$y=false){
-global $tn_prefix, $db_link;
+global $tn_prefix, $db_link, $db_req_count;
 if (!isset($d['ID'])) die('Няма номер на запис $d[\'ID\'] във функция db_update_record.');
 $q = "UPDATE `$tn_prefix$t` SET ";
 foreach($d as $n=>$v){
@@ -40,6 +40,7 @@ $q = substr($q,0,strlen($q)-1)." WHERE `ID`=".$d['ID'].";";
 if ($y) return $q;
 else{
  mysqli_query($db_link,$q);
+ $db_req_count++;
  return $d['ID'];
 }
 }

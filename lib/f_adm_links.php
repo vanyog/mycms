@@ -99,7 +99,7 @@ if (confirm("Hide this menu?")){
 <a href="https://github.com/vanyog/mycms/wiki" target="_blank">Help</a> :: 
 <a href="'.$go.'">'.$gon.'</a><!--:: 
 <a hr  ="'.$adm_pth.'dump_data.php">Dump</a-->'.$w3c.' :: 
-'.$clink.'
+'.$clink.' <!--DB_REQ_COUNT-->
 <a href="'.$pth.'lib/exit.php">x</a>&nbsp; 
 </p>';
   if (stored_value('adm_links_over',0)!=1) $rz .= '<p>&nbsp;</p>';

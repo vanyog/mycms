@@ -21,8 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include_once($idir."lib/usedatabase.php");
 
 function db_table_exists($t){
-global $database, $db_link, $tn_prefix;
+global $database, $db_link, $tn_prefix, $db_req_count;
 $r = mysqli_query($db_link,"SHOW TABLES FROM $database;");
+$db_req_count++;
 $ls = array();
 while ($l = mysqli_fetch_row($r)) $ls[] = $l[0];
 //echo $tn_prefix.$t.'<p>'; print_r($ls); die;

@@ -21,9 +21,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include_once($idir."lib/usedatabase.php");
 
 function db_field_names($t){
-global $db_link,$tn_prefix;
+global $db_link,$tn_prefix, $db_req_count;
 $q = "SELECT * FROM $tn_prefix$t LIMIT 1,1;";
 $r = mysqli_query($db_link,$q);
+$db_req_count++;
 $rz = array();
 if (!$r) return $rz;
 $fn = mysqli_fetch_fields($r);

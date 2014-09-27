@@ -30,10 +30,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include_once($idir."lib/usedatabase.php");
 
 function db_select_1($fn,$tb,$whr,$y = false){
-global $db_link, $tn_prefix;
+global $db_link, $tn_prefix, $db_req_count;
 $q="SELECT $fn FROM `$tn_prefix$tb` WHERE $whr LIMIT 1;";
 if ($y) echo "$q<br>";
 $r=mysqli_query($db_link,$q);
+$db_req_count++;
 if (!$r) return false;
 $rc=mysqli_fetch_assoc($r);
 mysqli_free_result($r);

@@ -25,9 +25,9 @@ global $ddir;
 include_once($ddir.'conf_database.php');
 
 function db_enum_values($fn, $tn){
-global $tn_prefix, $db_link;
+global $tn_prefix, $db_link, $db_req_count;
 $q = "SHOW COLUMNS FROM `$tn_prefix$tn` LIKE '$fn'";
-$r = mysql_query($q,$db_link);
+$r = mysqli_query($db_link,$q);
 if (!$r) return false;
 $a = mysql_fetch_assoc($r);
 if (!isset($a['Type'])) return false;

@@ -100,6 +100,9 @@ count_visits($page_data);
 // Оцветяване на търсени думи
 $cnt = colorize($cnt);
 
+// Показване броя на MYSQL заявките, ако е предвидено да се показват
+$cnt = str_replace('<!--DB_REQ_COUNT-->',"$db_req_count ", $cnt);
+
 // Изпращане на страницата
 echo $cnt;
 

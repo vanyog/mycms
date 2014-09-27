@@ -20,9 +20,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Изтрива запис с `ID`=$id от таблица $t
 
 function db_delete_from($t,$id){
-global $tn_prefix, $db_link;
+global $tn_prefix, $db_link, $db_req_count;
 $q = "DELETE FROM `$tn_prefix"."$t` WHERE `ID`=$id;";
 mysqli_query($db_link, $q);
+$db_req_count++;
 }
 
 ?>

@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include_once($idir.'lib/usedatabase.php');
 
 function db_update_where($d,$t,$w,$y=false){
-global $tn_prefix, $db_link;
+global $tn_prefix, $db_link, $db_req_count;
 $q = "UPDATE `$tn_prefix$t` SET ";
 foreach($d as $n=>$v){
   if ($n=='ID') continue;
@@ -37,6 +37,7 @@ $q = substr($q,0,strlen($q)-1)." WHERE $w;";
 if ($y) return $q;
 else{
  mysqli_query($db_link,$q);
+ $db_req_count++;
 }
 }
 

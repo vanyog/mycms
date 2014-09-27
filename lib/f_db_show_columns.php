@@ -22,11 +22,12 @@ if (!isset($idir)) $idir = dirname(dirname(__FILE__)).'/';
 include_once($idir."lib/usedatabase.php");
 
 function db_show_columns($tn, $fn = '', $in = ''){
-global $tn_prefix, $db_link;
+global $tn_prefix, $db_link, $db_req_count;
 $lk = '';
 if ($fn) $lk = " LIKE '$fn'";
 $q = "SHOW COLUMNS FROM `$tn_prefix$tn`$lk;";
 $r = mysqli_query($db_link,$q);
+$db_req_count++;
 $rz = array();
 while ( $a = mysqli_fetch_assoc($r) ) if ($in) $rz[] = $a[$in]; else $rz[] = $a;
 return $rz;

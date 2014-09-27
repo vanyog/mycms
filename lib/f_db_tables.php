@@ -21,9 +21,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include_once($idir."lib/usedatabase.php");
 
 function db_tables(){
-global $db_link;
+global $db_link, $db_req_count;
 $q = "SHOW TABLES;";
 $rs = mysqli_query($db_link,$q);
+$db_req_count++;
 $rz = array();
 while ($a = mysqli_fetch_array($rs)){
  $rz[] = $a[0];

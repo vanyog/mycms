@@ -26,6 +26,7 @@ if (!isset($ddir) || !file_exists($ddir."conf_database.php")) die("Database is n
 include_once($ddir."conf_database.php");
 
 $db_link = get_db_link($user, $password, $database);
+$db_req_count = 0;
 
 function get_db_link($user, $password, $database){
 $l = mysqli_connect("localhost",$user,$password,$database);

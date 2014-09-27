@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include_once($idir.'lib/usedatabase.php');
 
 function db_insert_1($d,$t,$y=false){
-global $tn_prefix, $db_link;
+global $tn_prefix, $db_link, $db_req_count;
 $q = "INSERT INTO `$tn_prefix$t` SET ";
 foreach($d as $n=>$v){
   if ($v=='NOW()') $q .= "`$n`=$v,";
@@ -36,6 +36,7 @@ $q = substr($q,0,strlen($q)-1).";";
 if ($y) return $q;
 else{
  mysqli_query($db_link,$q);
+ $db_req_count++;
  return mysqli_insert_id($db_link);
 }
 }

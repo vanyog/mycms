@@ -190,6 +190,7 @@ $_SESSION['session_start'] = time();
 if (isset($_GET['user'])&&($_GET['user']=='enter')){
   $l = unset_self_query_var('user',true); //echo $l; die;
   header('Location: '.$l);
+  die;
 }
 }
 
@@ -219,6 +220,7 @@ $q = "INSERT INTO `$tn_prefix".
 mysqli_query($db_link,$q);
 $l = unset_self_query_var('user','newreg');
 header("Location: $l");
+die;
 }
 
 // Връща обект форма за влизане/регистриране на потребител
@@ -252,6 +254,7 @@ unset($_SESSION['session_start']);
 if (isset($_SERVER['HTTP_REFERER'])) $_SESSION['user_returnpage'] = $_SERVER['HTTP_REFERER'];
 // Пренасочване към страницата след излизане
 header("Location: $lp");
+die;
 }
 
 // Връща форма за редактиране данните на потребителя
@@ -286,6 +289,7 @@ function new_user($a){// print_r($_SESSION); die;
   // В противен случай се изпраща параметър user=newreg и страницата се презарежда
   $l = set_self_query_var('user','newreg',false);
   header("Location: $l");
+  die;
 }
 
 //
@@ -380,6 +384,7 @@ db_delete_from($user_table, $_SESSION['user_to_delete']);
 unset($_SESSION['user_to_delete']);
 $l = unset_self_query_var('user');
 header('Location: '.$l);
+die;
 }
 
 //

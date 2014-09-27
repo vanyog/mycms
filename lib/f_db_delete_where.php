@@ -20,9 +20,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Изтрива всички записи от таблица $t, които отговарят на условието $w
 
 function db_delete_where($t,$w){
-global $tn_prefix, $db_link;
+global $tn_prefix, $db_link, $db_req_count;
 $q = "DELETE FROM `$tn_prefix"."$t` WHERE $w;";
 mysqli_query($db_link, $q);
+$db_req_count++;
 }
 
 ?>
