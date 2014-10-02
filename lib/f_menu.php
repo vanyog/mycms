@@ -37,7 +37,11 @@ $pp = stored_value('menu_popup');  // Дали да се показват изскачащи подменюта
 foreach($d as $m){
   $lnn = 1*$m['link'];
   $ln = $m['link']; 
-  if ($lnn) $ln = $ind_fl.'?pid='.$lnn;
+  if ($lnn){
+    $h = db_table_field('hidden', 'pages', "`ID`=$lnn");
+    if (!in_edit_mode() && !show_adm_links() && $h) continue;
+    $ln = $ind_fl.'?pid='.$lnn;
+  }
   $pl = '';
   if (in_edit_mode()) $pl = $m['place'].".";
   $js = '';

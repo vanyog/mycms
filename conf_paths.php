@@ -23,7 +23,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 $idir = dirname(__FILE__).'/';
 
+$option_name[] = 'admin_path';
+$option_name[] = 'ckeditor_file';
+$option_name[] = 'mod_path';
+$option_name[] = 'adm_name';
+$option_name[] = 'adm_value';
+$option_name[] = 'edit_name';
+$option_name[] = 'edit_value';
+$option_name[] = 'admin_path';
+$option_name[] = 'admin_path';
+
 include_once($idir.'lib/f_stored_value.php');
+include_once($idir.'lib/options.php');
 
 // Директория на входната страница.
 // Задава се ако сайтът се изгражда като раздел в друг сайт и се намира в директория на главния сайт.

@@ -47,7 +47,7 @@ if (in_edit_mode()){
   $id = db_select_1('ID','content',"name='$n' AND language='$language'");
   if ($can_edit) $h = $pth.'mod/usermenu/edit_text.php?i='.$id['ID'].'&amp;pid='.$page_data['ID'];
   else $h = $adm_pth.'edit_record.php?t=content&amp;r='.$id['ID'];
-  $el = '<a href="'.$h.'">*</a>';
+  $el = '<a href="'.$h.'" style="color:#000000;background-color:#ffffff;">*</a>';
 }
 
 // Връщан резултат

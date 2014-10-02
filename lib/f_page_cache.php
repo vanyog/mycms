@@ -85,12 +85,10 @@ function purge_page_cache($a){
 global $edit_name;
 $b = parse_url($a);
 $c = array(); 
-if (isset($b['query'])) parse_str($b['query'],$c);
-unset($c[$edit_name]);
-$b['query'] = http_build_query($c);
 $d = $b['path'];
-if ($b['query']) $d .= '?'.$b['query'];
-db_delete_where('page_cache',"`name`='$d'");
+if (isset($b['query'])) parse_str($b['query'],$c);
+if (isset($c['pid'])) $d .= '?pid='.$c['pid'];
+echo db_delete_where('page_cache',"`name` LIKE '$d%'");
 }
 
 

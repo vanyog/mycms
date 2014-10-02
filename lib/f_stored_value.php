@@ -23,8 +23,14 @@ include_once($idir.'lib/f_db_select_1.php');
 // Функцията stored_value($n,$def=false) чете полето `value` от таблица $tn_prifix.'options'
 // Ако не съществува такъв запис, връща стойността $def.
 
+// Статична променлива, която служи за кеш.
+//if (!isset($option_value)) $option_value = array();
+
 function stored_value($n, $def = false){
-  return db_table_field('value', 'options',"`name`='$n'", $def);
+global $option_value;
+  if (!isset($option_value[$n]))
+      $option_value[$n] = db_table_field('value', 'options',"`name`='$n'", $def);
+  return $option_value[$n];
 }
 
 // Функцията store_value($n,$v) записва стойността $v в запис с `name`=$n на таблица $tn_prifix.'options'

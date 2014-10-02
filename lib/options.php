@@ -1,7 +1,7 @@
 <?php
 /*
 MyCMS - a simple Content Management System
-Copyright (C) 2013  Vanyo Georgiev <info@vanyog.com>
+Copyright (C) 2014  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,14 +17,22 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Изтрива всички записи от таблица $t, които отговарят на условието $w
+// Целта на този файл е да намали броя на заявките към базата данни за четене на настройки
 
-function db_delete_where($t,$w,$y=false){
-global $tn_prefix, $db_link, $db_req_count;
-$q = "DELETE FROM `$tn_prefix"."$t` WHERE $w;";
-if ($y) echo $q;
-mysqli_query($db_link, $q);
-$db_req_count++;
+include_once($idir."lib/f_db_select_m.php");
+
+load_options();
+
+function load_options(){
+global $option_name, $option_value;
+$q = '';
+foreach($option_name as $n){
+  if ($q) $q .= ' OR ';
+  if (!isset($option_value[$n])) $q .= "`name`='$n'";
+}
+$d = db_select_m('`name`,`value`','options',"$q");
+foreach($d as $r) $option_value[$r['name']]=$r['value'];
+$option_name = array();
 }
 
 ?>

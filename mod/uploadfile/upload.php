@@ -26,6 +26,7 @@ include("conf_uploadfile.php");
 include($idir.'lib/translation.php');
 include($idir.'lib/o_form.php');
 include_once($idir.'mod/user/f_user.php');
+include_once($idir."lib/f_page_cache.php");
 
 // Проверка дали има влязъл потребител
 if (!in_edit_mode()) user('new');
@@ -140,6 +141,7 @@ if ($_FILES['file']['tmp_name']) $q .= "`filename`='$fln', ";
 $q .= "`text`='".addslashes($_POST['text'])."'$w;";
 mysqli_query($db_link,$q);
 //print_r($q); die;
+purge_page_cache($_POST['referer']);
 header("Location: ".$_POST['referer']);
 }
 

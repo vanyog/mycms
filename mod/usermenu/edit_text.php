@@ -26,6 +26,7 @@ include("f_usermenu.php");
 include_once($idir."lib/translation.php");
 include_once($idir."lib/f_edit_record_form.php");
 include_once($idir."lib/f_db_insert_1.php");
+include_once($idir."lib/f_page_cache.php");
 
 // Номер на страницата, на която е текста
 $page_id = 1*$_GET['pid'];
@@ -63,6 +64,7 @@ if (count($_POST)){
 'language' => addslashes($_GET['lang']),
 'text' => addslashes($_POST['text'])
 ), 'content');
+  purge_page_cache($_SESSION['http_referer']);
   header('Location: '.$_SESSION['http_referer']);
 }
 else if (isset($_SERVER['HTTP_REFERER'])) $_SESSION['http_referer'] = $_SERVER['HTTP_REFERER'];

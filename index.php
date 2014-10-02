@@ -43,12 +43,19 @@ if (
 ) 
 die('Системата все още не е правилно инсталирана и конфигурирана. Вижте файл <a href="http://vanyog.com/_new/index.php?pid=91" target="_blank">USAGE.txt</a>.');
 
+$option_name[] = 'main_index_pageid';
+$option_name[] = 'cache_time';
+$option_name[] = 'error_404_template';
+$option_name[] = 'today';
+$option_name[] = 'sitesearch_nocoleron';
+
 include_once($idir.'lib/f_db_select_1.php');
 include_once($idir.'lib/f_db_select_m.php');
 include_once($idir.'lib/f_parse_template.php');
 include_once($idir.'lib/f_stored_value.php');
 include_once($idir.'lib/translation.php');
 include_once($idir.'lib/f_page_cache.php');
+include_once($idir.'lib/options.php');
 
 // Адрес на индексния файл
 $ind_fl = $_SERVER['PHP_SELF'];
