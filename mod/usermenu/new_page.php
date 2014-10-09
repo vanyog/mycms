@@ -17,7 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Създаване на нова страница в раздел/меню $_GET['m']
+// Създаване на нова страница от страница $_GET['p']
+
+if (!isset($_GET['p'])) die('Insufficient parameters.');
 
 $idir = dirname(dirname(dirname(__FILE__))).'/';
 $ddir = $idir;

@@ -19,6 +19,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 // Ќевидима страница се прави видима и обратно
 
+if (!isset($_GET['pid'])) die('Insufficient parameters.');
+
 $idir = dirname(dirname(dirname(__FILE__))).'/';
 $ddir = $idir;
 

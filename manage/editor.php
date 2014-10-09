@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 include("ta_ctag.php");
+include_once($idir.'lib/f_mod_list.php');
+include_once($idir.'lib/f_mod_picker.php');
 
 function editor($n,$tx){
 global $ta_ctag, $ta_fctag, $page_header;
@@ -27,6 +29,7 @@ $tx = str_replace(chr(60).'!--$$_',chr(60).' !--$$_',$tx);
 // Брой на textarea елементите
 static $tec = 0;
 // Ако още няма textarea елементи се извежда javascript-ът
+// и mod_picker
 if (!$tec){
 $js = '
 <script type="text/javascript"><!--
@@ -80,7 +83,7 @@ var tag_a2 ="a";
 var tag_s1 = "<script type=\"text/javascript\"><!--\n";
 var tag_s2 = "\n--><"+"/script>";
 --></script>
-';
+'.mod_picker();
 } else $js = '';
 $tec += 1;
 // Връщане на резултата
@@ -93,7 +96,7 @@ return $js.
 '.make_insert_2_button('include','\'include(\\\'\'','\'\\\');\'').'
 '.make_insert_2_button('include_once','\'include_once(\\\'\'','\'\\\');\'').'
 '.make_insert_2_button('print_r','\'print_r($\'','\'); die;\'').'
-'.make_insert_2_button('&lt; !--$$_','\'&lt; !--$$_\'','\'_$$-->\'').'
+'.make_insert_2_button('<!--$$_','\'<!--$$_\'','\'_$$-->\'').'
 '.make_insert_2_button('javascript','tag_s1','tag_s2').ckeb($tec).'
 <textarea id="editor'.$tec.'" cols="120" name="'.$n.'" rows="22" style="font-size:120%;" onfocus="onTeFocus();">'.
 str_replace($ta_ctag,$ta_fctag,$tx).$ta_ctag;

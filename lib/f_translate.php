@@ -37,6 +37,12 @@ $content_date_time    = '';// Променлива, която съдържа датата и часа на последн
 $content_create_time = ''; // Променлива, която съдържа датата и часа на първото въвеждане на върнатия текст 
 
 function translate($n, $elink=true){
+
+// Статична променлива за кеш
+static $string = array();
+// Ако стрингът вече е съставен се връща от кеша
+if (isset($string[$n])) return $string[$n];
+
 global $language, $pth, $adm_pth, $default_language, $content_date_time, $content_create_time, $can_edit, $page_data;
 
 $content_date_time = '';
@@ -47,7 +53,7 @@ if (in_edit_mode()){
   $id = db_select_1('ID','content',"name='$n' AND language='$language'");
   if ($can_edit) $h = $pth.'mod/usermenu/edit_text.php?i='.$id['ID'].'&amp;pid='.$page_data['ID'];
   else $h = $adm_pth.'edit_record.php?t=content&amp;r='.$id['ID'];
-  $el = '<a href="'.$h.'" style="color:#000000;background-color:#ffffff;">*</a>';
+  $el = '<a href="'.$h.'" style="color:#000000;background-color:#ffffff;margin:0;padding:0;">*</a>';
 }
 
 // Връщан резултат
@@ -84,6 +90,8 @@ else if (is_local() || in_edit_mode()){
          // Заместват се със съдържание евентуални <!--$$_XXX_$$--> елементи
          $rz = apply_filters($n,parse_content($t));
        }
+// Запазване в кеш
+$string[$n] = $rz;
 
 // Връщане на резултата
 return $rz;

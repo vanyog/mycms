@@ -19,8 +19,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Набор функции за управление съдържанието на различни езици
 
-
 include_once($idir."lib/f_stored_value.php");
+load_options(array(
+  'languages',
+  'default_language'
+));
+
 include_once($idir."lib/f_translate.php");
 
 eval(stored_value('languages','$languages = array("bg"=>"Български");'));

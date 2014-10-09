@@ -18,7 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // Показва натрупаната в таблица hostory статистика за посещаването на страниците.
-// Ако има параметър $_GET['days'] статистиката от последните зададени с този параметър брой дни.
+// Ако има параметър $_GET['days'] показва статистиката от последните, зададени с този параметър брой дни.
+
 
 error_reporting(E_ALL); ini_set('display_errors',1);
 
@@ -31,15 +32,16 @@ include($idir.'lib/f_db_select_m.php');
 include($idir.'lib/f_db_table_field.php');
 include($idir.'lib/translation.php');
 
-$d1 = db_table_field('MIN(`date`)', 'visit_history', '1');
-$d2 = db_table_field('MAX(`date`)', 'visit_history', '1');
-
 $d = 0; // Брой на последните дни, за които се показва статистика
 // Стойност 0 означава цялата статистика за всички дни
 if (isset($_GET['days'])) $d = 1*$_GET['days'];
 
+$d2 = db_table_field('MAX(`date`)', 'visit_history', '1');
+
 $w = '1';
-if ($d) $w = "`date`>'".date('Y-m-d', time()-$d*60*60*24)."'";
+if ($d) $w = "`date`>'".date('Y-m-d', strtotime($d2)-$d*60*60*24)."'";
+
+$d1 = db_table_field('MIN(`date`)', 'visit_history', $w);
 
 // Четене на сумите на посещенията по страници
 $da = db_select_m('`page_id`, sum(`count`)', 'visit_history', "$w GROUP BY `page_id`");
@@ -65,7 +67,7 @@ foreach($dt as $i=>$c){
   $pt = translate($ptn);
   $page_content .= "<tr>
 <td align=\"right\">$c</td>
-<td align=\"center\"><a href=\"$pth"."index.php?pid=$i\">$i</a>
+<td align=\"center\"><a href=\"$pth"."index.php?pid=$i\" target=\"_blank\">$i</a>
 </td><td>$pt</td>
 </tr>\n";
   $t += $c;

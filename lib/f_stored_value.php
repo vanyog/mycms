@@ -19,17 +19,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 include_once($idir.'lib/f_db_table_field.php');
 include_once($idir.'lib/f_db_select_1.php');
+include_once($idir.'lib/f_db_select_m.php');
 
 // Функцията stored_value($n,$def=false) чете полето `value` от таблица $tn_prifix.'options'
 // Ако не съществува такъв запис, връща стойността $def.
 
-// Статична променлива, която служи за кеш.
-//if (!isset($option_value)) $option_value = array();
-
 function stored_value($n, $def = false){
-global $option_value;
-  if (!isset($option_value[$n]))
-      $option_value[$n] = db_table_field('value', 'options',"`name`='$n'", $def);
+global $option_value; // Глобална променлива, която служи за кеш.
+  if (!isset($option_value[$n])) $option_value[$n] = db_table_field('value', 'options',"`name`='$n'", $def);
   return $option_value[$n];
 }
 
@@ -41,6 +38,20 @@ $r = db_select_1('*','options',"`name`='$n'");
 if ($r) { $q = 'UPDATE'; $w = " WHERE `name`='$n';";} else { $q = 'INSERT INTO'; $w = ", `name`='$n';"; }
 $q .= " `$tn_prefix"."options` SET `value`='$v'$w";
 mysqli_query($db_link,$q);
+}
+
+// Само с една SQL заявка, чете стойностите на всички опциии с имена, зададени в масива $option_name 
+// и ги присвоява на елементите на глобалния масив $option_value
+function load_options($option_name){ 
+global $option_value;
+$q = '';
+foreach($option_name as $n){
+if ($q) $q .= ' OR ';
+if (!isset($option_value[$n])) $q .= "`name`='$n'";
+}
+$d = db_select_m('`name`,`value`','options',"$q");
+foreach($d as $r) $option_value[$r['name']]=$r['value'];
+$option_name = array();
 }
 
 ?>

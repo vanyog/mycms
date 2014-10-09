@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Редактиране на текст, след щракване върху линка * зад този текст в режим на редактиране
 
+if (!isset($_GET['pid']) || !isset($_GET['i'])) die('Insufficient parameters.');
+
 $idir = dirname(dirname(dirname(__FILE__))).'/';
 $ddir = $idir;
 
@@ -27,6 +29,7 @@ include_once($idir."lib/translation.php");
 include_once($idir."lib/f_edit_record_form.php");
 include_once($idir."lib/f_db_insert_1.php");
 include_once($idir."lib/f_page_cache.php");
+include_once($idir."/lib/f_mod_picker.php");
 
 // Номер на страницата, на която е текста
 $page_id = 1*$_GET['pid'];
@@ -52,7 +55,8 @@ $cp = array(
 
 
 $page_content = '<h1>'.translate('usermenu_edittext').'</h1>
-<p>Name: '.db_table_field('name','content','`ID`='.(1*$_GET['i']))."</p>\n";
+<p>Name: '.db_table_field('name','content','`ID`='.(1*$_GET['i']))."</p>\n".
+mod_picker();
 
 // Обработване на изпратени данни
 if (count($_POST)){
