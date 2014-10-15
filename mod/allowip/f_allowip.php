@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // IP адресите в него са разделени със запетаи и завършва със запетая.
 
 function allowip($ips){
-if (strpos($ips,','.$_SERVER['REMOTE_ADDR'].',')===false) die("Access from your IP is not allowed");
+if (strpos($ips,','.$_SERVER['REMOTE_ADDR'].',')===false) die('Access from your IP '.$_SERVER['REMOTE_ADDR'].' is not allowed');
 else return '';
 }
 

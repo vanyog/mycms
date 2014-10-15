@@ -54,7 +54,7 @@ function save_cache($cnt){
 // Случаи, в които не се запазва кеш
 if (do_not_cache()) return;
 global $language, $page_data, $tn_prefix, $db_link;
-$id = db_table_field('page_ID','page_cache',
+$id = db_table_field('ID','page_cache',
       "`page_ID`=".$page_data['ID'].
       " AND `name`='".addslashes($_SERVER['REQUEST_URI']).
       "' AND `language`='$language'");
@@ -63,7 +63,7 @@ else      $q = "UPDATE `$tn_prefix"."page_cache` SET ";
 $q .= "`page_ID`=".$page_data['ID'].
       ", `name`='".addslashes($_SERVER['REQUEST_URI']).
       "', `language`='$language', `date_time_1`=NOW(), `text`='".addslashes($cnt)."'";
-if ($id) $q .= " WHERE `page_ID`=$id;";
+if ($id) $q .= " WHERE `ID`=$id;";
 else $q .';';
 mysqli_query($db_link,$q);
 }
@@ -72,7 +72,11 @@ mysqli_query($db_link,$q);
 // Връща истина във всички случаи, в който не следва да се прави кеширане
 
 function do_not_cache(){
-return in_edit_mode() || 
+global $page_data;
+if (!session_id()) session_start();
+return
+  (isset($page_data['donotcache']) && ($page_data['donotcache']==1)) ||
+  in_edit_mode() || 
   count($_POST) || 
   (isset($_SESSION) && count($_SESSION)) || 
   (!is_local() && show_adm_links());
@@ -82,13 +86,12 @@ return in_edit_mode() ||
 // Изчиства кеша за адрес $a
 
 function purge_page_cache($a){
-global $edit_name;
 $b = parse_url($a);
 $c = array(); 
 $d = $b['path'];
 if (isset($b['query'])) parse_str($b['query'],$c);
 if (isset($c['pid'])) $d .= '?pid='.$c['pid'];
-echo db_delete_where('page_cache',"`name` LIKE '$d%'");
+if ($d>'/') db_delete_where('page_cache',"`name` LIKE '$d%'");
 }
 
 
