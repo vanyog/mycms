@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+include_once($idir.'lib/f_stored_value.php');
 include_once($idir.'lib/f_db_delete_where.php');
 
 // В този файл се дефинират две функции, свързани с кеширането на страници
@@ -67,7 +68,7 @@ $id = db_table_field('ID','page_cache',
 if (!$id) $q = "INSERT INTO `$tn_prefix"."page_cache` SET ";
 else      $q = "UPDATE `$tn_prefix"."page_cache` SET ";
 $q .= "`page_ID`=".$page_data['ID'].
-      ", `name`='".addslashes($_SERVER['REQUEST_URI']).
+      ", `name`='".addslashes($htp).
       "', `language`='$language', `date_time_1`=NOW(), `text`='".addslashes($cnt)."'";
 if ($id) $q .= " WHERE `ID`=$id;";
 else $q .';';
@@ -113,8 +114,12 @@ if (isset($a['query'])) parse_str($a['query'],$b);
 $ka = array_keys($b);
 $o = stored_value('acceptable_params');
 foreach($ka as $k){
+  if ($k=='lang') {
+     unset($b[$k]);
+     continue;
+  }
   if (strpos($o,"=$k=")===false)
-     if ($y && ($k!='lang')) return '';
+     if ($y) return '';
      else unset($b[$k]);
 }
 ksort($b);

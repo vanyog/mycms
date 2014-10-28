@@ -36,7 +36,7 @@ window.prompt("Copy to clipboard: Ctrl+C, Enter", "<!--$$_"+a.innerHTML+"_$$-->"
 $rz = "<p id=\"modbtn\"><strong>Modules:</strong><br>\n";
 $ml = mod_list();
 $mn = array();
-foreach($ml as $i=>$m) $mn[$i] = strtoupper(pathinfo($m, PATHINFO_FILENAME));
+foreach($ml as $i=>$m){ $mn[$i] = strtoupper(pathinfo($m,  PATHINFO_BASENAME)); }
 asort($mn);
 foreach($mn as $i=>$m) {
   $rm = $ml[$i].'README.txt';
