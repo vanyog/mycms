@@ -51,7 +51,8 @@ load_options(array(
   'cache_time',
   'error_404_template',
   'today',
-  'sitesearch_nocoleron'
+  'sitesearch_nocoleron',
+  'acceptable_params'
 ));
 include_once($idir.'lib/f_db_select_1.php');
 include_once($idir.'lib/f_db_select_m.php');
@@ -127,7 +128,8 @@ $rz = Array (
 'template_id' => stored_value('error_404_template',1),
 'options' => '',
 'tcount'=>0,
-'dcount'=>0
+'dcount'=>0,
+'donotcache'=>1
 );
 //print_r($rz); die;
 return $rz;

@@ -35,10 +35,12 @@ window.prompt("Copy to clipboard: Ctrl+C, Enter", "<!--$$_"+a.innerHTML+"_$$-->"
 ';
 $rz = "<p id=\"modbtn\"><strong>Modules:</strong><br>\n";
 $ml = mod_list();
-foreach($ml as $m) {
-  $rm = $m.'README.txt';
-  $rz .= '<span><span onclick="toClip(this);">'.
-        strtoupper(pathinfo($m, PATHINFO_FILENAME)).'</span>';
+$mn = array();
+foreach($ml as $i=>$m) $mn[$i] = strtoupper(pathinfo($m, PATHINFO_FILENAME));
+asort($mn);
+foreach($mn as $i=>$m) {
+  $rm = $ml[$i].'README.txt';
+  $rz .= '<span><span onclick="toClip(this);">'.$m.'</span>';
   if (file_exists($rm)) $rz .= ' <a href="'.current_pth($rm).'README.txt">help</a>';
   $rz .= '</span> '."\n";
 }

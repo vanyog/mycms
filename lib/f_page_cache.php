@@ -36,9 +36,11 @@ global $language, $page_data;
 $t = stored_value('cache_time');
 // Не е зададено време за кеширане, или то е 0
 if (!$t) return '';
+// Приемлив заявен адрес
+$htp = acceptable($_SERVER['REQUEST_URI'],false);
 // Четене на данните от кеш таблицата
 $d = db_select_1('*', 'page_cache', 
-     '`page_ID`='.$page_data['ID']." AND `name`='".addslashes($_SERVER['REQUEST_URI'])."' AND `language`='$language'");
+     '`page_ID`='.$page_data['ID']." AND `name`='".addslashes($htp)."' AND `language`='$language'");
 if (!$d) return '';
 else{
   $td = time() - strtotime($d['date_time_1']);
@@ -54,9 +56,13 @@ function save_cache($cnt){
 // Случаи, в които не се запазва кеш
 if (do_not_cache()) return;
 global $language, $page_data, $tn_prefix, $db_link;
+// Уеднаквена форма на адреса
+$htp = acceptable($_SERVER['REQUEST_URI'],true);
+// Ако адресът не е приемлив, не се запазва кеш
+if (!$htp) return;
 $id = db_table_field('ID','page_cache',
       "`page_ID`=".$page_data['ID'].
-      " AND `name`='".addslashes($_SERVER['REQUEST_URI']).
+      " AND `name`='".addslashes($htp).
       "' AND `language`='$language'");
 if (!$id) $q = "INSERT INTO `$tn_prefix"."page_cache` SET ";
 else      $q = "UPDATE `$tn_prefix"."page_cache` SET ";
@@ -75,6 +81,7 @@ function do_not_cache(){
 global $page_data;
 if (!session_id()) session_start();
 return
+  ($page_data['ID']==0) ||
   (isset($page_data['donotcache']) && ($page_data['donotcache']==1)) ||
   in_edit_mode() || 
   count($_POST) || 
@@ -90,9 +97,31 @@ $b = parse_url($a);
 $c = array(); 
 $d = $b['path'];
 if (isset($b['query'])) parse_str($b['query'],$c);
-if (isset($c['pid'])) $d .= '?pid='.$c['pid'];
-if ($d>'/') db_delete_where('page_cache',"`name` LIKE '$d%'");
+if (isset($c['pid'])) $d .= 'pid='.$c['pid'];
+if ($d>'/') db_delete_where('page_cache',"`name` LIKE '%$d%'");
 }
 
+//
+// Връща уеднаквена форма на заявения адрес
+// При $y=true - връща празен стринг за недопустим параметър
+// При $y=false - само премахва недопустимите параметри
+
+function acceptable($u,$y){
+$a = parse_url($u);
+$b = array();
+if (isset($a['query'])) parse_str($a['query'],$b);
+$ka = array_keys($b);
+$o = stored_value('acceptable_params');
+foreach($ka as $k){
+  if (strpos($o,"=$k=")===false)
+     if ($y && ($k!='lang')) return '';
+     else unset($b[$k]);
+}
+ksort($b);
+$a['query'] = http_build_query($b);
+$rz = $a['path'];
+if ($a['query']) $rz .= '?'.$a['query'];
+return $rz;
+}
 
 ?>

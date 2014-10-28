@@ -129,9 +129,12 @@ $rz .= $hf->html();
 return $rz;
 }
 
-// Записване на попълнените във формата данни
+// Записване на попълнените във формата данни.
+// $cp - изпратените данни, най-често съвпада с масива $_POST
+// $tn - име на таблицата
+// $m  - дали да се показва съобщение при успешен запис.
 
-function process_record($cp, $tn){
+function process_record($cp, $tn, $m = true){
 global $tn_prefix, $db_link;
 // Прочитане типовете на полетата на таблицата
 $ft = db_field_types($tn);
@@ -173,18 +176,22 @@ default:
     else $q .= "`$n`=0";
   else {
     $v1 = str_replace(chr(60).' !--$$_',chr(60).'!--$$_',$_POST[$n]); 
-    $v1 = str_replace('&lt; !--$$_',chr(60).'!--$$_',$v1);
-    $v1 = str_replace('_$$--&gt;','_$$--'.chr(62),$v1);
+    $v1 = str_replace('<!--$$_',chr(60).'!--$$_',$v1);
+    $v1 = str_replace('_$$-->','_$$--'.chr(62),$v1);
     $q .= "`$n`='".addslashes($v1)."'";
   }
 }
 // Обновяване данните за потребителя в текущата сесия.
 if ($pu) process_user();
 // Обновяване данните в базата данни.
-if ($w) $q = "UPDATE `$tn_prefix"."$tn` SET `date_time_2`=NOW(), $q$w";
-else $q = "INSERT INTO `$tn_prefix"."$tn` SET `date_time_1`=NOW(), `date_time_1`=NOW(), $q;";
+if (in_array('date_time_2', $fn)) $q = "`date_time_2`=NOW(), $q";
+if ($w) $q = "UPDATE `$tn_prefix"."$tn` SET $q$w";
+else {
+  if (in_array('date_time_1', $fn)) $q = "`date_time_1`=NOW(), $q";
+  $q = "INSERT INTO `$tn_prefix"."$tn` SET $q;";
+}
 //print_r($q); die;
-if (mysqli_query($db_link,$q)) $rz .= '<span class="message">'.translate('dataSaved')."</span>";
+if (mysqli_query($db_link,$q) && $m) $rz .= '<span class="message">'.translate('dataSaved')."</span>";
 if ($rz) $rz = '<p class="message">'.$rz.'</p>';
 return $rz;
 }
