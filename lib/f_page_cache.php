@@ -67,9 +67,12 @@ $id = db_table_field('ID','page_cache',
       "' AND `language`='$language'");
 if (!$id) $q = "INSERT INTO `$tn_prefix"."page_cache` SET ";
 else      $q = "UPDATE `$tn_prefix"."page_cache` SET ";
+if (isset($_SERVER['HTTP_REFERER'])) $r = ", `referer`='".addslashes($_SERVER['HTTP_REFERER'])."'";
+else $r = '';
 $q .= "`page_ID`=".$page_data['ID'].
       ", `name`='".addslashes($htp).
-      "', `language`='$language', `date_time_1`=NOW(), `text`='".addslashes($cnt)."'";
+      "', `language`='$language', `date_time_1`=NOW(), `text`='".addslashes($cnt)."'".
+      $r;
 if ($id) $q .= " WHERE `ID`=$id;";
 else $q .';';
 mysqli_query($db_link,$q);

@@ -67,7 +67,7 @@ foreach($lk as $k){
 }
 
 // Връщане на страницата
-$p = stored_value('main_index_file',$pth.'index.php').'?pid='.$page_id;
+$p = $main_index.'?pid='.$page_id;
 $q = 'http://'.$_SERVER['HTTP_HOST'].$p;
 purge_page_cache($q);
 header("Location: $p");

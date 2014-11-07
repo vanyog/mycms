@@ -34,13 +34,17 @@ load_options(array(
   'edit_name',
   'edit_value',
   'admin_path',
-  'admin_path'
+  'admin_path',
+  'main_index_file'
 ));
 
 // Директория на входната страница.
 // Задава се ако сайтът се изгражда като раздел в друг сайт и се намира в директория на главния сайт.
 // Трябва да завършва с /.
 $pth = current_pth();
+
+// Главен index.php файл на сайта
+$main_index = stored_value('main_index_file', $pth.'index.php');
 
 // Абсолютна директория на входната страница във файловата система на сървъра
 $apth = $_SERVER['DOCUMENT_ROOT'].$pth;

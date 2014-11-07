@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Показва натрупаната в таблица hostory статистика за посещаването на страниците.
 // Ако има параметър $_GET['days'] показва статистиката от последните, зададени с този параметър брой дни.
+// $_GET['pid'] - статистиката по дати на страницата с този номер
 
 
 error_reporting(E_ALL); ini_set('display_errors',1);
@@ -43,6 +44,24 @@ if ($d) $w = "`date`>'".date('Y-m-d', strtotime($d2)-$d*60*60*24)."'";
 
 $d1 = db_table_field('MIN(`date`)', 'visit_history', $w);
 
+// Сглобяване на страницата
+$page_title = 'Статистика за посещението на страниците';
+
+$page_content = "<p>От: $d1 до: $d2</p>\n";
+
+if (isset($_GET['pid'])){
+  $pid = 1*$_GET['pid'];
+  $page_content .= one_page($pid, $w);
+}
+else $page_content .= all_pages($w);
+
+include($idir.'lib/build_page.php');
+
+//
+// Показва таблица с всички страници
+
+function all_pages($w){
+global $pth;
 // Четене на сумите на посещенията по страници
 $da = db_select_m('`page_id`, sum(`count`)', 'visit_history', "$w GROUP BY `page_id`");
 
@@ -54,9 +73,7 @@ foreach($da as $d){ $dt[$d['page_id']] = $d['sum(`count`)']; }
 // Подреждане на масива по намаляване на броя посещения
 arsort($dt);
 
-// Сглобяване на страницата
-$page_content = "<p>От: $d1 до: $d2</p>\n".
-'<table style="border-bottom:solid 1px black;">
+$page_content = '<table style="border-bottom:solid 1px black;">
 <tr><th>Посещения</th><th>ID</th><th>Страница</th></tr>';
 
 $t = 0;
@@ -76,7 +93,27 @@ foreach($dt as $i=>$c){
 $page_content .= "</table>
 $t Общо\n";
 
-$page_title = 'Статистика за посещението на страниците';
+return $page_content;
+}
 
-include($idir.'lib/build_page.php');
+//
+// Показва таблица за една страница
+
+function one_page($i, $w){
+// Четене на записите за страница с номер $i
+$da = db_select_m('*', 'visit_history', "`page_id`=$i AND $w ORDER BY `date` DESC");
+$min = db_table_field('MIN(`count`)', 'visit_history', "`page_id`=$i AND $w");
+$max = db_table_field('MAX(`count`)', 'visit_history', "`page_id`=$i AND $w");
+$m = 800;
+$rz = "$min $max".'<table>
+<tr><th>Дата</th><th>Посещения</th></tr>';
+foreach($da as $d){
+  $a = $d['count']/$max * $m;
+  $rz .= '<tr><td>'.$d['date'].
+         '</td><td><div style="background-color:red;width:'.$a.'px;">'.$d['count'].'</div></td>';
+  $rz .= "</tr>\n";
+}
+$rz .= '</table>';
+return $rz;
+}
 ?>

@@ -17,12 +17,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Изтрива всички записи от таблица $t, които отговарят на условието $w
+// Изтрива всички записи от таблица $t, които отговарят на условието $w.
+// Ако $y = true, само се показва SQL заявката без да се трие нищо.
 
 function db_delete_where($t,$w,$y=false){
 global $tn_prefix, $db_link, $db_req_count;
 $q = "DELETE FROM `$tn_prefix"."$t` WHERE $w;";
-if ($y) echo $q;
+if ($y) { echo "$q<br>"; return; }
 mysqli_query($db_link, $q);
 $db_req_count++;
 }
