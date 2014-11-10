@@ -19,14 +19,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // Функцията menu($i) съставя последователност от хипервръзки (Меню).
-// $i е номер на групата хипервръзки от таблица $tb_preffix.'menu_items'
+// $i е номер на групата хипервръзки от таблица $tb_preffix.'menu_items'.
+// Ако е изпратен втори параметър $id той се слага за id атрибут на <div> елемента,
+// в който се слагат хипервръзките от менюто.
 
 include_once($idir."lib/f_is_local.php");
 include_once($idir.'conf_paths.php');
 include_once($idir.'lib/f_db_select_m.php');
 
 function menu($i, $id = 'page_menu'){
-global $ind_fl, $adm_pth, $page_id, $page_data;
+global $ind_fl, $adm_pth, $page_id, $page_data, $pth;
 $d = db_select_m('*','menu_items',"`group`=$i ORDER BY `place`");
 $rz = ''; // Връщания резултат
 $once = false; // Флаг, който се използва за да се покаже само веднъж различно линка от менюто на текущата страница
@@ -49,12 +51,16 @@ foreach($d as $m){
   if ($pp && ($i==$page_data['menu_group'])) $sm1 = submenu($m,$si);
   if ($pp && ($i==$page_data['menu_group'])) $js = ' onMouseOver="show_layer('.$si.',this);"';
   if ($once || !is_parrent_menu($i, $m['link'])) {
-     $rz .= "<a href=\"$ln\"$js>".$pl.translate($m['name']).'</a> '."\n";
+     $rz .= "<a href=\"$ln\"$js>".$pl.translate($m['name'],false).'</a> '."\n";
   }
   else {
      $once = true;
-     if ($lk) $rz .= '<a href="'.$ln.'" class="current"'.$js.'>'.$pl.translate($m['name']).'</a> '."\n";
-     else $rz .= '<span class="current">'.$pl.translate($m['name'])."</span> \n";
+     if ($lk) $rz .= '<a href="'.$ln.'" class="current"'.$js.'>'.$pl.translate($m['name'],false).'</a> '."\n";
+     else $rz .= '<span class="current">'.$pl.translate($m['name'],false)."</span> \n";
+  }
+  // Добавяне на * за редактиране
+  if (in_edit_mode()){
+    $rz .= '<a href="'.$pth.'mod/usermenu/edit_menu_link.php?pid='.$page_id.'&amp;id='.$m['ID'].'">*</a>';
   }
   if ($sm1){ $sm .= $sm1; }  $si++;
 }
@@ -68,7 +74,7 @@ return $rz;
 }
 
 //
-// Тази функция определяне дали линкът от менюто, сочеща към страница 
+// Тази функция определяне дали линкът от менюто, сочещ към страница 
 // $mlk, да се покаже като текуща или не.
 
 function is_parrent_menu($i, $mlk){

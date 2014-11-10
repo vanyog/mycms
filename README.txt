@@ -1,1 +1,1 @@
-There is a README-bg.txt file in Bulgarian.
+There is a more detailed README-bg.txt file in Bulgarian.
