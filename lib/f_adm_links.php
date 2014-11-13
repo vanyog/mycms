@@ -122,7 +122,7 @@ $a = substr($_SERVER['REQUEST_URI'],0,strlen($adm_pth))==$adm_pth;
 // - показва се страница от директорията за администриране
 // - получена е стойност $_GET[$adm_name] = $adm_value
 // - има бисквитка с име $adm_name и стойност $adm_value
-return is_local() || in_edit_mode() || $a || query_or_cookie($adm_name,$adm_value);
+return is_local() /*|| in_edit_mode()*/ || $a || query_or_cookie($adm_name,$adm_value);
 }
 
 ?>

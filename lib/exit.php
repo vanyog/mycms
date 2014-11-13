@@ -32,7 +32,7 @@ if (is_local()){ setcookie('noadm','yes',time()+30*24*3600, '/'); } else
 }
 
 purge_page_cache($_SERVER['HTTP_REFERER']);
-header('Location: '.$_SERVER['HTTP_REFERER']);
+header( 'Location: '.acceptable($_SERVER['HTTP_REFERER'],false) );
 //echo '<a href="'.$_SERVER['HTTP_REFERER'].'">Back</a>';
 
 ?>

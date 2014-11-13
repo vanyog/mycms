@@ -57,7 +57,7 @@ else {
 $m = db_select_1('*', 'menu_items', "`ID`=$id");
 
 // Текст върху линка
-$tx = db_table_field('text', 'content', "`name`=".$m['name']." AND `language`='$language'" );
+$tx = db_table_field('text', 'content', "`name`='".$m['name']."' AND `language`='$language'" );
 
 // Форма за редактиране
 $f = new HTMLform('mform');

@@ -176,8 +176,8 @@ default:
     else $q .= "`$n`=0";
   else {
     $v1 = str_replace(chr(60).' !--$$_',chr(60).'!--$$_',$_POST[$n]); 
-    $v1 = str_replace('<!--$$_',chr(60).'!--$$_',$v1);
-    $v1 = str_replace('_$$-->','_$$--'.chr(62),$v1);
+    $v1 = str_replace(chr(38).'lt; !--$$_',chr(60).'!--$$_',$v1);
+    $v1 = str_replace('_$$--'.chr(38).'gt;','_$$--'.chr(62),$v1);
     $q .= "`$n`='".addslashes($v1)."'";
   }
 }
