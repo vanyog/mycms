@@ -49,8 +49,10 @@ while ($pr['parent'])
   // ћ€рка против зацикл€ве
   if (in_array($pr['parent'],$psd)) break;
   $psd[] = $pr['parent'];
-  $pr = db_select_1('*','menu_tree',"`group`=".$pr['parent']); // print_r($pr); echo "<br>";
-  $pg = db_select_1('*','pages','ID='.$pr['index_page']);
+  $pi = $pr['parent'];
+  $pr = db_select_1('*','menu_tree',"`group`=".$pr['parent']);
+  if (!$pr) $pg = db_select_1('*','pages',"`menu_group`=$pi");
+  else $pg = db_select_1('*','pages','ID='.$pr['index_page']);
   if ($rz) $rz = ' &gt;&gt; '.$rz;
   $rz = '<a href="'.$main_index.'?pid='.$pg['ID'].'">'.translate($pg['title']).'</a>'.$rz;
 }

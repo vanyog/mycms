@@ -135,11 +135,11 @@ if ($newmenu){
   $d2 = array (
     'place'=>1*$_POST['place'] - 5, 
     'group'=>$mg1, 
-    'name'=>"p$pi"."_link",
+    'name'=>"m$mg2"."_link",
     'link'=>$pi
   );
-  // Записване в таблицата, ако е изпратен текст за линка в менюто
- if ($addtomenu) $pp = db_insert_1($d2,'menu_items');
+  // Записване в таблицата, ако е избрано да се добави линк в менюто на текущата страница
+  if ($addtomenu) $pp = db_insert_1($d2,'menu_items');
   // Данни за таблица 'menu_tree'
   $dt = array(
     'group'=>$mg2,
@@ -166,9 +166,17 @@ array('name'=>$d1['content'],
       'text'=>addslashes($_POST['content'])
       )
 );
-// Надпис върху линка в менюто
-if (trim($_POST['linktext'])) 
-  $d3[] = array('name'=>$d2['name'],
+// Надписи върху линкове в менюта
+if (trim($_POST['linktext']))
+  // В менюто на новата страница 
+  $d3[] = array('name'=>"p$pi"."_link",
+      'date_time_1'=>'NOW()',
+      'date_time_2'=>'NOW()',
+      'language'=>addslashes($_POST['lang']),
+      'text'=>addslashes($_POST['linktext'])
+  );
+  // В менюто на текущата страница, ако е избрано да се сложи
+  if ($addtomenu) $d3[] = array('name'=>"m$mg2"."_link",
       'date_time_1'=>'NOW()',
       'date_time_2'=>'NOW()',
       'language'=>addslashes($_POST['lang']),
