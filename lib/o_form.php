@@ -98,7 +98,7 @@ function __construct($c,$n,$t,$v = '',$ta = ''){
 $this->caption = $c;
 $this->name = $n;
 $this->type = $t;
-$this->value = $v;
+$this->value = "$v";// if ($t=='hidden') {print_r($this->value); die;}
 $this->textAfter = $ta;
 }
 
@@ -110,7 +110,7 @@ public function html($it){
 $rz = '';
 if (!$it) $rz .= "$this->caption <input type=\"$this->type\" name=\"$this->name\"";
 else $rz .= "<tr><th>$this->caption </th><td><input type=\"$this->type\" name=\"$this->name\"";
-if ($this->value) $rz .= " value=\"$this->value\"";
+if (strlen($this->value)) $rz .= " value=\"$this->value\"";
 if ($this->size) $rz .= " size=\"$this->size\"";
 if ($this->id) $rz .= " id=\"$this->id\"";
 if ($this->js) $rz .= " $this->js";
