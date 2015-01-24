@@ -36,12 +36,13 @@ $sm = ''; // Изскачащо подменю, ако има такова
 $si = 1; // Номер на изскачащото подменю
 $lk = stored_value('menu_aslink'); // Дали линкът на текущата страница да се покаже като линк
 $pp = stored_value('menu_popup');  // Дали да се показват изскачащи подменюта
+$hm = stored_value('menu_hide',1); // Дали да се скриват линкове към скрити страници
 foreach($d as $m){
   $lnn = 1*$m['link'];
   $ln = $m['link']; 
   if ($lnn){
     $h = db_table_field('hidden', 'pages', "`ID`=$lnn");
-    if (!in_edit_mode() && !show_adm_links() && $h) continue;
+    if ($hm && $h && !in_edit_mode() && !show_adm_links() ) continue;
     $ln = $ind_fl.'?pid='.$lnn;
   }
   $pl = '';
@@ -60,7 +61,8 @@ foreach($d as $m){
   }
   // Добавяне на * за редактиране
   if (in_edit_mode()){
-    $rz .= '<a href="'.$pth.'mod/usermenu/edit_menu_link.php?pid='.$page_id.'&amp;id='.$m['ID'].'">*</a>';
+    $rz .= '<a href="'.$pth.'mod/usermenu/edit_menu_link.php?pid='.$page_id.'&amp;id='.$m['ID'].
+           '"  style="color:#000000;background-color:#ffffff;margin:0;padding:0;">*</a>';
   }
   if ($sm1){ $sm .= $sm1; }  $si++;
 }

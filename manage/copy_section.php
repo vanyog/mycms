@@ -1,7 +1,7 @@
 <?php
 /*
 MyCMS - a simple Content Management System
-Copyright (C) 2013  Vanyo Georgiev <info@vanyog.com>
+Copyright (C) 2014  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,13 +17,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-//
-// Връща меню с препратки към страници за извършване на действия с потребители
-//
-function user_menu_items(){
-$p = current_pth(__FILE__);
-return '<a href="'.$p.'user.php?user=newreg">User New</a><br>
-<a href="'.$p.'user.php?user=delete">User Delete</a><br>'."\n";
-}
+// Създаване на копие на всички страници от раздел с меню номер $_GET['m']
+
+include_once('conf_manage.php');
+
+if (!isset($_GET['m'])) die("No parameter");
+
+$m = 1*$_GET['m'];
 
 ?>
