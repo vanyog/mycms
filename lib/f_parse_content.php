@@ -40,7 +40,14 @@ $str2 = '_$$-->';  // Означение за край на замествания елемент
 while ( !(($p0 = strrpos($cnt,$str1))===false) ){
 
 $p1 = $p0 + strlen($str1); // Позиция на първия символ от името на елемента
-$p2 = strrpos($cnt,$str2); // Позиция на първия следващ след параметрите символ 
+$p2 = strrpos($cnt,$str2); // Позиция на първия символ от означението за край на заместван елемент
+// echo "$l $p1 $p2 ".substr($cnt,$p1,$p2-$p1)."<br>";
+// Ако не е намерено означение за край, означението за начало се променя да стане видимо,
+// а след него се вмъква съобщение == Not closed ! ==
+if ($p2<$p1){
+  $cnt = substr_replace($cnt,'&lt;&nbsp;!--$$_== Not closed ! ==',$p0,strlen($str1));
+  continue;
+} 
 $p3 = $p2 + strlen($str2); // Позиция на последния заместван символ
 
 // Отделяне на името от параметъра
@@ -58,14 +65,18 @@ if (!$sc){ // Ако няма такъв скрипт се търси модул с това име
     $c = "include_once('$fn');\n";
     if (isset($tg[1])) $c .= '$tx = '."$f('$tg[1]');";
     else $c .= '$tx = '."$f();";
-    eval($c); // Изпълнява се модула
+    if (eval($c)===false){ // Изпълнява се модула
+      store_value("eval_error_uri", $_SERVER['REQUEST_URI']);
+    }
   }
   else { // Ако няма модул се показва линк за автоматично създаване на модул
     if (show_adm_links()) $tx = '<p>Can\'t parse content <a href="'.$adm_pth.'new_mod.php?n='.$tg[0].'">'.$tg[0].'</a></p>';
     else $tx = '<p>Can\'t parse content '.$tg[0].'</p>';
   }
 }
-else eval(stripslashes($sc['script'])); // Изпълнява се скрипта
+else if (eval(stripslashes($sc['script']))===false){ // Изпълнява се модула
+      store_value("eval_error_uri", $_SERVER['REQUEST_URI']);
+     }
 
 // Заместване на елемента с генерирания html код, който е присвоен на $tx
 $cnt = substr_replace($cnt,$tx,$p0,$p3-$p0);

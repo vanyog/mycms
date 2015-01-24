@@ -46,6 +46,7 @@ if (!$can_edit && !show_adm_links()) die('You have no permission to edit this te
 // Номер на линка в таблица $tn_prefix.'menu_items'.
 $id = 1*$_GET['id'];
 
+$rz = '';
 // Обрабитване на изпратените с $_POST данни
 if (count($_POST)) $rz = process_data();
 else {
@@ -70,8 +71,8 @@ $f -> add_input( new FormInput('','','submit',translate('saveData')) );
 
 $page_header = '<link href="'.$pth.'_style.css" rel="stylesheet" type="text/css">'."\n";
 $page_title = translate('usermenu_editmenu');
-
 $page_content = '<h1>'.$page_title.'</h1>
+'.$rz.'
 '.$f->html().'
 <p><a href="'.$_SESSION['http_referer'].'">'.translate('usermenu_back').'</a></p>';
 
@@ -85,6 +86,8 @@ $i = db_table_field('name', 'menu_items', "`ID`=".(1*$_POST['ID']) );
 db_update_where($d, 'content', "`name`='$i' AND `language`='$language'");
 unset($_POST['text']);
 db_update_record($_POST, 'menu_items');
+header('Location: '.$_SESSION['http_referer']);
+die;
 }
 
 ?>

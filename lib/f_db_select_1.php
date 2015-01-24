@@ -35,7 +35,7 @@ $q="SELECT $fn FROM `$tn_prefix$tb` WHERE $whr LIMIT 1;";
 if ($y) echo "$q<br>";
 $r=mysqli_query($db_link,$q);
 $db_req_count++;
-if (!$r) return false;
+if ($r===false) return false;
 $rc=mysqli_fetch_assoc($r);
 mysqli_free_result($r);
 return $rc;

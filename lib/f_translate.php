@@ -60,7 +60,7 @@ if (in_edit_mode()){
 $rz = ''; 
 
 // Четене на записа за надпис с име $n на език $language
-$r = db_select_1('*','content',"name='$n' AND language='$language'");
+$r = db_select_1('*','content',"`name`='$n' AND `language`='$language'");
 if ($r){ // Ако има такъв запис
   $content_create_time = $r['date_time_1']; 
   $content_date_time = $r['date_time_2'];
