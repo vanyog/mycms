@@ -64,15 +64,8 @@ $r = "";
 $how = stored_value('flag_setting','flag');
 if ($a) $how = $a;
 if (!$dont_translate) foreach($ls as $l) if ($l!=$language){
-  $u = str_replace('&','&amp;',$_SERVER['REQUEST_URI']);
-  $h = '';
-  if (strpos($u,'?')){
-     $p = strpos($u,'lang=');
-     if ($p) $h = substr_replace($u,'lang='.$l,$p,7); 
-     else $h = $u.'&amp;lang='.$l;
-  }
-  else $h = $u.'?lang='.$l;
-  $r .= "<a href=\"$h\">\n";
+  $h = set_self_query_var('lang',$l);
+  $r .= '<a href="'.$h.'" style="display:inline-block">'."\n";
   switch ($how){
   case 'text': $r .= $languages[$l]."\n"; break;
   case 'flag&text': $r .= '<img src="'.$pth.'images/flag-'.$l.'.gif" alt="'.$l.'" border="0">'."<br>$languages[$l]\n"; break;

@@ -61,13 +61,15 @@ mod_picker();
 // Обработване на изпратени данни
 if (count($_POST)){
   if ($i) process_record($cp, 'content');
-  else db_insert_1(array(
+  else {
+  db_insert_1(array(
 'name' => addslashes($_GET['i']),
 'date_time_1'=>'NOW()',
 'date_time_2'=>'NOW()',
 'language' => addslashes($_GET['lang']),
-'text' => addslashes($_POST['text'])
+'text' => addslashes(element_correction($_POST['text']))
 ), 'content');
+  }
   purge_page_cache($_SESSION['http_referer']);
   header('Location: '.$_SESSION['http_referer']);
 }

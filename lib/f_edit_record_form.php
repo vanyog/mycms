@@ -175,9 +175,7 @@ default:
     if (isset($_POST[$n])) $q .= "`$n`='".(1*$_POST[$n])."'";
     else $q .= "`$n`=0";
   else {
-    $v1 = str_replace(chr(60).' !--$$_',chr(60).'!--$$_',$_POST[$n]); 
-    $v1 = str_replace(chr(38).'lt; !--$$_',chr(60).'!--$$_',$v1);
-    $v1 = str_replace('_$$--'.chr(38).'gt;','_$$--'.chr(62),$v1);
+    $v1 = element_correction($_POST[$n]);
     $q .= "`$n`='".addslashes($v1)."'";
   }
 }
@@ -194,6 +192,15 @@ else {
 if (mysqli_query($db_link,$q) && $m) $rz .= '<span class="message">'.translate('dataSaved')."</span>";
 if ($rz) $rz = '<p class="message">'.$rz.'</p>';
 return $rz;
+}
+
+// Функция, която коригира елементите --$$_ _$$-- елементите
+
+function element_correction($v1){
+ $v1 = str_replace(chr(60).' !--$$_',chr(60).'!--$$_',$v1); 
+ $v1 = str_replace(chr(38).'lt; !--$$_',chr(60).'!--$$_',$v1);
+ $v1 = str_replace('_$$--'.chr(38).'gt;','_$$--'.chr(62),$v1);
+ return $v1;
 }
 
 ?>

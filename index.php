@@ -126,6 +126,7 @@ $rz = Array (
 'title' => 'error_404_title',
 'content' => 'error_404_content',
 'template_id' => stored_value('error_404_template',1),
+'hidden' => '0',
 'options' => '',
 'tcount'=>0,
 'dcount'=>0,
