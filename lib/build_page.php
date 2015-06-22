@@ -41,6 +41,7 @@ if (!isset($page_title)) $page_title = '';
 if (!isset($page_header)) $page_header = '';
 if (!isset($body_adds)) $body_adds = '';
 
+header("Content-Type: text/html; charset=windows-1251");
 echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
 <html>
