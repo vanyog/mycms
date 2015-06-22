@@ -97,10 +97,10 @@ CREATE TABLE IF NOT EXISTS `scripts` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
 INSERT INTO `scripts` (`name`, `script`, `coment`) VALUES
-('ADMINMENU', 'include_once("f_adm_links.php"); $tx = adm_links();', 'Показва линкове за администриране на сайта'),
+('ADMINMENU', 'include_once($idir."lib/f_adm_links.php"); $tx = adm_links();', 'Показва линкове за администриране на сайта'),
 ('PAGETITLE', '$tx = translate($page_data[''title'']);', 'Заглавие на страницата, показвано между таговете <h1></h1>.'),
 ('CONTENT', 'if (isset($tg[1])) $tx = translate($tg[1]);\r\nelse $tx = translate($page_data[''content'']);', 'Показване съдържанието на страницата и ли надпис със зададено име.'),
-('MENU', 'include_once(''f_menu.php'');\r\n$tx = menu($page_data[''menu_group'']);', 'Показване на група от хипервръзки (меню)'),
+('MENU', 'include_once($idir."lib/f_menu.php");\r\n$tx = menu($page_data[''menu_group'']);', 'Показване на група от хипервръзки (меню)'),
 ('BODYADDS', '$tx = $body_adds;', 'Вмъква добавките към <body> тага'),
 ('PAGEHEADER', '$tx = $page_header;', 'Вмъква добавките към хедъра на страницата'),
 ('HEADTITLE', '$tx = translate($page_data[''title''],false);', 'Заглавие на страницата, без линк за редактиране, показвано между таговете <title></title>.'),

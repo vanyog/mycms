@@ -53,9 +53,17 @@ if (fn){
 else alert("Choose a file to be renamed");
 }
 function doDelete(){
+if (!'.stored_value('can_delete_files',0).'){
+  alert("Deleting files on this system is not permited.");
+  return;
+}
 var fn = fileName();
-if (fn && confirm("Do you really want to delete file "+fn)) document.forms.file_form.submit()
-else alert("Choose a file to be deleted");
+if (!fn) { alert("Choose a file to be deleted"); return; }
+if (fn && confirm("Do you really want to delete file "+fn)){
+  document.forms.file_form.action = "'.$adm_pth.'delete_file.php"
+  document.forms.file_form.submit();
+}
+else return;
 }
 function doView(){
 var fn = fileName();
