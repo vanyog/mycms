@@ -27,8 +27,14 @@ $dn = dirname($fn);
 
 if ($dn=='.') $dn = '/..';
 
-if (is_file($afn)) unlink($afn);
-if (is_dir($afn)) rmdir($afn);
+$rz = true;
+if (is_file($afn)) $rz = unlink($afn);
+if (is_dir($afn)) $rz = rmdir($afn);
+
+if (!$rz) {
+   session_start();
+   $_SESSION['edit_result_message'] = "The file $afn was not deleted";
+}
 
 header('Location: '.$adm_pth.'edit_file.php?f='.$dn);
 

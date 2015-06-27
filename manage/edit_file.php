@@ -32,6 +32,15 @@ $d = $apth.$f; // Абсолютен път до файла или директорията във файловата система 
 
 $page_content = '';
 
+// Показване на съобщение за неуспех на последната операция, ако има такова
+session_start();
+if (isset($_SESSION['edit_result_message'])){
+  $page_content .= '<p style="color:#FF0000;">'.$_SESSION['edit_result_message']."</p>\n";
+  unset($_SESSION['edit_result_message']);
+}
+
+
+
 if (is_dir($d)){ // Ако е директория се показва таблица с файловете в нея
                  // ------------------------------------------------------
 

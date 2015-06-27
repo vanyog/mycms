@@ -558,4 +558,41 @@ $s->values = 'k';
 return $s;
 }
 
+//
+// Клас показващ html код на елемент за съставяне на списък от елементи, които се избират от друг списък
+//
+
+class FormChooser{
+
+public $caption = '';
+public $name = '';
+public $text = '';
+public $js = '';
+
+function __construct($c, $n, $v = ''){
+$this->caption = $c;
+$this->name = $n;
+$this->text = $v;
+}
+
+function html($it){
+$rz = '';
+if ($it) $rz .= '<tr><th>';
+$rz .= $this->caption;
+if ($it) $rz .= '</th><td>';
+$rz .= '<table><tr><td>
+Избрани<br>
+<textarea></textarea></td><td style="text-align:center">
+<input type="button" value="Изтриване"><br>
+<input type="button" value="Нагоре"><br>
+<input type="button" value="Надолу"><br>
+</td><td>
+Възможни<br>
+<textarea></textarea></td></tr></table>';
+if ($it) $rz .= '</td></tr>';
+return $rz;
+}
+
+}
+
 ?>

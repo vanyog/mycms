@@ -83,7 +83,7 @@ foreach($dt as $i=>$c){
   // Текст на заглавието на страницата
   $pt = translate($ptn);
   $page_content .= "<tr>
-<td align=\"right\">$c</td>
+<td align=\"right\"><a href=".set_self_query_var('pid',$i).">$c</a></td>
 <td align=\"center\"><a href=\"$pth"."index.php?pid=$i\" target=\"_blank\">$i</a>
 </td><td>$pt</td>
 </tr>\n";

@@ -17,8 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Показва линкове към всички страници на сайта
-// С параметър lang=en показва страниците на английски
+// Този файл показва линкове към всички страници на сайта или списък на неизползваните номера на страници
+// Списък на неизползваните номера се показва при параметър $_GET['u']=1
+// С параметър $_GET['lang']=xx показва страниците на език xx
 
 $idir = dirname(dirname(__FILE__)).'/';
 $ddir = $idir;
@@ -26,17 +27,36 @@ $ddir = $idir;
 include_once($idir.'conf_paths.php');
 include_once($idir.'lib/f_db_select_m.php');
 include_once($idir.'lib/f_db_table_field.php');
+include_once($idir.'lib/f_set_self_query_var.php');
 
-$ln = ''; $lnl = '';
-if (isset($_GET['lang'])) { $ln = $_GET['lang']; $lnl = '&lang='.$ln; }
+$page_content = '';
 
+// Максималния използван номер на страница
+$ma = db_table_field('MAX(`ID`)', 'pages', 1);
+
+// Данни на всички страници
 $pd = db_select_m('ID,content','pages','1 ORDER BY `ID` ASC');
 
-$page_content = '<p>Всичко страници: '.count($pd).'</p>
-<table><tr>';
+// Показване само на списък на неизползваните номера на страници
+if (isset($_GET['u']) && ($_GET['u']=='1')){
+  $c = 1;
+  foreach($pd as $d){
+    while ($d['ID']>$c){ $page_content .= '<a href="'.$main_index.'?pid='.$c.'">'.$c.'</a> '; $c++; }
+    $c++;
+  }
 
-$rz = '';
-$c = 0;
+}
+
+// Показване номерата на съществуващите страници - всички или на посочен език с $_GET['lang']=xx
+else {
+
+// Език на страниците, които се показват
+$ln = '';
+$lnl = '';
+if (isset($_GET['lang'])) { $ln = $_GET['lang']; $lnl = '&lang='.$ln; }
+
+$rz = ''; // Редове на таблицата с линкове
+$c = 0;   // Брой показани линкове
 foreach($pd as $p){
   if ($ln) { 
     $cn = db_table_field('text','content',"`name`='".$p['content']."' AND `language`='$ln'");
@@ -47,7 +67,10 @@ foreach($pd as $p){
   if (!($c % 10)) $rz = "</tr>\n<tr>$rz";
 }
 
-$page_content .= $rz.'</tr></table>';
+$page_content = '<p>Всичко страници: '.count($pd).", показани: $c".', неизползвани номера: <a href="'.set_self_query_var('u',1).'">'.($ma-count($pd))."</a></p>
+<table><tr>".$rz.'</tr></table>';
+
+}
 
 include($idir.'lib/build_page.php');
 

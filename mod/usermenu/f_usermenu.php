@@ -136,7 +136,7 @@ foreach($can_manage as $m=>$yn) if( $yn) {
   }
 }
 $hp = stored_value('usermenu_helppage');
-if (strlen($nom)&&!strlen($ud['type'])){
+if ( strlen($nom) && !strlen($ud['type']) ){
   if ($hp) $rz .= "<a href=\"$hp\" target=\"_blank\">Help</a><br>\n";
   $rz .= '<span class="user">'.$_SESSION['user_username'].
          ' <a href="'.$nom.'">'.translate('user_logaut').'</a></span>'."<br>\n";

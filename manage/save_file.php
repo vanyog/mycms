@@ -41,6 +41,10 @@ if ( !(('/'.$fn == $adm_pth.'edit_file.php') ||
 }
 //echo $afn; die;
 
+if (!is_writable($afn)){
+  session_start();
+  $_SESSION['edit_result_message'] = "The file $afn is not writable";
+}
 $f = fopen($afn,"w");
 if ($f){
   fwrite( $f, $fc );
