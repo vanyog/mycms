@@ -34,7 +34,8 @@ $fn = db_field_names($tb);
 $q = "INSERT INTO `$tn_prefix$tb` SET ";
 foreach($fn as $i => $n){
   switch ($n){
-  case 'ID': break;
+  case 'ID': if (isset($_GET[$n])) $q .= '`ID`='.(1*$_GET[$n]).', ';
+     break;
   case 'date_time_1': $q .= "`$n`=NOW(), "; break;
   case 'hidden': break;
   case 'place': $pl = db_table_field('MAX(`place`)',$tb,'1')+10;

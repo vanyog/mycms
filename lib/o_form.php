@@ -165,6 +165,11 @@ return $rz;
 }
 
 //----- FormSelect ------------
+// Списък
+// Надписите от списъка се задават чрез стойностите от масив,
+// който може да е обикновен или асоциативен. Ако масивът е асоциативен
+// ключовете му се изпалзват за стойности, връщани при избиране от списъка.
+// За да не се връщат текстове, а други стоности, трябва да се присвои values='k'.
 
 class FormSelect {
 
@@ -183,17 +188,22 @@ $this->selected = $s;
 }
 
 public function html($it){
-if (!$it) $rz = "$this->caption <select name=\"$this->name\"$this->js>";
-else $rz = "<tr>
-<th>$this->caption</th>
-<td><select name=\"$this->name\"$this->js>\n";
-foreach($this->options as $i => $v){
+$rz = '';
+if ($it) $rz .= "<tr><th>";
+$rz .= "$this->caption ";
+if ($it) $rz .= "</th><td>\n";
+$rz .= "<select";
+if ($this->name) $rz .= " name=\"$this->name\"";
+$rz .= "$this->js>";
+$i = 0;
+foreach($this->options as $k => $v){
   $sl = '';
   if ($i==$this->selected) $sl = ' selected';
   switch($this->values){
   case 'v': $rz .= "<option value=\"$v\"$sl>$v\n"; break;
-  case 'k': $rz .= "<option value=\"$i\"$sl>$v\n"; break;
+  case 'k': $rz .= "<option value=\"$k\"$sl>$v\n"; break;
   }
+  $i++;
 }
 $rz .= "</select>";
 if ($it) $rz .= "</td>
@@ -566,29 +576,79 @@ class FormChooser{
 
 public $caption = '';
 public $name = '';
-public $text = '';
+public $value = '';
 public $js = '';
 
-function __construct($c, $n, $v = ''){
+private $l1 = null;
+private $l2 = null;
+
+function __construct($c, $n, $sp, $v = ''){
 $this->caption = $c;
 $this->name = $n;
-$this->text = $v;
+$this->value = $v;
+$c = array();
+if ($v){
+  $a = explode(',', $v);
+  for($i=1; $i<count($a)-1; $i++) $c[$sp[$a[$i]]] = $a[$i];
+}
+$this->l1 =  new FormSelect('', '', $c);
+$this->l1->js = ' multiple="multiple" size="'.count($sp).'" id="formChoices"';
+$this->l2 =  new FormSelect('', '', $sp);
+$this->l2->js = ' multiple="multiple" size="'.count($sp).'" onclick="chooserClicked();" id="formChooser"';
 }
 
 function html($it){
+global $page_header;
+$page_header .= '<script type="text/javascript"><!--
+function chooserChosen(t){
+var l = document.getElementById("formChoices");
+for(var i=0; i<l.length; i++){
+  if (t==l.options[i].value) return true;
+}
+return false;
+}
+function chooserClicked(){
+var l = document.getElementById("formChooser");
+var i = l.selectedIndex;
+var t = l.options[i].text;
+if (!chooserChosen(t)){
+  var o = document.createElement("option");
+  o.text = t.substring(0,4);
+  o.value = t;
+  document.getElementById("formChoices").appendChild(o);
+}
+}
+function chooserClear(){
+var l = document.getElementById("formChoices");
+for(var i=l.length-1; i>=0; i--){
+  l.removeChild(l.options[i]);
+}
+}
+function chooserSubmit(){
+var l = document.getElementById("formChoices");
+var r = "";
+for(var i=0; i<l.length; i++) if (l.options[i].text) r = r + "," + l.options[i].text;
+if (r) r = r + ",";
+var v = document.getElementById("chooserValue");
+v.value = r;
+v.form.submit();
+
+}
+--></script>';
 $rz = '';
 if ($it) $rz .= '<tr><th>';
 $rz .= $this->caption;
 if ($it) $rz .= '</th><td>';
-$rz .= '<table><tr><td>
+$rz .= '<input name="'.$this->name.'" type="hidden" value="'.$this->value.'" id="chooserValue">
+<table style="margin-top:0;"><tr><td style="text-align:center;">
 Избрани<br>
-<textarea></textarea></td><td style="text-align:center">
-<input type="button" value="Изтриване"><br>
-<input type="button" value="Нагоре"><br>
-<input type="button" value="Надолу"><br>
+'.$this->l1->html(false).'</td><td style="text-align:center">
+<input type="button" value="Изчистване" onclick="chooserClear();"><br>
+<!--input type="button" value="Нагоре"><br>
+<input type="button" value="Надолу"><br-->
 </td><td>
 Възможни<br>
-<textarea></textarea></td></tr></table>';
+'.$this->l2->html(false).'</td></tr></table>';
 if ($it) $rz .= '</td></tr>';
 return $rz;
 }
