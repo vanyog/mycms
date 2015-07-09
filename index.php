@@ -78,7 +78,8 @@ if (isset($_GET['pid'])) $page_id = 1*$_GET['pid'];
 // Чете се описанието на страницата от таблица $tn_prefix.'pages'
 $page_data = db_select_1('*','pages',"ID=$page_id");
 if (!$page_data) 
-   if (is_local()) die('<a href="'.$adm_pth.'new_record.php?t=pages&ID='.$page_id.'">Click here</a> to create a page.');
+   if (is_local()) die('<a href="'.$adm_pth.'new_record.php?t=pages&ID='.$page_id.
+                       '&title=p'.$page_id.'_title&content=p'.$page_id.'_content">Click here</a> to create a page.');
    else $page_data = page404();
 
 // Масив с опции
