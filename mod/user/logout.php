@@ -37,7 +37,7 @@ setcookie( stored_value('edit_name','edit'), '0', time()+60*60*24*30, '/');
 
 // Премахване на параметъра за режим на редактиране
 $pr = stored_value('edit_name','edit').'='.stored_value('edit_value','on');
-$h = str_replace($pr,'',$_SESSION['user_returnpage']);
+if (isset($_SESSION['user_returnpage'])) $h = str_replace($pr,'',$_SESSION['user_returnpage']);
 
 $page_title = translate('user_logouttitle');
 

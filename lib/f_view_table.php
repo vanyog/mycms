@@ -25,7 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // и стойности - надписи, които да се сложат в антетката на таблицата.
 
 function view_table($da,$id='',$n=''){
-if ($id) $id = " id=\"$id\"";
+if ((strlen($id)>0)&&($id[0]!=' '))  $id = " id=\"$id\"";
+
 if ( !is_array($n)){
   if (count($da)) {
     $n = array_keys($da[0]);
@@ -33,7 +34,6 @@ if ( !is_array($n)){
   }
   else $n = array();
 }
-
 
 $rz = "<table$id>
 <tr>";
@@ -45,8 +45,9 @@ $rz .= "</tr>\n";
 foreach($da as $i=>$d){
   $rz .= '<tr>';
   foreach($n as $k=>$v){
-    if ($k=='email') $vl = '<a href="mailto:'.$d[$k].'">'.$d[$k].'</a>';
-    else $vl = stripslashes($d[$k]);
+    if (!isset($d[$k])) $vl = '';
+    else if ($k=='email') $vl = '<a href="mailto:'.$d[$k].'">'.$d[$k].'</a>';
+         else $vl = stripslashes($d[$k]);
     $rz .= "<td>$vl</td>";
   }
   $rz .= "</tr>\n";

@@ -32,9 +32,10 @@ include_once($idir.'lib/f_edit_record_form.php');
 // ако потребителското име или паролата не са валидни предизвиква "Access denied."
 // Ако потребителското име и паролата са валидни връща потребителското име и препратка "Изход".
 
-// Въпреки успешното влизане функцията прави $can_visit = false или според
-// стойността на настройката user_can_visit, така че, дори и да е влязъл, потребителят
-// може да види резултат Access denied ако няма други права за работа със страницата.
+// След успешното разпознаване на потребител, функцията задава стойност на $can_visit според
+// зададените в таблица pеrmissions права и стойността на настройката user_can_visit,
+// така че, дори и да е влязъл, потребителят може да види резултат Access denied,
+// ако няма други права за работа със страницата.
 
 // $_GET['user']='newreg' - показва форма за въвеждане на данни за нов потребител,
 // при условие, че има влязъл потребител с право да създава други потребители. (`type`='module', `object`='user')
@@ -115,7 +116,7 @@ else{
   mysqli_query($db_link, $q);
 
   // Ако е изпратен параметър за създаване на нов потребител.
-  if ( ($a=='create') || (isset($_GET['user']) && ($_GET['user']=='newreg')) ) create_user();
+  if ( ($a=='create') || (isset($_GET['user']) && ($_GET['user']=='newreg')) ) return create_user($a);
 
   // Ако е изпратен параметър за изтриване на потребител.
   if ( ($a=='delete') || (isset($_GET['user']) && ($_GET['user']=='delete')) ) delete_user($a);
@@ -136,7 +137,7 @@ else{
   }
 }
 return $rz;
-}
+} // function user($a = '')
 
 //
 // Връща потребителското име на влезлия потребител и линк "Изход"
@@ -209,7 +210,7 @@ function save_user(){
 global $tn_prefix, $db_link;
 // Име на таблицата с данни за потребители
 $user_table = stored_value('user_table','users');
-if ( !isset($_GET['user']) || ($_GET['user']!='newreg') || ($_POST['password2']!=$_POST['password']) || 
+if ( !isset($_GET['user']) || ($_GET['user']!='newreg') || !isset($_POST['password2']) || ($_POST['password2']!=$_POST['password']) ||
      !$_POST['username']
    ) return;
 $u = db_table_field('username', $user_table, "`username`='".addslashes($_POST['username'])."'");
@@ -296,14 +297,17 @@ function new_user($a){// print_r($_SESSION); die;
 // Функция create_user() се изпълнява, когато в адреса на страницата има параметър user=newreg
 // за да покаже форма за създаване на нов потребител.
 //
-function create_user(){
+function create_user($a){
 if (count($_POST)) save_user();
 global $idir;
 if (!can_manage_users()) die(translate('user_cnnotcreate'));
 $page_title = translate('user_newreg');
 $page_content = '<div id="user_login">'."\n<h1>$page_title</h1>\n".user_form(0)->html();
-include($idir.'lib/build_page.php');
-die;
+if ($a != 'login'){
+  include($idir.'lib/build_page.php');
+  die;
+}
+else return $page_content;
 }
 
 //
