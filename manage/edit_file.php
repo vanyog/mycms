@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 include("conf_manage.php");
 include_once($idir."conf_paths.php");
+include_once($idir."lib/f_is_local.php");
 include_once($idir."lib/f_strip_last_name.php");
 
 $f = ''; // Име на файла или директорията, които ще се редактират
@@ -46,6 +47,12 @@ if (is_dir($d)){ // Ако е директория се показва таблица с файловете в нея
 
 if ($f) $f .= '/';
 
+// Дали е разрешено изтриване на файлове.
+// Разрешено е на локален сървър, а на отдалечен сървър,
+// по подразбиране не е разрешено, освен ако е зададена настройка
+// can_delete_files със стойност 1.
+$cdel = stored_value('can_delete_files',0) || is_local();
+
 $page_header = '<script type="text/javascript"><!--
 function fileName(){
 var frm = document.forms.file_form;
@@ -62,7 +69,7 @@ if (fn){
 else alert("Choose a file to be renamed");
 }
 function doDelete(){
-if (!'.stored_value('can_delete_files',0).'){
+if (!'.$cdel.'){
   alert("Deleting files on this system is not permited.");
   return;
 }
@@ -78,7 +85,7 @@ function doView(){
 var fn = fileName();
 var lc = "'.$pth.'"+fn;
 var q = document.forms.file_form.query.value;
-if (q) lc = lc+"?"+q;  
+if (q) lc = lc+"?"+q;
 if (fn) document.location = lc;
 else alert("Choose a file to be viewed as a web page");
 }
@@ -110,7 +117,7 @@ while ($a = readdir($dr)) if ( ($a!='.') && !(($a=='..')&&($d==$apth)) ) $dl[] =
 sort($dl);
 
 $cls = 3; $rw = 0; $j = 0; $stp = floor(count($dl)/$cls); $cln=0;
-$rem = count($dl) % $cls; $rc = 0; 
+$rem = count($dl) % $cls; $rc = 0;
 for($i=0; $i<count($dl); $i++){
   $a = $dl[$j];
   $j += $stp;
@@ -120,7 +127,7 @@ for($i=0; $i<count($dl); $i++){
   $s1 = ''; $s2 = '';
   if (is_dir($d.'/'.$a)){ $s1 = '<strong>'; $s2 = '</strong>'; }
   $page_content .= '<td><input type="radio" name="file" value="'.$f.$a.
-  "\"></td><td>$s1<a href=\"edit_file.php?f=$f$a\">$a</a>$s2</td>\n"; 
+  "\"></td><td>$s1<a href=\"edit_file.php?f=$f$a\">$a</a>$s2</td>\n";
   $cln++;
   if (($cln % $cls)==0){ $page_content .= "</tr><tr>\n"; $rc = 0; }
 }
@@ -129,11 +136,11 @@ if (($cln % $cls)!=0) $page_content .= "</tr>";
 
 $page_content .= '</table>
 <p>?<input type="text" name="query"></p>
-<p><input type="button" value="Create file" onclick="doCreate();"> 
-<input type="button" value="Make dir" onclick="doMakeDir();"> 
-<input type="button" value="View" onclick="doView();"> 
-<input type="button" value="Rename" onclick="doRename();"> 
-<input type="button" value="Delete" onclick="doDelete();"></p> 
+<p><input type="button" value="Create file" onclick="doCreate();">
+<input type="button" value="Make dir" onclick="doMakeDir();">
+<input type="button" value="View" onclick="doView();">
+<input type="button" value="Rename" onclick="doRename();">
+<input type="button" value="Delete" onclick="doDelete();"></p>
 </form>';
 
 }
@@ -176,9 +183,9 @@ function doSaveAs(){
 function doOpen(){
   var te = document.forms.edit_form.editor1;
   var st = te.value.substring(te.selectionStart,te.selectionEnd);
-  if (!st.length) return; 
+  if (!st.length) return;
   var d = "'.strip_last_name($f).'";
-  if (d) d += "/";  
+  if (d) d += "/";
   document.location = "'.$adm_pth.'edit_file.php?f=" + d + st;
 }
 --></script>
@@ -186,7 +193,7 @@ function doOpen(){
 <form action="save_file.php" method="POST" name="edit_form">
 <input type="hidden" name="file" value="'.$f.'">
 '.editor('editor1',$tx).'
-<br><input type="submit" value="Save" name="submit_button"> 
+<br><input type="submit" value="Save" name="submit_button">
 <input type="button" value="Save as" onclick="doSaveAs();" name="save_as">
 <input type="button" value="Close" onclick="document.location=\''.$adm_pth.'edit_file.php?f='.strip_last_name($f).'\'">
 <input type="button" value="Open" onclick="doOpen();">
@@ -201,9 +208,9 @@ $rz = ''; $rm = false;
 for($i=count($a)-1; $i>=0; $i--)
    if ($a[$i]=='..') { unset($a[$i]); $rm = true; }
    else if ($rm) { unset($a[$i]); $rm = false; } //print_r($a);
-foreach($a as $b) $rz .= '/'.$b; 
+foreach($a as $b) $rz .= '/'.$b;
 $rz = substr($rz,1); //echo $rz;
-return $rz; 
+return $rz;
 }
 
 include("build_page.php");
