@@ -405,4 +405,17 @@ if (!($rz===false)) return $rz;
 return stored_value('user_can_visit',false);
 }
 
+//
+// Помощна функция, която връща трите имена на потребител по ID.
+// Ако няма такъв потребител, връща празен стринг.
+
+function user_names($id){
+// Име на таблицата с данни за потребители
+$user_table = stored_value('user_table','users');
+// Четене на имената
+$n = db_select_1('`firstname`,`secondname`,`thirdname`', $user_table, "`ID`=$id");
+if (!$n) return '';
+else return $n['firstname'].' '.$n['secondname'].' '.$n['thirdname'];
+}
+
 ?>
