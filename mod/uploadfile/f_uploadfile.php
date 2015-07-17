@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // Модул за качване на файлове
-// Функцията uploadfile($n) генерира html кода на хипервръзка към
+// Функцията uploadfile($n) генерира html кода за показване на
 // качен на сървъра файл.
 // В режим на редактиране зад хипервръзката се показват знаци:
 // +  за качване на файл и 
@@ -29,12 +29,21 @@ global $can_manage;
 function uploadfile($n){
 global $mod_pth, $page_id;
 
+// CSS дефиниции на html тага за показване на файла
+$ss = ''; $m = array();
+$i = preg_match_all('/,style=".*"/', $n, $m);
+if ($i==1){
+ $ss = $m[0][0];
+ $n = str_replace($ss,'', $n);
+ $ss[0] = ' ';
+}
+
+// Разпадане на параметъра $a на: име, номер на страница и опция за показване на текста
+$na = explode(',',$n);
+
 // За всеки случай, ако не е дефиниран номер на страница.
 if (!isset($page_id)) $page_id = 1*$_GET['pid'];
 $pid = $page_id;
-
-// Разпадане на параметъра на име, номер и опция за показване на текста.
-$na = explode(',',$n);
 
 // Ако е изпратен и номер на страница - коригиране на $n и $pid
 if (isset($na[1])){ $pid = 1*$na[1]; $n = $na[0]; }
@@ -90,8 +99,8 @@ else {
   }
   else { // Показване на картинка или хипервръзка към файла
     $e = strtolower(pathinfo($f, PATHINFO_EXTENSION));
-    if (in_array($e, $imgs)) $rz .= '<img src="'.$f.'" alt="'.stripslashes($fr['text']).'">';
-    else $rz .= '<a href="'.$f.'">'.stripslashes($fr['text']).'</a>';
+    if (in_array($e, $imgs)) $rz .= '<img src="'.$f."\"$ss alt=\"".stripslashes($fr['text']).'">';
+    else $rz .= '<a href="'.$f."\"$ss>".stripslashes($fr['text']).'</a>';
   }
   $fid = $fr['ID'];
 }
