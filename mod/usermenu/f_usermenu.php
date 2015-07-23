@@ -120,12 +120,19 @@ function getPage(){
 var a = prompt("ID of the page to get content from");
 if (a){
   var r = "'.$pt.'get_content.php?p1="+a+"&p2='.$page_data['ID'].'";
-  alert(r);
+  document.location = r;
+}
+}
+function moveTo(){
+var g = prompt("ID of the page group to move the page to");
+if (g){
+  var r = "'.$pt.'move_page.php?p='.$page_data['ID'].'"+"&g="+g;
   document.location = r;
 }
 }
 --></script>';
  $rz .= '<a href="javascript:void(0);" onclick="getPage();">Page Get</a><br>'."\n";
+ $rz .= '<a href="javascript:void(0);" onclick="moveTo();">Page Move</a><br>'."\n";
 }
 if ($can_edit) $rz .= edit_normal_link()."<br>\n";
 foreach($can_manage as $m=>$yn) if( $yn) {
