@@ -38,7 +38,7 @@ include_once($idir.'lib/f_parse_content.php');
 include_once($idir."lib/f_edit_normal_links.php");
 
 function adm_links(){
-global $pth, $adm_pth, $edit_name, $edit_value, $web_host, $local_host, 
+global $pth, $adm_pth, $edit_name, $edit_value, $web_host, $local_host, $main_index,
        $phpmyadmin_site, $phpmyadmin_local, $page_data;
 if ( !show_adm_links() ) return '';
 else {
@@ -89,7 +89,7 @@ function gotoPageNumber(e){
 if (e.keyCode==13){
   var n = document.getElementById("gtpNumber").value;
   if (n){
-    var l = "'.$pth.'index.php?pid="+n;
+    var l = "'.$main_index.'?pid="+n;
     document.location = l;
   }
 }
@@ -97,10 +97,10 @@ if (e.keyCode==13){
 --></script>
 <p id="adm_links">&nbsp;
 <a href="'.$pth.'">Home</a> :: '.$enmch.'
-<a href="'.$pth.'index.php?pid='.$ppid.'">&lt;</a>
+<a href="'.$main_index.'?pid='.$ppid.'">&lt;</a>
 <input type="text" size="4" id="gtpNumber" onkeypress="gotoPageNumber(event);">
-<a href="'.$pth.'index.php?pid='.$npid.'">&gt;</a> 
-<a href="'.$pth.'index.php?pid='.$lpid.'&amp;'.$edit_name.'='.urlencode($edit_value).'">'.$lpid.'</a> :: 
+<a href="'.$main_index.'?pid='.$npid.'">&gt;</a>
+<a href="'.$main_index.'?pid='.$lpid.'&amp;'.$edit_name.'='.urlencode($edit_value).'">'.$lpid.'</a> ::
 <a href="'.$adm_pth.'edit_file.php">File system</a> :: 
 <a href="'.$adm_pth.'edit_data.php">Database</a> :: 
 <a href="'.stored_value('adm_links_cpanel').'" target="_blank">cPanel</a> :: 

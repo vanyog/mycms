@@ -32,9 +32,11 @@ global $mod_pth, $page_id;
 // CSS дефиниции на html тага за показване на файла
 $ss = ''; $m = array();
 $i = preg_match_all('/,style=".*"/', $n, $m);
+if (!$i) $i = preg_match_all('/,style=&quot;.*&quot;/', $n, $m);
 if ($i==1){
  $ss = $m[0][0];
  $n = str_replace($ss,'', $n);
+ $ss = str_replace('&quot;','"',$ss);
  $ss[0] = ' ';
 }
 
