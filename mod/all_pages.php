@@ -78,6 +78,7 @@ foreach($pd as $p){
 }
 
 $page_content = '<p>Всичко страници: '.count($pd).", показани: $c".', неизползвани номера: <a href="'.set_self_query_var('u',1).'">'.($ma-count($pd))."</a></p>
+<p><a href=\"".set_self_query_var('t',1)."\">Със заглавия</a></p>
 <table><tr>".$rz.'</tr></table>';
 
 }

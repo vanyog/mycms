@@ -69,7 +69,8 @@ case 'all':
   $can_create = $q['yes_no'];
   $ml = mod_list(true);
   foreach($ml as $m){
-    $n = pathinfo($m,PATHINFO_FILENAME);
+//    $n = pathinfo($m,PATHINFO_FILENAME);
+    $n = pathinfo($m, PATHINFO_BASENAME);
     $yn = db_select_m('yes_no','permissions',"`user_id`=$id AND `type`='module' AND `object`='$n'");
     if (!count($yn)){ $can_manage[$n] = $q['yes_no']; }
     else { $can_manage[$n] = $yn[0]['yes_no']; }
@@ -111,7 +112,7 @@ if (confirm("'.translate('usermenu_confirdeleting').'")) document.location = "'.
 --></script>';
   $rz .= '<a href="" onclick="confirm_page_deleting();return false;">Page Delete</a><br>'."\n";
  }
- if ($page_data['hidden'])
+ if (isset($page_data['hidden']) && $page_data['hidden'])
      $rz .= '<a href="'.$pt.'/toggle_visibility.php?pid='.$page_data['ID'].'">Page Visible</a><br>'."\n";
  else
      $rz .= '<a href="'.$pt.'/toggle_visibility.php?pid='.$page_data['ID'].'">Page Hidden</a><br>'."\n";

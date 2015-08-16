@@ -70,6 +70,7 @@ INSERT INTO `content` (`name`,`nolink`,`date_time_1`,`date_time_2`,`language`,`t
 ('user_passwordinvalid',1,NOW(),NOW(),'bg','Паролата и нейното повторение не съвпадаха. Паролата не е променена.'),
 ('user_passwordinvalid',0,NOW(),NOW(),'en','Password and its repetition does not match. Password is not changed.'),
 ('user_savenew',1,NOW(),NOW(),'bg','Създаване на нов потребител'),
+('user_savenew',1,NOW(),NOW(),'en','Create a new user'),
 ('user_secondname',1,NOW(),NOW(),'bg','Презиме:'),
 ('user_secondname',1,NOW(),NOW(),'en','Surname:'),
 ('user_telephone',1,NOW(),NOW(),'bg','Телефон:'),

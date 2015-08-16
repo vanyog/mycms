@@ -101,6 +101,7 @@ if (e.keyCode==13){
 <input type="text" size="4" id="gtpNumber" onkeypress="gotoPageNumber(event);">
 <a href="'.$main_index.'?pid='.$npid.'">&gt;</a>
 <a href="'.$main_index.'?pid='.$lpid.'&amp;'.$edit_name.'='.urlencode($edit_value).'">'.$lpid.'</a> ::
+<a href="'.$pth.'mod/all_pages.php">all</a> ::
 <a href="'.$adm_pth.'edit_file.php">File system</a> :: 
 <a href="'.$adm_pth.'edit_data.php">Database</a> :: 
 <a href="'.stored_value('adm_links_cpanel').'" target="_blank">cPanel</a> :: 
