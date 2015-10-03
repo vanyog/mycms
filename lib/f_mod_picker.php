@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Показване списък на наличните модули за по-лесно добавяне
 
 function mod_picker(){
-global $page_header;
+global $page_header, $pth;
 $page_header .= '<script type="text/javascript"><!--
 function toClip(a){
 window.prompt("Copy to clipboard: Ctrl+C, Enter", "<!--$$_"+a.innerHTML+"_$$-->" );
@@ -41,7 +41,7 @@ asort($mn);
 foreach($mn as $i=>$m) {
   $rm = $ml[$i].'README.txt';
   $rz .= '<span><span onclick="toClip(this);">'.$m.'</span>';
-  if (file_exists($rm)) $rz .= ' <a href="'.current_pth($rm).'README.txt">help</a>';
+  if (file_exists($rm)) $rz .= ' <a href="'.$pth.'mod/help.php?m='.$m.'">help</a>';
   $rz .= '</span> '."\n";
 }
 $rz .= '</p>';

@@ -20,7 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Функцията parse_content($cnt) замества елементите <!--$$_XXX_$$--> в стринга $cnt
 // със съдържание, генерирано от php скриптове, които се съхраняват в таблица $tn_prefix.'scripts'
-// или модули от директория mod
+// или модули от директория mod.
+// При грешка в изпълнението на функция eval(), адреса на страницата се запазва в таблица
+// `options` под име 'eval_error_uri'.
 
 include_once($idir.'lib/f_translate.php');
 include_once($idir.'lib/f_adm_links.php');
