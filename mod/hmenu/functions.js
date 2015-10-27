@@ -6,12 +6,12 @@ var last_hitem = null;
 
 function getHTop(e){
 var r = e.getBoundingClientRect();
-alert(r.top);
-return r.top;
+//alert(r.top);
+//return r.top;
 var t = 0;
 do {
   t += e.offsetTop;
-  alert(e.id + " "+e.offsetTop + " "+e.style.position );
+//  alert(e.id + " "+e.offsetTop + " "+e.style.position );
   e = e.offsetParent;
 } while (e);
 return t;
@@ -25,11 +25,11 @@ if (el){
   var s = el.style;
   s.visibility = "visible";
 //  s.top = (getHTop(e)+e.offsetHeight-2)+"px";//(e.offsetTop+161)+"px";
-//  s.top = (getHTop(e))+"px";//(e.offsetTop+161)+"px";
-  s.top = "138px";
+  s.top = (getHTop(e) + e.offsetHeight - 2) + "px";
+//  s.top = "138px";
   var w;
-//  w = Math.round(e.getBoundingClientRect().left) + "px";
-  w = Math.round(e.offsetLeft) + "px";
+  w = Math.round(e.getBoundingClientRect().left) + "px";
+//  w = Math.round(e.offsetLeft) + "px";
   s.left = w;
   last_hlayer = id;
 }
