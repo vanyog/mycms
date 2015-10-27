@@ -24,10 +24,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // да има запис с име 'month_names', съдържащ дефиниция на масив $month с имената на 
 // месеците на всеки от езиците, използване на сайта.
 
-function db2user_date_time($dts){
+function db2user_date_time($dts, $tm = true){
 $c = translate('month_names',false);// print_r($c); die;
 eval($c);
-if (substr($dts,11,8)=="00:00:00") $t = '';
+if ((substr($dts,11,8)=="00:00:00")||!$tm) $t = '';
 else {
   $h = (1*substr($dts,11,2));
   if ($h<10) $t = ' &nbsp;'; else $t = ' ';

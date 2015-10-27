@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 session_start();
 unset($_SESSION['text_to_search']);
 unset($_SESSION['sitesearch_saved']);
+if (!count($_SESSION)) setcookie('PHPSESSID','',time()-60,'/');
 if (isset($_SERVER['HTTP_REFERER'])) header('Location: '.$_SERVER['HTTP_REFERER']);
 else echo("'text_to_search' variable have been unset.");
 

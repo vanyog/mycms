@@ -41,7 +41,7 @@ if (isset($_GET['ssr'])) do_site_search($_GET['ssr']);
 
 // Показване на форма за търсене
 $f = new HTMLForm('site_search_form',false);
-if (!session_id()) session_start();
+if (!session_id() && isset($_COOKIE['PHPSESSID'])) session_start();
 if (isset($_SESSION['text_to_search'])) $tx = $_SESSION['text_to_search'];
 else $tx = '';
 $tx = str_replace('"','&quot;',$tx);
@@ -86,7 +86,7 @@ function do_site_search($txs){
 //
 function site_search_result(){
 global $language, $pth;
-  if (!session_id()) session_start();
+  if (!session_id() && isset($_COOKIE['PHPSESSID'])) session_start();
   // Съобщение, че няма текст за търсене
   if (!isset($_SESSION['text_to_search'])) return translate('sitesearch_notext');
   $ts = $_SESSION['text_to_search'];

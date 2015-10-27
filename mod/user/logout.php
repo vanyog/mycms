@@ -24,7 +24,7 @@ $ddir = $idir;
 
 include($idir."lib/translation.php");
 
-session_start();
+if (isset($_COOKIE['PHPSESSID'])) session_start();
 
 // Ќомер на началната страница на сайта
 $i = stored_value('main_index_pageid',1);

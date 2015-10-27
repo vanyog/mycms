@@ -83,7 +83,7 @@ mysqli_query($db_link,$q);
 
 function do_not_cache(){
 global $page_data;
-if (!session_id()) session_start();
+//if (!session_id()) session_start();
 return
   ($page_data['ID']==0) ||
   (isset($page_data['donotcache']) && ($page_data['donotcache']==1)) ||
