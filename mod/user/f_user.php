@@ -50,8 +50,6 @@ include_once($idir.'lib/f_edit_record_form.php');
 // $a = 'create' връща форма за създаване на нов потребител, при условие, че има влязъл потребите,
 // с право да създава други потребители.
 
-if (!session_id()) session_start();
-
 function user($a = ''){
 
 global $tn_prefix, $db_link, $user_table, $mod_apth, $can_visit;
@@ -71,6 +69,8 @@ if ($c===false) die("Table '$user_table' is not set up.");
 
 // Ако няма потребители, се създава нов потребител.
 if ( !$c && (!isset($_GET['user']) || ($_GET['user']!='newreg')) ){ return new_user($a); }
+
+if (!session_id()) session_start();
 
 // Ако няма влязъл потребител се отваря страница за влизане.
 if (!isset($_SESSION['user_username'])){
@@ -122,16 +122,14 @@ else{
   if ( ($a=='delete') || (isset($_GET['user']) && ($_GET['user']=='delete')) ) delete_user($a);
 
   // Адрес на страницата, на която да се отиде след влизане.
-  $lp = stored_value('user_loginpage',''); 
+  $lp = stored_value('user_loginpage','');
 
   // Ако е зададена се извършва препращане.
   if ($lp && ($a=='login')){
     header("Location: $lp");
     die;
   }
-
-  // Ако не е зададена се връща линк "Изход".
-  else{
+  else{ // Ако не е зададена се връща линк "Изход".
     $can_visit = user_can_visit($rz['ID']);
     $rz = user_logout_link();
   }
@@ -246,11 +244,14 @@ function logout_user(){
 $lp = current_pth(__FILE__).'logout.php';
 // Евентуално в настройките може да е зададена друга 
 $lp = stored_value('user_logoutpage',$lp);
+if (!session_id()) session_start();
 // Унищожаване променливите на сесията
 unset($_SESSION['user_username']);
 unset($_SESSION['user_password']);
 unset($_SESSION['user_password_raw']);
 unset($_SESSION['session_start']);
+//die(print_r($_SESSION,true));
+if (!count($_SESSION)) setcookie('PHPSESSID','',time()-60,'/');
 // Запазване на страницата за връщане
 if (isset($_SERVER['HTTP_REFERER'])) $_SESSION['user_returnpage'] = $_SERVER['HTTP_REFERER'];
 // Пренасочване към страницата след излизане

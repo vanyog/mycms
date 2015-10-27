@@ -34,7 +34,7 @@ include_once($idir."lib/f_edit_normal_links.php");
 include_once($idir."mod/user/f_user.php");
 //include_once($idir."lib/f_mod_path.php");
 
-if (!session_id()) session_start();
+if (!session_id() && isset($_COOKIE['PHPSESSID'])) session_start();
 
 function usermenu($nom = false){
 
