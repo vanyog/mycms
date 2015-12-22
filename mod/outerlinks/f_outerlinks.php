@@ -28,7 +28,6 @@ return outer_links();
 // ----------------------------------------------
 function outer_links(){
 global $tn_prefix, $db_link;
-$pth = '/_new/';
 
 // Общ брой на връзките
 $lc = db_table_field('COUNT(*)','outer_links',"`link`>''");
@@ -42,7 +41,7 @@ if (isset($_GET['lid'])) $lid = 1*$_GET['lid'];
 
 // Начало - Показване на общите бройки
 $rz = '<div id="outer_links">'.start_edit_form().'
-<p>'.translate('outerlinks_totalcount')." $lc ".translate('outerlinks_in')." $cc ".translate('outerlinks_categories')."</p>\n";
+<p class="counts">'.translate('outerlinks_totalcount')." $lc ".translate('outerlinks_in')." $cc ".translate('outerlinks_categories')."</p>\n";
 
 // Ако е извършено търсене се показва резултата от търсенето
 if (count($_POST) && isset($_POST['search_by'])){
@@ -71,20 +70,21 @@ $rz .= link_tree($lid);
 
 // Четене и показване на (под)категориите
 $ca = db_select_m('*','outer_links',"`up`=$lid AND `link`='' ORDER BY `place`");
+$p = current_pth(__FILE__);
 foreach($ca as $c){// print_r($c); die;
- $rz .= '<p>'.edit_radio($c['ID'],$c['place']).'<img src="'.$pth.'folder.gif" alt=""> <a href="'.
+ $rz .= '<p>'.edit_radio($c['ID'],$c['place']).'<img src="'.$p.'folder.gif" alt=""> <a href="'.
         set_self_query_var('lid',$c['ID']).'">'.stripslashes($c['Title'])."</a>";
- if ($c['Comment']) $rz .= ' - '.stripslashes($c['Comment']);
+ if (isset($c['Comment']) && $c['Comment']) $rz .= ' - '.stripslashes($c['Comment']);
  $rz .= "</p>\n";
 }
 
 // Четене и показване на линковете
 $la = db_select_m('*','outer_links',"`up`=$lid AND `link`>'' ORDER BY `place`");
 foreach($la as $l){
- $rz .= '<p>'.edit_radio($l['ID'],$l['place']).'<img src="'.$pth.'go.gif" alt=""> <a href="'.
+ $rz .= '<p>'.edit_radio($l['ID'],$l['place']).'<img src="'.$p.'go.gif" alt=""> <a href="'.
         set_self_query_var('lid',$l['ID']).'" title="'.$l['link'].
         '" target="_blank">'.stripslashes($l['Title'])."</a>";
- if ($l['Comment']) $rz .= ' - '.stripslashes($l['Comment']);
+ if (isset($c['Comment']) && $l['Comment']) $rz .= ' - '.stripslashes($l['Comment']);
  $rz .= "</p>\n";
 }
 
@@ -105,7 +105,11 @@ do {
   $lid = $l['up'];
   if ($rz) $rz = " > ".$rz;
   if ($lk) $rz = '<a href="'.$lk.'">'.$l['Title']."</a>".$rz;
-  else{ $rz = $l['Title'].$rz; $cm = $l['Comment']; }
+  else{
+     $rz = $l['Title'].$rz;
+     $cm = '';
+     if (isset($l['Comment'])) $cm = $l['Comment'];
+  }
   $lk = set_self_query_var('lid',$l['up']);
 } while ($lid);
 if ($rz) $rz = " > ".$rz;
@@ -118,8 +122,9 @@ return "$rz\n<p>";
 // Показване резултат от търсене
 // -----------------------------
 function link_search(){
+global $pth, $page_id;
 if (!isset($_POST['search_for']) || !$_POST['search_for']) return '';
-$pth = current_pth(__FILE__);
+$p = current_pth(__FILE__);
 $q = '';
 // Съставяне на SQL заявката
 switch ($_POST['search_by']){
@@ -153,10 +158,10 @@ foreach($ra as $r){
   $lk = '<a href="'.$lk.'" title="'.$t1.'" target="_blank">'.stripslashes($r['Title']).'</a>   '.'<a href="'.set_self_query_var('lid',$r['up']).'" title="'.$t2.'">>></a>';
   $lk .= "<br>\n";
   // Добавяне към резултата
-  if ($r['link']) $rz2 .= '<img src="'.$pth.'go.gif" alt=""> '.$lk;
-  else  $rz1 .= '<img src="'.$pth.'folder.gif" alt=""> '.$lk;
+  if ($r['link']) $rz2 .= '<img src="'.$p.'go.gif" alt=""> '.$lk;
+  else  $rz1 .= '<img src="'.$p.'folder.gif" alt=""> '.$lk;
 }
-return '<p class="link_tree"><a href="/_new/index.php?pid=29">'.translate('outerlinks_home').'</a>   '
+return '<p class="link_tree"><a href="'.$pth.'index.php?pid='.$page_id.'">'.translate('outerlinks_home').'</a>   '
 .translate('outerlinks_found')." ".count($ra)."</p>
 $rz1$rz2".search_link_form();
 }

@@ -48,7 +48,8 @@ else return false;
 
 function in_edit_mode(){
 global $edit_name, $edit_value; // echo "$edit_name, $edit_value"; die;
-return query_or_cookie($edit_name,$edit_value);
+if (isset($_COOKIE['PHPSESSID']) || show_adm_links()) return query_or_cookie($edit_name,$edit_value);
+return false;
 }
 
 

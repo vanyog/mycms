@@ -73,14 +73,21 @@ return $rz;
 // Изтриване на всички бисквитки
 
 function cookies_clear_all(){
+<<<<<<< HEAD
 global $edit_name, $edit_value, $language;
+=======
+>>>>>>> 811986182d6a1c1c74c2f16c85a73b3b7955439a
 if (isset($_SERVER['HTTP_REFERER'])){
    foreach($_COOKIE as $n=>$v){
      setcookie($n,'',time()-60*60*24,'/');
    }
+<<<<<<< HEAD
    $h = str_replace("&$edit_name=$edit_value",'',$_SERVER['HTTP_REFERER']);
    $h = str_replace("&lang=$language",'',$h);
    header('Location: '.$h);
+=======
+   header('Location: '.$_SERVER['HTTP_REFERER']);
+>>>>>>> 811986182d6a1c1c74c2f16c85a73b3b7955439a
    die;
 }
 }

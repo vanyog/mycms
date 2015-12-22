@@ -50,7 +50,7 @@ if ($p2<$p1){
   $cnt = substr_replace($cnt,'&lt;&nbsp;!--$$_== Not closed ! ==',$p0,strlen($str1));
   continue;
 } 
-$p3 = $p2 + strlen($str2); // Позиция на последния заместван символ
+$p3 = $p2 + strlen($str2); // Позиция на последния заместван символf_parse_content
 
 // Отделяне на името от параметъра
 $tg = explode('_',substr($cnt,$p1,$p2-$p1),2);
@@ -65,10 +65,12 @@ if (!$sc){ // Ако няма такъв скрипт се търси модул с това име
   $fn = mod_path($f);
   if ($fn){
     $c = "include_once('$fn');\n";
-    if (isset($tg[1])) $c .= '$tx = '."$f('$tg[1]');";
+    if (isset($tg[1])) $c .= '$tx = '."$f('".addslashes($tg[1])."');";
     else $c .= '$tx = '."$f();";
     if (eval($c)===false){ // Изпълнява се модула
       store_value("eval_error_uri", $_SERVER['REQUEST_URI']);
+      store_value("eval_error_code", $c);
+      die($c);
     }
   }
   else { // Ако няма модул се показва линк за автоматично създаване на модул

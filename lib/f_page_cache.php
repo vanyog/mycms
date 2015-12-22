@@ -83,13 +83,12 @@ mysqli_query($db_link,$q);
 
 function do_not_cache(){
 global $page_data;
-//if (!session_id()) session_start();
 return
   ($page_data['ID']==0) ||
   (isset($page_data['donotcache']) && ($page_data['donotcache']==1)) ||
   in_edit_mode() || 
   count($_POST) || 
-  (isset($_SESSION) && count($_SESSION)) || 
+  isset($_COOKIE['PHPSESSID']) || 
   (!is_local() && show_adm_links());
 }
 

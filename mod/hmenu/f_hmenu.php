@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Параметърът $a е стойността на полето `group` в таблица 'menu_items'.
 
 function hmenu($a){
-global $ind_fl, $page_header, $pth, $page_id;
+global $ind_fl, $page_header, $pth, $adm_pth, $page_id;
 $p = current_pth(__FILE__);
 $page_header .= '<script type="text/javascript">'."\n";
 // Цветове
@@ -56,6 +56,11 @@ foreach($il as $i){
   }
   $rz .= "</a>\n";
   $j++;
+}
+if (in_edit_mode()){
+  $ni = db_table_field('MAX(`ID`)','menu_items','1')+1;
+  $rz .= " ".'<a href="'.$adm_pth.'new_record.php?t=menu_items&group='.$a.'&link='.$page_id.
+         '&name=p'.$ni.'_link">New</a> '."\n";
 }
 return $sm.'<div id="MENU_'.$a."\">\n".$rz.'</div>';
 }
