@@ -50,7 +50,7 @@ if ($p2<$p1){
   $cnt = substr_replace($cnt,'&lt;&nbsp;!--$$_== Not closed ! ==',$p0,strlen($str1));
   continue;
 } 
-$p3 = $p2 + strlen($str2); // Позиция на последния заместван символf_parse_content
+$p3 = $p2 + strlen($str2); // Позиция на последния заместван символ
 
 // Отделяне на името от параметъра
 $tg = explode('_',substr($cnt,$p1,$p2-$p1),2);

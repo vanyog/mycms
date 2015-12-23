@@ -24,6 +24,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // да има запис с име 'month_names', съдържащ дефиниция на масив $month с имената на 
 // месеците на всеки от езиците, използване на сайта.
 
+// Ако вторият параметър $tm = false не се показва час.
+// иначе час не се показва, само ако е 00:00:00.
+
 function db2user_date_time($dts, $tm = true){
 $c = translate('month_names',false);// print_r($c); die;
 eval($c);

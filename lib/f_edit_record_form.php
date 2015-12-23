@@ -83,6 +83,7 @@ foreach($cp as $n => $v){
         $v = translate('user_passwordconfirm');
       } 
       else { $vl = htmlspecialchars(stripslashes($d[$n]), ENT_COMPAT, 'cp1251'); }
+      // Ако полето е за попълване на дата и час, се попълва с текущите дата и час
       if (($tp[1]=='datetime')&& !$vl) $vl = date("Y-m-d H:i:s");
       $fi =  new FORMInput($v, $n, $t, $vl);
       $fi->size = 80;
