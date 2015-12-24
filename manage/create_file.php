@@ -24,7 +24,15 @@ include($idir."conf_paths.php");
 $fn = $_GET['f'];
 $afn = $apth.$fn;
 
-$f = fopen($afn,"w") or die("Can't create file $fn"); fclose($f);
+$drn = dirname($afn);
+if (!is_writable($drn)){
+  session_start();
+  $_SESSION['edit_result_message'] = "The folder $drn is not writable";
+}
+else {
+  $f = fopen($afn,"w") or die("Can't create file $fn");
+  fclose($f);
+}
 
 header('Location: '.$adm_pth.'edit_file.php?f='.dirname($fn));
 
