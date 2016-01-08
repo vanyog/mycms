@@ -21,9 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // поредица от sql заявки във файл tables.sql в директорията
 // на модул с име $_GET['m'].
 
-include("conf_manage.php"); 
-include($idir.'conf_paths.php');
-include($idir.'lib/f_db_select_m.php');
+include_once("conf_manage.php");
+include_once($idir.'conf_paths.php');
+include_once($idir.'lib/f_db_select_m.php');
 
 if (!isset($_GET['p'])) die("Parameter p=Name_Prefix is not posted");
 if (!isset($_GET['m'])) die("Parameter m=Mod_Name is not posted");
