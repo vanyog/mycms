@@ -29,20 +29,24 @@ $in = $main_index.'?pid=';
 
 foreach($da as $d){
   // Ако файлът няма име, най-вероятно е изтрит
-  if (!$d['filename']){
+//  if (!$d['filename'])
+  {
     // Проверка дали се използва на страницата
     // Име на съдържанието на страницата
     $cn = db_table_field('content', 'pages', "`ID`=".$d['pid']);
-    if (!$cn) break;
+    // Ако е празно се минава към следващия файл
+//    if (!$cn) break;
+    // Линк към страницата
+    $lk = '<a href="'.$in.$d['pid'].'">'.$d['pid'].'</a>';
+    // Използва се
+    $y = false;
     foreach($languages as $language=>$c){
-      // Линк към страницата
-      $lk = '<a href="'.$in.$d['pid'].'">'.$d['pid'].'</a>';
       // Съдържание на страницата на език $language
       $ct = db_table_field('text', 'content', "`name`='$cn' AND `language`='$language'");
-      $p = strpos($ct, '!--$$_UPLOADFILE_'.$d['name']); 
-      if ($p===false) echo 'Not in use - '.$lk.' '.$d['name']." ".$language."<br>";
+      $y = $ct && (strpos($ct, '!--$$_UPLOADFILE_'.$d['name'])!==false);
     }
-//    echo $cn.' !--$$_UPLOADFILE_'.$d['name'].'<br>';
+//    if ($y) 
+        echo 'Not in use - '.$lk.' '.$d['name']." ".$language."<br>";
   }
 }
 
