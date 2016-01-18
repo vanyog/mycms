@@ -162,10 +162,12 @@ $dd = $d['year'].'-'.$d['mon'].'-'.$d['mday'];
 // четат се записите на посетените през деня страници от таблица $tn_prefix.'pages'
 $dt = db_select_m('ID,dcount','pages','`dcount`>0');
 // записват се броя посещения на всяка страница в таблица $tn_prefix.'visit_history'
+$q = "INSERT INTO `$tn_prefix"."visit_history` (`page_id`, `date`, `count`) VALUES\n";
 foreach($dt as $r){
-  $q = "INSERT INTO `$tn_prefix"."visit_history` SET `page_id`=".$r['ID'].", `date`='$dd', `count`=".$r['dcount'].";";
-  mysqli_query($db_link,$q);
+  $q .= "(".$r['ID'].", '$dd', ".$r['dcount']."),\n";
 }
+$q = substr($q, 0, strlen($q)-2).";";
+mysqli_query($db_link,$q);
 // записва се последната датата в таблица $tn_prefix.'options'
 store_value('today',$d['mday']);
 // нулира се броя на посещенията в таблица $tn_prefix.'pages'

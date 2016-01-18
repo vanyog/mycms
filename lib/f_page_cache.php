@@ -100,7 +100,7 @@ $b = parse_url($a);
 $c = array(); 
 $d = $b['path'];
 if (isset($b['query'])) parse_str($b['query'],$c);
-if (isset($c['pid'])) $d .= 'pid='.$c['pid'];
+if (isset($c['pid'])) $d .= '?pid='.$c['pid'];
 if ($d>'/') db_delete_where('page_cache',"`name` LIKE '%$d%'");
 }
 

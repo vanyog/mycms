@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 function set_self_query_var($n, $v, $a = true){
 $r = $_GET;
 $r[$n] = $v;
+ksort($r);
 $rz = http_build_query($r);
 if ($a) $rz = str_replace('&','&amp;',$rz);
 return $_SERVER['PHP_SELF'].'?'.$rz;

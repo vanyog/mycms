@@ -25,6 +25,7 @@ function pagestat(){
 global $page_data, $can_edit;
 if ( !(show_adm_links() || $can_edit) ) return '';
 $pth = current_pth(__FILE__);
-return 'Total '.$page_data['tcount'].' Today '.$page_data['dcount'].' See <a href="'.$pth.'page_stats.php">page stats</a>';}
+return 'Total '.$page_data['tcount'].' Today '.$page_data['dcount'].' See <a href="'.$pth.'page_stats.php?pid='.
+$page_data['ID'].'">page stats</a>';}
 
 ?>

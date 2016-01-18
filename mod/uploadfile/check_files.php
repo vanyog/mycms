@@ -37,16 +37,18 @@ foreach($da as $d){
     // Ако е празно се минава към следващия файл
 //    if (!$cn) break;
     // Линк към страницата
-    $lk = '<a href="'.$in.$d['pid'].'">'.$d['pid'].'</a>';
+    $lk = '<a href="'.$in.$d['pid'].'" target="_blank">'.$d['pid'].'</a>';
     // Използва се
     $y = false;
     foreach($languages as $language=>$c){
       // Съдържание на страницата на език $language
       $ct = db_table_field('text', 'content', "`name`='$cn' AND `language`='$language'");
-      $y = $ct && (strpos($ct, '!--$$_UPLOADFILE_'.$d['name'])!==false);
+      $p = strpos($ct, '!--$$_UPLOADFILE_'.$d['name']);
+      $y = $y || ($p!==false);
+ //     if ($y) die(strlen($ct)." $ct $language");
     }
-//    if ($y) 
-        echo 'Not in use - '.$lk.' '.$d['name']." ".$language."<br>";
+    if (!$y) 
+        echo $d['name'].' on page '.$lk." not used. ".$d['filename']."<br>";
   }
 }
 

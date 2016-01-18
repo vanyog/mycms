@@ -23,7 +23,7 @@ include($idir."conf_paths.php");
 include_once($idir."lib/usedatabase.php");
 include_once($idir."lib/f_page_cache.php");
 
-
+print_r($_POST); die;
 $t = ''; $r = 0; $gtc = false;
 $q1 = "UPDATE "; $q2 = ' SET'; $q3 = ' WHERE ID='; 
 foreach($_POST as $k => $v){
@@ -35,8 +35,8 @@ case 'date_time_2': $q2 .= " `$k`=NOW(),"; break;
 case 'go_to_close': if (1*$v) $gtc = true; break;
 default:
   $v1 =  str_replace(chr(60).' !--$$_',chr(60).'!--$$_',$v);
-  $v1 =  str_replace('&lt; !--$$_',chr(60).'!--$$_',$v1);
-  $v1 =  str_replace('_$$--&gt;','_$$--'.chr(62),$v1);
+  $v1 =  str_replace('<!--$$_',chr(60).'!--$$_',$v1);
+  $v1 =  str_replace('_$$-->','_$$--'.chr(62),$v1);
   $q2 .= " `$k`='".addslashes($v1)."',";
 }
 }
@@ -47,7 +47,7 @@ mysqli_query($db_link,$q);
 
 session_start();
 
-if ($gtc){
+if ($gtc){ print_r($_SESSION['http_referer']); die;
   purge_page_cache($_SESSION['http_referer']);
   header('Location: '.$_SESSION['http_referer']);
 }

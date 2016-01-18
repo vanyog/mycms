@@ -40,6 +40,14 @@ if ($i==1){
  $ss[0] = ' ';
 }
 
+// Проверка за наличие на img опция
+$add_image = false;
+$i = preg_match_all('/,img/', $n, $m);
+if ($i){
+  $add_image = true;
+  $n = str_replace(',img','',$n);
+}
+
 // Разпадане на параметъра $a на: име, номер на страница и опция за показване на текста
 $na = explode(',',$n);
 
@@ -102,7 +110,7 @@ else {
   else { // Показване на картинка или хипервръзка към файла
     $e = strtolower(pathinfo($f, PATHINFO_EXTENSION));
     if (in_array($e, $imgs)) $rz .= '<img src="'.$f."\"$ss alt=\"".stripslashes($fr['text']).'">';
-    else $rz .= '<a href="'.$f."\"$ss>".stripslashes($fr['text']).'</a>';
+    else $rz .= '<a href="'.$f."\"$ss>".upload_file_addimage($add_image,$e).stripslashes($fr['text']).'</a>';
   }
   $fid = $fr['ID'];
 }
@@ -117,6 +125,14 @@ if (in_edit_mode() || can_upload()){
 }
 
 return $rz;
+}
+
+// Добавяне на картинка ако $add_image==true;
+function upload_file_addimage($add_image,$e){
+  if (!$add_image) return '';
+  $p = current_pth(__FILE__).'images/'.$e.'.png';
+  $a = $_SERVER['DOCUMENT_ROOT'].$p;
+  if (file_exists($a)) return '<img alt="'.$e.'" src="'.$p.'"> ';
 }
 
 // Проверяване дали потребителят има право да качва, сменя и изтрива файлове

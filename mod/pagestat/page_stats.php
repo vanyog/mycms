@@ -17,9 +17,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Показва натрупаната в таблица hostory статистика за посещаването на страниците.
+// Показва натрупаната в таблица visit_hostory статистика за посещаването на страниците.
 // Ако има параметър $_GET['days'] показва статистиката от последните, зададени с този параметър брой дни.
 // $_GET['pid'] - статистиката по дати на страницата с този номер
+// $_GET['date'] - статистиката за определена дата
 
 
 error_reporting(E_ALL); ini_set('display_errors',1);
@@ -52,6 +53,9 @@ $page_content = "<p>От: $d1 до: $d2</p>\n";
 if (isset($_GET['pid'])){
   $pid = 1*$_GET['pid'];
   $page_content .= one_page($pid, $w);
+}
+else if (isset($_GET['date'])){
+  $page_content = one_day($_GET['date']);
 }
 else $page_content .= all_pages($w);
 
@@ -100,18 +104,41 @@ return $page_content;
 // Показва таблица за една страница
 
 function one_page($i, $w){
+global $language, $main_index;
 // Четене на записите за страница с номер $i
 $da = db_select_m('*', 'visit_history', "`page_id`=$i AND $w ORDER BY `date` DESC");
 $min = db_table_field('MIN(`count`)', 'visit_history', "`page_id`=$i AND $w");
 $max = db_table_field('MAX(`count`)', 'visit_history', "`page_id`=$i AND $w");
 $m = 800;
-$rz = "$min $max".'<table>
+$tn = db_table_field('title', 'pages', "`ID`=$i");
+$tn = db_table_field('text', 'content', "`name`='$tn' AND `language`='$language'");
+$rz = "<p>Page: <a href=\"$main_index?pid=$i\">$tn</a></p>".'
+<p>See: <a href="page_stats.php">All pages statistics</a></p>
+'."Minimum visit count: $min, Maximum: $max".'
+<table>
 <tr><th>Дата</th><th>Посещения</th></tr>';
 foreach($da as $d){
   $a = $d['count']/$max * $m;
-  $rz .= '<tr><td>'.$d['date'].
+  $t = date("N",strtotime($d['date']));
+  $rz .= '<tr><td><a href="page_stats.php?date='.$d['date'].'">'.$d['date']."</a> $t".
          '</td><td><div style="background-color:red;width:'.$a.'px;">'.$d['count'].'</div></td>';
   $rz .= "</tr>\n";
+}
+$rz .= '</table>';
+return $rz;
+}
+
+// 
+// Показване на таблица за една дата
+
+function one_day($d){
+$rz = "<p>Visit statistics for: $d</p>";
+// Четене на данните за дата $d
+$dt = db_select_m('*', 'visit_history', "`date`='$d' ORDER BY `count` DESC");
+$rz .= '<table>
+<tr><th>Visits</th><th>Page</th></tr>';
+foreach($dt as $t){
+  $rz .= "\n<tr><td>".$t['count']."</td><td>".$t['page_id']."</td></tr>";
 }
 $rz .= '</table>';
 return $rz;
