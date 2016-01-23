@@ -20,14 +20,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Филтър links открива уеб адреси и ги превръща в активни линкове
 
 function links($t){
-$pt = '/^(?!href=")(?:https*:\/\/|www\.)[a-zA-Z\.\/\-0-9_?=&;%+#]*/is';
+$pt = '/(?:[^"]https*:\/\/|[^\/]www\.|[^"]https*:\/\/www\.)[a-zA-Z\.\/\-0-9_?=&;%+#]*/is';
 return preg_replace_callback($pt,'link_this',$t);
 }
 
 function link_this($a){
-$u = parse_url($a[0]);
+$h = substr($a[0],1);
+$u = parse_url($h);
 if (!isset($u['host'])){ $u['host'] = $u['path']; $a[0] = 'http://'.$a[0]; }
-return '<a href="'.$a[0].'" target="_blank">'.$u['host'].'</a>';
+return $a[0][0].'<a href="'.$h.'" target="_blank">'.$u['host'].'</a>';
 }
 
 ?>
