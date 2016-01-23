@@ -18,18 +18,26 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Скрипт за създаване на таблици в базата данни за нуждите на системата или модулите.
-// SQL заявките за създаване и вмъкване на данни в таблиците са във файл tables.sql в 
-// директория manage или в директорията на съответния модул mod/имеНаМодул.
-// $_GET['m'] е името на модула, а ако не е зададено, се създава файл conf_database.php 
-// и се изпълняват заявките от manage/table.sql
+// Скрипт за създаване на таблици в базата данни за нуждите на системата или на модулите.
+// SQL заявките за създаване и вмъкване на данни в таблиците са във файл tables.sql -
+// за системата - в директория manage
+// за модулите - в директорията на съответния модул mod/имеНаМодул.
+// $_GET['m'] е името на модула.
+// $_GET['c'] е пълен път до директория с файл conf_database.php. Използва се когато една и съща
+// система се изпобзва и в поддомейните на сайт.
+// Ако не е зададен $_GET параметър, се създава файл conf_database.php
 
 error_reporting(E_ALL); ini_set('display_errors',1);
 
 include('conf_manage.php');
 
-// Ако няма conf_database.php файл, показване на форма за създаването му
-if (!file_exists($idir.'conf_database.php')) create_conf_database();
+if (isset($_GET['c'])){
+   $ddir = $_GET['c'];
+}
+else {
+   // Ако няма conf_database.php файл, показване на форма за създаването му
+   if (!file_exists($idir.'conf_database.php')) create_conf_database();
+}
 
 include($idir.'conf_paths.php');
 
@@ -71,17 +79,17 @@ echo '<p>Success</p>
 // да се запишат във файл conf_database.php.
 //
 function create_conf_database(){
-global $idir;
+global $idir, $ddir;
 include_once($idir.'lib/o_form.php');
 // Ако файл conf_database.php вече съществува
-if (file_exists($idir.'conf_database.php')){
+if (file_exists($ddir.'conf_database.php')){
   // Ако вече е отговорено да се продължи
   if (isset($_POST['continue'])&&($_POST['continue']=='yes')) return;
   // Показва се бутон за продължаване
   $f = new HTMLForm('pform'); $f->astable = false;
   $i = new FormInput('','continue','hidden','yes'); $f->add_input($i);
   $i = new FormInput('Click the button to ','','submit','continue'); $f->add_input($i);
-  echo '<p>File '.$idir.'<strong>conf_database.php</strong>'.' exists.</p>
+  echo '<p>File '.$ddir.'<strong>conf_database.php</strong>'.' exists.</p>
   '.$f->html().'
   <p>Or remove it to start a new instalation.</p>';
   die;
