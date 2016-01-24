@@ -2,6 +2,7 @@ body { font-family: arial, sans-serif; }
 code { padding:0; margin: 0; }
 pre  { padding:0; margin: 0; }
 td { padding: 0 5px 0 5px; }
+th { text-align:right; }
 a { text-decoration:none; }
 div { padding:5px; }
 .red { color:red; }
@@ -19,13 +20,8 @@ div { padding:5px; }
   z-index:100;
 }
 
-#page_menu{
-  width:170px;
-}
-
-#page_menu a{
-  display:block;
-}
+#page_menu { border-bottom:solid 1px black; width:170px; }
+#page_menu a { display:block; }
 
 #user_frame a{ color:white; }
 
