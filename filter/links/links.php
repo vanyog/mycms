@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Филтър links открива уеб адреси и ги превръща в активни линкове
 
 function links($t){
-$pt = '/(?:[^"]https*:\/\/|[^\/]www\.|[^"]https*:\/\/www\.)[a-zA-Z\.\/\-0-9_?=&;%+#]*/is';
+$pt = '/(?:[^"]https*:\/\/|[^\/]www\.|[^"]https*:\/\/www\.)[a-zA-Z\.\/\-0-9_?=&;%+#~]*/is';
 return preg_replace_callback($pt,'link_this',$t);
 }
 
