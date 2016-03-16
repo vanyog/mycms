@@ -41,7 +41,7 @@ function translate($n, $elink=true){
 // Статична променлива за кеш
 static $string = array();
 // Ако стрингът вече е съставен се връща от кеша
-if (isset($string[$n])) return $string[$n];
+if (isset($string[$n]) && !in_edit_mode()) return $string[$n];
 
 global $language, $pth, $adm_pth, $default_language, $content_date_time, $content_create_time, $can_edit, $page_data;
 
@@ -49,7 +49,7 @@ $content_date_time = '';
 $content_create_time = '';
 
 $el = ''; // Линк за редактиране. Показва се ако сайтът е в режим на редактиране.
-if (in_edit_mode()){
+if (in_edit_mode() && $elink){
   $id = db_select_1('ID','content',"name='$n' AND language='$language'");
   if ($can_edit) $h = $pth.'mod/usermenu/edit_text.php?i='.$id['ID'].'&amp;pid='.$page_data['ID'];
   else $h = $adm_pth.'edit_record.php?t=content&amp;r='.$id['ID'];

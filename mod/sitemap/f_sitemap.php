@@ -18,8 +18,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // Функцията sitemap($i) генерира html код за показване карта на сайта.
-// $i е номера на менюто на страницата, от която се разклонява картата.
-// Функцията извиква сама себе си (рекурсия) за да получи карти на подменютата.
+// $i е номера на менюто на страницата, от която се разклонява картата,
+// но може да съдържа и втори, отделен с | параметър,
+// който се задава като id атрибут на <div> тага, в който се представя картата.
+// Когато втори параметър не е зададен id="site_map".
 
 include_once($idir.'lib/f_db_table_field.php');
 
@@ -27,13 +29,15 @@ $page_passed = array(); // Номера на менюта, които вече са обработени,
                         // използва са за да не се получи зацикляне
 $map_lavel = 0; // Ниво на рекурсията
 $i_root    = 0; // Номер на входното меню
+$id_pre    = ''; // Представка, с която започват id атрибутите на <div> елементите
 
 function sitemap($a){
-global $page_passed, $map_lavel, $i_root;
+global $page_passed, $map_lavel, $i_root, $id_pre;
 $page_passed = array();
 $map_lavel = 0;
 $i_root    = 0;
 $ar = explode('|',$a);
+$id_pre = 'map'.$ar[0];
 $id = 'site_map';
 if (isset($ar[1])) $id = $ar[1];
 return '<div id="'.$id.'">'."\n".sitemap_rec($ar[0])."
@@ -41,7 +45,7 @@ return '<div id="'.$id.'">'."\n".sitemap_rec($ar[0])."
 }
 
 function sitemap_rec($i){
-global $pth, $page_passed, $map_lavel, $i_root, $ind_fl;
+global $pth, $page_passed, $map_lavel, $i_root, $ind_fl, $id_pre;
 
 $page_passed[] = $i;
 
@@ -59,7 +63,7 @@ $index = db_table_field('index_page','menu_tree',"`group`=$i");
 
 // Цикъл за обработка на всяка хипервръзка от менюто $i
 foreach($mi as $m){
-  $rz .= "<div id=\"sml_$map_lavel"."_$count\">";
+  $rz .= "<div id=\"$id_pre"."_$map_lavel"."_$count\">";
   
   // Съставяне на хипервръзка за картата
   $pid = 1*$m['link'];
