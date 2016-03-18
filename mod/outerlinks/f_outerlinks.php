@@ -39,8 +39,16 @@ $cc = db_table_field('COUNT(*)','outer_links',"`link`=''");
 $lid = 0;
 if (isset($_GET['lid'])) $lid = 1*$_GET['lid'];
 
-// Начало - Показване на общите бройки
-$rz = '<div id="outer_links">'.start_edit_form().'
+// Път към началната страница
+$tr = link_tree($lid);
+
+$rz = '';
+
+// Ако сме на началната страница - добавяне на начално съобщение
+if (!$tr) $rz = translate('outerlinks_homemessage');
+
+// Показване на бройките
+$rz .= '<div id="outer_links">'.start_edit_form().'
 <p class="counts">'.translate('outerlinks_totalcount')." $lc ".translate('outerlinks_in')." $cc ".translate('outerlinks_categories')."</p>\n";
 
 // Ако е извършено търсене се показва резултата от търсенето
@@ -65,8 +73,9 @@ if (isset($l['link']) && $l['link']>''){
  header('Location: '.$l['link']);
 }
 
-// Път към началната страница
-$rz .= link_tree($lid);
+// Добавяне пътя към началната страница
+if ($tr) $rz .= $tr;
+else $rz .="\n";
 
 // Четене и показване на (под)категориите
 $ca = db_select_m('*','outer_links',"`up`=$lid AND `link`='' ORDER BY `place`");
@@ -84,7 +93,7 @@ foreach($la as $l){
  $rz .= '<p>'.edit_radio($l['ID'],$l['place']).'<img src="'.$p.'go.gif" alt=""> <a href="'.
         set_self_query_var('lid',$l['ID']).'" title="'.$l['link'].
         '" target="_blank">'.stripslashes($l['Title'])."</a>";
- if (isset($c['Comment']) && $l['Comment']) $rz .= ' - '.stripslashes($l['Comment']);
+ if (isset($l['Comment']) && $l['Comment']) $rz .= ' - '.stripslashes($l['Comment']);
  $rz .= "</p>\n";
 }
 
@@ -98,7 +107,7 @@ return $rz;
 // Показване пътя до началната страница
 // ------------------------------------
 function link_tree($lid){
-if (!$lid) return "\n";
+if (!$lid) return "";
 $rz = ""; $lk = ''; $cm = '';
 do {
   $l = db_select_1('*','outer_links',"`ID`=$lid");
