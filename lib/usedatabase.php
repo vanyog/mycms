@@ -25,15 +25,15 @@ if (!isset($ddir) || !file_exists($ddir."conf_database.php")) die("Database is n
 
 include_once($ddir."conf_database.php");
 
-$db_link = get_db_link($user, $password, $database);
+$db_link = get_db_link($user, $password, $database, $colation);
 $db_req_count = 0;
 
-function get_db_link($user, $password, $database){
+function get_db_link($user, $password, $database, $colation = 'cp1251'){
 $l = mysqli_connect("localhost",$user,$password,$database);
 if (!$l){
  echo '<p>Не се получава връзка с MySQL сървъра!'; die;
 }
-mysqli_query($l,"SET NAMES 'cp1251';");
+mysqli_query($l,"SET NAMES '$colation';");
 return $l;
 }
 

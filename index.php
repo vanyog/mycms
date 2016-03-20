@@ -26,8 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 error_reporting(E_ALL); ini_set('display_errors',1);
 
-header("Content-Type: text/html; charset=windows-1251");
-
 if (phpversion()>'5.0') date_default_timezone_set("Europe/Sofia");
 
 // Път до директорията на системата
@@ -41,7 +39,7 @@ if (
   !file_exists($idir.'conf_database.php')
   || !file_exists($idir.'conf_paths.php')
 ) 
-die('Системата все още не е правилно инсталирана и конфигурирана. Вижте файл <a href="http://vanyog.com/_new/index.php?pid=91" target="_blank">USAGE.txt</a>.');
+die('The system is not propperly installed. See <a href="http://vanyog.com/_new/index.php?pid=91" target="_blank">USAGE.txt</a> file.');
 
 $page_header = ''; // Добавки към хедъра на страницата
 
@@ -60,6 +58,7 @@ include_once($idir.'lib/f_parse_template.php');
 include_once($idir.'lib/translation.php');
 include_once($idir.'lib/f_page_cache.php');
 
+header("Content-Type: text/html; charset=$site_encoding");
 
 // Адрес на индексния файл
 $ind_fl = $_SERVER['PHP_SELF'];

@@ -69,6 +69,14 @@ if ($mod_pth[0]!='/') $mod_pth = $pth.$mod_pth;
 // Абсолютна директория до директорията с модули
 $mod_apth = $_SERVER['DOCUMENT_ROOT'].$mod_pth;
 
+// Кодировка на сайта
+$site_encoding = 'windows-1251';
+switch ($colation){
+case 'cp1251': $site_encoding = 'windows-1251'; break;
+case 'utf8': $site_encoding = 'UTF-8'; break;
+default: die("Unknown colation $colation in conf_paths.php");
+}
+
 // Тайни стойности, на които се базира сигурността на административния достъп до сайта:
 
 // Име на променлива, която се изпраща с GET за да се покаже менюто за администриране 
