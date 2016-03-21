@@ -75,7 +75,7 @@ if (!$dont_translate) foreach($ls as $l) if ($l!=$language){
   }
   $r .= "</a>\n";
 }
-return "\n<!--Флагчета за смяна на езика-->\n$r<!--Край на флагчетата-->\n";
+return "\n<!--Language flags-->\n$r<!--End of language flags-->\n";
 }
 
 ?>
