@@ -40,6 +40,7 @@ if (!isset($page_content)) $page_content = 'This page is still empty.';
 if (!isset($page_title)) $page_title = '';
 if (!isset($page_header)) $page_header = '';
 if (!isset($body_adds)) $body_adds = '';
+if (!isset($site_encoding)) $site_encoding = 'windows-1251';
 
 if (!isset($pth)) $pth = '../';
 

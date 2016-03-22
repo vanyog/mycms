@@ -17,19 +17,19 @@ $rank_addtowhile2 = '';
 function ranking(){
 $limit = 3; // Брой страници от всеки тип, които се добавят
 return '<div id="page_ranking">
-<h2>'.translate('page_ranking_title').'</h2>
+<h2>'.translate('ranking_title').'</h2>
 <table>
 
-<tr><td class="n">'.translate('page_ranking_new').'</td>
+<tr><td class="n">'.translate('ranking_new').'</td>
 <td>'.new_page_links($limit).'</td></tr>
 
-<tr><td class="n">'.translate('page_ranking_updated').'</td>
+<tr><td class="n">'.translate('ranking_updated').'</td>
 <td>'.updated_page_links($limit).'</td></tr>
 
-<tr><td class="n">'.translate('page_ranking_max_visidet').'</td>
+<tr><td class="n">'.translate('ranking_max_visidet').'</td>
 <td>'.max_visited_page_links($limit).'</td></tr>
 
-<tr><td class="n">'.translate('page_ranking_min_visited').'</td>
+<tr><td class="n">'.translate('ranking_min_visited').'</td>
 <td>'.min_visited_page_links($limit).'</td></tr>
 
 </table>
