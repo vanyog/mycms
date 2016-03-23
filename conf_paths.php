@@ -60,7 +60,7 @@ $adm_apth = $_SERVER['DOCUMENT_ROOT'].$adm_pth;
 $phpmyadmin = $adm_pth.'db/index.php';
 
 // Път до ckeditor
-$ckpth = dirname(stored_value('ckeditor_file',$adm_pth.'ckeditor')).'/';
+$ckpth = dirname(stored_value('ckeditor_file',$adm_pth.'ckeditor/ckeditor.js')).'/';
 
 // Директория с модули
 $mod_pth = stored_value('mod_path',$pth.'mod').'/';

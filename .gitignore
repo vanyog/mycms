@@ -4,3 +4,4 @@ mod/bgdic
 _*
 conf_database.php
 mod/uploadfile/conf_uploadfile.php
+manage/ckeditor

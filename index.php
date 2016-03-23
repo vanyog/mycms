@@ -57,6 +57,7 @@ include_once($idir.'lib/f_db_select_m.php');
 include_once($idir.'lib/f_parse_template.php');
 include_once($idir.'lib/translation.php');
 include_once($idir.'lib/f_page_cache.php');
+include_once($idir.'lib/f_db_table_status.php');
 
 header("Content-Type: text/html; charset=$site_encoding");
 
