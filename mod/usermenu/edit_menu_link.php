@@ -65,7 +65,7 @@ $f = new HTMLform('mform');
 $f -> add_input( new FormInput('','ID','hidden',$m['ID']) );
 $f -> add_input( new FormInput(translate('usermenu_menugroup'),'group','text',$m['group']) );
 $f -> add_input( new FormInput(translate('usermenu_menupos'),'place','text',$m['place']) );
-$f -> add_input( new FormInput(translate('usermenu_menutext'),'text','text',$tx) );
+$f -> add_input( new FormInput(translate('usermenu_menutext'),'text','text',str_replace('"','&quot;', $tx)) );
 $f -> add_input( new FormInput(translate('usermenu_menulinkdb'),'link','text',$m['link']) );
 $f -> add_input( new FormInput('','','submit',translate('saveData')) );
 

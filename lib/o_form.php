@@ -145,14 +145,14 @@ $this->cols = $cl;
 $this->rows = $r;
 $this->text = str_replace(chr(60).'!--$$_',chr(60).' !--$$_',$t);
 // Домавяне на бутон за зареждане на CKEditor.
-$cka = $_SERVER['DOCUMENT_ROOT'].$ckpth;
+$cka = $_SERVER['DOCUMENT_ROOT'].$ckpth.'ckeditor.js';
 if (file_exists($cka)){
-  $sc = "   <script type=\"text/javascript\" src=\"$ckpth\"></script>\n";
+  $sc = '   <script type="text/javascript" src="'.$ckpth.'ckeditor.js"></script>'."\n";
   if (strpos($page_header,$sc)===false) $page_header .= $sc;
   $this->ckbutton = '<input type="button" value="CKEditor" onclick="CKEDITOR.replace(\''.$this->name.'\');"><br>';
 }
 else {
-  $sc = '   <script src="//cdn.ckeditor.com/4.5.7/standard/ckeditor.js"></script>'."\n";
+  $sc = '   <script src="//cdn.ckeditor.com/4.5.7/full/ckeditor.js"></script>'."\n";
   if (strpos($page_header,$sc)===false) $page_header .= $sc;
   $this->ckbutton = '<input type="button" value="CKEditor" onclick="CKEDITOR.replace(\''.$this->name.'\');"><br>';
 }

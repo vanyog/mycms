@@ -199,9 +199,9 @@ return $rz;
 // Функция, която коригира елементите --$$_ _$$-- елементите
 
 function element_correction($v1){
- $v1 = str_replace(chr(60).' !--$$_',chr(60).'!--$$_',$v1); 
- $v1 = str_replace(chr(38).'lt; !--$$_',chr(60).'!--$$_',$v1);
- $v1 = str_replace('_$$--'.chr(38).'gt;','_$$--'.chr(62),$v1);
+ $v1 = str_replace( chr(60).' !--$$_',     chr(60).'!--$$_', $v1); 
+ $v1 = str_replace( chr(38).'lt; !--$$_',  chr(60).'!--$$_', $v1);
+ $v1 = str_replace( '_$$--'.chr(38).'gt;', '_$$--'.chr(62),  $v1);
  return $v1;
 }
 
