@@ -69,7 +69,7 @@ foreach($d as $m){
 if (in_edit_mode()){
   $ni = db_table_field('MAX(`ID`)','menu_items','1')+1;
   $rz .= "id $i ".'<a href="'.$adm_pth.'new_record.php?t=menu_items&group='.$i.'&link='.$page_id.
-         '&name=p'.$ni.'_link">New</a> '."\n";
+         '&name=p'.$ni.'_link" style="font-size:80%">New Item</a> '."\n";
 }
 if ($rz) $rz = "\n$sm<div id=\"$id\">\n$rz</div>\n";
 return $rz;

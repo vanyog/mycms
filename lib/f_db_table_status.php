@@ -19,13 +19,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 include_once($idir."lib/usedatabase.php");
 
-function db_table_status($t){
+function db_table_status($t, $k = ''){
 global $db_link,$tn_prefix, $db_req_count;
 $q = "SHOW TABLE STATUS WHERE Name = '$tn_prefix"."$t'";
 $r = mysqli_query($db_link, $q);
 $db_req_count++;
 $rc = mysqli_fetch_assoc($r);
-return $rc;
+if ($k) return $rc[$k];
+else return $rc;
 }
 
 ?>

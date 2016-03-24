@@ -138,17 +138,21 @@ public $js = '';
 public $ckbutton = '';
 
 function __construct($c,$n,$cl=100,$r=10,$t=''){
-global $mod_pth, $page_header;
+global $mod_pth, $page_header, $ckpth;
 $this->caption = $c;
 $this->name = $n;
 $this->cols = $cl;
 $this->rows = $r;
 $this->text = str_replace(chr(60).'!--$$_',chr(60).' !--$$_',$t);
 // Домавяне на бутон за зареждане на CKEditor.
-$ckp = stored_value('ckeditor_file',$mod_pth.'ckeditor/ckeditor.js');
-$cka = $_SERVER['DOCUMENT_ROOT'].$ckp;
+$cka = $_SERVER['DOCUMENT_ROOT'].$ckpth;
 if (file_exists($cka)){
-  $sc = "   <script type=\"text/javascript\" src=\"$ckp\"></script>\n";
+  $sc = "   <script type=\"text/javascript\" src=\"$ckpth\"></script>\n";
+  if (strpos($page_header,$sc)===false) $page_header .= $sc;
+  $this->ckbutton = '<input type="button" value="CKEditor" onclick="CKEDITOR.replace(\''.$this->name.'\');"><br>';
+}
+else {
+  $sc = '   <script src="//cdn.ckeditor.com/4.5.7/standard/ckeditor.js"></script>'."\n";
   if (strpos($page_header,$sc)===false) $page_header .= $sc;
   $this->ckbutton = '<input type="button" value="CKEditor" onclick="CKEDITOR.replace(\''.$this->name.'\');"><br>';
 }
