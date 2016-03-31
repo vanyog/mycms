@@ -34,7 +34,7 @@ if (!file_exists($fln)) $fln = $apth.'mod/'.$_GET['m'].'/README.txt';
 //$cnt = $fln;
 $cnt = nl2br( htmlspecialchars( file_get_contents($fln), ENT_COMPAT, 'cp1251' ) );
 
-$page_content = '<div style="width:800px; margin:0 auto;">'.$cnt.'</div>';
+$page_content = '<div style="width:800px; margin:0 auto;">'.iconv('windows-1251', $site_encoding, $cnt).'</div>';
 
 include($idir.'lib/build_page.php');
 

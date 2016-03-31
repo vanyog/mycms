@@ -152,7 +152,7 @@ return '<span class="user">'.$_SESSION['user_username'].
 function get_user($a,$c){
 // Ако формата за влизане вече е попълнена, се обработват изпратените с нея данни
 if (isset($_POST['username'])){ process_user(); return ''; }
-global $idir;
+global $idir, $site_encoding;
 // Заглавие на страницата за влизане/създаване на потребител
 if (!$c && isset($_GET['user']) && ($_GET['user']=='newreg')) $page_title = translate('user_newreg');
 else $page_title = translate('user_login');

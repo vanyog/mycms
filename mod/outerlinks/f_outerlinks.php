@@ -37,7 +37,11 @@ $cc = db_table_field('COUNT(*)','outer_links',"`link`=''");
 
 // Номер на линка, за отваряне
 $lid = 0;
-if (isset($_GET['lid'])) $lid = 1*$_GET['lid'];
+if (isset($_GET['lid'])) switch (strtolower($_GET['lid'])){
+// Показване на всички връзки в разгърнат вид
+case 'all': return '<div id="outer_links">'."\n".outerlenks_all(0, '')."</div>\n"; break;
+default: $lid = 1*$_GET['lid'];
+}
 
 // Път към началната страница
 $tr = link_tree($lid);
@@ -78,7 +82,8 @@ if ($tr) $rz .= $tr;
 else $rz .="\n";
 
 // Четене и показване на (под)категориите
-$ca = db_select_m('*','outer_links',"`up`=$lid AND `link`='' ORDER BY `place`");
+$ca = db_select_m('*','outer_links',"`up`=$lid AND (`link`='' OR `link` IS NULL) ORDER BY `place`");
+//print_r($ca); die;
 $p = current_pth(__FILE__);
 foreach($ca as $c){// print_r($c); die;
  $rz .= '<p>'.edit_radio($c['ID'],$c['place']).'<img src="'.$p.'folder.gif" alt=""> <a href="'.
@@ -115,7 +120,7 @@ do {
   if ($rz) $rz = " > ".$rz;
   if ($lk) $rz = '<a href="'.$lk.'">'.$l['Title']."</a>".$rz;
   else{
-     $rz = $l['Title'].$rz;
+     $rz = '<span>'.$l['Title'].'</span>'.$rz;
      $cm = '';
      if (isset($l['Comment'])) $cm = $l['Comment'];
   }
@@ -263,6 +268,29 @@ else {
 //print_r($q); die;
 mysqli_query($db_link,$q);
 
+}
+
+//
+// Показване на всички връзки в разгърнат вид
+// ------------------------------------------
+function outerlenks_all($up, $tx, $lv = 1){
+$rz = '';
+$dt = db_select_m('*', 'outer_links', "`up`=$up AND (`link`>'') ORDER BY `place`");
+foreach($dt as $d){
+  $rz .= '<p><a href="'.
+  set_self_query_var('lid',$d['ID']).'" title="'.$d['link'].
+  '" target="_blank">'.$d['Title']."</a>";
+  if ($d['Comment']) $rz .= ' - '.$d['Comment'];
+  $rz .= "</p>\n";
+}
+$da = db_select_m('*', 'outer_links', "`up`=$up AND (`link`='' OR `link` IS NULL) ORDER BY `place`");
+foreach($da as $d){
+  $t = '<h'.($lv+1).'>'.$d['Title'].'</h'.($lv+1).">\n";
+  if ($d['Comment']) $t .= '<p>'.$d['Comment']."</p>\n";
+  $rz .= outerlenks_all( $d['ID'], $t, $lv + 1 );
+}
+$rz = "<div>\n$tx$rz</div>\n";
+return $rz;
 }
 
 ?>

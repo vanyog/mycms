@@ -15,9 +15,11 @@ CREATE TABLE IF NOT EXISTS `sitesearch_words` (
 -- --------------------------------------------------------
 INSERT INTO `content` (`name`,`nolink`,`date_time_1`,`date_time_2`,`language`,`text`) VALUES
 ('sitesearch_clear',1,NOW(),NOW(),'bg','Почистване'),
+('sitesearch_clear',1,NOW(),NOW(),'en','Clear'),
 ('sitesearch_count',1,NOW(),NOW(),'bg','Намерени страници'),
 ('sitesearch_count',1,NOW(),NOW(),'en','Pages found'),
 ('sitesearch_last',1,NOW(),NOW(),'bg','Последен резултат'),
+('sitesearch_last',1,NOW(),NOW(),'en','Last result'),
 ('sitesearch_notext',1,NOW(),NOW(),'bg','Не е въведен текст за търсене.'),
 ('sitesearch_notext',1,NOW(),NOW(),'en','Missing text to search for.'),
 ('sitesearch_notfound',1,NOW(),NOW(),'bg','Не е намерено срещане на думата/думите:'),

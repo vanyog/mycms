@@ -186,12 +186,12 @@ $word_pattern = '';
 function colorize($cnt){
 if (isset($_SESSION['text_to_search'])){
   // Страници, на които не се прави оцветяване
-  $a = stored_value('sitesearch_nocoleron');
+  $a = stored_value('sitesearch_nocoleron', '$nocolor = array();');
   if ($a) eval($a);
   global $page_id, $word_pattern;
   // Дали е възникнала грешка в preg_replace
   $GLOBALS['preg_error']=false;
-  if (!in_array($page_id,$nocolor)){
+  if (!in_array($page_id, $nocolor)){
     $ca = explode('<body',$cnt);
     $wa = array_unique(explode(' ',$_SESSION['text_to_search']));
     foreach($wa as $w){

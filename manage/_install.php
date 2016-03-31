@@ -49,7 +49,7 @@ if (isset($_GET['m'])) $p = $_SERVER['DOCUMENT_ROOT'].$mod_pth.$_GET['m']."/$p";
 // Ако не е изпратено име на модул, се инсталира самата система
 else create_conf_database();
 
-header("Content-Type: text/html; charset=windows-1251");
+header("Content-Type: text/html; charset=$site_encoding");
 
 // Ако .sql файл не е в директория $mod_pth се проверява в директория 'mod'
 if (!file_exists($p)){
@@ -57,7 +57,7 @@ if (!file_exists($p)){
   if (!file_exists($p)) die("$p file not found");
 }
 
-$fc = file_get_contents($p);
+$fc = iconv('windows-1251', $site_encoding, file_get_contents($p));
 
 $fc = str_replace('CREATE TABLE IF NOT EXISTS `',   "CREATE TABLE IF NOT EXISTS `$tn_prefix",$fc);
 

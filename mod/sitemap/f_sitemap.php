@@ -45,7 +45,7 @@ return '<div id="'.$id.'">'."\n".sitemap_rec($ar[0])."
 }
 
 function sitemap_rec($i){
-global $pth, $page_passed, $map_lavel, $i_root, $ind_fl, $id_pre;
+global $pth, $page_passed, $map_lavel, $i_root, $ind_fl, $id_pre, $page_id;
 
 $page_passed[] = $i;
 
@@ -72,7 +72,7 @@ foreach($mi as $m){
     $lk = $m['link'];
     if ($pid) $lk = $ind_fl.'?pid='.$pid;
 //    $rz .= '<span style="padding-left:'.$ind.'"><a href="'.$lk.'">'.translate($m['name']).'</a></span><br>'."\n";
-    $rz .= '<a href="'.$lk.'">'.translate($m['name']).'</a><br>'."\n";
+    if ($pid!=$page_id) $rz .= '<a href="'.$lk.'">'.translate($m['name']).'</a><br>'."\n";
     $count++;
   }
 
