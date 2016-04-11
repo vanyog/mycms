@@ -28,7 +28,8 @@ $na = array('admin_path', 'adm_name', 'adm_value', 'edit_name', 'edit_value');
 
 // ѕром€на на стойностите с имена от масива $na
 foreach($na as $i=>$n){
-  $v = rand_string(4);
+  $sl = stored_value('security_level', 6);
+  $v = rand_string($sl);
   if (!$i){
     $v[0] = '_';
     echo "Rename 'manage' directory to '$v' and after that <a href=\"$pth"."$v\">click here</a>";

@@ -32,6 +32,7 @@ $ddir = $idir;
 
 include($idir.'lib/f_db_select_m.php');
 include($idir.'lib/f_db_table_field.php');
+include($idir.'lib/f_encode.php');
 include($idir.'lib/translation.php');
 
 $d = 0; // Брой на последните дни, за които се показва статистика
@@ -46,9 +47,9 @@ if ($d) $w = "`date`>'".date('Y-m-d', strtotime($d2)-$d*60*60*24)."'";
 $d1 = db_table_field('MIN(`date`)', 'visit_history', $w);
 
 // Сглобяване на страницата
-$page_title = 'Статистика за посещението на страниците';
+$page_title = encode('Статистика за посещението на страниците');
 
-$page_content = "<p>От: $d1 до: $d2</p>\n";
+$page_content = encode("<p>От: $d1 до: $d2</p>\n");
 
 if (isset($_GET['pid'])){
   $pid = 1*$_GET['pid'];
@@ -78,7 +79,7 @@ foreach($da as $d){ $dt[$d['page_id']] = $d['sum(`count`)']; }
 arsort($dt);
 
 $page_content = '<table style="border-bottom:solid 1px black;">
-<tr><th>Посещения</th><th>ID</th><th>Страница</th></tr>';
+<tr><th>'.encode('Посещения').'</th><th>ID</th><th>'.encode('Страница').'</th></tr>';
 
 $t = 0;
 foreach($dt as $i=>$c){
@@ -95,7 +96,7 @@ foreach($dt as $i=>$c){
 }
 
 $page_content .= "</table>
-$t Общо\n";
+$t ".encode("Общо\n");
 
 return $page_content;
 }
@@ -114,9 +115,9 @@ $tn = db_table_field('title', 'pages', "`ID`=$i");
 $tn = db_table_field('text', 'content', "`name`='$tn' AND `language`='$language'");
 $rz = "<p>Page: <a href=\"$main_index?pid=$i\">$tn</a></p>".'
 <p>See: <a href="page_stats.php">All pages statistics</a></p>
-'."Minimum visit count: $min, Maximum: $max".'
+'."Minimum visit count: $min, Maximum: $max".encode('
 <table>
-<tr><th>Дата</th><th>Посещения</th></tr>';
+<tr><th>Дата</th><th>Посещения</th></tr>');
 foreach($da as $d){
   $a = $d['count']/$max * $m;
   $t = date("N",strtotime($d['date']));

@@ -173,8 +173,9 @@ store_value('today',$d['mday']);
 // нулира се броя на посещенията в таблица $tn_prefix.'pages'
 $q = "UPDATE `$tn_prefix"."pages` SET tcount = tcount + dcount, dcount = 0;";
 mysqli_query($db_link,$q);
-// записване обема на данните от таблица content към днешната дата
-$q = "INSERT INTO `$tn_prefix"."content_history` (`date`, `size`) VALUES ('$dd', ".db_table_status('content', 'Data_length').");";
+// Записване обема на данните от таблица content към днешната дата
+$q = "INSERT INTO `$tn_prefix"."content_history` (`date`, `size`) VALUES ".
+     "('$dd', ".db_table_status('content', 'Data_length').");";
 mysqli_query($db_link,$q);
 }
 

@@ -77,6 +77,9 @@ case 'utf8': $site_encoding = 'UTF-8'; break;
 default: die("Unknown colation $colation in conf_paths.php");
 }
 
+// Кодировка на php файловете на сървъра
+$file_encoding = 'windows-1251';
+
 // Тайни стойности, на които се базира сигурността на административния достъп до сайта:
 
 // Име на променлива, която се изпраща с GET за да се покаже менюто за администриране 
