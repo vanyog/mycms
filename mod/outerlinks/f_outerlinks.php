@@ -53,7 +53,8 @@ if (!$tr) $rz = translate('outerlinks_homemessage');
 
 // Показване на бройките
 $rz .= '<div id="outer_links">'.start_edit_form().'
-<p class="counts">'.translate('outerlinks_totalcount')." $lc ".translate('outerlinks_in')." $cc ".translate('outerlinks_categories')."</p>\n";
+<p class="counts">'.translate('outerlinks_totalcount')." $lc ".translate('outerlinks_in')." $cc ".translate('outerlinks_categories').
+" &nbsp; <a href=".set_self_query_var('lid', 'all').">".translate('outerlinks_all')."</a></p>\n";
 
 // Ако е извършено търсене се показва резултата от търсенето
 if (count($_POST) && isset($_POST['search_by'])){
@@ -259,13 +260,13 @@ else {
   if ($_POST['link'])    $q2 .= "`link`='".addslashes($_POST['link'])."', ";
   if ($_POST['title'])   $q2 .= "`Title`='".addslashes($_POST['title'])."', ";
   if ($_POST['comment']) $q2 .= "`Comment`='".addslashes($_POST['comment'])."', ";
-  if ($_POST['up'])      $q2 .= "`up`=".(1*$_POST['up']).", ";
+  if ($_POST['up']>'')      $q2 .= "`up`=".(1*$_POST['up']).", ";
   if ($_POST['place'])   $q2 .= "`place`=".(1*$_POST['place']).", ";
   else if (!$id) $q2 .= "`place`=".(db_table_field('MAX(`place`)', 'outer_links', '1')+10).", ";
+//  print_r($q2); die;
   if (!$q2) return;
   $q = $q1.substr($q2,0,strlen($q2)-2)." ".$q3;
 }
-//print_r($q); die;
 mysqli_query($db_link,$q);
 
 }
