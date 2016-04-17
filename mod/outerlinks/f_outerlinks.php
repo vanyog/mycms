@@ -99,7 +99,7 @@ foreach($la as $l){
  $rz .= '<p>'.edit_radio($l['ID'],$l['place']).'<img src="'.$p.'go.gif" alt=""> <a href="'.
         set_self_query_var('lid',$l['ID']).'" title="'.$l['link'].
         '" target="_blank">'.stripslashes($l['Title'])."</a>";
- if (isset($l['Comment']) && $l['Comment']) $rz .= ' - '.stripslashes($l['Comment']);
+ if (isset($l['Comment']) && ($l['Comment']>" ")) $rz .= ' - '.stripslashes($l['Comment']);
  $rz .= "</p>\n";
 }
 

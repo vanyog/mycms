@@ -20,11 +20,11 @@ return '<div id="page_ranking">
 <h2>'.translate('ranking_title').'</h2>
 <table>
 
-<tr><td class="n">'.translate('ranking_new').'</td>
-<td>'.new_page_links($limit).'</td></tr>
-
 <tr><td class="n">'.translate('ranking_updated').'</td>
 <td>'.updated_page_links($limit).'</td></tr>
+
+<tr><td class="n">'.translate('ranking_new').'</td>
+<td>'.new_page_links($limit).'</td></tr>
 
 <tr><td class="n">'.translate('ranking_max_visidet').'</td>
 <td>'.max_visited_page_links($limit).'</td></tr>

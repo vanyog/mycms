@@ -45,7 +45,7 @@ foreach($da as $d){
 }
 
 // Добавяне и на днешния ден
-$td = date("Y-m-d");
+$td = date("Y-m-d", time() + 24*3600);
 if (!isset($dt[$td])) $dt[$td] = db_table_status('content', 'Data_length');
 
 // Четене на данните от таблица outer_links

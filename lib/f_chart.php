@@ -20,7 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 // Показване на диаграма
 
 
-function chart($dt){
+function chart($dt){ //die(print_r($dt, true));
 global $page_header;
 $page_header .= '<style><!--
 .chart_barr { background-color:#FF0000; display:inline-block; width:1em; vertical-align:bottom; }
@@ -29,6 +29,8 @@ $page_header .= '<style><!--
 $rz = '<div style="margin-top:100px;">'."\n";
 $mi = min($dt);
 $ma = max($dt);
+if ($mi && ($mi==$ma)) $mi = 0;
+//die("$mi $ma");
 foreach($dt as $k=>$v){
 
   $rz .= '<div style="width:1em; display:inline-block;"><div style="background-color:#FF0000; min-height:'.(400*($v-$mi)/($ma-$mi)+1).'px"></div><div style="transform:rotate(270deg); width:5em; height:5em;">'.$k."</div></div>\n";
