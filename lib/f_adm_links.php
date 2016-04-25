@@ -61,7 +61,7 @@ else {
   else {
     if (substr($_SERVER['REQUEST_URI'],0,strlen($adm_pth))==$adm_pth) $w3c = '';
     else $w3c = ' :: <a href="http://validator.w3.org/check?uri='.
-         urlencode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).'">w3c</a>';
+         urlencode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).'" target="_blank">w3c</a>';
   }
   $go = 'http://'.$go.$_SERVER['REQUEST_URI'];
   
