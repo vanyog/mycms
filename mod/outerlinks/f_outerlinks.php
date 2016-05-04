@@ -82,7 +82,7 @@ if ($rzr) return $rz.$rzr.'
 }
 
 // Ако са изпратени данни за редактиране
-if (count($_POST)) edit_link();
+if (count($_POST)) edit_link($lid);
 
 // Четене на данните за линка
 $l = db_select_1('*','outer_links',"`ID`=$lid");
@@ -106,6 +106,8 @@ else $rz .="\n";
 // Добавка за пропускане на private линковете
 $qp = '';
 if (!in_edit_mode()) $qp = 'AND `private`=0';
+// Сайт за търсене
+$seng = stored_value('outerlenks_sengin', 'https://www.google.bg/search?q=');
 
 // Четене и показване на (под)категориите
 $ca = db_select_m('*','outer_links',"`up`=$lid AND (`link`='' OR `link` IS NULL)$qp ORDER BY `place`");
@@ -115,13 +117,13 @@ foreach($ca as $c){// print_r($c); die;
  $rz .= '<p>'.edit_radio($c['ID'],$c['place']).'<img src="'.$p.'folder.gif" alt=""> <a href="'.
         set_self_query_var('lid',$c['ID']).'">'.stripslashes($c['Title'])."</a>";
  if (isset($c['Comment']) && $c['Comment']) $rz .= ' - '.stripslashes($c['Comment']);
+ if (in_edit_mode()) $rz .= ' <a href="'.$seng.
+    urlencode( iconv($site_encoding, 'UTF-8', stripslashes($c['Title'])) ).'" target="_blank">g</a>';
  $rz .= "</p>\n";
 }
 
 // Четене и показване на линковете
 $la = db_select_m('*','outer_links',"`up`=$lid AND `link`>''$qp ORDER BY `place`");
-// Сайт за търсене
-$seng = stored_value('outerlenks_sengin', 'https://www.google.bg/search?q=');
 foreach($la as $l){
  $rz .= '<p>'.edit_radio($l['ID'],$l['place']).'<img src="'.$p.'go.gif" alt=""> <a href="'.
         set_self_query_var('lid',$l['ID']).'" title="'.$l['link'].
@@ -280,7 +282,7 @@ else return '<input type="radio" name="link_id" value="'.$id.'">'.$p.' ';
 
 // Добавяне/променяне на данните в режим на редактиране
 // ----------------------------------------------------
-function edit_link(){
+function edit_link($lid){
 if ( ! in_edit_mode() ) return;
 global $tn_prefix,$db_link;
 
@@ -291,7 +293,10 @@ $q0 = " `$tn_prefix"."outer_links` ";
 $q2 = '';
 
 if ($_POST['action']=='delete'){
-  if (db_table_field('link', 'outer_links', "`ID`=$id")=='') die('This is a folder!');
+  if (db_table_field('link', 'outer_links', "`ID`=$id")==''){
+     // Ако подкатегорията не е празна не се изтрива
+     if (db_table_field('COUNT(*)', 'outer_links', "`up`=$id")) die('This is a not empty folder!');
+  }
   $q = "DELETE FROM$q0 WHERE `ID`=$id;";
 }
 else {
@@ -306,13 +311,12 @@ else {
   if ($_POST['place'])   $q2 .= "`place`=".(1*$_POST['place']).", ";
   else if (!$id && ($q2!="`up`=".(1*$_POST['up']).", "))
           $q2 .= "`place`=".(db_table_field('MAX(`place`)', 'outer_links', '1')+10).", ";
-//  die(print_r($_POST,true).'<p>'.$q2.'<p>'.'`up`='.(1*$_POST['up']).', ');
   if (!$q2) return '';
   $q = $q1.substr($q2,0,strlen($q2)-2)." ".$q3;
 //  die($q);
 }
-if ($q2!="`up`=".(1*$_POST['up']).", ") mysqli_query($db_link,$q);
-
+//die(print_r($_POST,true).'<p>'.$q2.'<p>'."`up`=$lid, "." $lid");
+if ($q2!="`up`=$lid, ") mysqli_query($db_link,$q);
 }
 
 //
