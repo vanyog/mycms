@@ -351,9 +351,9 @@ function outerlenks_new(){
 $rz = '<h2>'.translate('outerlinks_newest')."</h2>\n";
 // Добавка за пропускане на private линковете
 $qp = '';
-if (!in_edit_mode()) $qp = 'AND `private`=0';
-$da = db_select_m('*', 'outer_links', "`link`>' '1$qp ORDER BY `date_time_1` DESC LIMIT 0,10");
-return outerlinks_showlinks($da);
+if (!in_edit_mode()) $qp = ' AND `private`=0';
+$da = db_select_m('*', 'outer_links', "`link`>' '$qp ORDER BY `date_time_1` DESC LIMIT 0,10");
+return $rz.outerlinks_showlinks($da);
 }
 
 // Показване на "най-кликваните"
@@ -364,7 +364,7 @@ $rz = '<h2>'.translate('outerlinks_clicked')."</h2>\n";
 $qp = '';
 if (!in_edit_mode()) $qp = 'AND `private`=0';
 $da = db_select_m('*', 'outer_links', "`link`>' ' AND `clicked`>0$qp ORDER BY `clicked` DESC LIMIT 0,10");
-return outerlinks_showlinks($da);
+return $rz.outerlinks_showlinks($da);
 }
 
 function outerlinks_showlinks($da){
