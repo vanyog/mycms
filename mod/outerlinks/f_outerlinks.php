@@ -58,8 +58,10 @@ if (!$tr && !$what) $rz .= translate('outerlinks_homemessage');
 // Показване на бройките
 $rz .= '<div id="outer_links">'."\n".start_edit_form().'
 <p class="counts">'.translate('outerlinks_totalcount')." $lc ".translate('outerlinks_in')." $cc ".translate('outerlinks_categories')." &nbsp; ";
-if (!($what!='all')) $rz .= "<a href=\"".unset_self_query_var('lid')."\">".translate('outerlinks_cat')."</a>";
-else $rz .= "<a href=\"".set_self_query_var('lid', 'all')."\">".translate('outerlinks_all')."</a>";
+if ( in_array($what, array('all','new','click')) )
+   $rz .= "<a href=\"".unset_self_query_var('lid')."\">".translate('outerlinks_cat')."</a>";
+else
+   $rz .= "<a href=\"".set_self_query_var('lid', 'all')."\">".translate('outerlinks_all')."</a>"; 
 $rz .= "</p>\n";
 
 switch ($what){
