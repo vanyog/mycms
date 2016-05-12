@@ -128,7 +128,7 @@ foreach($ca as $c){// print_r($c); die;
 $la = db_select_m('*','outer_links',"`up`=$lid AND `link`>''$qp ORDER BY `place`");
 foreach($la as $l){
  $rz .= '<p>'.edit_radio($l['ID'],$l['place']).'<img src="'.$p.'go.gif" alt=""> <a href="'.
-        set_self_query_var('lid',$l['ID']).'" title="'.$l['link'].
+        set_self_query_var('lid',$l['ID']).'" title="'.urldecode($l['link']).
         '" target="_blank">'.stripslashes($l['Title'])."</a>";
  if (isset($l['Comment']) && ($l['Comment']>" ")) $rz .= ' - '.stripslashes($l['Comment']);
  if (in_edit_mode()) $rz .= ' <a href="'.$seng.
@@ -212,8 +212,8 @@ foreach($ra as $r){
   // Title - ако е линк
   if ($r['link']) $t1 = ($r['link']); else $t1 = '';
   // Сглобяване на реда с линка  
-  $lk = '<a href="'.$lk.'" title="'.$t1.'" target="_blank">'.stripslashes($r['Title']).'</a>   '.
-        '<a href="'.set_self_query_var('lid',$r['up']).'" title="'.$t2.'">>></a>';
+  $lk = '<a href="'.$lk.'" title="'.urldecode($t1).'" target="_blank">'.stripslashes($r['Title']).'</a>   '.
+        '<a href="'.set_self_query_var('lid',$r['up']).'" title="'.urldecode($t2).'">>></a>';
   $lk .= "<br>\n";
   // Добавяне към резултата
   if ($r['link']) $rz2 .= '<img src="'.$p.'go.gif" alt=""> '.$lk;
@@ -332,7 +332,7 @@ if (!in_edit_mode()) $qp = 'AND `private`=0';
 $dt = db_select_m('*', 'outer_links', "`up`=$up AND (`link`>'')$qp ORDER BY `place`");
 foreach($dt as $d){
   $rz .= '<p><a href="'.
-  set_self_query_var('lid',$d['ID']).'" title="'.$d['link'].
+  set_self_query_var('lid',$d['ID']).'" title="'.urldecode($d['link']).
   '" target="_blank">'.stripslashes($d['Title'])."</a>";
   if ($d['Comment']) $rz .= ' - '.$d['Comment'];
   $rz .= "</p>\n";
@@ -372,12 +372,12 @@ return $rz.outerlinks_showlinks($da);
 function outerlinks_showlinks($da){
 $rz = '';
 foreach($da as $d){
-  $rz .= '<p><a href="'.set_self_query_var('lid',$d['ID']).'" title="'.$d['link'].'" target="_blank">'.
+  $rz .= '<p><a href="'.set_self_query_var('lid',$d['ID']).'" title="'.urldecode($d['link']).'" target="_blank">'.
          stripslashes($d['Title']).'</a>';
   if ($d['up']){
      $t2 = db_table_field('Title', 'outer_links', "`ID`=".$d['up']);
      if (show_adm_links()) $rz .= ' &nbsp; '.$d['clicked'];
-     $rz .= ' &nbsp; <a href="'.set_self_query_var('lid',$d['up']).'" title="'.$t2.'">'.">></a>";
+     $rz .= ' &nbsp; <a href="'.set_self_query_var('lid',$d['up']).'" title="'.urldecode($t2).'">'.">></a>";
   }
   $rz .= "</p>\n";
 }

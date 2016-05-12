@@ -28,7 +28,8 @@ $aa = explode('|',$a);
 // Четене данните за хипервръзката
 $d = db_select_1('*', 'outer_links', "`ID`=".$aa[0] );
 if (!isset($aa[1])) $aa[1] = $d['Title'];
-return '<a href="'.$main_index.'?lid='.$aa[0].'&pid=6" target="_blank">'.$aa[1].'</a>';
+return '<a href="'.$main_index.'?lid='.$aa[0].'&pid=6" target="_blank" title="'.
+        urldecode($d['link']).'">'.$aa[1].'</a>';
 }
 
 ?>
