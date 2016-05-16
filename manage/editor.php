@@ -78,7 +78,7 @@ e += t1.length;
 te.selectionStart = s;
 te.selectionEnd = e;  
 }
-var tag_a1 = "a href=\"/index.php?pid=\"";
+var tag_a1 = "a href=\"index.php?pid=\"";
 var tag_a2 ="a";
 var tag_s1 = "<script type=\"text/javascript\"><!--\n";
 var tag_s2 = "\n--><"+"/script>";
@@ -94,7 +94,7 @@ return $js.
 '.make_insert_button('php','<?php\n// Copyright: Vanyo Georgiev info@vanyog.com\n\n?>\n').'
 '.make_insert_2_button('case','\'case \\\'\'','\'\\\': break;\'').'
 '.make_insert_2_button('include','\'include(\\\'\'','\'\\\');\'').'
-'.make_insert_2_button('include_once','\'include_once(\\\'\'','\'\\\');\'').'
+'.make_insert_2_button('include_once','\'include_once($idir.\\\'\'','\'\\\');\'').'
 '.make_insert_2_button('print_r','\'print_r($\'','\'); die;\'').'
 '.make_insert_2_button('<!--$$_','\'<!--$$_\'','\'_$$-->\'').'
 '.make_insert_2_button('javascript','tag_s1','tag_s2').ckeb($tec).'

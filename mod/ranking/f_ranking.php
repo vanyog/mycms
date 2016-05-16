@@ -61,7 +61,7 @@ return $rz;
 }
 
 function page_link($p){
-return '<a href="index.php?pid='.$p['ID'].'">'.translate($p['title']).'</a>'."<br>\n";
+return '<a href="index.php?pid='.$p['ID'].'">'.strip_tags(translate($p['title'])).'</a>'."<br>\n";
 }
 
 // Най-скоро обновените страници

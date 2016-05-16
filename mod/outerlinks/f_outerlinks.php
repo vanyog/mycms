@@ -186,10 +186,18 @@ switch ($_POST['search_by']){
 case 'keyword': 
   $wa = explode(' ',$_POST['search_for'],4);
   foreach($wa as $i => $w){
-    if ($i>2) break;
+    if ($i>2) break; // за да се търси само по първите 3 думи
     if ($q) $q .= ' AND ';
     $q .= "`Title` LIKE '%".addslashes($w)."%'";
   }
+  $q1 = '';
+  foreach($wa as $i => $w){
+    if ($i>2) break; // за да се търси само по първите 3 думи
+    if ($q1) $q1 .= ' AND ';
+    $q1 .= "`Comment` LIKE '%".addslashes($w)."%'";
+  }
+  $q = "($q) OR ($q1)";
+//  die($q);
   break;
 // За търсене в адресите
 case 'url': 
