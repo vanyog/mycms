@@ -25,10 +25,10 @@ include_once($idir.'lib/f_encode.php');
 function inetsearch(){
 global $page_header;
 $page_header = '<script type="text/javascript"><!--
-function searchBy(a){
+function searchBy(a, b){
 var l = document.getElementById("selink");
 var w = document.forms.inetsearch.words.value;
-l.href = a+encodeURIComponent(w);
+l.href = a+encodeURIComponent(b+w+b);
 if (w) window.open(l.href);
 }
 --></script>';
@@ -38,16 +38,19 @@ $i = new FormInput(encode('Ключови думи:'), 'words', 'text');
 $i -> size = 100;
 $f -> add_input( $i );
 $i = new FormInput(encode('Търсене в:'), '', 'button', 'google.bg');
-$i -> js = 'onclick="searchBy(\'https://google.bg/search?q=\');"';
+$i -> js = 'onclick="searchBy(\'https://google.bg/search?q=\', \'\');"';
 $f -> add_input( $i );
 $i = new FormInput('', '', 'button', 'scholar.google.bg');
-$i -> js = 'onclick="searchBy(\'https://scholar.google.bg/scholar?q=\');"';
+$i -> js = 'onclick="searchBy(\'https://scholar.google.bg/scholar?q=\', \'\');"';
 $f -> add_input( $i );
 $i = new FormInput('', '', 'button', 'bg.wikipedia.org');
-$i -> js = 'onclick="searchBy(\'https://bg.wikipedia.org/wiki/\');"';
+$i -> js = 'onclick="searchBy(\'https://bg.wikipedia.org/wiki/\', \'\');"';
 $f -> add_input( $i );
 $i = new FormInput('', '', 'button', 'en.wikipedia.org');
-$i -> js = 'onclick="searchBy(\'https://en.wikipedia.org/wiki/\');"';
+$i -> js = 'onclick="searchBy(\'https://en.wikipedia.org/wiki/\', \'\');"';
+$f -> add_input( $i );
+$i = new FormInput('', '', 'button', 'academic.microsoft.com');
+$i -> js = 'onclick="searchBy(\'https://academic.microsoft.com/#/search?iq=\', \'@\');"';
 $f -> add_input( $i );
 return $rz.$f->html();
 }
