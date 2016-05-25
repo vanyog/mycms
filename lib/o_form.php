@@ -108,8 +108,9 @@ $this->js = " $e=\"$js\"";
 
 public function html($it){
 $rz = '';
-if (!$it) $rz .= "$this->caption <input type=\"$this->type\" name=\"$this->name\"";
-else $rz .= "<tr><th>$this->caption </th><td><input type=\"$this->type\" name=\"$this->name\"";
+if (!$it) $rz .= "$this->caption <input type=\"$this->type\" ";
+else $rz .= "<tr><th>$this->caption </th><td><input type=\"$this->type\" ";
+if ($this->name) $rz .= "name=\"$this->name\"";
 if (strlen($this->value)) $rz .= " value=\"$this->value\"";
 if ($this->size) $rz .= " size=\"$this->size\"";
 if ($this->id) $rz .= " id=\"$this->id\"";
