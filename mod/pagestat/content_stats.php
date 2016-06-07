@@ -36,7 +36,7 @@ include($idir.'lib/f_db_table_status.php');
 $page_content = encode('<h1>Статистика на обема на съдържанието на сайта</h1>');
 
 // Четене на данните от таблица content_history
-$da = db_select_m('*', 'content_history', 1);
+$da = db_select_m('*', 'content_history', "1 GROUP BY `size`");
 
 // Съставяне на масив дата - брой
 $dt = array();
@@ -45,7 +45,7 @@ foreach($da as $d){
 }
 
 // Добавяне и на днешния ден
-$td = date("Y-m-d");
+$td = date("Y-m-d", time() + 24*3600);
 if (!isset($dt[$td])) $dt[$td] = db_table_status('content', 'Data_length');
 
 // Четене на данните от таблица outer_links
@@ -60,7 +60,8 @@ foreach($ld as $d){
   $lt[$k] = $v;
 }
 
-$page_content .= chart($dt);
+$page_content .= encode("<h2>Съдържание на сайта</h2>\n").chart($dt).
+                 encode("<h2>Брой интернет връзки</h2>\n").chart($lt);
 
 include($idir.'lib/build_page.php');
 

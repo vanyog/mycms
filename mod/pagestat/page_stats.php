@@ -108,8 +108,15 @@ function one_page($i, $w){
 global $language, $main_index;
 // Четене на записите за страница с номер $i
 $da = db_select_m('*', 'visit_history', "`page_id`=$i AND $w ORDER BY `date` DESC");
+// Добавяне на дрешна дата
+$d = array( 'date'=>date("Y-m-d", time() + 24*3600), 'count'=>db_table_field('dcount', 'pages', "`ID`=$i") );
+array_unshift( $da, $d );
+//die(print_r($da, true));
 $min = db_table_field('MIN(`count`)', 'visit_history', "`page_id`=$i AND $w");
 $max = db_table_field('MAX(`count`)', 'visit_history', "`page_id`=$i AND $w");
+if ($max<$da[0]['count']) $max = $da[0]['count'];
+if (!$max) $max = 1;
+//die("$min $max");
 $m = 800;
 $tn = db_table_field('title', 'pages', "`ID`=$i");
 $tn = db_table_field('text', 'content', "`name`='$tn' AND `language`='$language'");

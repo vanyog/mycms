@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Всяка страница се описва с шаблон, заглавие, съдържание и др., които са зададени
 // в запис от таблица $tn_prefix.`pages`.
 
+$exe_time = microtime(true);
+
 error_reporting(E_ALL); ini_set('display_errors',1);
 
 if (phpversion()>'5.0') date_default_timezone_set("Europe/Sofia");
@@ -112,8 +114,10 @@ count_visits($page_data);
 // Оцветяване на търсени думи
 $cnt = colorize($cnt);
 
+$exe_time = number_format(microtime(true) - $exe_time, 3);
+
 // Показване броя на MYSQL заявките, ако е предвидено да се показват
-$cnt = str_replace('<!--DB_REQ_COUNT-->',"$db_req_count ", $cnt);
+$cnt = str_replace('<!--DB_REQ_COUNT-->',"$db_req_count $exe_time ", $cnt);
 
 // Изпращане на страницата
 echo $cnt;
