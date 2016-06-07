@@ -28,7 +28,8 @@ return outer_links();
 // Главна функция за показване на Интернет връзки
 // ----------------------------------------------
 function outer_links(){
-global $tn_prefix, $db_link, $site_encoding;
+
+global $tn_prefix, $db_link, $site_encoding, $page_header;
 
 if (!$site_encoding) $site_encoding = 'windows-1251';
 
@@ -65,7 +66,7 @@ else
 $rz .= "</p>\n";
 
 switch ($what){
-  // Показване на всички връзки в разгърнат вид
+// Показване на всички връзки в разгърнат вид
 case 'all': $rz .= '<h2><a href="'.unset_self_query_var('lid').'">'.translate('outerlinks_home')."</a></h2>\n".
                    outerlenks_all(0, '').
                    "<p><a href=\"".unset_self_query_var('lid')."\">".translate('outerlinks_cat')."</a></p>";
@@ -79,8 +80,7 @@ case 'click': $rz .= outerlenks_click();
 // Ако е извършено търсене се показва резултата от търсенето
 if (count($_POST) && isset($_POST['search_by'])){
 $rzr =  link_search();
-if ($rzr) return $rz.$rzr.'
-</div>';
+if ($rzr) return $rz.$rzr."\n</div>";
 }
 
 // Ако са изпратени данни за редактиране
@@ -111,13 +111,37 @@ if (!in_edit_mode()) $qp = 'AND `private`=0';
 // Сайт за търсене
 $seng = stored_value('outerlenks_sengin', 'https://www.google.bg/search?q=');
 
+if (in_edit_mode()) $page_header .= '<script type="text/javascript"><!--
+function linkradioclicked(){
+var f = document.forms.link_edit_form;
+var r = f.link_id.value;
+var l = document.getElementById("lk"+r);
+f.link.value = l.title;
+f.title.value = l.text;
+var p = l.parentElement;
+if (p.className=="private") f.private.value = 1;
+else  f.private.value = 0;
+t = p.innerText;
+var i = t.indexOf(" ");
+f.place.value = t.substring(0, i);
+t = l.parentElement.innerHTML;
+i = t.indexOf("</a>") + 7;
+t = t.substring(i);
+var j = t.indexOf("<a ");
+if (j>-1) f.comment.value = t.substring(0, j);
+else f.comment.value = "";
+}
+--></script>';
+
 // Четене и показване на (под)категориите
 $ca = db_select_m('*','outer_links',"`up`=$lid AND (`link`='' OR `link` IS NULL)$qp ORDER BY `place`");
 //print_r($ca); die;
 $p = current_pth(__FILE__);
 foreach($ca as $c){// print_r($c); die;
- $rz .= '<p>'.edit_radio($c['ID'],$c['place']).'<img src="'.$p.'folder.gif" alt=""> <a href="'.
-        set_self_query_var('lid',$c['ID']).'">'.stripslashes($c['Title'])."</a>";
+ $cl = '';
+ if ($c['private']) $cl = ' class="private"';
+ $rz .= "<p$cl>".edit_radio($c['ID'],$c['place']).'<img src="'.$p.'folder.gif" alt=""> <a href="'.
+        set_self_query_var('lid',$c['ID']).'" id="lk'.$c['ID'].'">'.stripslashes($c['Title'])."</a>";
  if (isset($c['Comment']) && $c['Comment']) $rz .= ' - '.stripslashes($c['Comment']);
  if (in_edit_mode()) $rz .= ' <a href="'.$seng.
     urlencode( iconv($site_encoding, 'UTF-8', stripslashes($c['Title'])) ).'" target="_blank">g</a>';
@@ -127,9 +151,11 @@ foreach($ca as $c){// print_r($c); die;
 // Четене и показване на линковете
 $la = db_select_m('*','outer_links',"`up`=$lid AND `link`>''$qp ORDER BY `place`");
 foreach($la as $l){
- $rz .= '<p>'.edit_radio($l['ID'],$l['place']).'<img src="'.$p.'go.gif" alt=""> <a href="'.
-        set_self_query_var('lid',$l['ID']).'" title="'.$l['link'].
-        '" target="_blank">'.stripslashes($l['Title'])."</a>";
+$cl = '';
+if ($l['private']) $cl = ' class="private"';
+$rz .= "<p$cl>".edit_radio($l['ID'],$l['place']).'<img src="'.$p.'go.gif" alt=""> <a href="'.
+        set_self_query_var('lid',$l['ID']).'" title="'.urldecode($l['link']).
+        '" target="_blank" id="lk'.$l['ID'].'">'.stripslashes($l['Title'])."</a>";
  if (isset($l['Comment']) && ($l['Comment']>" ")) $rz .= ' - '.stripslashes($l['Comment']);
  if (in_edit_mode()) $rz .= ' <a href="'.$seng.
     urlencode( iconv($site_encoding, 'UTF-8', stripslashes($l['Title'])) ).'" target="_blank">g</a>';
@@ -186,10 +212,18 @@ switch ($_POST['search_by']){
 case 'keyword': 
   $wa = explode(' ',$_POST['search_for'],4);
   foreach($wa as $i => $w){
-    if ($i>2) break;
+    if ($i>2) break; // за да се търси само по първите 3 думи
     if ($q) $q .= ' AND ';
     $q .= "`Title` LIKE '%".addslashes($w)."%'";
   }
+  $q1 = '';
+  foreach($wa as $i => $w){
+    if ($i>2) break; // за да се търси само по първите 3 думи
+    if ($q1) $q1 .= ' AND ';
+    $q1 .= "`Comment` LIKE '%".addslashes($w)."%'";
+  }
+  $q = "($q) OR ($q1)";
+//  die($q);
   break;
 // За търсене в адресите
 case 'url': 
@@ -212,8 +246,8 @@ foreach($ra as $r){
   // Title - ако е линк
   if ($r['link']) $t1 = ($r['link']); else $t1 = '';
   // Сглобяване на реда с линка  
-  $lk = '<a href="'.$lk.'" title="'.$t1.'" target="_blank">'.stripslashes($r['Title']).'</a>   '.
-        '<a href="'.set_self_query_var('lid',$r['up']).'" title="'.$t2.'">>></a>';
+  $lk = '<a href="'.$lk.'" title="'.urldecode($t1).'" target="_blank">'.stripslashes($r['Title']).'</a>   '.
+        '<a href="'.set_self_query_var('lid',$r['up']).'" title="'.urldecode($t2).'">>></a>';
   $lk .= "<br>\n";
   // Добавяне към резултата
   if ($r['link']) $rz2 .= '<img src="'.$p.'go.gif" alt=""> '.$lk;
@@ -279,7 +313,7 @@ Private: <input type="text" name="private" size="1"></p>
 // ------------------------------------------------------
 function edit_radio($id,$p){
 if (!in_edit_mode()) return '';
-else return '<input type="radio" name="link_id" value="'.$id.'">'.$p.' ';
+else return '<input type="radio" name="link_id" value="'.$id.'" onclick="linkradioclicked();">'.$p.' ';
 }
 
 // Добавяне/променяне на данните в режим на редактиране
@@ -332,7 +366,7 @@ if (!in_edit_mode()) $qp = 'AND `private`=0';
 $dt = db_select_m('*', 'outer_links', "`up`=$up AND (`link`>'')$qp ORDER BY `place`");
 foreach($dt as $d){
   $rz .= '<p><a href="'.
-  set_self_query_var('lid',$d['ID']).'" title="'.$d['link'].
+  set_self_query_var('lid',$d['ID']).'" title="'.urldecode($d['link']).
   '" target="_blank">'.stripslashes($d['Title'])."</a>";
   if ($d['Comment']) $rz .= ' - '.$d['Comment'];
   $rz .= "</p>\n";
@@ -364,7 +398,7 @@ function outerlenks_click(){
 $rz = '<h2>'.translate('outerlinks_clicked')."</h2>\n";
 // Добавка за пропускане на private линковете
 $qp = '';
-if (!in_edit_mode()) $qp = 'AND `private`=0';
+if (!in_edit_mode()) $qp = ' AND `private`=0';
 $da = db_select_m('*', 'outer_links', "`link`>' ' AND `clicked`>0$qp ORDER BY `clicked` DESC LIMIT 0,10");
 return $rz.outerlinks_showlinks($da);
 }
@@ -372,12 +406,12 @@ return $rz.outerlinks_showlinks($da);
 function outerlinks_showlinks($da){
 $rz = '';
 foreach($da as $d){
-  $rz .= '<p><a href="'.set_self_query_var('lid',$d['ID']).'" title="'.$d['link'].'" target="_blank">'.
+  $rz .= '<p><a href="'.set_self_query_var('lid',$d['ID']).'" title="'.urldecode($d['link']).'" target="_blank">'.
          stripslashes($d['Title']).'</a>';
   if ($d['up']){
      $t2 = db_table_field('Title', 'outer_links', "`ID`=".$d['up']);
      if (show_adm_links()) $rz .= ' &nbsp; '.$d['clicked'];
-     $rz .= ' &nbsp; <a href="'.set_self_query_var('lid',$d['up']).'" title="'.$t2.'">'.">></a>";
+     $rz .= ' &nbsp; <a href="'.set_self_query_var('lid',$d['up']).'" title="'.urldecode($t2).'">'.">></a>";
   }
   $rz .= "</p>\n";
 }
