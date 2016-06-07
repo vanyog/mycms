@@ -20,20 +20,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include_once($idir.'lib/o_form.php');
 include_once($idir.'lib/f_encode.php');
 include_once($idir.'lib/f_db_insert_1.php');
+include_once($idir.'lib/f_db_update_record.php');
 
 function formula($a){
+if ( strlen($a) && (strtolower($a[0])=='c') )  return formula_ref($a);
 global $adm_pth;
 static $fs = false;
-static $c = -1;
 if (!$fs) $fs = formula_for_page();
+static $c = 0;
+$n = count($fs) - $c;
 if (!isset($fs[$a])) return formula_edit_form();
+if ($c!=$fs[$a]['number']) db_update_record(array('ID'=>$fs[$a]['ID'], 'number'=>$n), 'formula');
 $elk = '';
 if (in_edit_mode()) $elk = " <a href=\"$adm_pth/edit_record.php?t=formula&amp;r=$a\">*</a>";
-$c++;
-return '<div class="math">
-<div class="l">('.$fs[$a]['page_id'].'.'.(count($fs)-$c).')</div>
+$rz = '<div class="math">
+<div class="l">('.$fs[$a]['page_id'].'.'.$n.')</div>
 <div class="r">'.$fs[$a]['markup']."\n".$elk."</div>\n</div>
 <div style=\"clear:both\"></div>\n";
+$c++;
+return $rz;
 }
 
 function formula_for_page(){
@@ -58,6 +63,13 @@ function formula_insert(){
 global $page_id;
 $_POST['page_id'] = $page_id;
 db_insert_1($_POST, 'formula');
+}
+
+function formula_ref($a){
+$id = substr($a, 1);
+$d = db_select_1('*', 'formula', "`ID`=$id");
+$rz = '('.$d['page_id'].'.'.$d['number'].')';
+return $rz;
 }
 
 ?>
