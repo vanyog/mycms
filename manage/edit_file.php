@@ -51,7 +51,7 @@ if ($f) $f .= '/';
 // Разрешено е на локален сървър, а на отдалечен сървър,
 // по подразбиране не е разрешено, освен ако е зададена настройка
 // can_delete_files със стойност 1.
-$cdel = stored_value('can_delete_files',0) || is_local();
+$cdel = stored_value('can_delete_files','false') || is_local();
 
 $page_header = '<script type="text/javascript"><!--
 function fileName(){
@@ -162,7 +162,10 @@ f.submit_button.disabled = "disabled";
 f.save_as.disabled="disabled";
 }
 --></script>
-<p class="red">You can\'t edit file with extension '."'<strong>.$e</strong>'.<p>";
+<p class="red">';
+  if (!file_exists($d)) $page_content .= "File $d do not exists.";
+  else $page_content .= 'You can\'t edit file with extension '."'<strong>.$e</strong>'.";
+  $page_content .= "<p>";
   $body_adds = ' onload="desableEditForm();"';
 }
 if (!file_exists($d)) $page_content .= '<p slass="red">File not exists!</p>';

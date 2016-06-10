@@ -74,7 +74,7 @@ if (!$sc){ // Ако няма такъв скрипт се търси модул с това име
     }
   }
   else { // Ако няма модул се показва линк за автоматично създаване на модул
-    if (show_adm_links()) $tx = '<p>Can\'t parse content <a href="'.$adm_pth.'new_mod.php?n='.$tg[0].'">'.$tg[0].'</a></p>';
+    if (show_adm_links()) $tx = ' (Can\'t parse content <a href="'.$adm_pth.'new_mod.php?n='.$tg[0].'">'.$tg[0].'</a>) ';
     else $tx = '<p>Can\'t parse content '.$tg[0].'</p>';
   }
 }
