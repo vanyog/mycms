@@ -17,22 +17,42 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+// Модул за автоматично номериране на формули.
+// Параметър $a е `ID` на формулата от таблица 'formula'
+// Ако непосредствено пред цифрите на номера стои буква 'c' вместо формулата се показва цитиране към нея.
+// Ако в таблица 'formula' няма формула със задавеното `ID`, се показва форма за въвеждане на формулата.
+// Ако $a е `ID` на формула, показана на друга страница, се показва съобщение, какво ID да се използва за нова формула.
+
 include_once($idir.'lib/o_form.php');
 include_once($idir.'lib/f_encode.php');
 include_once($idir.'lib/f_db_insert_1.php');
 include_once($idir.'lib/f_db_update_record.php');
 
 function formula($a){
+// Връщане на цитиране към формулата
 if ( strlen($a) && (strtolower($a[0])=='c') )  return formula_ref($a);
 global $adm_pth;
+// Асоциативен масив с формулите от текущата страница
 static $fs = false;
 if (!$fs) $fs = formula_for_page();
-static $c = 0;
-$n = count($fs) - $c;
-if (!isset($fs[$a])) return formula_edit_form();
-if ($c!=$fs[$a]['number']) db_update_record(array('ID'=>$fs[$a]['ID'], 'number'=>$n), 'formula');
+static $c = 0; // Брой вече показани на текущата страница формули
+$n = count($fs) - $c; // Номер на поредната формула в страницата
+// Ако не съществува формула с `ID`=$a за текущата страница
+if (!isset($fs[$a])){
+  // Ако съществува формула с `ID`=$a, показана на друга страница
+  if (db_table_field('ID', 'formula', "`ID`=$a"))
+     // Съобщение за какво стойност на $a е допустима за текущата страница
+     return '<p>'.translate('formula_incorrectID').db_table_field('MAX(`ID`)', 'formula', 1).'</p>';
+  else 
+     // Форма за въвеждане на формула
+     return formula_edit_form();
+}
+// Преномериране на формулата, ако е необходимо
+if ($n!=$fs[$a]['number']) db_update_record(array('ID'=>$fs[$a]['ID'], 'number'=>$n), 'formula');
+// Линк * за редактиране на формулата
 $elk = '';
 if (in_edit_mode()) $elk = " <a href=\"$adm_pth/edit_record.php?t=formula&amp;r=$a\">*</a>";
+// Показване на формулата
 $rz = '<div class="math">
 <div class="l">('.$fs[$a]['page_id'].'.'.$n.')</div>
 <div class="r">'.$fs[$a]['markup']."\n".$elk."</div>\n</div>
