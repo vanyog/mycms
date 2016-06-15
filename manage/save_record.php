@@ -33,6 +33,14 @@ case 'record_id': $q3 .= $v; $r = $v; break;
 //case 'ID': break;
 case 'date_time_2': $q2 .= " `$k`=NOW(),"; break;
 case 'go_to_close': if (1*$v) $gtc = true; break;
+case 'start_edit_time':
+   $tm = time() - $v;
+   $fn = $_POST['table_name'].'.'.$_POST['record_id'];
+   $q = "INSERT INTO `$tn_prefix".
+        "worktime` (`name`,`time`) VALUES ('$fn', $tm) ON DUPLICATE KEY UPDATE `time`=`time`+$tm;";
+//   die($q);
+   mysqli_query($db_link, $q);
+   break;
 default:
   $v1 = str_replace( chr(60).' !--$$_',     chr(60).'!--$$_', $v);
   $v1 = str_replace( '<!--$$_',            chr(60).'!--$$_', $v1);

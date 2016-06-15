@@ -17,9 +17,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+// Този скрипт търси стринг $_GET['s1'] и го замества със стринг $_GET['s2'] в
+// полето $_GET['f'] на всички записи от таблица $_GET['t'] на базата данни.
+
 include('conf_manage.php');
 include_once($idir.'lib/f_db_replace_all.php');
 
+// Ако липсва някой от параметрите изпълнението спира
 if (!isset($_GET['s1'])) die('No string to replace s1= is specified.');
 if (!isset($_GET['s2'])) die('No string to replace width s2= is specified.');
 if (!isset($_GET['f'])) die('No field name f= is specified.');

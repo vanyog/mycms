@@ -17,26 +17,25 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-//     
+// Модул за търсене в сайта
 
 include_once($idir.'lib/o_form.php');
 include_once($idir.'lib/translation.php');
 include_once($idir.'lib/f_db_select_m.php');
 
 // 
-//    ,   html     ,
-//        ,    
-//             .
-//       $r='result'     .
-//
+// Основна функция на модула, която връща html код на форма за търсене,
+// но ако вече са изпратени данни за търсене, изпратеният за търсене стринг
+// се записва в сесия и се отива на страницата за показване на резултат.
+// Ако на функцията е изпратен параметър $r='result' тя връща резултата от търсенето.
 
 function sitesearch($r=''){
 
-//    
+// Модул за търсене в сайта
 if ($r=='result') return site_search_result();
 
-//      
-if (isset($_POST['text'])) do_site_search($_POST['text']);
+// Обработване на изпратен стринг за търсене
+if (isset($_POST['searchtext'])) do_site_search($_POST['searchtext']);
 if (isset($_GET['ssr'])) do_site_search($_GET['ssr']);
 
 //     
@@ -45,7 +44,7 @@ if (!session_id() && isset($_COOKIE['PHPSESSID'])) session_start();
 if (isset($_SESSION['text_to_search'])) $tx = $_SESSION['text_to_search'];
 else $tx = '';
 $tx = str_replace('"','&quot;',$tx);
-$f->add_input(new FormInput('','text','text',$tx));
+$f->add_input(new FormInput('','searchtext','text',$tx));
 $b = new FormInput('','','submit', ' ');
 $p = current_pth(__FILE__);
 $b->js = 'style="background-image:url('.$p.'images/search19x19.png); background-repeat: no-repeat; background-position: center;" '.

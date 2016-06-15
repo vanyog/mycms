@@ -142,7 +142,7 @@ foreach($ca as $c){// print_r($c); die;
  if ($c['private']) $cl = ' class="private"';
  $rz .= "<p$cl>".edit_radio($c['ID'],$c['place']).'<img src="'.$p.'folder.gif" alt=""> <a href="'.
         set_self_query_var('lid',$c['ID']).'" id="lk'.$c['ID'].'">'.stripslashes($c['Title'])."</a>";
- if (isset($c['Comment']) && $c['Comment']) $rz .= ' - '.stripslashes($c['Comment']);
+ $rz .= outerlinks_autocomment($c);
  if (in_edit_mode()) $rz .= ' <a href="'.$seng.
     urlencode( iconv($site_encoding, 'UTF-8', stripslashes($c['Title'])) ).'" target="_blank">g</a>';
  $rz .= "</p>\n";
@@ -156,7 +156,7 @@ if ($l['private']) $cl = ' class="private"';
 $rz .= "<p$cl>".edit_radio($l['ID'],$l['place']).'<img src="'.$p.'go.gif" alt=""> <a href="'.
         set_self_query_var('lid',$l['ID']).'" title="'.urldecode($l['link']).
         '" target="_blank" id="lk'.$l['ID'].'">'.stripslashes($l['Title'])."</a>";
- if (isset($l['Comment']) && ($l['Comment']>" ")) $rz .= ' - '.stripslashes($l['Comment']);
+ $rz .= outerlinks_autocomment($l);
  if (in_edit_mode()) $rz .= ' <a href="'.$seng.
     urlencode( iconv($site_encoding, 'UTF-8', stripslashes($l['Title'])) ).'" target="_blank">g</a>';
  $rz .= "</p>\n";
@@ -368,13 +368,13 @@ foreach($dt as $d){
   $rz .= '<p><a href="'.
   set_self_query_var('lid',$d['ID']).'" title="'.urldecode($d['link']).
   '" target="_blank">'.stripslashes($d['Title'])."</a>";
-  if ($d['Comment']) $rz .= ' - '.$d['Comment'];
+  if ($d['Comment']) $rz .= outerlinks_autocomment($d);
   $rz .= "</p>\n";
 }
 $da = db_select_m('*', 'outer_links', "`up`=$up AND (`link`='' OR `link` IS NULL)$qp ORDER BY `place`");
 foreach($da as $d){
   $t = '<h'.($lv+1).'><a href="'.set_self_query_var('lid',$d['ID']).'">'.$d['Title'].'</a></h'.($lv+1).">\n";
-  if ($d['Comment']) $t .= '<p>'.$d['Comment']."</p>\n";
+  if ($d['Comment']) $t .= '<p>'.outerlinks_autocomment($d)."</p>\n";
   $rz .= outerlenks_all( $d['ID'], $t, $lv + 1 );
 }
 $rz = "<div>\n$tx$rz</div>\n";
@@ -416,5 +416,16 @@ foreach($da as $d){
   $rz .= "</p>\n";
 }
 return $rz;
+}
+
+// Автоматичен коментар
+function outerlinks_autocomment($d){
+if (!isset($d['Comment'])) return '';
+if ($d['Comment']>' ') return ' - '.stripslashes($d['Comment']);
+if (substr($d['link'],-4)=='.pdf') return ' - pdf';
+if (!(strpos($d['link'], 'google.bg')===false)) return ' - '.translate('outerlinks_sresult').' google.bg';
+if (!(strpos($d['link'], 'bg.wikipedia.org')===false)) return ' - '.translate('outerlinks_wiki').'bg.wikipedia.org';
+if (!(strpos($d['link'], 'en.wikipedia.org')===false)) return ' - '.translate('outerlinks_wiki').'en.wikipedia.org';
+
 }
 ?>

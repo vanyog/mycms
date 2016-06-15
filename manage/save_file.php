@@ -28,18 +28,13 @@ $i = strrpos($fn,'/');
 $pn = substr($fn,0,$i);
 $fc = $_POST['editor1'];
 if (get_magic_quotes_gpc()) $fc = stripslashes($fc);
-if ( !(('/'.$fn == $adm_pth.'edit_file.php') ||
-       ('/'.$fn == $adm_pth.'save_file.php')
-      )
-   )
-{
-   $fc = str_replace($ta_fctag,$ta_ctag,$fc);
-   $fc = str_replace(chr(60).' !--$$_',chr(60).'!--$$_',$fc); 
-   $fc = str_replace('&lt; !--$$_',chr(60).'!--$$_',$fc);
-   $fc = str_replace('_$$--&gt;','_$$--'.chr(62),$fc);
-   $fc = iconv($site_encoding, "windows-1251", $fc);
 
-}
+$fc = str_replace($ta_fctag,$ta_ctag,$fc);
+$fc = str_replace(chr(60).' !--$$_',chr(60).'!--$$_',$fc);
+$fc = str_replace('<!--$$_',chr(60).'!--$$_',$fc);
+$fc = str_replace('_$$-->','_$$--'.chr(62),$fc);
+$fc = iconv($site_encoding, "windows-1251", $fc);
+if($fc===false) die();
 //echo $afn; die;
 
 if (!is_writable($afn)){
@@ -51,6 +46,11 @@ if ($f){
   fwrite( $f, $fc );
   fclose($f);
 }
+
+// Време за редактиране на файла
+$t = time() - $_POST['start_edit_time'];
+$q = "INSERT INTO `$tn_prefix"."worktime` (`name`,`time`) VALUES ('$fn', $t) ON DUPLICATE KEY UPDATE `time`=`time`+$t;";
+mysqli_query($db_link, $q);
 
 header('Location: '.$adm_pth.'edit_file.php?f='.$fn);
 ?>

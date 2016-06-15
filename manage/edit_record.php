@@ -46,6 +46,7 @@ f.submit();
 <input type="hidden" name="table_name" value="'.$t.'">
 <input type="hidden" name="record_id" value="'.$id.'">
 <input type="hidden" name="go_to_close" value="0">
+<input type="hidden" name="start_edit_time" value="'.time().'">
 <table>';
 
 $i = 0;

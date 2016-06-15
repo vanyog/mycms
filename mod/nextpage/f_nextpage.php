@@ -32,7 +32,7 @@ if (!$nl) return ''; // die(print_r($ld, true));
 // Данни за следващата страница
 $pd = db_select_1('*', 'pages', "`ID`=".$nl['link'] );
 // Заглавие на страницата
-$t = translate('nextpage_next').'<a href="'.$main_index.'?pid='.$pd['ID'].'">'.translate($pd['title'], false).'</a>';
+$t = translate('nextpage_next').'<a href="'.$main_index.'?pid='.$pd['ID'].'">'.strip_tags(translate($pd['title'], false)).'</a>';
 return $t;
 }
 

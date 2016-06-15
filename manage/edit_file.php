@@ -196,6 +196,7 @@ function doOpen(){
 <p><strong>/'.$f.'</strong></p>
 <form action="save_file.php" method="POST" name="edit_form">
 <input type="hidden" name="file" value="'.$f.'">
+<input type="hidden" name="start_edit_time" value="'.time().'">
 '.editor('editor1',$tx).'
 <br><input type="submit" value="Save" name="submit_button">
 <input type="button" value="Save as" onclick="doSaveAs();" name="save_as">
