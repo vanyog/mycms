@@ -42,11 +42,12 @@ case 'start_edit_time':
    mysqli_query($db_link, $q);
    break;
 default:
-  $v1 = str_replace( chr(60).' !--$$_',     chr(60).'!--$$_', $v);
-  $v1 = str_replace( '<!--$$_',            chr(60).'!--$$_', $v1);
-  $v1 = str_replace( '_$$-->',              '_$$--'.chr(62),  $v1);
-  $v1 = str_replace( chr(38).'lt; !--$$_',  chr(60).'!--$$_', $v1);
-  $v1 = str_replace( '_$$--'.chr(38).'gt;', '_$$--'.chr(62),  $v1);
+  $v1 = str_replace( chr(60).' !--$$_',    chr(60).'!--$$_', $v);
+  $v1 = str_replace( '<!--$$_',           chr(60).'!--$$_', $v1);
+  $v1 = str_replace( '_$$-->',             '_$$--'.chr(62),  $v1);
+  $v1 = str_replace( chr(38).'lt;!--$$_',  chr(60).'!--$$_', $v1);
+  $v1 = str_replace( chr(38).'lt; !--$$_', chr(60).'!--$$_', $v1);
+  $v1 = str_replace( '_$$--'.chr(38).'gt;','_$$--'.chr(62),  $v1);
   $q2 .= " `$k`='".addslashes($v1)."',";
 }
 }
