@@ -55,7 +55,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 function '.$mf.'(){
-return \'Module '.$mf.' works\';
+$rz = \'\';
+$rz .= \'Module '.$mf.' works\';
+$rz .= \'\';
+return $rz;
 }
 
 ?>';

@@ -79,11 +79,10 @@ if (isset($_GET['pid'])) $page_id = 1*$_GET['pid'];
 
 // Чете се описанието на страницата от таблица $tn_prefix.'pages'
 $page_data = db_select_1('*','pages',"ID=$page_id");
-if (!$page_data) 
-/*   if (is_local()) die('<a href="'.$adm_pth.'new_record.php?t=pages&ID='.$page_id.
-                       '&title=p'.$page_id.'_title&content=p'.$page_id.'_content">Click here</a> to create a page.');
-   else */
- $page_data = page404();
+if (!$page_data) $page_data = page404();
+
+// Заглавие на страницата
+$page_title = translate($page_data['title'], false);
 
 // Масив с опции
 $page_options = '';
@@ -94,6 +93,7 @@ $cnt = page_cache();
 
 // Ако страницата не е извлечена от кеша се генерира
 if (!$cnt){
+
  // Попълване със съдържание на елементите в шаблона
  $cnt = parse_template($page_data);
  // Записване в кеша

@@ -104,7 +104,7 @@ function apply_filters($n, $t){
 global $idir, $adm_pth;
 $rz = $t; // Връщан резултат
 // Четене на списъка от имена на филтри, които се прилагат върху текста
-$fl = db_select_1('filters', 'filters', "`name`='$n'");
+$fl = db_select_1('*', 'filters', "`name`='$n'");
 // Масив от имена на филтри
 $fla = array();
 if ($fl) $fla = explode(',', $fl['filters']);
@@ -112,10 +112,11 @@ if ($fl) $fla = explode(',', $fl['filters']);
 foreach($fla as $fln){
   $flp = "filter/$fln/$fln.php"; // Път до файла на филтъра от директорията на сайта
   $afp = "$idir$flp"; // Абсолютен път до файла на филтъра
-//  print_r($afp); die;
   if (file_exists($afp)){ // Ако има такъв филтър
+//    print_r($fl); die;
     include_once($afp);
-	$rz = $fln($rz);
+    if($fl['param']>" ") $rz = $fln($rz, $fl['param']);
+    else $rz = $fln($rz);
   }
   else if (show_adm_links()) $rz .= '<p><br>Unknown fliter <a href="'.$adm_pth.'new_filter.php?f='.$fln.'">'.$fln.'</a><p>';
 }

@@ -72,6 +72,7 @@ if (!$sc){ // Ако няма такъв скрипт се търси модул с това име
       store_value("eval_error_code", $c);
       die($c);
     }
+//    if(in_edit_mode()) $tx .= '<a href="/edit_file.php?f='.current_pth($fn).'">'.$tg[0].'</a>';
   }
   else { // Ако няма модул се показва линк за автоматично създаване на модул
     if (show_adm_links()) $tx = ' (Can\'t parse content <a href="'.$adm_pth.'new_mod.php?n='.$tg[0].'">'.$tg[0].'</a>) ';

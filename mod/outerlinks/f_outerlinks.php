@@ -63,16 +63,28 @@ if ( in_array($what, array('all','new','click')) )
    $rz .= "<a href=\"".unset_self_query_var('lid')."\">".translate('outerlinks_cat')."</a>";
 else
    $rz .= "<a href=\"".set_self_query_var('lid', 'all')."\">".translate('outerlinks_all')."</a>"; 
+if($what!='cat') $rz .= " &nbsp; <a href=\"".set_self_query_var('lid', 'cat')."\">".translate('outerlinks_catonly')."</a>";
+else $rz .= " &nbsp; <a href=\"".unset_self_query_var('lid')."\">".translate('outerlinks_cat')."</a>";
 $rz .= "</p>\n";
 
+$p = current_pth(__FILE__);
 switch ($what){
 // Показване на всички връзки в разгърнат вид
 case 'all': $rz .= '<h2><a href="'.unset_self_query_var('lid').'">'.translate('outerlinks_home')."</a></h2>\n".
                    outerlenks_all(0, '').
                    "<p><a href=\"".unset_self_query_var('lid')."\">".translate('outerlinks_cat')."</a></p>";
             break;
+// Показване само на категориите
+case 'cat': $rz .= '<p><img src="'.$p.'folder.gif" alt=""> <a href="'.unset_self_query_var('lid').'">'.translate('outerlinks_home')."<p>\n".
+            outerlenks_cat(0, '');
+            break;
+// Показване на най-новите
 case 'new': $rz .= outerlenks_new();
             break;
+// Показване на най-старите
+case 'old': $rz .= outerlenks_old();
+            break;
+// Показване на най-клекваните
 case 'click': $rz .= outerlenks_click();
             break;
 }
@@ -164,12 +176,16 @@ $rz .= "<p$cl>".edit_radio($l['ID'],$l['place']).'<img src="'.$p.'go.gif" alt=""
 
 }
 
+// Бисквита, запомняща отворената категория
+setcookie('lid',$lid, 0, '/');
+
 // Показване на формата за търсене
-if ($what!='all') $rz .= "\n".end_edit_form($lid).search_link_form();
+if (($what!='all') && ($what!='cat')) $rz .= "\n".end_edit_form($lid).search_link_form();
 
 // Линкове "Най-нови"...
 $rz .= '<p class="counts">'."\n";
 if ($what!='new') $rz .= '<a href="'.set_self_query_var('lid','new').'">'.translate('outerlinks_new')."</a> &nbsp; ";
+if ($what!='old') $rz .= '<a href="'.set_self_query_var('lid','old').'">'.translate('outerlinks_old')."</a> &nbsp; ";
 if ($what!='click') $rz .= '<a href="'.set_self_query_var('lid','click').'">'.translate('outerlinks_click')."</a> &nbsp; ";
 $rz .= "</p>\n</div>\n";
 return $rz;
@@ -318,7 +334,7 @@ else return '<input type="radio" name="link_id" value="'.$id.'" onclick="linkrad
 
 // Добавяне/променяне на данните в режим на редактиране
 // ----------------------------------------------------
-function edit_link($lid){
+function edit_link($lid){// die(print_r($_POST,true));
 if ( ! in_edit_mode() ) return;
 global $tn_prefix,$db_link;
 
@@ -381,6 +397,28 @@ $rz = "<div>\n$tx$rz</div>\n";
 return $rz;
 }
 
+//
+// Показване само на всички категории в разгърнат вид
+// --------------------------------------------------
+function outerlenks_cat($up, $tx, $lv = 1){
+$rz = '';
+$p = current_pth(__FILE__);
+// Добавка за пропускане на private линковете
+$qp = '';
+if (!in_edit_mode()) $qp = 'AND `private`=0';
+$da = db_select_m('*', 'outer_links', "`up`=$up AND (`link`='' OR `link` IS NULL)$qp ORDER BY `place`");
+foreach($da as $d){
+  $n = '';
+  if(in_edit_mode()) $n = $d['ID'].' ';
+  $t = '<p style="margin-left:'.(20*$lv).'px"><img src="'.$p.'folder.gif" alt=""> '.$n.
+       '<a href="'.set_self_query_var('lid',$d['ID']).'">'.$d['Title'].
+       "</a></p>\n";
+  $rz .= outerlenks_cat( $d['ID'], $t, $lv + 1 );
+}
+$rz = "$tx$rz";
+return $rz;
+}
+
 // Показване на "най-новите"
 
 function outerlenks_new(){
@@ -389,6 +427,17 @@ $rz = '<h2>'.translate('outerlinks_newest')."</h2>\n";
 $qp = '';
 if (!in_edit_mode()) $qp = ' AND `private`=0';
 $da = db_select_m('*', 'outer_links', "`link`>' '$qp ORDER BY `date_time_1` DESC LIMIT 0,10");
+return $rz.outerlinks_showlinks($da);
+}
+
+// Показване на "най-старите"
+
+function outerlenks_old(){
+$rz = '<h2>'.translate('outerlinks_oldest')."</h2>\n";
+// Добавка за пропускане на private линковете
+$qp = '';
+if (!in_edit_mode()) $qp = ' AND `private`=0';
+$da = db_select_m('*', 'outer_links', "`link`>' '$qp ORDER BY `date_time_1` ASC LIMIT 0,10");
 return $rz.outerlinks_showlinks($da);
 }
 

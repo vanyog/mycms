@@ -23,12 +23,21 @@ include_once($ddir.'lib/f_db2user_date_time.php');
 
 function pagedates(){
 global $page_data, $language;
-$d = db_select_1('date_time_1,date_time_2', 'content', "`name`='".$page_data['content']."' AND `language`='$language'");
-return '<p id="pagedates">'.translate('pagedates_created').
-       db2user_date_time($d['date_time_1'], false).
-       ' '.translate('pagedates_updated').
-       db2user_date_time($d['date_time_2'], false).
-       '</p>';
+$d = db_select_1('ID,date_time_1,date_time_2', 'content', "`name`='".$page_data['content']."' AND `language`='$language'");
+$rz = '<p id="pagedates">'.translate('pagedates_created').
+      db2user_date_time($d['date_time_1'], false).
+      ' '.translate('pagedates_updated').
+      db2user_date_time($d['date_time_2'], false);
+if(show_adm_links()){
+   $s = db_table_field('time', 'worktime', "`name`='content.".$d['ID']."'");
+   if($s){
+      $h = floor($s/3600); $s -= 3600*$h;
+      $m = floor($s/60);   $s -= 60*$m;
+      $rz .= "<br>$h:$m:$s";
+   }
+}
+$rz .= '</p>';
+return $rz;
 }
 
 ?>

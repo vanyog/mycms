@@ -90,7 +90,8 @@ if (e.keyCode==13){
   var n = document.getElementById("gtpNumber").value;
   if (n){
     var l = "'.$main_index.'?pid="+n;
-    document.location = l;
+    if (e.ctrlKey || e.metaKey) window.open(l);
+    else document.location = l;
   }
 }
 }
