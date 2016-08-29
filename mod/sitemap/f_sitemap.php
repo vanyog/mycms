@@ -40,11 +40,11 @@ $ar = explode('|',$a);
 $id_pre = 'map'.$ar[0];
 $id = 'site_map';
 if (isset($ar[1])) $id = $ar[1];
-return '<div id="'.$id.'">'."\n".sitemap_rec($ar[0])."
+return '<div id="'.$id.'">'."\n".sitemap_rec($ar[0], 1)."
 <p class=\"clear\"></p></div>\n";
 }
 
-function sitemap_rec($i){
+function sitemap_rec($i, $j){
 global $pth, $page_passed, $map_lavel, $i_root, $ind_fl, $id_pre, $page_id;
 
 $page_passed[] = $i;
@@ -52,7 +52,6 @@ $page_passed[] = $i;
 $count = 1; // Номер на поредната връзка
 
 $rz = "\n"; 
-$ind = (40*$map_lavel).'px';
 if (!$i_root) $i_root = $i;
 
 // Извличат се данни за хипервръзките от меню $i
@@ -63,15 +62,13 @@ $index = db_table_field('index_page','menu_tree',"`group`=$i");
 
 // Цикъл за обработка на всяка хипервръзка от менюто $i
 foreach($mi as $m){
-  $rz .= "<div id=\"$id_pre"."_$map_lavel"."_$count\">";
+  $rz .= "<div id=\"$id_pre"."_$j"."_$count\">\n";
   
-  // Съставяне на хипервръзка за картата
-  $pid = 1*$m['link'];
+  $pid = 1*$m['link']; // Номер на страницата от поредния линк
   if (($i==$i_root)||($pid!=$index))
-  { 
+  {
     $lk = $m['link'];
     if ($pid) $lk = $ind_fl.'?pid='.$pid;
-//    $rz .= '<span style="padding-left:'.$ind.'"><a href="'.$lk.'">'.translate($m['name']).'</a></span><br>'."\n";
     if ($pid!=$page_id){
        $rz .= '<a href="'.$lk.'">'.translate($m['name']).'</a>';
        if (in_edit_mode() && db_table_field('hidden', 'pages', "`ID`=".$pid)) $rz .= ' hiddeh';
@@ -89,16 +86,17 @@ foreach($mi as $m){
       // Рекурсивно извикване за получаване карта на подменюто
       if (!in_array($p['menu_group'],$page_passed)){
         $map_lavel++;
-        $rz .= sitemap_rec($p['menu_group']);
+        $rz .= sitemap_rec($p['menu_group'], $count);
         $map_lavel--;
       }
     }
   }
-  $rz .= '</div>';
+  if ($count>1) $rz .= "</div>\n";
+  else $rz = '';
 
 } // Край на цикъла за обработка на всяка хипервръзка от менюто $i
 
-return $rz."\n";
+return $rz;
 
 }
 

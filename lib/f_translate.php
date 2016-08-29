@@ -115,7 +115,7 @@ foreach($fla as $fln){
   if (file_exists($afp)){ // Ако има такъв филтър
 //    print_r($fl); die;
     include_once($afp);
-    if($fl['param']>" ") $rz = $fln($rz, $fl['param']);
+    if(isset($fl['param']) && ($fl['param']>" ")) $rz = $fln($rz, $fl['param']);
     else $rz = $fln($rz);
   }
   else if (show_adm_links()) $rz .= '<p><br>Unknown fliter <a href="'.$adm_pth.'new_filter.php?f='.$fln.'">'.$fln.'</a><p>';
