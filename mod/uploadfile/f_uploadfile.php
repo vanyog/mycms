@@ -29,6 +29,8 @@ global $can_manage;
 function uploadfile($n){
 global $mod_pth, $page_id;
 
+$n = stripslashes($n);
+
 // CSS дефиниции на html тага за показване на файла
 $ss = ''; $m = array();
 $i = preg_match_all('/,style=".*"/', $n, $m);
