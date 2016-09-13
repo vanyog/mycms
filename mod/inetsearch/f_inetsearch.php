@@ -40,13 +40,14 @@ if (w){
   l.text = w;
   window.open(l.href);
 }
+document.getElementById("sengine").innerText = a.split("/")[2];
 }
 function words_enter_pressed(e){
 if (e.keyCode == 13) searchBy("https://google.bg/search?q=", "");
 return false;
 }
 --></script>';
-$rz = '<p><a href="" id="selink" target="_blank">'.encode('Вижте резултата').'</a></p>'."\n";
+$rz = '<p><span id="sengine">'.encode('Резултат').'</span>: <a href="" id="selink" target="_blank"></a></p>'."\n";
 
 if (in_edit_mode()){ // Бутон за добавяне в Интернет връзки
 $sc = 'http';
@@ -102,6 +103,7 @@ $f -> add_input( $i );
 $i = new FormInput('', '', 'button', 'academic.microsoft.com');
 $i -> js = 'onclick="searchBy(\'https://academic.microsoft.com/#/search?iq=\', \'@\');"';
 $f -> add_input( $i );
+
 return $rz.$f->html();
 }
 
