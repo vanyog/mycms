@@ -472,6 +472,7 @@ function outerlinks_autocomment($d){
 if (!isset($d['Comment'])) return '';
 if ($d['Comment']>' ') return ' - '.stripslashes($d['Comment']);
 if (substr($d['link'],-4)=='.pdf') return ' - pdf';
+if (!(strpos($d['link'], 'scholar.google.bg')===false)) return ' - '.translate('outerlinks_sresult').' scholar.google.bg';
 if (!(strpos($d['link'], 'google.bg')===false)) return ' - '.translate('outerlinks_sresult').' google.bg';
 if (!(strpos($d['link'], 'bg.wikipedia.org')===false)) return ' - '.translate('outerlinks_wiki').'bg.wikipedia.org';
 if (!(strpos($d['link'], 'en.wikipedia.org')===false)) return ' - '.translate('outerlinks_wiki').'en.wikipedia.org';

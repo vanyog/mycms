@@ -26,6 +26,7 @@ function refstat(){
 if (!isset($_SERVER['HTTP_REFERER'])) return;
 
 $r = $_SERVER['HTTP_REFERER'];
+if(substr($r, -1)=='/') $r = substr($r, 0, strlen($r) - 1);
 
 // Избягване на някои адреси
 
