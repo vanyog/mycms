@@ -448,20 +448,23 @@ $rz = '<h2>'.translate('outerlinks_clicked')."</h2>\n";
 // Добавка за пропускане на private линковете
 $qp = '';
 if (!in_edit_mode()) $qp = ' AND `private`=0';
-$da = db_select_m('*', 'outer_links', "`link`>' ' AND `clicked`>0$qp ORDER BY `clicked` DESC LIMIT 0,10");
+$da = db_select_m('*', 'outer_links',
+      "`link`>' ' AND `clicked`>0$qp ORDER BY `clicked` DESC LIMIT 0,10");
 return $rz.outerlinks_showlinks($da);
 }
 
 function outerlinks_showlinks($da){
 $rz = '';
 foreach($da as $d){
-  $rz .= '<p><a href="'.set_self_query_var('lid',$d['ID']).'" title="'.urldecode($d['link']).'" target="_blank">'.
-         stripslashes($d['Title']).'</a>';
+  $rz .= '<p><a href="'.set_self_query_var('lid',$d['ID']).'" title="'.urldecode($d['link']).
+         '" target="_blank">'.stripslashes($d['Title']).'</a>';
   if ($d['up']){
      $t2 = db_table_field('Title', 'outer_links', "`ID`=".$d['up']);
-     if (show_adm_links()) $rz .= ' &nbsp; '.$d['clicked'];
-     $rz .= ' &nbsp; <a href="'.set_self_query_var('lid',$d['up']).'" title="'.urldecode($t2).'">'.">></a>";
   }
+  else $t2 = translate('outerlinks_home', false);
+  if (show_adm_links()) $rz .= ' &nbsp; '.$d['clicked'];
+  $rz .= ' &nbsp; <a href="'.set_self_query_var('lid',$d['up']).'" title="'.urldecode($t2).'">'.
+         ">></a>";
   $rz .= "</p>\n";
 }
 return $rz;
