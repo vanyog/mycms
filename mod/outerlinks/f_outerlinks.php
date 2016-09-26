@@ -180,7 +180,8 @@ $rz .= "<p$cl>".edit_radio($l['ID'],$l['place']).'<img src="'.$p.'go.gif" alt=""
 setcookie('lid',$lid, 0, '/');
 
 // Показване на формата за търсене
-if (($what!='all') && ($what!='cat')) $rz .= "\n".end_edit_form($lid).search_link_form();
+if (($what!='all') && ($what!='cat')) $rz .= "\n".end_edit_form($lid);
+if ($what!='all') $rz .= search_link_form();
 
 // Линкове "Най-нови"...
 $rz .= '<p class="counts">'."\n";
@@ -202,7 +203,7 @@ do {
   if ($rz) $rz = " > \n".$rz;
   if ($lk) $rz = '<a href="'.$lk.'">'.$l['Title']."</a>".$rz;
   else{
-     $rz = '<span>'.$l['Title'].'</span>'.$rz;
+     $rz = '<span><a href="'.$lk.'">'.$l['Title'].'</span></a>'.$rz;
      $cm = '';
      if (isset($l['Comment'])) $cm = $l['Comment'];
   }
