@@ -43,8 +43,10 @@ $rz = '';
 
 // Номер на линка, за отваряне
 $lid = 0;
+
 // Какво да се покаже
 $what = '';
+
 if (isset($_GET['lid'])){
   $what = strtolower($_GET['lid']);
   $lid = 1*$_GET['lid'];
@@ -58,16 +60,38 @@ if (!$tr && !$what) $rz .= translate('outerlinks_homemessage');
 
 // Показване на бройките
 $rz .= '<div id="outer_links">'."\n".start_edit_form().'
-<p class="counts">'.translate('outerlinks_totalcount')." $lc ".translate('outerlinks_in')." $cc ".translate('outerlinks_categories')." &nbsp; ";
+<p class="counts">'.translate('outerlinks_totalcount')." $lc ".translate('outerlinks_in')." $cc\n".
+translate('outerlinks_categories')." &nbsp; ";
+
+// Хипервръзка "Преглед по категории" или "Преглед на всички"
 if ( in_array($what, array('all','new','click')) )
    $rz .= "<a href=\"".unset_self_query_var('lid')."\">".translate('outerlinks_cat')."</a>";
 else
-   $rz .= "<a href=\"".set_self_query_var('lid', 'all')."\">".translate('outerlinks_all')."</a>"; 
-if($what!='cat') $rz .= " &nbsp; <a href=\"".set_self_query_var('lid', 'cat')."\">".translate('outerlinks_catonly')."</a>";
-else $rz .= " &nbsp; <a href=\"".unset_self_query_var('lid')."\">".translate('outerlinks_cat')."</a>";
+   $rz .= "<a href=\"".set_self_query_var('lid', 'all')."\">".translate('outerlinks_all')."</a>";
+
+// Хипервръзка "Само категориите" или "Преглед по категории" 
+if($what!='cat')
+   $rz .= " &nbsp; <a href=\"".set_self_query_var('lid', 'cat')."\">".translate('outerlinks_catonly')."</a>";
+else
+   $rz .= " &nbsp; <a href=\"".unset_self_query_var('lid')."\">".translate('outerlinks_cat')."</a>";
+
 $rz .= "</p>\n";
 
+// Линкове "Най-нови"...
+$rzl .= '<p class="counts">'."\n";
+if ($what!='new') $rzl .= '<a href="'.set_self_query_var('lid','new').'">'.translate('outerlinks_new')."</a> &nbsp; ";
+if ($what!='old') $rzl .= '<a href="'.set_self_query_var('lid','old').'">'.translate('outerlinks_old')."</a> &nbsp; ";
+if ($what!='click') $rzl .= '<a href="'.set_self_query_var('lid','click').'">'.translate('outerlinks_click')."</a> &nbsp; ";
+$rzl .= "</p>";
+
 $p = current_pth(__FILE__);
+
+// Ако е извършено търсене се показва резултата от търсенето
+if (count($_POST) && isset($_POST['search_by'])){
+   $rzs .=  link_search();
+   if ($rzs) return $rz.$rzs.$rzl."\n</div>\n";
+}
+
 switch ($what){
 // Показване на всички връзки в разгърнат вид
 case 'all': $rz .= '<h2><a href="'.unset_self_query_var('lid').'">'.translate('outerlinks_home')."</a></h2>\n".
@@ -75,8 +99,10 @@ case 'all': $rz .= '<h2><a href="'.unset_self_query_var('lid').'">'.translate('o
                    "<p><a href=\"".unset_self_query_var('lid')."\">".translate('outerlinks_cat')."</a></p>";
             break;
 // Показване само на категориите
-case 'cat': $rz .= '<p><img src="'.$p.'folder.gif" alt=""> <a href="'.unset_self_query_var('lid').'">'.translate('outerlinks_home')."<p>\n".
-            outerlenks_cat(0, '');
+case 'cat': $rz .= '<p><img src="'.$p.'folder.gif" alt=""> '.
+                   '<a href="'.unset_self_query_var('lid').'">'.translate('outerlinks_home').
+                   "<p>\n".
+                   outerlenks_cat(0, '');
             break;
 // Показване на най-новите
 case 'new': $rz .= outerlenks_new();
@@ -87,12 +113,6 @@ case 'old': $rz .= outerlenks_old();
 // Показване на най-клекваните
 case 'click': $rz .= outerlenks_click();
             break;
-}
-
-// Ако е извършено търсене се показва резултата от търсенето
-if (count($_POST) && isset($_POST['search_by'])){
-$rzr =  link_search();
-if ($rzr) return $rz.$rzr."\n</div>";
 }
 
 // Ако са изпратени данни за редактиране
@@ -183,14 +203,13 @@ setcookie('lid',$lid, 0, '/');
 if (($what!='all') && ($what!='cat')) $rz .= "\n".end_edit_form($lid);
 if ($what!='all') $rz .= search_link_form();
 
-// Линкове "Най-нови"...
-$rz .= '<p class="counts">'."\n";
-if ($what!='new') $rz .= '<a href="'.set_self_query_var('lid','new').'">'.translate('outerlinks_new')."</a> &nbsp; ";
-if ($what!='old') $rz .= '<a href="'.set_self_query_var('lid','old').'">'.translate('outerlinks_old')."</a> &nbsp; ";
-if ($what!='click') $rz .= '<a href="'.set_self_query_var('lid','click').'">'.translate('outerlinks_click')."</a> &nbsp; ";
-$rz .= "</p>\n</div>\n";
+$rz .= $rzl."\n</div>\n";
+
 return $rz;
-}
+
+} // Край на function outer_links()
+
+
 
 // Показване пътя до началната страница
 // ------------------------------------
