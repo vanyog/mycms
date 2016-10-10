@@ -77,12 +77,15 @@ $can_visit = true;     // Право на влязъл потребител да вижда съдържанието на ст
 $page_id = stored_value('main_index_pageid',1);
 if (isset($_GET['pid'])) $page_id = 1*$_GET['pid'];
 
+// Заглавие на страницата
+$page_title = '';
+
 // Чете се описанието на страницата от таблица $tn_prefix.'pages'
 $page_data = db_select_1('*','pages',"ID=$page_id");
 if (!$page_data) $page_data = page404();
 
 // Заглавие на страницата
-$page_title = translate($page_data['title'], false);
+$page_title = translate($page_data['title']);
 
 // Масив с опции
 $page_options = '';

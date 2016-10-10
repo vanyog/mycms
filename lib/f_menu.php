@@ -71,7 +71,7 @@ if (in_edit_mode()){
   $rz .= "id $i ".'<a href="'.$adm_pth.'new_record.php?t=menu_items&group='.$i.'&link='.$page_id.
          '&name=p'.$ni.'_link" style="font-size:80%">New Item</a> '."\n";
 }
-if ($rz) $rz = "\n$sm<div id=\"$id\">\n$rz</div>\n";
+if ($rz) $rz = "\n$sm<div id=\"$id\">\n".translate('menu_start')."$rz</div>\n";
 return $rz;
 }
 

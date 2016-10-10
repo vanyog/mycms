@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include_once($idir.'lib/f_set_self_query_var.php');
 include_once($idir.'lib/f_unset_self_query_var.php');
 include_once($idir.'lib/f_db_table_field.php');
+include_once($idir.'lib/f_encode.php');
 
 function outerlinks(){
 return outer_links();
@@ -55,8 +56,11 @@ if (isset($_GET['lid'])){
 // Път към началната страница
 $tr = link_tree($lid);
 
+// Дали се прави търсне
+$sr4 = (count($_POST) && isset($_POST['search_by']));
+
 // Ако сме на началната страница - добавяне на начално съобщение
-if (!$tr && !$what) $rz .= translate('outerlinks_homemessage');
+if (!$tr && !$what && !$sr4) $rz .= translate('outerlinks_homemessage');
 
 // Показване на бройките
 $rz .= '<div id="outer_links">'."\n".start_edit_form().'
@@ -78,7 +82,7 @@ else
 $rz .= "</p>\n";
 
 // Линкове "Най-нови"...
-$rzl .= '<p class="counts">'."\n";
+$rzl = '<p class="most">'."\n";
 if ($what!='new') $rzl .= '<a href="'.set_self_query_var('lid','new').'">'.translate('outerlinks_new')."</a> &nbsp; ";
 if ($what!='old') $rzl .= '<a href="'.set_self_query_var('lid','old').'">'.translate('outerlinks_old')."</a> &nbsp; ";
 if ($what!='click') $rzl .= '<a href="'.set_self_query_var('lid','click').'">'.translate('outerlinks_click')."</a> &nbsp; ";
@@ -87,8 +91,8 @@ $rzl .= "</p>";
 $p = current_pth(__FILE__);
 
 // Ако е извършено търсене се показва резултата от търсенето
-if (count($_POST) && isset($_POST['search_by'])){
-   $rzs .=  link_search();
+if ($sr4){
+   $rzs =  link_search();
    if ($rzs) return $rz.$rzs.$rzl."\n</div>\n";
 }
 
@@ -214,6 +218,7 @@ return $rz;
 // Показване пътя до началната страница
 // ------------------------------------
 function link_tree($lid){
+global $page_data, $page_title;
 if (!$lid) return "";
 $rz = ""; $lk = ''; $cm = '';
 do {
@@ -222,6 +227,8 @@ do {
   if ($rz) $rz = " > \n".$rz;
   if ($lk) $rz = '<a href="'.$lk.'">'.$l['Title']."</a>".$rz;
   else{
+     if (!$page_title) $page_title = translate($page_data['title'],false);
+     $page_title .= ' - '.$l['Title'];
      $rz = '<span><a href="'.$lk.'">'.$l['Title'].'</span></a>'.$rz;
      $cm = '';
      if (isset($l['Comment'])) $cm = $l['Comment'];
@@ -430,7 +437,7 @@ $da = db_select_m('*', 'outer_links', "`up`=$up AND (`link`='' OR `link` IS NULL
 foreach($da as $d){
   $n = '';
   if(in_edit_mode()) $n = $d['ID'].' ';
-  $t = '<p style="margin-left:'.(20*$lv).'px"><img src="'.$p.'folder.gif" alt=""> '.$n.
+  $t = '<p style="margin-left:'.(20*$lv).'px" class="lv'.$lv.'"><img src="'.$p.'folder.gif" alt=""> '.$n.
        '<a href="'.set_self_query_var('lid',$d['ID']).'">'.$d['Title'].
        "</a></p>\n";
   $rz .= outerlenks_cat( $d['ID'], $t, $lv + 1 );
@@ -494,7 +501,8 @@ return $rz;
 function outerlinks_autocomment($d){
 if (!isset($d['Comment'])) return '';
 if ($d['Comment']>' ') return ' - '.stripslashes($d['Comment']);
-if (substr($d['link'],-4)=='.pdf') return ' - pdf';
+if (substr($d['link'],-4)=='.pdf') return encode(' - pdf файл');
+if (substr($d['link'],-4)=='.doc') return encode(' - doc файл');
 if (!(strpos($d['link'], 'scholar.google.bg')===false)) return ' - '.translate('outerlinks_sresult').' scholar.google.bg';
 if (!(strpos($d['link'], 'google.bg')===false)) return ' - '.translate('outerlinks_sresult').' google.bg';
 if (!(strpos($d['link'], 'bg.wikipedia.org')===false)) return ' - '.translate('outerlinks_wiki').'bg.wikipedia.org';

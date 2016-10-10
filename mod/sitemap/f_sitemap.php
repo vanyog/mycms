@@ -61,8 +61,8 @@ $mi = db_select_m('*', 'menu_items', "`group`=$i ORDER BY `place`");
 $index = db_table_field('index_page','menu_tree',"`group`=$i");
 
 // Цикъл за обработка на всяка хипервръзка от менюто $i
-foreach($mi as $m){
-  $rz .= "<div id=\"$id_pre"."_$j"."_$count\">\n";
+foreach($mi as $m){// die(print_r($m,true));
+  $rz .= '<div id="map'.$m['ID']."\">\n";
   
   $pid = 1*$m['link']; // Номер на страницата от поредния линк
   if (($i==$i_root)||($pid!=$index))
