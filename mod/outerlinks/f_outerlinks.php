@@ -63,7 +63,7 @@ $sr4 = (count($_POST) && isset($_POST['search_by']));
 if (!$tr && !$what && !$sr4) $rz .= translate('outerlinks_homemessage');
 
 // Показване на бройките
-$rz .= '<div id="outer_links">'."\n".start_edit_form().'
+$rz .= '<div id="outer_links">'."\n".'
 <p class="counts">'.translate('outerlinks_totalcount')." $lc ".translate('outerlinks_in')." $cc\n".
 translate('outerlinks_categories')." &nbsp; ";
 
@@ -81,7 +81,7 @@ else
 
 $rz .= "</p>\n";
 
-// Линкове "Най-нови"...
+// Линкове "Най-нови", "Най-стари", "Най-кликвани"
 $rzl = '<p class="most">'."\n";
 if ($what!='new') $rzl .= '<a href="'.set_self_query_var('lid','new').'">'.translate('outerlinks_new')."</a> &nbsp; ";
 if ($what!='old') $rzl .= '<a href="'.set_self_query_var('lid','old').'">'.translate('outerlinks_old')."</a> &nbsp; ";
@@ -103,7 +103,8 @@ case 'all': $rz .= '<h2><a href="'.unset_self_query_var('lid').'">'.translate('o
                    "<p><a href=\"".unset_self_query_var('lid')."\">".translate('outerlinks_cat')."</a></p>";
             break;
 // Показване само на категориите
-case 'cat': $rz .= '<p><img src="'.$p.'folder.gif" alt=""> '.
+case 'cat': $rz .= search_link_form().
+                   '<p><img src="'.$p.'folder.gif" alt=""> '.
                    '<a href="'.unset_self_query_var('lid').'">'.translate('outerlinks_home').
                    "<p>\n".
                    outerlenks_cat(0, '');
@@ -141,6 +142,9 @@ if (!$what || $lid) {
 if ($tr) $rz .= $tr;
 else $rz .="\n";
 
+// Показване на формата за търсене
+if ($what!='all') $rz .= search_link_form();
+
 // Добавка за пропускане на private линковете
 $qp = '';
 if (!in_edit_mode()) $qp = 'AND `private`=0';
@@ -168,6 +172,9 @@ if (j>-1) f.comment.value = t.substring(0, j);
 else f.comment.value = "";
 }
 --></script>';
+
+// Добавяне началото на формата за редактиране
+$rz .= start_edit_form();
 
 // Четене и показване на (под)категориите
 $ca = db_select_m('*','outer_links',"`up`=$lid AND (`link`='' OR `link` IS NULL)$qp ORDER BY `place`");
@@ -203,9 +210,8 @@ $rz .= "<p$cl>".edit_radio($l['ID'],$l['place']).'<img src="'.$p.'go.gif" alt=""
 // Бисквита, запомняща отворената категория
 setcookie('lid',$lid, 0, '/');
 
-// Показване на формата за търсене
+// Край на формата за редактиране
 if (($what!='all') && ($what!='cat')) $rz .= "\n".end_edit_form($lid);
-if ($what!='all') $rz .= search_link_form();
 
 $rz .= $rzl."\n</div>\n";
 
@@ -408,7 +414,9 @@ $qp = '';
 if (!in_edit_mode()) $qp = 'AND `private`=0';
 $dt = db_select_m('*', 'outer_links', "`up`=$up AND (`link`>'')$qp ORDER BY `place`");
 foreach($dt as $d){
-  $rz .= '<p><a href="'.
+  $pr = '';
+  if($d['private']) $pr = ' class="private"';
+  $rz .= "<p$pr><a href=\"".
   set_self_query_var('lid',$d['ID']).'" title="'.urldecode($d['link']).
   '" target="_blank">'.stripslashes($d['Title'])."</a>";
   if ($d['Comment']) $rz .= outerlinks_autocomment($d);
@@ -416,7 +424,9 @@ foreach($dt as $d){
 }
 $da = db_select_m('*', 'outer_links', "`up`=$up AND (`link`='' OR `link` IS NULL)$qp ORDER BY `place`");
 foreach($da as $d){
-  $t = '<h'.($lv+1).'><a href="'.set_self_query_var('lid',$d['ID']).'">'.$d['Title'].'</a></h'.($lv+1).">\n";
+  $pr = '';
+  if($d['private']) $pr = ' class="private"';
+  $t = '<h'.($lv+1).$pr.'><a href="'.set_self_query_var('lid',$d['ID']).'">'.$d['Title'].'</a></h'.($lv+1).">\n";
   if ($d['Comment']) $t .= '<p>'.outerlinks_autocomment($d)."</p>\n";
   $rz .= outerlenks_all( $d['ID'], $t, $lv + 1 );
 }
