@@ -169,6 +169,7 @@ foreach($sd as $d){
   $a = translate($d['name']);
   $rz .= "<a href=\"index.php?pid=".$d['link']."\">$a</a> \n";
 }
+if (in_edit_mode()) $rz .= $sm['group'];
 $rz .= "</div>\n";
 return $rz;
 }
