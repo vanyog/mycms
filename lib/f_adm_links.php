@@ -56,12 +56,20 @@ else {
   $go = $local_host; $gon = 'go to LOCAL';
   if (is_local()){
     $mphp = $phpmyadmin_local;
-    $go = $web_host; $gon = 'go to WEB'; $w3c = '';
+    $go = $web_host; $gon = 'go to WEB'; $w3c = ''; $mob = ''; $spt = '';
   }
   else {
-    if (substr($_SERVER['REQUEST_URI'],0,strlen($adm_pth))==$adm_pth) $w3c = '';
-    else $w3c = ' :: <a href="http://validator.w3.org/check?uri='.
-         urlencode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).'" target="_blank">w3c</a>';
+    if (substr($_SERVER['REQUEST_URI'],0,strlen($adm_pth))==$adm_pth){
+       $w3c = '';  $mob = ''; $spt = '';
+    }
+    else {
+       $w3c = ' :: <a href="http://validator.w3.org/check?uri='.
+              urlencode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).'" target="_blank">w3c</a>';
+       $mob = ' :: <a href="https://www.google.com/webmasters/tools/mobile-friendly/?url='.
+              urlencode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).'" target="_blank">mob</a>';
+       $spt = ' :: <a href="https://developers.google.com/speed/pagespeed/insights/?url='.
+              urlencode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).'" target="_blank">sp</a>';
+    }
   }
   $go = 'http://'.$go.$_SERVER['REQUEST_URI'];
   
@@ -110,7 +118,7 @@ if (e.keyCode==13){
 <a href="'.$adm_pth.'showenv.php?AAAAAAA" target="_blank">$_SERVER</a> :: 
 <a href="https://github.com/vanyog/mycms/wiki" target="_blank">Help</a> :: 
 <a href="'.$go.'">'.$gon.'</a><!--:: 
-<a hr  ="'.$adm_pth.'dump_data.php">Dump</a-->'.$w3c.' :: 
+<a hr  ="'.$adm_pth.'dump_data.php">Dump</a-->'.$w3c.$mob.$spt.' ::
 '.$clink.' <!--DB_REQ_COUNT-->
 <a href="'.$pth.'lib/exit.php">x</a>&nbsp; 
 </p>';

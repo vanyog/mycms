@@ -57,7 +57,7 @@ while ($pr['parent'])
   $rz = '<a href="'.$main_index.'?pid='.$pg['ID'].'">'.translate($pg['title']).'</a>'.$rz;
 }
 return '<div id="menu_tree">
-'.$rz.'
+'.translate('menutree_start').$rz.'
 </div>';
 }
 

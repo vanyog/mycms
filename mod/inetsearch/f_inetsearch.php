@@ -52,6 +52,7 @@ $rz = '<p><span id="sengine">'.encode('Резултат').'</span>: <a href="" id="selin
 if (in_edit_mode()){ // Бутон за добавяне в Интернет връзки
 $sc = 'http';
 if (isset($_SERVER['REQUEST_SCHEME'])) $sc = $_SERVER['REQUEST_SCHEME'];
+$v = (isset($_COOKIE['lid']) ? $_COOKIE['lid'] : '');
 $rz .= '<script type="text/javascript"><!--
 function sendLink(){
 var f = document.forms.send_link_form;
@@ -75,11 +76,15 @@ f.submit();
 <input type="hidden" name="action" value="update">
 <input type="hidden" name="link">
 <input type="hidden" name="place">
-'.encode('Раздел:').' <input type="text" name="up" size="5" value="'.(isset($_COOKIE['lid']) ? $_COOKIE['lid'] : '').'">
+';
+if($v) $rz .= '<a href="/index.php?lid='.$v.'&amp;pid=6">'.encode('Раздел:').'</a>';
+else $rz .= encode('Раздел:');
+$rz .= ' <input type="text" name="up" size="5" value="'.$v.'">
 '.encode('Служебен:').' <input type="text" name="private" size="1">
 <input type="hidden" name="title">
 <input type="hidden" name="comment">
-<input type="button" value="'.encode('Добавяне в Интернет връзки').'" onclick="sendLink();"></p>
+<input type="button" value="'.encode('Добавяне').'" onclick="sendLink();"> <a href="/index.php?pid=6">'.
+encode(' в Интернет връзки').'</a>.</p>
 </form>'."\n";
 } // if (in_edit_mode())
 

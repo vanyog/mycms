@@ -63,7 +63,7 @@ if (isset($_SESSION['text_to_search'])){
            ' title="'.translate('sitesearch_clear').'"';
   $f->add_input( $b );
 }
-return $f->html();
+return translate('sitesearch_start').$f->html();
 }
 
 //

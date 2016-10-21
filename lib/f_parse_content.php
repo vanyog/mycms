@@ -29,7 +29,7 @@ include_once($idir.'lib/f_adm_links.php');
 include_once($idir.'lib/f_mod_path.php');
 
 function parse_content($cnt){
-global $page_options, $page_data, $body_adds, $page_header, $content_date_time, 
+global $page_options, $page_data, $page_title, $body_adds, $page_header, $content_date_time,
        $idir, $pth, $adm_pth, $apth, $mod_pth, $mod_apth,
        $can_visit, $can_manage, $site_encoding;
 
