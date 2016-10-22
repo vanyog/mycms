@@ -32,7 +32,7 @@ private $ins = array();
 // $at - дали да се показва в таблица
 // $tx - текст, който се показва между <form> тага и първия елемент на формата
 
-function __construct($n,$at=true,$tx = ''){
+function __construct($n, $at=true, $tx = ''){
 $this->name = $n;
 $this->astable = $at;
 if ($at){ if ($tx) $this->text = "<tr><td colspan=\"2\">$tx</td></tr>"; }
@@ -41,7 +41,7 @@ else $this->text = $tx;
 
 function add_input($in){
 $this->ins[] = $in;
-$this->action = str_replace('&','&amp;',$_SERVER['REQUEST_URI']);
+if (!$this->action) $this->action = str_replace('&','&amp;',$_SERVER['REQUEST_URI']);
 }
 
 public function html(){
