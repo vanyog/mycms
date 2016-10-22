@@ -109,11 +109,14 @@ if ($newmenu){ // Номерът на новото меню - с 1 по-голям от най-големия, зададен 
   if ($mg3>$mg2) $mg2 = $mg3;
 }
 
+// Предполагаем номер на новия линк
+$mi = db_table_field('MAX(`ID`)', 'menu_items', '1')+1;
+
 // Данни за таблица 'pages'
 $d1 = array(
   'menu_group'=>$mg2,
   'title'=>"p$pi"."_title",
-  'content'=>"p$pi"."_content",
+  'content'=>"p$mi"."_content",
   'template_id'=>$page_data['template_id'],
 );
 // Записване в таблицата
