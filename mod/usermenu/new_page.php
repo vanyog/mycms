@@ -90,6 +90,11 @@ include($idir."lib/build_page.php");
 function process_data(){
 global $pth, $page_data;//  print_r($_POST); die;
 
+// Премахване на m: от старите формули
+$_POST['content'] = str_replace('<m:', '<', $_POST['content']);
+$_POST['content'] = str_replace('</m:', '</', $_POST['content']);
+$_POST['content'] = str_replace(' xmlns:m="http://www.w3.org/1998/Math/MathML"', '', $_POST['content']);
+
 // Дали се създава нов раздел
 $newmenu = isset($_POST['newmenu']) && ($_POST['newmenu']=='on');
 
@@ -116,7 +121,7 @@ $mi = db_table_field('MAX(`ID`)', 'menu_items', '1')+1;
 $d1 = array(
   'menu_group'=>$mg2,
   'title'=>"p$pi"."_title",
-  'content'=>"p$mi"."_content",
+  'content'=>"p$pi"."_content",
   'template_id'=>$page_data['template_id'],
 );
 // Записване в таблицата
@@ -126,7 +131,7 @@ $pi = db_insert_1($d1,'pages');
 $d2 = array (
   'place'=>1*$_POST['place'], 
   'group'=>$mg2, 
-  'name'=>"p$pi"."_link",
+  'name'=>"p$mi"."_link",
   'link'=>$pi
 );
 // Записване в таблицата
@@ -172,7 +177,7 @@ array('name'=>$d1['content'],
 // Надписи върху линкове в менюта
 if (trim($_POST['linktext']))
   // В менюто на новата страница 
-  $d3[] = array('name'=>"p$pi"."_link",
+  $d3[] = array('name'=>"p$mi"."_link",
       'date_time_1'=>'NOW()',
       'date_time_2'=>'NOW()',
       'language'=>addslashes($_POST['lang']),

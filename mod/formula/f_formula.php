@@ -34,6 +34,7 @@ if ( strlen($a) && (strtolower($a[0])=='c') )  return formula_ref($a);
 global $adm_pth;
 // Асоциативен масив с формулите от текущата страница
 static $fs = false;
+// Ако оща не е съставен се съставя
 if (!$fs) $fs = formula_for_page();
 static $c = 0; // Брой вече показани на текущата страница формули
 $n = count($fs) - $c; // Номер на поредната формула в страницата
@@ -41,20 +42,22 @@ $n = count($fs) - $c; // Номер на поредната формула в страницата
 if (!isset($fs[$a])){
   // Ако съществува формула с `ID`=$a, показана на друга страница
   if (db_table_field('ID', 'formula', "`ID`=$a"))
-     // Съобщение за какво стойност на $a е допустима за текущата страница
+     // Се показва съобщение какво стойност на $a е допустима за текущата страница
      return '<p>'.translate('formula_incorrectID').db_table_field('MAX(`ID`)', 'formula', 1).'</p>';
   else 
-     // Форма за въвеждане на формула
+     // Ако не съществува формула с `ID`=$a, се показва форма за въвеждане
      return formula_edit_form();
 }
-// Преномериране на формулата, ако е необходимо
+// Запазване в БД нов номер на формулата, ако е необходимо
 if ($n!=$fs[$a]['number']) db_update_record(array('ID'=>$fs[$a]['ID'], 'number'=>$n), 'formula');
 // Линк * за редактиране на формулата
 $elk = '';
-if (in_edit_mode()) $elk = " <a href=\"$adm_pth/edit_record.php?t=formula&amp;r=$a\">*</a>";
+if (in_edit_mode()) $elk = " <a href=\"$adm_pth/edit_record.php?t=formula&amp;r=$a\">$a*</a>";
 // Показване на формулата
-$rz = '<div class="math">
-<div class="l">('.$fs[$a]['page_id'].'.'.$n.')</div>
+$vn = $fs[$a]['page_id'].'.'.$n; // Видим номер на формулата
+$rz = '<a name="f'.$vn.'" id="f'.$vn.'"></a>
+<div class="math">
+<div class="l">('.$vn.')</div>
 <div class="r">'.$fs[$a]['markup']."\n".$elk."</div>\n</div>
 <div style=\"clear:both\"></div>\n";
 $c++;
@@ -86,9 +89,11 @@ db_insert_1($_POST, 'formula');
 }
 
 function formula_ref($a){
+global $main_index;
 $id = substr($a, 1);
 $d = db_select_1('*', 'formula', "`ID`=$id");
-$rz = '('.$d['page_id'].'.'.$d['number'].')';
+$vn = $d['page_id'].'.'.$d['number']; // Видим номер на формулата
+$rz = '(<a href="'.$main_index.'?pid='.$d['page_id'].'#f'.$vn.'">'.$d['page_id'].'.'.$d['number'].'</a>)';
 return $rz;
 }
 

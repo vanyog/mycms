@@ -27,6 +27,7 @@ if (!$ld) return '';
 // Данни за следващия линк в менюто
 $nl = db_select_1('*', 'menu_items', "`group`='".$page_data['menu_group']."' AND `place`>".$ld['place'].
       " ORDER BY `place`");
+// Ако няма такъв се търси следващ линк в родителските менюта
 if (!$nl) $nl = nextpage_from_parent($ld);
 if (!$nl) return ''; // die(print_r($ld, true));
 // Данни за следващата страница
@@ -40,14 +41,16 @@ return $t;
 
 function nextpage_from_parent($ld){
 global $page_id;
-// Родителско меню
-$p = db_select_1('*', 'menu_tree', "`group`=".$ld['group']);
-if (!$p) return false;
-// Данни за линка към главната страница на раздела в родителското меню.
-$ld = db_select_1('*', 'menu_items', "`group`='".$p['parent']."' AND `link`=".$p['index_page']);
-if (!$ld) return false;
-// Данни за следващия линк в родителското меню
-$nl = db_select_1('*', 'menu_items', "`group`='".$ld['group']."' AND `place`>".$ld['place']." ORDER BY `place`");
+do {
+  // Родителско меню
+  $p = db_select_1('*', 'menu_tree', "`group`=".$ld['group']);
+  if (!$p) return false;
+  // Данни за линка към главната страница на раздела в родителското меню.
+  $ld = db_select_1('*', 'menu_items', "`group`='".$p['parent']."' AND `link`=".$p['index_page']);
+  if (!$ld) return false;
+  // Данни за следващия линк в родителското меню
+  $nl = db_select_1('*', 'menu_items', "`group`='".$ld['group']."' AND `place`>".$ld['place']." ORDER BY `place`");
+} while (!$nl); // die;
 return $nl;
 }
 

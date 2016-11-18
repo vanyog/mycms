@@ -67,7 +67,7 @@ $rz = '';
 $fr = db_select_1('*','files',"`pid`=$pid AND `name`='$n'"); //print_r($fr); die;
 
 $ne = true; // Флаг, който ако е истина файлът не се показва
-$imgs = array('jpg','gif','png'); // Разширения на файлове - изображения
+$imgs = array('jpg','gif','png','svg'); // Разширения на файлове - изображения
 
 // $show_text - Дали да се показва текст
 if (isset($na[2])) $show_text = $na[2];
@@ -95,13 +95,14 @@ else {
   // href - атрибут на файла
   $f = substr($fr['filename'],  $l, strlen($fr['filename'])-$l);
   // Дали файлът е във време за показване
-  $t1 = strtotime($fr['date_time_3']);
-  $t2 = strtotime($fr['date_time_4']);
-  $t3 = time()+3600;
+  $t1 = strtotime(str_replace('-','/',$fr['date_time_3']));
+  $t2 = strtotime(str_replace('-','/',$fr['date_time_4']));
+  $t3 = time()+3600; die("$t1 $t2 $t3");
   $cs = ( (!$t1 || ($t1<0) || ($t3>$t1)) && (!$t2 || ($t2<0) || ($t3<$t2)) );
 //  echo "$t1<br>".date("Y-m-d H:i:s", $t3)."<br>$t2<br><br>";
   // Ако няма файл или е извън DOCUMENT_ROOT, или не е във време за показване
-  if ( (!$fr['filename'] || $ne || !$cs) && !in_edit_mode() ){ // Показване на текста на връзката, "няма качен файл" или нищо
+  if ( (!$fr['filename'] || $ne || !$cs) && !in_edit_mode() ){
+    // Показване на текста на връзката, "няма качен файл" или нищо
     if (in_edit_mode()) $rz .= stripslashes($fr['text']); 
     else switch ($show_text){
     case '0': $rz .= ''; break;
