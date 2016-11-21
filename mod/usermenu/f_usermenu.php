@@ -109,7 +109,7 @@ if ($can_create){
 function confirm_page_deleting(){
 if (confirm("'.translate('usermenu_confirdeleting').'")) document.location = "'.$pt.'delete_page.php?pid='.$page_data['ID'].'";
 }
---></script>';
+--></script>'."\n";
   $rz .= '<a href="" onclick="confirm_page_deleting();return false;">Page Delete</a><br>'."\n";
  }
  if (isset($page_data['hidden']) && $page_data['hidden'])
@@ -131,7 +131,7 @@ if (g){
   document.location = r;
 }
 }
---></script>';
+--></script>'."\n";
  $rz .= '<a href="javascript:void(0);" onclick="getPage();">Page Get</a><br>'."\n";
  $rz .= '<a href="javascript:void(0);" onclick="moveTo();">Page Move</a><br>'."\n";
 }

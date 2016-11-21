@@ -75,7 +75,7 @@ return $rz;
 }
 
 function translate_if($a, $b){
-if (function_exists('translate')) return translate($a);
+if (function_exists('translate')) return translate($a, false);
 else return $b;
 }
 
@@ -234,21 +234,13 @@ else $this->public_key = $pk;
 }
 
 public function html($it){
-global $language;
+global $page_header, $language;
+$page_header .= '<script src="https://www.google.com/recaptcha/api.js"></script>'."\n";
 $rz = '';
 if ($it) $rz = "<tr>\n<th>";
 $rz .= $this->caption;
 if ($it) $rz .= "</th>\n<td>"; else $rz .= " ";
-$rz .= '<script type="text/javascript"
-  src="http://www.google.com/recaptcha/api/challenge?k='.$this->public_key.'&amp;hl='.$language.'">
-</script>
-<noscript>
-  <iframe src="http://www.google.com/recaptcha/api/noscript?k='.$this->public_key.'&hl='.$language.'"
-    height="300" width="500" frameborder="0"></iframe><br>
-  <textarea name="recaptcha_challenge_field" rows="3" cols="40">
-  </textarea>
-  <input type="hidden" name="recaptcha_response_field" value="manual_challenge">
-</noscript>';
+$rz .= '<div class="g-recaptcha" data-sitekey="'.$this->public_key.'"></div>';
 if ($it) $rz .= "</td>\n<tr>\n"; else $rz .= "<br>\n";
 return $rz;
 }
