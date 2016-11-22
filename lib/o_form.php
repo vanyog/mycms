@@ -48,8 +48,13 @@ public function html(){
 $js = '';
 // JavaScript функция, която проверява дали всички текстови полета във формата са попълнени.
 // За да се изпълни, на бутона на формата трябва да се присвои ->js = ' onclick="ifNotEmpty_имеНаФорма();"';
-$js1 = 'function ifNotEmpty_'.$this->name.'(){
+$js1 = 'var noEmptyCheck = "";
+function ifNotEmpty_'.$this->name.'(){
 var f = document.forms["'.$this->name.'"];
+if(noEmptyCheck){
+   if(confirm(noEmptyCheck)) f.submit();
+   return;
+}
 var l = f.length;
 var r = 1;
 for(i=0;i<l-1;i++){

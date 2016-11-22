@@ -90,6 +90,7 @@ if (isset($_GET['code'])) return confirm_userreg($t);
 $message = '';
 $email = ''; 
 if (count($_POST)){
+ print_r($_POST); die;
  $message = userreg_newprocess();
  if ($message=='OK') return '<p class="message">'.translate('userreg_emailsent').'</p>';
  $email = $_POST['email'];
@@ -107,16 +108,17 @@ if (stored_value('userreg_facebook')!='allowed') return '';
 return "
 <script>
 
+// This code is from https://developers.fac book.com/docs/facebook-login/web#checklogin
+// modified by the needs of MyCMS project
+
   function statusChangeCallback(response) {
     if (response.status === 'connected') {
+      document.getElementsByTagName('fb:login-button')[0].innerHTML = '';
       testAPI();
     } else if (response.status === 'not_authorized') {
-      document.getElementById('status').innerHTML = '".translate('userreg_byFacebook')."';
+      document.getElementById('status').innerHTML = '".translate('userreg_byFacebookNA')."';
     } else {
-      // The person is not logged into Facebook, so we're not sure if
-      // they are logged into this app or not.
-      document.getElementById('status').innerHTML = 'Please log ' +
-        'into Facebook.';
+      document.getElementById('status').innerHTML = '".translate('userreg_byFacebookNC')."';
     }
   }
 
@@ -132,8 +134,7 @@ return "
   window.fbAsyncInit = function() {
   FB.init({
     appId      : '1350744361603908',
-    cookie     : true,  // enable cookies to allow the server to access 
-                        // the session
+    cookie     : true,  // enable cookies to allow the server to access the session
     xfbml      : true,  // parse social plugins on this page
     version    : 'v2.8' // use graph api version 2.8
   });
@@ -165,14 +166,12 @@ return "
     fjs.parentNode.insertBefore(js, fjs);
   }(document, 'script', 'facebook-jssdk'));
 
-  // Here we run a very simple test of the Graph API after login is
-  // successful.  See statusChangeCallback() for when this call is made.
   function testAPI() {
-    console.log('Welcome!  Fetching your information.... ');
-    FB.api('/me', function(response) {
-      console.log('Successful login for: ' + response.name);
-      document.getElementById('status').innerHTML =
-        'Thanks for logging in, ' + response.name + '!';
+    FB.api('/me', {fields:'name, email'}, function(response) {
+      noEmptyCheck = '".translate('userreg_confirmByFB')."';
+      document.forms['userreg_form'].email.value = response.email;
+      document.forms['userreg_form'].password.value = 'fromFacebook';
+      document.getElementById('status').innerHTML = '".translate('userreg_continueByFB')."';
     });
   }
 </script>
