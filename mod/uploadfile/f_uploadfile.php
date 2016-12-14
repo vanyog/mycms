@@ -97,7 +97,7 @@ else {
   // Дали файлът е във време за показване
   $t1 = strtotime(str_replace('-','/',$fr['date_time_3']));
   $t2 = strtotime(str_replace('-','/',$fr['date_time_4']));
-  $t3 = time()+3600; die("$t1 $t2 $t3");
+  $t3 = time()+3600; //die("$t1 $t2 $t3");
   $cs = ( (!$t1 || ($t1<0) || ($t3>$t1)) && (!$t2 || ($t2<0) || ($t3<$t2)) );
 //  echo "$t1<br>".date("Y-m-d H:i:s", $t3)."<br>$t2<br><br>";
   // Ако няма файл или е извън DOCUMENT_ROOT, или не е във време за показване
