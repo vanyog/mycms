@@ -98,10 +98,8 @@ return
 function purge_page_cache($a){
 $b = parse_url($a);
 $c = array(); 
-$d = $b['path'];
 if (isset($b['query'])) parse_str($b['query'],$c);
-if (isset($c['pid'])) $d .= '?pid='.$c['pid'];
-if ($d>'/') db_delete_where('page_cache',"`name` LIKE '%$d%'");
+if (isset($c['pid'])) db_delete_where('page_cache',"`page_ID`=".(1*$c['pid']), true);
 }
 
 //

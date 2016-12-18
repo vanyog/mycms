@@ -58,7 +58,7 @@ mysqli_query($db_link,$q);
 
 session_start();
 
-if ($gtc){ print_r($_SESSION['http_referer']); //die;
+if ($gtc){ //print_r($_SESSION['http_referer']);
   purge_page_cache($_SESSION['http_referer']);
   header('Location: '.$_SESSION['http_referer']);
 }
