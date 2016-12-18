@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Показване датите на създаване и на последната промяна на страницата.
 
+global $ddir;
+
 include_once($ddir.'lib/f_db2user_date_time.php');
 
 function pagedates(){

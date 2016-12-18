@@ -396,7 +396,9 @@ $rz = '<p>'.translate('userreg_logoutcontent').
        ' <a href="'.stored_value("userreg_login_$t").'">'.translate('userreg_login').'</a></p>
 ';
 if (isset($_SESSION['user2_returnpage']))
-   $rz .= '<p><a href="'.$_SESSION['user2_returnpage'].'">'.translate('userreg_backto').'</a>.</p>';
+   if (isset($_SERVER['HTTP_REFERER'])) $rf = $_SERVER['HTTP_REFERER'];
+   else $rf = $_SESSION['user2_returnpage'];
+   $rz .= '<p><a href="'.$rf.'">'.translate('userreg_backto').'</a>.</p>';
 unset($_SESSION['user2_returnpage']);
 unset($_SESSION['session_start']);
 if (!count($_SESSION)) setcookie('PHPSESSID','',time()-60,'/');

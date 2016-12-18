@@ -23,8 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Ако $nom=true само се проверяват правата без да се показва меню.
 // $nom = адрес на страница за излизане
 
-
-
 global $can_visit, $can_manage;
 
 //include_once($idir."conf_paths.php");
