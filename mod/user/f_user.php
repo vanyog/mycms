@@ -102,7 +102,7 @@ if (!$rz) {
     }
   }
   // Ако никоя функция не е намерила номер на валиден потребител - Access denied.
-  if (!$rz) { session_destroy(); header("Status: 403"); die("Access denied by user module."); } 
+  if (!$rz) { session_destroy(); header("Status: 403"); die("Access denied by user module."); }
 }
 else{
   // Ако се редактират данните на потребителя.
@@ -170,7 +170,7 @@ if ($a != 'login'){ include($idir.'lib/build_page.php'); die; }
 else return $page_content;
 }
 
-// Функцията process_user() обработва данните за влизане на потребителя - 
+// Функцията process_user() обработва данните за влизане на потребителя -
 // присвоява ги на съответните променливи на сесията и презарежда страницата
 
 function process_user(){
@@ -242,7 +242,7 @@ return $guf;
 function logout_user(){
 // Адрес на страницата, която по подразбиране се показва след излизане
 $lp = current_pth(__FILE__).'logout.php';
-// Евентуално в настройките може да е зададена друга 
+// Евентуално в настройките може да е зададена друга
 $lp = stored_value('user_logoutpage',$lp);
 if (!session_id()) session_start();
 // Унищожаване променливите на сесията
@@ -282,7 +282,7 @@ return $rz.edit_record_form($cp, $user_table);
 
 //
 // Функция new_user() се извиква, когато все още няма нито един потребител.
-// Тя презарежда страницата, като добавя в адреса и праметър user=newreg и това предизвиква показване на форма за 
+// Тя презарежда страницата, като добавя в адреса и праметър user=newreg и това предизвиква показване на форма за
 // редактиране на нов потребител.
 //
 function new_user($a){// print_r($_SESSION); die;
@@ -380,7 +380,7 @@ if ($p) return true; else return false;
 
 //
 // В момента тази функция не се използва
-// Изтрива потребител с потребителско име 
+// Изтрива потребител с потребителско име
 //
 function do_delete_user(){
 // Име на таблицата с данни за потребители
