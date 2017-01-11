@@ -35,8 +35,13 @@ load_options(array(
   'edit_value',
   'admin_path',
   'admin_path',
-  'main_index_file'
+  'main_index_file',
+  'document_root'
 ));
+
+// Задаване друга стойност на $_SERVER['DOCUMENT_ROOT'], ако връщаната от сървъра не е правилна
+$donument_root = stored_value('document_root');
+if (file_exists($donument_root)) $_SERVER['DOCUMENT_ROOT'] = $donument_root;
 
 // Директория на входната страница.
 // Задава се ако сайтът се изгражда като раздел в друг сайт и се намира в директория на главния сайт.
@@ -51,6 +56,7 @@ $apth = $_SERVER['DOCUMENT_ROOT'].$pth;
 
 // Директория за администриране
 $adm_pth = stored_value('admin_path','manage').'/';
+//die("$pth.$adm_pth");
 if ($adm_pth[0]!='/') $adm_pth = $pth.$adm_pth;
 
 // Абсолютна директория на директорията за администриране във файловата система на сървъра
@@ -103,6 +109,7 @@ function current_pth($f = __FILE__){
 $p1 = $_SERVER['DOCUMENT_ROOT'];         $n1 = strlen($p1);
 if ($p1[$n1-1]=='/') $n1--;
 $p2 = str_replace('\\','/',dirname($f)); $n2 = strlen($p2);
+//die("$p2,$n1,$n2-$n1");
 $r = substr($p2,$n1,$n2-$n1).'/';
 return $r;
 }
