@@ -70,9 +70,12 @@ foreach($mi as $m){// die(print_r($m,true));
     $lk = $m['link'];
     if ($pid) $lk = $ind_fl.'?pid='.$pid;
     if ($pid!=$page_id){
-       $rz .= '<a href="'.$lk.'">'.translate($m['name']).'</a>';
-       if (in_edit_mode() && db_table_field('hidden', 'pages', "`ID`=".$pid)) $rz .= ' hiddeh';
-       $rz .= "<br>\n";
+       $h = db_table_field('hidden', 'pages', "`ID`=".$pid);
+       if( !$h || in_edit_mode() ){
+          $rz .= '<a href="'.$lk.'">'.translate($m['name']).'</a>';
+          if( $h && in_edit_mode() ) $rz .= ' hiddeh';
+          $rz .= "<br>\n";
+       }
     }
     $count++;
   }

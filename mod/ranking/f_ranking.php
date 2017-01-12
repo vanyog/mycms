@@ -39,7 +39,8 @@ return '<div id="page_ranking">
 
 function new_page_links($limit){
 global $rank_addtowhile1, $rank_addtowhile2;
-$d = db_select_m('*','pages','`hidden`=0 ORDER BY `ID` DESC LIMIT 0,'.$limit);
+$h = in_edit_mode() ? 1 : '`hidden`=0';
+$d = db_select_m('*','pages',"$h ORDER BY `ID` DESC LIMIT 0,".$limit);
 // Съставяне на $rank_addtowhile1 и $rank_addtowhile2
 $rank_addtowhile1 = '';
 $rank_addtowhile2 = '';
@@ -80,7 +81,8 @@ do {
     if (!count($cd)) return $rz; 
 
     // Прочита се записа за страницата, чието съдържание е този текст (ако има такава)
-    $pd = db_select_m('*','pages',"`hidden`=0 AND `content`='".$cd['name']."'");
+    $h = in_edit_mode() ? '' : '`hidden`=0 AND ';
+    $pd = db_select_m('*','pages',"$h`content`='".$cd['name']."'");
     if (count($pd)) $pd = $pd[0];
 
     $i++;
@@ -95,7 +97,8 @@ return $rz;
 // Най-посетените страници
 
 function max_visited_page_links($limit){
-$d = db_select_m('*','pages','`hidden`=0 ORDER BY `tcount` DESC LIMIT 0,'.$limit);
+$h = in_edit_mode() ? 1 : '`hidden`=0';
+$d = db_select_m('*','pages',"$h ORDER BY `tcount` DESC LIMIT 0,".$limit);
 return page_links($d);
 }
 
@@ -103,7 +106,8 @@ return page_links($d);
 
 function min_visited_page_links($limit){
 global $rank_addtowhile2;
-$d = db_select_m('*','pages',"`hidden`=0 $rank_addtowhile2 ORDER BY `tcount` ASC LIMIT 0,".$limit);
+$h = in_edit_mode() ? 1 : '`hidden`=0';
+$d = db_select_m('*','pages',"$h $rank_addtowhile2 ORDER BY `tcount` ASC LIMIT 0,".$limit);
 //die($rank_addtowhile2);
 return page_links($d);
 }

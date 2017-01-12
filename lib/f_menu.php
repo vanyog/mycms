@@ -42,7 +42,7 @@ foreach($d as $m){
   $ln = $m['link']; 
   if ($lnn){
     $h = db_table_field('hidden', 'pages', "`ID`=$lnn");
-    if ($hm && $h && !in_edit_mode() && !show_adm_links() ) continue;
+    if ($hm && $h && !in_edit_mode() /*&& !show_adm_links()*/) continue;
     $ln = $ind_fl.'?pid='.$lnn;
   }
   $pl = '';
