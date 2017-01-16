@@ -57,7 +57,7 @@ case 'login' : return userreg_login($ta[0]);
 case 'logout': return userreg_logout($ta[0]);
 case 'edit'  : return userreg_edit($ta[0]);
 }
-else{
+else{// die(print_r($ta,false));
   if (isset($ta[1])){
     $pid = 1*$ta[1];
     if ($pid){ header('Location: '.$main_index.'?pid='.$pid); die; }
@@ -87,6 +87,7 @@ return $rz;
 
 function userreg_newform($t){
 if (isset($_GET['code'])) return confirm_userreg($t);
+userreg_check($t);
 $message = '';
 $email = ''; 
 if (count($_POST)){
@@ -282,23 +283,26 @@ return '<p class="message">'.translate('userreg_emcofirmed').' <a href="'.stored
 }
 
 //
-// Проверка за валидността на потребителя
+// Ако има влязъл потребител, връща празен стренг или
+// пренасочва към страницата за влизане, око няма влязъл потребител
 
 function userreg_check($t){
+global $page_id;
 if (!session_id()) session_start();
 // Адрес на страницата за влизане
 $lp = stored_value("userreg_login_$t");
 if (!$lp) die("'userreg_login_$t' option is not set.");
 $_SESSION['user2_returnpage'] = $_SERVER['REQUEST_URI'];
-// Ако няма номер на влязъл потребител - пренасочване
-//print_r($_SESSION); die;
-if (!userreg_id($t)) { header('Location: '.$lp); die; }
+$id = userreg_id($t);
+// Ако няма номер на влязъл потребител и не сме на страницата за влизане - пренасочване
+// към страницата за влизане
+if (!$id && (strpos($lp,'pid='.$page_id)===false)) { header('Location: '.$lp); die; }
 // Ако потребителят съществува, се връща празен стринг.
 return '';
 }
 
 //
-// Определяне номера на влезлия потребител
+// Връща номера на влезлия потребител или 0 ако няма такъв
 
 function userreg_id($t){
 if (!session_id() && isset($_COOKIE['PHPSESSID'])) session_start();
@@ -341,6 +345,7 @@ return '<p class="user">'.$_SESSION['user_username'].' <a href="'.$lp.'">'.trans
 
 function userreg_login($t){
 if (count($_POST)) return userreg_loginprocess($t);
+userreg_check($t);
 // Адрес на страницата за излизане
 $lp = stored_value("userreg_logout_$t");
 // Ако вече има влязъл потребител - надпис "Вие сте влезли като: име "Изход"
@@ -363,7 +368,7 @@ return translate('userreg_logintext').
 }
 
 //
-// Обработване на данните за потребителско име и парола
+// Обработване на данните за потребителско име и парола,
 // изпратени с формата за влизане
 
 function userreg_loginprocess($t){
@@ -377,9 +382,11 @@ if (isset($_POST['username'])){
 if (!isset($_SESSION['user2_returnpage'])) $h = $_SERVER['REQUEST_URI'];
 // Иначе се презарежда текущата страница
 else $h = $_SESSION['user2_returnpage'];
-// От адреса на страницата се премахва параметър user2=logout, ако случайно има такъв.
-// Иначе потребителят ще излезе от системата без още да е успял да влезе.
+// От адреса на страницата се премахва параметър user2=logout и user2=logсх.
+// Иначе потребителят ще излезе от системата без още да е успял да влезе или
+// ще се изпълни отново процеса про влизане.
 $h = str_replace('&user2=logout','',$h);
+$h = str_replace('&user2=login','',$h);
 header('Location: '.$h);
 die;
 }
@@ -388,6 +395,7 @@ die;
 // Излизане на потребител от системата
 
 function userreg_logout($t){
+userreg_check($t);
 if (!session_id()) session_start();
 //die(print_r($_SESSION, true));
 unset($_SESSION['user_username']);
@@ -411,7 +419,7 @@ return $rz;
 function userreg_edit($t){
 // Проверяване дали има влязъл потребител
 $r = userreg_check($t);
-//if (!$r) return die($r);
+//if (!$r) die("No user is log in to edit");
 // Име на таблицата с данни за потребители
 $user_table = stored_value('user_table','users');
 // Масив с надписи на съответните полета

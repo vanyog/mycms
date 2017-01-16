@@ -64,20 +64,24 @@ if (!$tr && !$what && !$sr4) $rz .= translate('outerlinks_homemessage');
 
 // Показване на бройките
 $rz .= '<div id="outer_links">'."\n".'
-<p class="counts">'.translate('outerlinks_totalcount')." $lc ".translate('outerlinks_in')." $cc\n".
+<p class="counts">'.
+translate('outerlinks_totalcount')." $lc ".
+translate('outerlinks_in')." $cc\n".
 translate('outerlinks_categories')." &nbsp; ";
+
+// Хипервръзка "Само категориите" или "Преглед по категории"
+if($what!='cat')
+   $rz .= "<a href=\"".set_self_query_var('lid', 'cat')."\">".translate('outerlinks_catonly').
+   "</a> &nbsp; ";
+else
+   $rz .= "<a href=\"".unset_self_query_var('lid')."\">".translate('outerlinks_cat').
+          "</a> &nbsp; ";
 
 // Хипервръзка "Преглед по категории" или "Преглед на всички"
 if ( in_array($what, array('all','new','click')) )
    $rz .= "<a href=\"".unset_self_query_var('lid')."\">".translate('outerlinks_cat')."</a>";
 else
    $rz .= "<a href=\"".set_self_query_var('lid', 'all')."\">".translate('outerlinks_all')."</a>";
-
-// Хипервръзка "Само категориите" или "Преглед по категории" 
-if($what!='cat')
-   $rz .= " &nbsp; <a href=\"".set_self_query_var('lid', 'cat')."\">".translate('outerlinks_catonly')."</a>";
-else
-   $rz .= " &nbsp; <a href=\"".unset_self_query_var('lid')."\">".translate('outerlinks_cat')."</a>";
 
 $rz .= "</p>\n";
 
@@ -331,7 +335,7 @@ var f = document.forms.link_edit_form;
 var r = f.link_id;
 var k = -1;
 for(i=0; i<r.length; i++) if (r[i].checked) k = i;
-if (!(r.checked || (k>-1)) ) { alert("Check a file to be deleted."); return; }
+if (!(r.checked || (k>-1)) ) { alert("Check a link to be deleted."); return; }
 if (confirm("Do you really want to delete the checked link?")){
   f.action.value = "delete";
   f.submit();
