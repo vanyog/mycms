@@ -149,7 +149,7 @@ else $rz .="\n";
 // Показване на формата за търсене
 if ($what!='all') $rz .= search_link_form();
 
-// Добавка за пропускане на private линковете
+// Част от SQL заявката за пропускане на private линковете
 $qp = '';
 if (!in_edit_mode()) $qp = 'AND `private`=0';
 // Сайт за търсене
@@ -187,7 +187,11 @@ $p = current_pth(__FILE__);
 foreach($ca as $c){// print_r($c); die;
  $cl = '';
  if ($c['private']) $cl = ' class="private"';
- $rz .= "<p$cl>".edit_radio($c['ID'],$c['place']).'<img src="'.$p.'folder.gif" alt=""> <a href="'.
+ $sid = ''; // ID на записа
+ // Показва се само в режим на редактиране
+ if(in_edit_mode()) $sid = $c['ID']." ";
+ $rz .= "<p$cl>".edit_radio($c['ID'],$c['place']).'<img src="'.$p.'folder.gif" alt=""> '.$sid.
+        '<a href="'.
         set_self_query_var('lid',$c['ID']).'" id="lk'.$c['ID'].'">'.stripslashes($c['Title'])."</a>";
  $rz .= outerlinks_autocomment($c);
  if (in_edit_mode()) $rz .= ' <a href="'.$seng.
@@ -353,7 +357,7 @@ else return '
 <input type="hidden" name="action" value="update">
 <p>URL: <input type="text" name="link" size="50"> 
 Place: <input type="text" name="place" size="5"> 
-Group: <input type="text" name="up" size="5" value="'.$i.'">
+Group: <input type="text" name="up" size="5" value="'.$i.'" onfocus="this.select();">
 Private: <input type="text" name="private" size="1"></p>
 <p>Title: <input type="text" name="title" size="100"></p>
 <p>Comment: <textarea name="comment" cols="83" rows="4" style="vertical-align:top"></textarea></p>
