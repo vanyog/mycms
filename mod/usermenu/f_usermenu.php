@@ -111,9 +111,9 @@ if (confirm("'.translate('usermenu_confirdeleting').'")) document.location = "'.
   $rz .= '<a href="" onclick="confirm_page_deleting();return false;">Page Delete</a><br>'."\n";
  }
  if (isset($page_data['hidden']) && $page_data['hidden'])
-     $rz .= '<a href="'.$pt.'/toggle_visibility.php?pid='.$page_data['ID'].'">Page Visible</a><br>'."\n";
+     $rz .= '<a href="'.$pt.'/toggle_visibility.php?pid='.$page_data['ID'].'">Page Public</a><br>'."\n";
  else
-     $rz .= '<a href="'.$pt.'/toggle_visibility.php?pid='.$page_data['ID'].'">Page Hidden</a><br>'."\n";
+     $rz .= '<a href="'.$pt.'/toggle_visibility.php?pid='.$page_data['ID'].'">Page Hide</a><br>'."\n";
   $page_header .= '<script type="text/javascript"><!--
 function getPage(){
 var a = prompt("ID of the page to get content from");

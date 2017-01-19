@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Втората част, ако има такава, може да има стойност:
 // 'logout' за да се се покаже потребителското име и линк "Изход", или нищо, ако няма влязъл потребител.
+// 'return' за да се осъществи връщане на предишната страница, след влизане на потребителя.
 // Ако е номер на страница, към тази страница се извършва препращане, ако потребителят е успешно влязъл.
 
 // Действието на функцията се определя от стойността на параметъра $_GET['user2']
@@ -49,13 +50,14 @@ global $main_index;
 if (!$t) die('No user type specified in userreg module.');
 $ta = explode('|', $t);
 if (isset($ta[1])) switch($ta[1]){
-case 'logout': return userreg_outlink($ta[0]);
+case 'logout': return userreg_outlink($ta[0]); break;
+default: if(!(1*$ta[1])) die("Undefined parameter '".$ta[1]."' for USERREG module"); break;
 }
 if (isset($_GET['user2'])) switch ($_GET['user2']){
-case 'newreg': return userreg_newform($ta[0]);
-case 'login' : return userreg_login($ta[0]);
-case 'logout': return userreg_logout($ta[0]);
-case 'edit'  : return userreg_edit($ta[0]);
+case 'newreg': return userreg_newform($ta[0]); break;
+case 'login' : return userreg_login($ta[0]);   break;
+case 'logout': return userreg_logout($ta[0]);  break;
+case 'edit'  : return userreg_edit($ta[0]);    break;
 }
 else{// die(print_r($ta,false));
   if (isset($ta[1])){
@@ -349,7 +351,8 @@ userreg_check($t);
 // Адрес на страницата за излизане
 $lp = stored_value("userreg_logout_$t");
 // Ако вече има влязъл потребител - надпис "Вие сте влезли като: име "Изход"
-if (userreg_id($t))
+$id = userreg_id($t);
+if ($id)
     return '<p class="message">'.translate('userreg_yourin').$_SESSION['user_username'].
            ' <a href="'.$lp.'">'.translate('user_logaut').'</a></span>';
 // Определяне страницата, към която да стане връщане
