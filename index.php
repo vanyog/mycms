@@ -165,18 +165,18 @@ $td = stored_value('today');
 $d = getdate();
 // ако не се е сменила датата не се прави нищо
 if ($d['mday']==$td) return;
+// записва се последната датата в таблица $tn_prefix.'options'
+store_value('today',$d['mday']);
 $dd = $d['year'].'-'.$d['mon'].'-'.$d['mday'];
 // четат се записите на посетените през деня страници от таблица $tn_prefix.'pages'
 $dt = db_select_m('ID,dcount','pages','`dcount`>0');
-// записват се броя посещения на всяка страница в таблица $tn_prefix.'visit_history'
+// записва се броя посещения на всяка страница в таблица $tn_prefix.'visit_history'
 $q = "INSERT INTO `$tn_prefix"."visit_history` (`page_id`, `date`, `count`) VALUES\n";
 foreach($dt as $r){
   $q .= "(".$r['ID'].", '$dd', ".$r['dcount']."),\n";
 }
 $q = substr($q, 0, strlen($q)-2).";";
 mysqli_query($db_link,$q);
-// записва се последната датата в таблица $tn_prefix.'options'
-store_value('today',$d['mday']);
 // нулира се броя на посещенията в таблица $tn_prefix.'pages'
 $q = "UPDATE `$tn_prefix"."pages` SET tcount = tcount + dcount, dcount = 0;";
 mysqli_query($db_link,$q);
