@@ -60,15 +60,24 @@ mod_picker();
 
 // Обработване на изпратени данни
 if (count($_POST)){
+  // Запис в таблица who_made_change
+  $d = array();
+  $d['date_time_1'] = 'NOW()';
+  if (isset($_SESSION['user_username'])) $d['user_name'] = $_SESSION['user_username'];
+  $d['is_admin'] = show_adm_links();
+  $d['content_id'] = $i;
+  if(isset($_GET['pid'])) $d['page_id'] = $_GET['pid'];
+  db_insert_1($d,'who_made_change');
+  // Запазване на редактираните данни
   if ($i) process_record($cp, 'content');
   else {
-  db_insert_1(array(
-'name' => addslashes($_GET['i']),
-'date_time_1'=>'NOW()',
-'date_time_2'=>'NOW()',
-'language' => addslashes($_GET['lang']),
-'text' => addslashes(element_correction($_POST['text']))
-), 'content');
+    db_insert_1(array(
+      'name' => addslashes($_GET['i']),
+      'date_time_1'=>'NOW()',
+      'date_time_2'=>'NOW()',
+      'language' => addslashes($_GET['lang']),
+      'text' => addslashes(element_correction($_POST['text']))
+     ), 'content');
   }
   purge_page_cache($_SESSION['http_referer']);
   header('Location: '.$_SESSION['http_referer']);
