@@ -82,6 +82,10 @@ var tag_a1 = "a href=\"/index.php?pid=\"";
 var tag_a2 ="a";
 var tag_s1 = "<script type=\"text/javascript\"><!--\n";
 var tag_s2 = "\n--><"+"/script>";
+function showCharCount(a){
+var s = document.getElementById(a.id + "_count");
+s.innerHTML = a.value.length;
+}
 --></script>
 '.mod_picker();
 } else $js = '';
@@ -98,7 +102,8 @@ return $js.
 '.make_insert_2_button('print_r','\'print_r($\'','\'); die;\'').'
 '.make_insert_2_button('<!--$$_','\'<!--$$_\'','\'_$$-->\'').'
 '.make_insert_2_button('javascript','tag_s1','tag_s2').ckeb($tec).'
-<textarea id="editor'.$tec.'" cols="120" name="'.$n.'" rows="22" style="font-size:120%;" onfocus="onTeFocus();">'.
+<span id="editor'.$tec.'_count"></span>
+<textarea id="editor'.$tec.'" cols="120" name="'.$n.'" rows="22" style="font-size:120%;" onfocus="onTeFocus();" onkeyup="showCharCount(this);">'.
 str_replace($ta_ctag,$ta_fctag,$tx).$ta_ctag;
 
 }

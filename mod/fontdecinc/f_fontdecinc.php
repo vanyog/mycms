@@ -63,7 +63,7 @@ document.body.style.fontSize = s;
 --></script>';
 //$body_adds = preg_replace('/onload="(.*?)"/', 'aaaa', $body_adds); die($body_adds);
 //$body_adds .= ' onload="set_font_size();"';
-return '<a href="" onclick="font_inc();return false;">A+</a> <span style="font-size:85%"><a href="" onclick="font_dec();return false;">A-</a></span>';
+return '<a href="" onclick="font_inc();return false;">A+</a> <span class="smaller"><a href="" onclick="font_dec();return false;">A-</a></span>';
 }
 
 ?>

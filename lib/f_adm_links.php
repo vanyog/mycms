@@ -118,7 +118,8 @@ if (e.keyCode==13){
 <a href="'.$adm_pth.'showenv.php?AAAAAAA" target="_blank">$_SERVER</a> :: 
 <a href="https://github.com/vanyog/mycms/wiki" target="_blank">Help</a> :: 
 <a href="'.$go.'">'.$gon.'</a><!--:: 
-<a hr  ="'.$adm_pth.'dump_data.php">Dump</a-->'.$w3c.$mob.$spt.' ::
+<a hr  ="'.$adm_pth.'dump_data.php">Dump</a-->
+'.$w3c.$mob.$spt.' ::
 '.$clink.' <!--DB_REQ_COUNT-->
 <a href="'.$pth.'lib/exit.php">x</a>&nbsp; 
 </p>';
