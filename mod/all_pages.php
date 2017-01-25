@@ -28,6 +28,7 @@ $ddir = $idir;
 //include_once($idir.'conf_paths.php');
 //include_once($idir.'lib/f_db_select_m.php');
 include_once($idir.'lib/translation.php');
+include_once($idir.'lib/f_encode.php');
 //include_once($idir.'lib/f_db_table_field.php');
 //include_once($idir.'lib/f_set_self_query_var.php');
 
@@ -77,9 +78,9 @@ foreach($pd as $p){
   }
 }
 
-$page_content = '<p>Всичко страници: '.count($pd).", показани: $c".', неизползвани номера: <a href="'.set_self_query_var('u',1).'">'.($ma-count($pd))."</a></p>
+$page_content = encode('<p>Всичко страници: '.count($pd).", показани: $c".', неизползвани номера: <a href="'.set_self_query_var('u',1).'">'.($ma-count($pd))."</a></p>
 <p><a href=\"".set_self_query_var('t',1)."\">Със заглавия</a></p>
-<table><tr>".$rz.'</tr></table>';
+<table><tr>").$rz.'</tr></table>';
 
 }
 
