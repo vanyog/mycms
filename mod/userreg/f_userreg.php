@@ -293,6 +293,8 @@ global $page_id;
 if (!session_id()) session_start();
 // Адрес на страницата за влизане
 $lp = stored_value("userreg_login_$t");
+// Ако е разрешен https
+if(stored_value('userreg_https')=='on') $lp = 'https://'.$_SERVER['HTTP_HOST'].$lp;
 if (!$lp) die("'userreg_login_$t' option is not set.");
 $_SESSION['user2_returnpage'] = $_SERVER['REQUEST_URI'];
 $id = userreg_id($t);
@@ -423,6 +425,11 @@ function userreg_edit($t){
 // Проверяване дали има влязъл потребител
 $r = userreg_check($t);
 //if (!$r) die("No user is log in to edit");
+// Превключване към https, ако се изисква
+if((stored_value('userreg_https')=='on') && !(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']=='on')) ){
+  header('Location: https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+  die();
+}
 // Име на таблицата с данни за потребители
 $user_table = stored_value('user_table','users');
 // Масив с надписи на съответните полета

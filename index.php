@@ -87,6 +87,10 @@ $page_title = '';
 $page_data = db_select_1('*','pages',"ID=$page_id");
 if (!$page_data) $page_data = page404();
 
+// Пренасочване към http, ако не е необходим https протокол
+include_once($idir.'lib/f_stop_https.php');
+stop_https($page_data['content']);
+
 // Заглавие на страницата
 $page_title = translate($page_data['title']);
 
