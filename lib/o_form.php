@@ -240,7 +240,7 @@ else $this->public_key = $pk;
 
 public function html($it){
 global $page_header, $language;
-$page_header .= '<script src="https://www.google.com/recaptcha/api.js"></script>'."\n";
+$page_header .= '<script src="https://www.google.com/recaptcha/api.js?hl='.$language.'"></script>'."\n";
 $rz = '';
 if ($it) $rz = "<tr>\n<th>";
 $rz .= $this->caption;

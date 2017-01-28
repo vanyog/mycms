@@ -90,10 +90,15 @@ return $rz;
 function userreg_newform($t){
 if (isset($_GET['code'])) return confirm_userreg($t);
 userreg_check($t);
+// Превключване към https, ако се изисква
+if((stored_value('userreg_https')=='on') && !(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']=='on')) ){
+  header('Location: https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+  die();
+}
 $message = '';
 $email = ''; 
 if (count($_POST)){
- print_r($_POST); die;
+ //print_r($_POST); die;
  $message = userreg_newprocess();
  if ($message=='OK') return '<p class="message">'.translate('userreg_emailsent').'</p>';
  $email = $_POST['email'];
@@ -250,6 +255,7 @@ $r = db_insert_or_1($d, stored_value('user_table','users'), "`email`='".$d['emai
 // Текст на имейла
 $ms = translate('userreg_regmess').'http://'.$_SERVER['HTTP_HOST'].set_self_query_var('code',$d['code'],false);
 $sb = translate('userreg_regsub');
+$sb = '=?'.$site_encoding.'?B?'.base64_encode($sb).'?=';
 $hd = 'Content-type: text/plain; charset='.$site_encoding."\r\n".
       'From: '.stored_value('site_owner_email','site@vsu.bg')."\r\n";
 mail($e,$sb,$ms,$hd);
