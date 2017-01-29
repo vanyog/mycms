@@ -105,7 +105,7 @@ function doMakeDir(){
 }
 --></script>';
 
-$page_content .= '<p>Folder: <strong>/'.$f.'</strong> </p>
+$page_content .= '<p>Folder: '.$apth.'<strong>'.$f.'</strong> </p>
 <form method="POST" action="'.$adm_pth.'edit_file.php" name="file_form">
 <table border="1" cellspacing="0">
 <tr>
@@ -150,7 +150,7 @@ else { // Ако е файл се показва форма за редактиране на съдържанието му
 include("editor.php");
 
 $fc = array();
-$can_edit = array('php','txt','css','js','html','sql','htaccess','');
+$can_edit = array('php','txt','css','js','html','sql','htaccess','svg','');
 $e = pathinfo($d,PATHINFO_EXTENSION);
 if (is_file($d) && in_array($e,$can_edit)) $fc=file($d);
 else {
