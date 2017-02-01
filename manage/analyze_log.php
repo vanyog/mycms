@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Скрипт за анализиране на лог файл
 
 // Абсолютен път и име на лог файла
-$logpath = '/Users/vanyog/Sites/physics-bg.org/www/logs/access_log';
+$logpath = '/Users/vanyog/Sites/physics-bg.org.cbox/_logs/access_log_2017-01-25';
 
 if (!file_exists($logpath)) die("File $logpath do not exists.");
 
@@ -46,6 +46,12 @@ foreach($fl as $l){
   if (isset($by[$le[0]])) $by[$le[0]] += $le[9]; else $by[$le[0]] = 0;
   if (isset($le[9])) $bt += $le[9];
   if (isset($le[8]) && ($le[8]=='404')) $er .= $le[6]."<br>\n";
+  if (isset($le[3]) && false){
+    $le[3] = substr($le[3],1);
+    $date = date_create_from_format('d/M/Y:H:i:s', $le[3]);
+    $ts = $date->getTimestamp();
+    $le[3] = "$ts";
+  }
   $rz .= '<tr>';
   foreach($le as $e){
     $c = 80;
