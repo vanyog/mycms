@@ -23,20 +23,39 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // който се задава като id атрибут на <div> тага, в който се представя картата.
 // Когато втори параметър не е зададен id="site_map".
 
+// Ако е дефинирана глобална променлива $max_level, се показват само връзките до това ниво на вложеност.
+
 include_once($idir.'lib/f_db_table_field.php');
 
 $page_passed = array(); // Номера на менюта, които вече са обработени,
                         // използва са за да не се получи зацикляне
-$map_lavel = 0; // Ниво на рекурсията
+$map_level = 0; // Ниво на рекурсията
 $i_root    = 0; // Номер на входното меню
 $id_pre    = ''; // Представка, с която започват id атрибутите на <div> елементите
 
 function sitemap($a){
-global $page_passed, $map_lavel, $i_root, $id_pre;
+global $page_passed, $map_level, $i_root, $id_pre, $page_header;
 $page_passed = array();
-$map_lavel = 0;
+$map_level = 0;
 $i_root    = 0;
 $ar = explode('|',$a);
+$page_header .= '<script type="text/javascript"><!--
+function mapHideShow(e){
+var p = e.parentElement;
+var h = p.style.height;
+var v = "1.45em";
+if (h!=v){
+  e.innerHTML = "&#9660;"
+  p.style.height = v;
+  p.style.overflow = "hidden";
+}
+else {
+  e.innerHTML = "&#9658;"
+  p.style.height = "auto";
+  p.style.overflow = "visible";
+}
+}
+--></script>';
 $id_pre = 'map'.$ar[0];
 $id = 'site_map';
 if (isset($ar[1])) $id = $ar[1];
@@ -45,7 +64,8 @@ return '<div id="'.$id.'">'."\n".sitemap_rec($ar[0], 1)."
 }
 
 function sitemap_rec($i, $j){
-global $pth, $page_passed, $map_lavel, $i_root, $ind_fl, $id_pre, $page_id;
+global $pth, $page_passed, $map_level, $max_level, $i_root, $ind_fl, $id_pre, $page_id;
+if(!isset($max_level)) $max_level = 100;
 
 $page_passed[] = $i;
 
@@ -72,7 +92,7 @@ foreach($mi as $m){// die(print_r($m,true));
     if ($pid!=$page_id){
        $h = db_table_field('hidden', 'pages', "`ID`=".$pid);
        if( !$h || in_edit_mode() ){
-          $rz .= '<a href="'.$lk.'">'.translate($m['name']).'</a>';
+          $rz .= '<span onclick="mapHideShow(this);" class="bullet">&#9658;</span> <a href="'.$lk.'">'.translate($m['name']).'</a>';
           if( $h && in_edit_mode() ) $rz .= ' hiddeh';
           $rz .= "<br>\n";
        }
@@ -88,9 +108,9 @@ foreach($mi as $m){// die(print_r($m,true));
     if ($p['menu_group']!=$i){ // Ако е страница от друго меню
       // Рекурсивно извикване за получаване карта на подменюто
       if (!in_array($p['menu_group'],$page_passed)){
-        $map_lavel++;
-        $rz .= sitemap_rec($p['menu_group'], $count);
-        $map_lavel--;
+        $map_level++;
+        if ($map_level<$max_level) $rz .= sitemap_rec($p['menu_group'], $count);
+        $map_level--;
       }
     }
   }
