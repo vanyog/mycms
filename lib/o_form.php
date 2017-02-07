@@ -142,6 +142,7 @@ public $rows = '';
 public $text = '';
 public $js = '';
 public $ckbutton = '';
+public $size = true;
 
 function __construct($c,$n,$cl=100,$r=10,$t=''){
 global $mod_pth, $page_header, $ckpth;
@@ -165,7 +166,9 @@ else {
 }
 
 public function html($it){
-$rz = "$this->ckbutton<textarea name=\"$this->name\" id=\"$this->name\" cols=\"$this->cols\" rows=\"$this->rows\"$this->js>$this->text</textarea>";
+$rz = "$this->ckbutton<textarea name=\"$this->name\" id=\"$this->name\" ";
+if ($this->size) $rz .=  "cols=\"$this->cols\" rows=\"$this->rows\"";
+$rz .= "$this->js>$this->text</textarea>";
 if (!$it) $rz = "$this->caption $rz<br>\n";
 else $rz = "<tr>\n<th>$this->caption</th>\n<td>$rz</td>\n</tr>";
 return $rz;
@@ -245,7 +248,7 @@ $rz = '';
 if ($it) $rz = "<tr>\n<th>";
 $rz .= $this->caption;
 if ($it) $rz .= "</th>\n<td>"; else $rz .= " ";
-$rz .= '<div class="g-recaptcha" data-sitekey="'.$this->public_key.'"></div>';
+$rz .= '<div class="g-recaptcha" data-sitekey="'.$this->public_key.'" data-size="compact"></div>';
 if ($it) $rz .= "</td>\n<tr>\n"; else $rz .= "<br>\n";
 return $rz;
 }
