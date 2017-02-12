@@ -24,7 +24,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 function metadescr(){
 global $page_description, $page_title;
 if(!$page_description) $page_description = strip_tags($page_title);
-return '<meta name="description" content="'.stripslashes($page_description)."\">";
+return '<meta name="description" content="'.
+       htmlspecialchars(stripslashes($page_description)).
+       "\">";
 }
 
 ?>

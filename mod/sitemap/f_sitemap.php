@@ -110,6 +110,7 @@ foreach($mi as $m){// die(print_r($m,true));
       if (!in_array($p['menu_group'],$page_passed)){
         $map_level++;
         if ($map_level<$max_level) $rz .= sitemap_rec($p['menu_group'], $count);
+        else $rz .= '...';
         $map_level--;
       }
     }

@@ -243,7 +243,7 @@ do {
   else{
      if (!$page_title) $page_title = translate($page_data['title'],false);
      $page_title .= ' - '.$l['Title'];
-     $rz = '<span><a href="'.$lk.'">'.$l['Title'].'</span></a>'.$rz;
+     $rz = '<span><a href="'.$lk.'">'.$l['Title'].'</a></span>'.$rz;
      $cm = '';
      if (isset($l['Comment'])) $cm = $l['Comment'];
   }

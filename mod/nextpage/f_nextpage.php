@@ -21,20 +21,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 function nextpage(){
 global $page_data, $page_id, $main_index;
+$id = $page_id;
+while (true){
+  // Данни за следващата страница
+  $pd = nextpage_data($page_data['menu_group'], $id);
+  if(!$pd) return '';
+  $id = $pd['ID'];
+  if( in_edit_mode() || !$pd['hidden'] ) break;
+}
+// Заглавие на страницата
+$t = translate('nextpage_next').'<a href="'.$main_index.'?pid='.$pd['ID'].'">'.strip_tags(translate($pd['title'], false)).'</a>';
+return $t;
+}
+
+// Данните на следващата страница
+
+function nextpage_data($gr, $page_id){
 // Данни за линка към текущата страница в менюто й.
-$ld = db_select_1('*', 'menu_items', "`group`='".$page_data['menu_group']."' AND `link`='$page_id'");
+$ld = db_select_1('*', 'menu_items', "`group`='$gr' AND `link`='$page_id'");
 if (!$ld) return '';
 // Данни за следващия линк в менюто
-$nl = db_select_1('*', 'menu_items', "`group`='".$page_data['menu_group']."' AND `place`>".$ld['place'].
+$nl = db_select_1('*', 'menu_items', "`group`='$gr' AND `place`>".$ld['place'].
       " ORDER BY `place`");
 // Ако няма такъв се търси следващ линк в родителските менюта
 if (!$nl) $nl = nextpage_from_parent($ld);
 if (!$nl) return ''; // die(print_r($ld, true));
 // Данни за следващата страница
-$pd = db_select_1('*', 'pages', "`ID`=".$nl['link'] );
-// Заглавие на страницата
-$t = translate('nextpage_next').'<a href="'.$main_index.'?pid='.$pd['ID'].'">'.strip_tags(translate($pd['title'], false)).'</a>';
-return $t;
+return db_select_1('*', 'pages', "`ID`=".$nl['link'] );
 }
 
 // Следващ линк от родителското меню

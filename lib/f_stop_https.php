@@ -50,7 +50,7 @@ if(stored_value('stop_https', 1) && isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS
   }
 }
 $l = strlen($pth);
-if(substr($_SERVER['REQUEST_URI'],0,$l)==$pth){
+if( ($l>1) && (substr($_SERVER['REQUEST_URI'],0,$l)==$pth) ){
   $l1 = strlen($_SERVER['REQUEST_URI']);
   $_SERVER['REQUEST_URI'] = substr($_SERVER['REQUEST_URI'], $l-1, $l1-$l+1);
   $redir = true;
