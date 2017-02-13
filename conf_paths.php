@@ -40,8 +40,8 @@ load_options(array(
 ));
 
 // Задаване друга стойност на $_SERVER['DOCUMENT_ROOT'], ако връщаната от сървъра не е правилна
-$donument_root = stored_value('document_root');
-if (file_exists($donument_root)) $_SERVER['DOCUMENT_ROOT'] = $donument_root;
+$document_root = stored_value('document_root');
+if (file_exists($document_root)) $_SERVER['DOCUMENT_ROOT'] = $document_root;
 
 // Директория на входната страница.
 // Задава се ако сайтът се изгражда като раздел в друг сайт и се намира в директория на главния сайт.
