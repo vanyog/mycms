@@ -33,12 +33,16 @@ include_once($idir."lib/o_form.php");
 
 function edit_record_form($cp, $tn, $ck = true){
 global $countries;
+// Прочитане имената на полетата на таблицата
+$fn = db_field_names($tn);
 // Прочитане типовете на полетата на таблицата
 $ft = db_show_columns($tn, '', 'Type');
-// Прочитане имената на полетата на таблицата 
-$fn = db_field_names($tn);
 // Съставяне на нов асоциативен масив с ключове имената на полетата и стойности - типовете им
 $ft = array_combine($fn, $ft);
+// Прочитане стойностите по подразбиране на полетата на таблицата
+$fd = db_show_columns($tn, '', 'Default');
+// Съставяне на нов асоциативен масив с ключове имената на полетата и стойности - типовете им
+$fd = array_combine($fn, $fd);
 // Прочитане на записа, който ще се редактира
 $d = db_select_1('*', $tn, "`ID`=".$cp['ID']);// print_r($d); die;
 // Връщан резултат
@@ -112,16 +116,27 @@ foreach($cp as $n => $v){
         if ($d[$n]) $fi->checked = ' checked';
         $hf->add_input($fi);
         break;
-      default: die("Unknown subtype of '$ft[$n]'");
+        case 4:
+        case 11:
+          $fi =  new FORMInput($v, $n, 'text', $d[$n]);
+          $hf->add_input($fi);
+          break;
+      default: die("Unknown subtype of '$ft[$n]' $tp[2]");
       }
       break;
     case 'enum':
       $op = str_getcsv($tp[2], ',', "'");
       $i = array_search($d[$n], $op);
+      if(($i===false) && $fd[$n]) $i = array_search($fd[$n], $op);;
       $fi =  new FormSelect($v, $n, $op, $i);
       if ($d[$n]) $fi->checked = ' checked';
       $hf->add_input($fi);
       break;
+    case 'float':
+        $vl = str_replace(',', '.', $d[$n]);
+        $fi =  new FORMInput($v, $n, 'text', $vl);
+        $hf->add_input($fi);
+        break;
     default: die("Unknown type '$ft[$n]' of field `$n`");
     }
   }
@@ -173,9 +188,14 @@ case 'password':
   break;
 default:
   if ($q) $q .= ', ';
-  if ($ft[$n]=='int') 
+  if ($ft[$n]==3){ // Цяло число
     if (isset($_POST[$n])) $q .= "`$n`='".(1*$_POST[$n])."'";
     else $q .= "`$n`=0";
+  }
+  else if ($ft[$n]==4){ // Реално число
+    $v1 = str_replace(',', '.', $_POST[$n]);// die($v1);
+    $q .= "`$n`='".addslashes($v1)."'";
+  }
   else {
     $v1 = element_correction($_POST[$n]);
     $q .= "`$n`='".addslashes($v1)."'";

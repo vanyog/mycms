@@ -300,7 +300,7 @@ function new_user($a){// print_r($_SESSION); die;
 //
 function create_user($a){
 if (count($_POST)) save_user();
-global $idir;
+global $idir, $site_encoding;
 if (!can_manage_users()) die(translate('user_cnnotcreate'));
 $page_title = translate('user_newreg');
 $page_content = '<div id="user_login">'."\n<h1>$page_title</h1>\n".user_form(0)->html();

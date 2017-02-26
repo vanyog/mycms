@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Когато $nom=false (по подразбиране) се показва меню с разрешените на влезлия потребител действия.
 // Ако $nom=true само се проверяват правата без да се показва меню.
-// $nom = адрес на страница за излизане
+// $nom = стринг - адрес на страница за излизане
 
 global $can_visit, $can_manage;
 
@@ -66,14 +66,16 @@ case 'all':
   $can_edit = $q['yes_no'];
   $can_create = $q['yes_no'];
   $ml = mod_list(true);
+  $can_visit = false;
   foreach($ml as $m){
 //    $n = pathinfo($m,PATHINFO_FILENAME);
     $n = pathinfo($m, PATHINFO_BASENAME);
     $yn = db_select_m('yes_no','permissions',"`user_id`=$id AND `type`='module' AND `object`='$n'");
     if (!count($yn)){ $can_manage[$n] = $q['yes_no']; }
     else { $can_manage[$n] = $yn[0]['yes_no']; }
+    $can_visit = $can_visit || $can_manage[$n];
   }
-  $can_visit = true;
+//  $can_visit = true;
   break;
 case 'menu':// print_r($page_data); die;
   if (in_that_branch($page_data['menu_group'], $q['object'])) $can_create = $q['yes_no'];
@@ -134,7 +136,7 @@ if (g){
  $rz .= '<a href="javascript:void(0);" onclick="moveTo();">Page Move</a><br>'."\n";
 }
 if ($can_edit) $rz .= edit_normal_link()."<br>\n";
-foreach($can_manage as $m=>$yn) if( $yn) {
+foreach($can_manage as $m=>$yn) if( $yn ) {
   $fn = dirname(mod_path($m)).'/f_menu_items.php';
   if (file_exists($fn)){
     include_once($fn);
@@ -142,7 +144,7 @@ foreach($can_manage as $m=>$yn) if( $yn) {
   }
 }
 $hp = stored_value('usermenu_helppage');
-if ( strlen($nom) && !strlen($ud['type']) ){
+if ( strlen($nom) && strlen($rz) ){
   if ($hp) $rz .= "<a href=\"$hp\" target=\"_blank\">Help</a><br>\n";
   $rz .= '<span class="user">'.$_SESSION['user_username'].
          ' <a href="'.$nom.'">'.translate('user_logaut').'</a></span>'."<br>\n";

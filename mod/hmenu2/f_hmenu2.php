@@ -1,7 +1,7 @@
 <?php
 /*
 MyCMS - a simple Content Management System
-Copyright (C) 2013  Vanyo Georgiev <info@vanyog.com>
+Copyright (C) 2017  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,12 +17,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Функция за показване на хоризонтално, падащо меню.
+// Функция за показване на хоризонтално, падащо меню, подходящо за мобилни устройства.
 // Данните за менюто се четат от таблица 'menu_items'.
 // Параметърът $a е стойността на полето `group` в таблица 'menu_items'.
 
-function hmenu($a){
-global $ind_fl, $page_header, $pth, $adm_pth, $page_id;
+function hmenu2($a){
+global $ind_fl, $page_header, $pth, $page_id;
 $p = current_pth(__FILE__);
 $page_header .= '<script type="text/javascript">'."\n";
 // Цветове
@@ -43,12 +43,12 @@ foreach($il as $i){
   $lk = 1*$i['link'];
   $c = '';
   if ($lk) {
-    $sm .= hsubmenu($lk,$ia,$j);
+//    $sm .= hsubmenu($lk,$ia,$j);
     if (in_array($lk,$ia)) $c = ' class="current"';
     $lk = $ind_fl.'?pid='.$lk;
   }
   else $lk = $i['link'];
-  $rz .= '<a href="'.$lk.'"'.$c.' onMouseOver="show_hlayer('.$j.',this)">'.translate($i['name'],false);
+  $rz .= '<a href="'.$lk.'"'.$c.'>'.translate($i['name'],false);
   // Добавяне на * за редактиране 
   if (in_edit_mode()){
      $rz .= '<a href="'.$pth.'mod/usermenu/edit_menu_link.php?pid='.$page_id.'&amp;id='.$i['ID'].
@@ -57,12 +57,7 @@ foreach($il as $i){
   $rz .= "</a>\n";
   $j++;
 }
-if (in_edit_mode()){
-  $ni = db_table_field('MAX(`ID`)','menu_items','1')+1;
-  $rz .= " ".'<a href="'.$adm_pth.'new_record.php?t=menu_items&group='.$a.'&link='.$page_id.
-         '&name=p'.$ni.'_link">New</a> '."\n";
-}
-return $sm.'<div id="menu_'.$a."\">\n".$rz.'</div>';
+return $sm.'<div id="MENU_'.$a."\">\n".$rz.'</div>';
 }
 
 // Връща подменюто към линк $lk

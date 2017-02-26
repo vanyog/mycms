@@ -22,6 +22,7 @@ $ddir = $idir;
 
 include('f_user.php');
 include('../usermenu/f_usermenu.php');
+include_once($idir.'conf_paths.php');
 
 $page_content = user();
 $page_content = usermenu().$page_content;

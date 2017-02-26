@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Набор функции за управление съдържанието на различни езици
 
 include_once($idir."lib/f_stored_value.php");
+include_once($idir."lib/f_encode.php");
+
 load_options(array(
   'languages',
   'default_language'
@@ -66,16 +68,16 @@ $how = stored_value('flag_setting','flag');
 if ($a) $how = $a;
 if (!$dont_translate) foreach($ls as $l) if ($l!=$language){
   $h = set_self_query_var('lang',$l);
-  $r .= '<a href="'.$h.'" style="display:inline-block">'."\n";
+  $r .= '<a href="'.$h.'" style="display:inline-block; height:20px;">'."\n";
   switch ($how){
   case 'text': $r .= $languages[$l]."\n"; break;
   case 'flag&text': $r .= '<img src="'.$pth.'images/flag-'.$l.'.gif" alt="'.$l.'" border="0">'."<br>$languages[$l]\n"; break;
   case 'flag text': $r .= '<img src="'.$pth.'images/flag-'.$l.'.gif" alt="'.$l.'" border="0" align="left">'." $languages[$l]\n"; break;
-  default: $r .= '<img src="'.$pth.'images/flag-'.$l.'.gif" alt="'.$l.'" border="0">'."\n"; break;
+  default: $r .= '<img src="'.$pth.'images/flag-'.$l.'.gif" alt="'.$l.'">'."\n"; break;
   }
   $r .= "</a>\n";
 }
-return "\n<!--Language flags-->\n$r<!--End of language flags-->\n";
+return encode("\n<!--Флагчета за смяна на езика-->\n$r<!--Край на флагчетата-->\n");
 }
 
 ?>

@@ -66,12 +66,12 @@ if (r) f.submit(); else alert("'.translate_if('fillin_all', 'All fields mut be f
 ';
 $rz = "<form enctype=\"multipart/form-data\" name=\"$this->name\" id=\"$this->name\" method=\"$this->method\" action=\"$this->action\">\n";
 if ($this->astable) $rz .= "<table>\n";
-$rz .= $this->text; 
+$rz .= $this->text;
 foreach($this->ins as $i){
   $rz .= $i->html($this->astable);
-  if (!(strpos($i->js, 'ifNotEmpty_'.$this->name.'()')===false)) $js .= $js1; 
+  if (!(strpos($i->js, 'ifNotEmpty_'.$this->name.'()')===false)) $js .= $js1;
 }
-if ($this->astable) $rz .= "</table>\n"; 
+if ($this->astable) $rz .= "</table>\n";
 $rz .= "</form>\n";
 if ($js) $rz = "<script type=\"text/javascript\">\n$js1</script>\n$rz";
 return $rz;
@@ -112,6 +112,7 @@ $this->js = " $e=\"$js\"";
 }
 
 public function html($it){
+$dsbl = lock_form_fields();
 $rz = '';
 if (!$it) $rz .= "$this->caption <input type=\"$this->type\" ";
 else $rz .= "<tr><th>$this->caption </th><td><input type=\"$this->type\" ";
@@ -121,7 +122,7 @@ if ($this->size) $rz .= " size=\"$this->size\"";
 if ($this->id) $rz .= " id=\"$this->id\"";
 if ($this->js) $rz .= " $this->js";
 if ($this->checked) $rz .= " $this->checked";
-$rz .= ">";
+$rz .= "$dsbl>";
 if ($this->type=='file') $rz .= '<input type="hidden" name="MAX_FILE_SIZE" value="'.$this->max_file_size.'">';
 if ($this->textAfter) $rz .= ' '.$this->textAfter;
 if (!$it) $rz .= "\n";
@@ -129,6 +130,12 @@ else $rz .= "</td></tr>\n";
 return $rz;
 }
 
+}
+
+function lock_form_fields(){
+global $lock_fields;
+if(isset($lock_fields) && ($lock_fields===true)) return ' disabled';
+return '';
 }
 
 //----- FormTextArea ------------
@@ -166,9 +173,10 @@ else {
 }
 
 public function html($it){
+$dsbl = lock_form_fields();
 $rz = "$this->ckbutton<textarea name=\"$this->name\" id=\"$this->name\" ";
 if ($this->size) $rz .=  "cols=\"$this->cols\" rows=\"$this->rows\"";
-$rz .= "$this->js>$this->text</textarea>";
+$rz .= "$this->js$dsbl>$this->text</textarea>";
 if (!$it) $rz = "$this->caption $rz<br>\n";
 else $rz = "<tr>\n<th>$this->caption</th>\n<td>$rz</td>\n</tr>";
 return $rz;
@@ -201,17 +209,19 @@ $this->selected = $s;
 }
 
 public function html($it){
+$dsbl = lock_form_fields();
 $rz = '';
 if ($it) $rz .= "<tr><th>";
 $rz .= "$this->caption ";
 if ($it) $rz .= "</th><td>\n";
 $rz .= "<select";
 if ($this->name) $rz .= " name=\"$this->name\"";
-$rz .= "$this->js>";
+$rz .= "$this->js$dsbl>";
 $i = 0;
 foreach($this->options as $k => $v){
   $sl = '';
   if ($i==$this->selected) $sl = ' selected';
+  if ($k==$this->selected) $sl = ' selected';
   switch($this->values){
   case 'v': $rz .= "<option value=\"$v\"$sl>$v\n"; break;
   case 'k': $rz .= "<option value=\"$k\"$sl>$v\n"; break;
@@ -287,7 +297,7 @@ global $currency;
 if ($it) $rz = "<tr>\n<th>";
 $rz .= $this->caption;
 if ($it) $rz .= "</th>\n<td>"; else $rz .= " ";
-$rz .= '<INPUT name="'.$this->name.'" type="text" size="5" value="'.$this->value.'"> 
+$rz .= '<INPUT name="'.$this->name.'" type="text" size="5" value="'.$this->value.'">
 <select name="'.$this->name2.'">';
 foreach($currency as $k=>$v){
   if ($k==$this->currency) $sl = ' selected'; else $sl = '';
@@ -641,18 +651,19 @@ v.form.submit();
 }
 --></script>';
 $rz = '';
+$dsbl = lock_form_fields();// die("$dsbl");
 if ($it) $rz .= '<tr><th>';
 $rz .= $this->caption;
 if ($it) $rz .= '</th><td>';
 $rz .= '<input name="'.$this->name.'" type="hidden" value="'.$this->value.'" id="chooserValue">
-<table style="margin-top:0;"><tr><td style="text-align:center;">
-Избрани<br>
-'.$this->l1->html(false).'</td><td style="text-align:center">
-<input type="button" value="Изчистване" onclick="chooserClear();"><br>
+<table style="margin-top:0;"><tr><td style="text-align:center; width:auto;">
+'.encode('Избрани').'<br>
+'.$this->l1->html(false).'</td><td style="text-align:center; width:auto;">
+<input type="button" value="'.encode('Изчистване').'" onclick="chooserClear();"'.$dsbl.'><br>
 <!--input type="button" value="Нагоре"><br>
 <input type="button" value="Надолу"><br-->
 </td><td>
-Възможни<br>
+'.encode('Възможности за избиране').'<br>
 '.$this->l2->html(false).'</td></tr></table>';
 if ($it) $rz .= '</td></tr>';
 return $rz;
