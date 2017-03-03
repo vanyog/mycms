@@ -45,12 +45,12 @@ var p = e.parentElement;
 var h = p.style.height;
 var v = "1.45em";
 if (h!=v){
-  e.innerHTML = "&#9660;"
+  e.innerHTML = "&#9658;"
   p.style.height = v;
   p.style.overflow = "hidden";
 }
 else {
-  e.innerHTML = "&#9658;"
+  e.innerHTML = "&#9660;"
   p.style.height = "auto";
   p.style.overflow = "visible";
 }
@@ -83,6 +83,8 @@ $index = db_table_field('index_page','menu_tree',"`group`=$i");
 // Цикъл за обработка на всяка хипервръзка от менюто $i
 foreach($mi as $m){// die(print_r($m,true));
   $rz .= '<div id="map'.$m['ID']."\">\n";
+  $rz1 = '';
+  $rz2 = '';
   
   $pid = 1*$m['link']; // Номер на страницата от поредния линк
   if (($i==$i_root)||($pid!=$index))
@@ -92,9 +94,9 @@ foreach($mi as $m){// die(print_r($m,true));
     if ($pid!=$page_id){
        $h = db_table_field('hidden', 'pages', "`ID`=".$pid);
        if( !$h || in_edit_mode() ){
-          $rz .= '<span onclick="mapHideShow(this);" class="bullet">&#9658;</span> <a href="'.$lk.'">'.translate($m['name']).'</a>';
+          $rz1 .= '<a href="'.$lk.'">'.translate($m['name']).'</a>';
           if( $h && in_edit_mode() ) $rz .= ' hiddeh';
-          $rz .= "<br>\n";
+          $rz1 .= "<br>\n";
        }
     }
     $count++;
@@ -109,12 +111,15 @@ foreach($mi as $m){// die(print_r($m,true));
       // Рекурсивно извикване за получаване карта на подменюто
       if (!in_array($p['menu_group'],$page_passed)){
         $map_level++;
-        if ($map_level<$max_level) $rz .= sitemap_rec($p['menu_group'], $count);
-        else $rz .= '...';
+        if ($map_level<$max_level) $rz1 .= sitemap_rec($p['menu_group'], $count);
+        else $rz1 .= '...';
         $map_level--;
+        $rz2 = '<span onclick="mapHideShow(this);" class="bullet">&#9660;</span> ';
       }
     }
   }
+  if ($rz1) $rz1 = $rz2.$rz1;
+  $rz .= $rz1;
   if ($count>1) $rz .= "</div>\n";
   else $rz = '';
 
