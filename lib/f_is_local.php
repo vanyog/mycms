@@ -36,7 +36,7 @@ $phpmyadmin_local = stored_value('phpmyadmin_local','http://localhost/phpmyadmin
 // Връща истина, ако сайтът се намира на локален сървър.
 function is_local(){
 global $local_host;
-if (isset($_SERVER['HTTP_HOST'])) return $local_host==$_SERVER['HTTP_HOST'];
+if (isset($_SERVER['HTTP_HOST'])) return ($local_host==$_SERVER['HTTP_HOST']) || ($_SERVER['HTTP_HOST']=='localhost');
 else return false;
 }
 

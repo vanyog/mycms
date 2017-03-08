@@ -43,14 +43,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include_once($idir.'lib/f_rand_string.php');
 include_once($idir.'lib/f_db_insert_or_1.php');
 include_once($idir.'lib/f_db_update_record.php');
+include_once($idir.'lib/f_view_record.php');
 include_once($idir.'mod/user/f_user.php');
 
 function userreg($t = ''){
-global $main_index;
+global $main_index, $can_visit;
 if (!$t) die('No user type specified in userreg module.');
 $ta = explode('|', $t);
 if (isset($ta[1])) switch($ta[1]){
 case 'logout': return userreg_outlink($ta[0]); break;
+case 'mydata': return userreg_mydata($ta[0]); break;
 default: if(!(1*$ta[1])) die("Undefined parameter '".$ta[1]."' for USERREG module"); break;
 }
 if (isset($_GET['user2'])) switch ($_GET['user2']){
@@ -295,19 +297,20 @@ return '<p class="message">'.translate('userreg_emcofirmed').' <a href="'.stored
 // пренасочва към страницата за влизане, око няма влязъл потребител
 
 function userreg_check($t){
-global $page_id;
+global $page_id, $can_visit;
 if (!session_id()) session_start();
 // Адрес на страницата за влизане
 $lp = stored_value("userreg_login_$t");
+if(!$lp) die("'userreg_login_$t' option is not set.");
 // Ако е разрешен https
 if(stored_value('userreg_https')=='on') $lp = 'https://'.$_SERVER['HTTP_HOST'].$lp;
-if (!$lp) die("'userreg_login_$t' option is not set.");
 $_SESSION['user2_returnpage'] = $_SERVER['REQUEST_URI'];
 $id = userreg_id($t);
 // Ако няма номер на влязъл потребител и не сме на страницата за влизане - пренасочване
 // към страницата за влизане
 if (!$id && (strpos($lp,'pid='.$page_id)===false)) { header('Location: '.$lp); die; }
 // Ако потребителят съществува, се връща празен стринг.
+$can_visit = 1;
 return '';
 }
 
@@ -315,6 +318,7 @@ return '';
 // Връща номера на влезлия потребител или 0 ако няма такъв
 
 function userreg_id($t){
+global $can_visit;
 if (!session_id() && isset($_COOKIE['PHPSESSID'])) session_start();
 if (!isset($_SESSION)) return 0;
 if (!isset($_SESSION['user_username'])){
@@ -331,6 +335,7 @@ $user_table = stored_value('user_table','users');
 $id = db_table_field('ID', $user_table, "`username`='".$_SESSION['user_username'].
       "' AND `password`='".$_SESSION['user_password']."' AND `type`='$t'", 0);
 if (!$id) return 0;
+$can_visit = 1;
 // Отбелязване на часа и IP адреса на влизане
 if (!isset($_SESSION['session_start'])) $_SESSION['session_start'] = time();
 $tm = date('Y-m-d H:m:s', $_SESSION['session_start']);
@@ -517,6 +522,38 @@ $i = db_update_record($_POST, $user_table);
 if ($i){
   $rz .= '<p class="message">'.translate('dataSaved').'</p>';
   if (isset($_POST['username']) && ($id1==$id2)) $_SESSION['user_username'] = $_POST['username'];
+}
+return $rz;
+}
+
+// Показване на таблица с личните данни на потребителя
+
+function userreg_mydata($t){
+global $userreg_locked;
+$uid = userreg_id($t);
+// Име на таблицата с данни за потребителите
+$user_table = stored_value('user_table','users');
+// Лични данни на потребителя
+$d = db_select_1('*', $user_table, "`ID`=$uid");
+$cp = array(
+'username'=>translate('user_username'),
+'email'=>translate('user_email'),
+'firstname'=>translate('user_firstname'),
+'secondname'=>translate('user_secondname'),
+'thirdname'=>translate('user_thirdname'),
+'country'=>translate('user_country'),
+'institution'=>translate('user_institution'),
+'address'=>translate('user_address'),
+'telephone'=>translate('user_telephone')
+);
+$rz = '<h2>'.translate('conference_mydata').'</h2>
+'.view_record($d, $cp);
+if(!isset($userreg_locked) || ($userreg_locked!==true)){
+  // Адрес на страницата за влизане
+  $plogin = stored_value('userreg_login_'.$t);
+  // Адрес на страницата за редактиране на личните данни
+  $pedit = str_replace('&user2=login', '&user2=edit', $plogin);
+  $rz .= '<p><a href="'.$pedit.'">'.translate('conference_mypersonal').'</a></p>';
 }
 return $rz;
 }
