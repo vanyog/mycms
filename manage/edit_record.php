@@ -57,7 +57,8 @@ if ($r) foreach($r as $k => $v){
  case 1  :
  case 3  : 
  case 4  : 
- case 10 : 
+ case 5  :
+ case 10 :
  case 12 : 
  case 254: $page_content .= '<td class="r">'.$k.':</td><td><input type="text" name="'.$k.'" value="'.$v.'"></td>'."\n";
            break;

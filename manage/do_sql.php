@@ -23,7 +23,8 @@ include("conf_manage.php");
 include_once($idir."lib/f_db_query.php");
 include_once($idir."lib/f_view_table.php");
 
-$page_content = '<p>Back to: <a href="edit_data.php">Database</a></p>'."\n".
+$page_content = '<p>'.$_POST['sql'].'</p>
+<p>Back to: <a href="edit_data.php">Database</a></p>'."\n".
 view_table(db_query($_POST['sql'])).
 '<p>Back to: <a href="edit_data.php">Database</a></p>';
 

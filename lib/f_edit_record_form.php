@@ -141,7 +141,9 @@ foreach($cp as $n => $v){
     }
   }
 }
-$hf->add_input( new FORMInput('','','submit',translate('saveData')) );
+$i = new FORMInput('','','submit',translate('saveData'));
+$i->js = ' class="sub"';
+$hf->add_input( $i );
 $rz .= $hf->html();
 return $rz;
 }

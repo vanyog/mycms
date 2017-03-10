@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Използва се по изключение, ако административния блок не е в директория,
 // която е поддиректория на системата за управление на съдържанието
 
+error_reporting(E_ALL); ini_set('display_errors',1);
+
 // Главно директория на системата.
 $idir = dirname(dirname(__FILE__)).'/';
 

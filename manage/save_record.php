@@ -48,6 +48,7 @@ default:
   $v1 = str_replace( chr(38).'lt;!--$$_',  chr(60).'!--$$_', $v1);
   $v1 = str_replace( chr(38).'lt; !--$$_', chr(60).'!--$$_', $v1);
   $v1 = str_replace( '_$$--'.chr(38).'gt;','_$$--'.chr(62),  $v1);
+  if( ($t=='content') && ($k=='text') ) $v1 = str_replace( ' />', '>', $v1);
   $q2 .= " `$k`='".addslashes($v1)."',";
 }
 }
@@ -58,7 +59,7 @@ mysqli_query($db_link,$q);
 
 session_start();
 
-if ($gtc){ //print_r($_SESSION['http_referer']);
+if ($gtc){ //print_r($_SESSION['http_referer']); die;
   purge_page_cache($_SESSION['http_referer']);
   header('Location: '.$_SESSION['http_referer']);
 }
