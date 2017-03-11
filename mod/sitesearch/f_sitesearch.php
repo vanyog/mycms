@@ -31,7 +31,7 @@ include_once($idir.'lib/f_db_select_m.php');
 
 function sitesearch($r=''){
 
-// Модул за търсене в сайта
+// Връщане на резутата от търсенето
 if ($r=='result') return site_search_result();
 
 // Обработване на изпратен стринг за търсене
@@ -86,56 +86,46 @@ function do_site_search($txs){
 }
 
 //
-// ,     
+// Показване на резултата от търсенето
 //
 function site_search_result(){
 global $language, $pth;
   if (!session_id() && isset($_COOKIE['PHPSESSID'])) session_start();
-  // ,     
+  // Ако няма текст за търсене, връщане на съобщение за това
   if (!isset($_SESSION['text_to_search'])) return translate('sitesearch_notext');
   $ts = $_SESSION['text_to_search'];
-  //     
+  // Премахват се символите за нов ред
   $ts = str_replace("\n",'',$ts);
   $ts = str_replace("\r",'',$ts);
-  // ,     
+  // Ако текста за търсене е по-дълъг от 255 - съобщение
   if (strlen($ts)>255){
     unset($_SESSION['text_to_search']);
     unset($_SESSION['sitesearch_saved']);
     return translate('sitesearch_verylong');
   }
-  //       
+  // Сйставяне на масив от неповтарящи се думи
   $wa = array_unique(explode(' ',$ts));
-  //     ,    
+  // Отчитане на статистика за думите в таблица sitesearch_words
   site_search_stat($wa);
-  //    ,      
+  // Добавяне на дума $wa в WHARE частта на SQL зявката за търсене
   $q = where_part($wa,'AND');
   //  
   $msg = '';
   if (count($wa)>1) $msg = translate('sitesearch_allwords');
-  $r = db_select_m('name','content',"($q) AND `language`='$language'");
+  $r = db_select_m('name','content',"($q) AND `language`='$language' ORDER BY `date_time_2` DESC");
   //         ,      
   if (!count($r)){
     $q = where_part($wa,'OR');
-    $r = db_select_m('name','content',"($q) AND `language`='$language'");
+    $r = db_select_m('name','content',"($q) AND `language`='$language' ORDER BY `date_time_2` DESC");
     if (count($wa)>1) $msg = translate('sitesearch_anyword');
   }
   $nf = '<p>'.translate('sitesearch_notfound').'"'.$_SESSION['text_to_search'].'"'.'</p>';
   if (!count($r)) return $nf;
-  //    ,    ,  
+  // Масив, съдържащ номерата на страниците, чието съдържание са записите от масива $r
   $pa = siteserch_pgids($r);
-/*
-  $q = '';
-  foreach($r as $i)
-    if ($q) $q .= " OR `content`='".$i['name']."'"; 
-    else $q .= "`content`='".$i['name']."'";
-  //  ,         
-  $w = stored_value('sitesearch_restr');
-  if ($w && !in_edit_mode() && !show_adm_links()) $q = "( $q )$w";
-  $pa = db_select_m('`ID`,`title`','pages',"$q GROUP BY `content`");
-*/
   if (!count($pa)) return $nf;
-  $rz  = '<p>'.translate('sitesearch_searchfor').": \"$ts\"<br>\n";
-  $rz .= translate('sitesearch_count').': '.count($pa)."</p>\n";
+  $rz  = '<p>'.translate('sitesearch_searchfor').": \"$ts\"</p>\n";
+  $rz .= '<p>'.translate('sitesearch_count').': '.count($pa)."</p>\n";
   $rz .= "<p>$msg</p>\n";
   foreach($pa as $p){
     $t = db_table_field('text','content',"`name`='".$p['title']."' AND `language`='$language'");
@@ -147,17 +137,17 @@ global $language, $pth;
 }
 
 //
-//    ,          $r
+// Връща масив, съдържащ номерата на страниците, чието съдържание са записите от масива $r
 
 function siteserch_pgids($r){
   $q = '';
   foreach($r as $i)
     if ($q) $q .= " OR `content`='".$i['name']."'"; 
     else $q .= "`content`='".$i['name']."'";
-  //  ,         
+  // Настройката sitesearch_restr съдържа част от SQL заявка, която изключва някои страници от показване в резултата от търсене
   $w = stored_value('sitesearch_restr');
   if ($w && !in_edit_mode() && !show_adm_links()) $q = "( $q )$w";
-  $pa = db_select_m('`ID`,`title`','pages',"$q GROUP BY `content`");
+  $pa = db_select_m('`ID`,`title`','pages',"$q" /* GROUP BY `content`"*/ );
   return $pa;
 }
 
@@ -186,23 +176,23 @@ function where_part($wa,$o){
   return $q;
 }
 
-//     ,    
-//      sitesearch_stat   1
+//
+// Водене на статистика за търсените думи в таблица sitesearch_words
 
 function site_search_stat($wa){
-//    sitesearch_stat - 
+// За да се води статистика за потърсените думи, трябва да има настройта sitesearch_stat равносилна на логическа стойност true
 if (!stored_value('sitesearch_stat')) return;
-//       - 
+// В режим на редактиране или администриране, не се отчита статистика
 global $can_edit;
 if ( show_adm_links() || $can_edit ) return;
-//      - 
+// Ако статистиката веднъж е отчетене не се повтаря
 if ($_SESSION['sitesearch_saved']) return;
 global $db_link,$tn_prefix;
 foreach($wa as $w){
  $w1 = addslashes(trim($w));
  //       
  if (strlen($w1)){
-   //   ,    
+   // Номер на дума $w1
    $id = db_table_field('ID', 'sitesearch_words', "`word`='$w1'");
    if ($id){ $q1 = "UPDATE `$tn_prefix"."sitesearch_words` SET "; $q2 = " WHERE `ID`=$id;"; }
    else { $q1 = "INSERT INTO `$tn_prefix"."sitesearch_words` SET `date_time_1`=NOW(), "; $q2 = ';'; }

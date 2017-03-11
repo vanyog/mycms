@@ -28,6 +28,8 @@ include_once($idir.'lib/o_form.php');
 include_once($idir.'mod/user/f_user.php');
 include_once($idir.'lib/f_db_insert_1.php');
 
+if(!session_id()) session_start();
+
 // Ако в сесията няма данни за влязъл потребител - съобщение, че трябва да се влезе
 if (!isset($_SESSION['user_username']) || !isset($_SESSION['user_password']) )
    $page_content = '<p class="message">'.translate('userreg_mustlogin').'</p>';
