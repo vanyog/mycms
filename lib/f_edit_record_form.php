@@ -85,7 +85,7 @@ foreach($cp as $n => $v){
         $hf->add_input($fi);
         $n = 'password2';
         $v = translate('user_passwordconfirm');
-      } 
+      }
       else { $vl = htmlspecialchars(stripslashes($d[$n]), ENT_COMPAT, 'cp1251'); }
       // Ако полето е за попълване на дата и час, се попълва с текущите дата и час
       if (($tp[1]=='datetime')&& !$vl) $vl = date("Y-m-d H:i:s");
@@ -157,7 +157,7 @@ function process_record($cp, $tn, $m = true){
 global $tn_prefix, $db_link;
 // Прочитане типовете на полетата на таблицата
 $ft = db_field_types($tn);
-// Прочитане имената на полетата на таблицата 
+// Прочитане имената на полетата на таблицата
 $fn = db_field_names($tn);
 // Съставяне на нов асоциативен масив с ключове имената на полетата и стойности - типовете им
 $ft = array_combine($fn, $ft); //print_r($ft); die;
@@ -221,7 +221,7 @@ return $rz;
 // Функция, която коригира елементите --$$_ _$$-- елементите
 
 function element_correction($v1){
- $v1 = str_replace( chr(60).' !--$$_',     chr(60).'!--$$_', $v1); 
+ $v1 = str_replace( chr(60).' !--$$_',     chr(60).'!--$$_', $v1);
  $v1 = str_replace( chr(38).'lt; !--$$_',  chr(60).'!--$$_', $v1);
  $v1 = str_replace( chr(38).'lt;!--$$_',  chr(60).'!--$$_', $v1);
  $v1 = str_replace( '_$$--'.chr(38).'gt;', '_$$--'.chr(62),  $v1);

@@ -34,11 +34,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 function stop_https($a){
 global $language, $pth;
 $redir = false;
-if((stored_value('prefere_www')=='yes') && (substr($_SERVER['HTTP_HOST'],0,4)!='www.') ){
+if((stored_value('prefere_www')=='yes') && isset($_SERVER['HTTP_HOST']) && (substr($_SERVER['HTTP_HOST'],0,4)!='www.') ){
   $_SERVER['HTTP_HOST'] = 'www.'.$_SERVER['HTTP_HOST'];
   $redir = true;
 }
-if((stored_value('prefere_www')=='no') && (substr($_SERVER['HTTP_HOST'],0,4)=='www.') ){
+if((stored_value('prefere_www')=='no') && isset($_SERVER['HTTP_HOST']) && (substr($_SERVER['HTTP_HOST'],0,4)=='www.') ){
   $_SERVER['HTTP_HOST'] = substr($_SERVER['HTTP_HOST'],4);
   $redir = true;
 }
@@ -56,7 +56,7 @@ if( ($l>1) && (substr($_SERVER['REQUEST_URI'],0,$l)==$pth) ){
   $redir = true;
 //  die($_SERVER['REQUEST_URI']);
 }
-if($redir) {
+if( $redir && isset($_SERVER['HTTP_HOST']) ) {
   header('Location: http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
   die();
 }

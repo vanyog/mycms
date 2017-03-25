@@ -216,12 +216,16 @@ $rz .= "$this->caption ";
 if ($it) $rz .= "</th><td>\n";
 $rz .= "<select";
 if ($this->name) $rz .= " name=\"$this->name\"";
-$rz .= "$this->js$dsbl>";
+$rz .= "$this->js$dsbl>\n";
 $i = 0;
 foreach($this->options as $k => $v){
   $sl = '';
-  if ($i==$this->selected) $sl = ' selected';
-  if ($k==$this->selected) $sl = ' selected';
+  if ($this->values=='k'){
+     if ($k==$this->selected) $sl = ' selected';
+  } else {
+     if ($i==$this->selected) $sl = ' selected';
+     else if ($v===$this->selected) $sl = ' selected';
+  }
   switch($this->values){
   case 'v': $rz .= "<option value=\"$v\"$sl>$v\n"; break;
   case 'k': $rz .= "<option value=\"$k\"$sl>$v\n"; break;

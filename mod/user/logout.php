@@ -43,7 +43,7 @@ $page_title = translate('user_logouttitle');
 
 $page_content = "<h1>$page_title</h1>\n".translate('user_logoutcontent').'
 <p>'.translate('user_backto').'<br>
-'.translate('user_homåpage').'
+'.translate('user_homepage').'
 <a href="'.$pth.'index.php?pid='.$i.'">'.translate($n,false).'</a><br>
 ';
 if (isset($_SESSION['user_returnpage'])) $page_content .= '<a href="'.$h.'">'.translate('user_lastpage').'</a>';
