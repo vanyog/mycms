@@ -43,7 +43,7 @@ $page_header .= '<script type="text/javascript"><!--
 function mapHideShow(e){
 var p = e.parentElement;
 var h = p.style.height;
-var v = "1.45em";
+var v = "'.stored_value('sitemap_colapsed_height', '1.45em').'";
 if (h!=v){
   e.innerHTML = "&#9658;"
   p.style.height = v;
@@ -62,6 +62,9 @@ if (isset($ar[1])) $id = $ar[1];
 return '<div id="'.$id.'">'."\n".sitemap_rec($ar[0], 1)."
 <p class=\"clear\"></p></div>\n";
 }
+
+//
+// Рекурсивна функция, която съставя картата
 
 function sitemap_rec($i, $j){
 global $pth, $page_passed, $map_level, $max_level, $i_root, $ind_fl, $id_pre, $page_id;
@@ -90,7 +93,14 @@ foreach($mi as $m){// die(print_r($m,true));
   if (($i==$i_root)||($pid!=$index))
   {
     $lk = $m['link'];
-    if ($pid) $lk = $ind_fl.'?pid='.$pid;
+    if ($pid){
+       $lk = $ind_fl.'?pid='.$pid;
+       if(isset($_GET['template'])){
+          $t = 1*$_GET['template'];
+          $at = stored_value('allowed_templates');
+          if(!(strpos($at, ",$t,")===false)) $lk .= "&template=$t";
+       }
+    }
     if ($pid!=$page_id){
        $h = db_table_field('hidden', 'pages', "`ID`=".$pid);
        if( !$h || in_edit_mode() ){
@@ -114,7 +124,7 @@ foreach($mi as $m){// die(print_r($m,true));
         if ($map_level<$max_level) $rz1 .= sitemap_rec($p['menu_group'], $count);
         else $rz1 .= '...';
         $map_level--;
-        $rz2 = '<span onclick="mapHideShow(this);" class="bullet">&#9660;</span> ';
+        $rz2 = '<span onclick="mapHideShow(this);" class="bullet">&#9660;</span>&nbsp;';
       }
     }
   }

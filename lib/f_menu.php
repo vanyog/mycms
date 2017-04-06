@@ -87,7 +87,7 @@ return $rz;
 function is_parrent_menu($i, $mlk){
 global $page_data, $ind_fl;
   // Ако $mlk е текущата страница - истина.
-  if ($mlk==$page_data['ID']) return true;
+  if (($mlk==$page_data['ID']) || !(strpos($mlk,'pid='.$page_data['ID'])===false)) return true;
   // Ако $mlk не е число, а друг линк
   if (!(1*$mlk)) return html_entity_decode($mlk) == $_SERVER['REQUEST_URI'];
   // Ако $i е номер на менюто на текущата страница не търси повече - неистина
