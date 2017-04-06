@@ -53,7 +53,7 @@ $pg = $page_data;
 // Четене записа на главната страница на менюто
 $pg = db_select_1('*','pages','ID='.$pr['index_page']);
 $rz = '<a id="sm_'.$page_data['menu_group'].'" href="'.$main_index.'?pid='.$pg['ID'].
-           '" onclick="show_sub('.$page_data['menu_group'].');return false;">'.translate($pg['title']).' &#9662;</a>'.$rz;
+           '" onclick="show_sub('.$page_data['menu_group'].');return false;">'.translate($pg['title']).' &#9660;</a>'.$rz;
 //if($page_id!=$pr['index_page']) $rz .= "&nbsp;&#10093; \n".'<span>'.translate($page_data['title'])."</span>\n";
 // Ако менюто има родители се добавят и те.
 $psd = array(0=>$pr['group']);
@@ -68,7 +68,7 @@ while ($pr['parent'])
   else $pg = db_select_1('*','pages','ID='.$pr['index_page']);
   if ($rz) $rz = "&nbsp;&#10093; \n".$rz;
   $rz = '<a id="sm_'.$pg['menu_group'].'" href="'.$main_index.'?pid='.$pg['ID'].
-        '" onclick="show_sub('.$pg['menu_group'].');return false;">'.translate($pg['title']).' &#9662;</a>'.$rz;
+        '" onclick="show_sub('.$pg['menu_group'].');return false;">'.translate($pg['title']).' &#9660;</a>'.$rz;
   $sm .= menutree2_submenu($pg['menu_group']);
 }
 return '<div id="menu_tree">
