@@ -88,6 +88,7 @@ foreach($mi as $m){// die(print_r($m,true));
   $rz .= '<div id="map'.$m['ID']."\">\n";
   $rz1 = '';
   $rz2 = '';
+  $h = false;
   
   $pid = 1*$m['link']; // Номер на страницата от поредния линк
   if (($i==$i_root)||($pid!=$index))
@@ -121,7 +122,9 @@ foreach($mi as $m){// die(print_r($m,true));
       // Рекурсивно извикване за получаване карта на подменюто
       if (!in_array($p['menu_group'],$page_passed)){
         $map_level++;
-        if ($map_level<$max_level) $rz1 .= sitemap_rec($p['menu_group'], $count);
+        if ($map_level<$max_level){
+           if(in_edit_mode() || !$h) $rz1 .= sitemap_rec($p['menu_group'], $count);
+        }
         else $rz1 .= '...';
         $map_level--;
         $rz2 = '<span onclick="mapHideShow(this);" class="bullet">&#9660;</span>&nbsp;';
