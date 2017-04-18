@@ -125,7 +125,7 @@ case 'click': $rz .= outerlenks_click();
 }
 
 // Ако са изпратени данни за редактиране
-if (count($_POST)) edit_link($lid);
+if (count($_POST) && isset($_POST['link'])) edit_link($lid);
 
 // Четене на данните за линка
 $l = db_select_1('*','outer_links',"`ID`=$lid");
@@ -175,7 +175,14 @@ var j = t.indexOf("<a ");
 if (j>-1) f.comment.value = t.substring(0, j);
 else f.comment.value = "";
 }
---></script>';
+function sid_clicked(a){
+var u = document.forms.link_edit_form.up;
+u.value = a.innerText;
+}
+--></script>
+<style>
+.sid { cursor: pointer; }
+</style>';
 
 // Добавяне началото на формата за редактиране
 $rz .= start_edit_form();
@@ -184,12 +191,13 @@ $rz .= start_edit_form();
 $ca = db_select_m('*','outer_links',"`up`=$lid AND (`link`='' OR `link` IS NULL)$qp ORDER BY `place`");
 //print_r($ca); die;
 $p = current_pth(__FILE__);
+if (count($ca)) $rz .= '<p>'.count($ca).' '.translate('outerlinks_sub')."</p>\n";
 foreach($ca as $c){// print_r($c); die;
  $cl = '';
  if ($c['private']) $cl = ' class="private"';
  $sid = ''; // ID на записа
  // Показва се само в режим на редактиране
- if(in_edit_mode()) $sid = $c['ID']." ";
+ if(in_edit_mode()) $sid = '<span class="sid" onclick="sid_clicked(this);">'.$c['ID']."</span> ";
  $rz .= "<p$cl>".edit_radio($c['ID'],$c['place']).'<img src="'.$p.'folder.gif" alt=""> '.$sid.
         '<a href="'.
         set_self_query_var('lid',$c['ID']).'" id="lk'.$c['ID'].'">'.stripslashes($c['Title'])."</a>";
@@ -201,6 +209,7 @@ foreach($ca as $c){// print_r($c); die;
 
 // Четене и показване на линковете
 $la = db_select_m('*','outer_links',"`up`=$lid AND `link`>''$qp ORDER BY `place`");
+if (count($la)) $rz .= '<p>'.count($la).' '.translate('outerlinks_links')."</p>\n";
 foreach($la as $l){
 $cl = '';
 if ($l['private']) $cl = ' class="private"';
