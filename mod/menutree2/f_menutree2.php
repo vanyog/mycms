@@ -91,7 +91,11 @@ if(isset($_GET['template'])){
 $md = db_select_m('*','menu_items',"`group`=$g ORDER BY `place` ASC");
 foreach($md as $d){
   $rf = 1*$d['link'];
-  if($rf) $rf = "$main_index?pid=$rf$tm";
+  if($rf){
+     $h = db_table_field('hidden', 'pages', "`ID`=$rf") && !in_edit_mode();
+     if($h) continue;
+     $rf = "$main_index?pid=$rf$tm";
+  }
   else $rf = $d['link'];
   $cr = '';
   if($page_id==$d['link']) $cr = ' class="current"';

@@ -19,6 +19,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Редактиране на текст, след щракване върху линка * зад този текст в режим на редактиране
 
+// Параметри, изпращани с $_GET:
+// Задължителни:
+// i номер на запис от таблица content, който ще се редактира
+// pid номер на страница, на която ще се отрази промяната
+// Незадължителни:
+// lang - език, трябва да се посочва при създаване на нов запис
+// code - кад за получаване на разрешение за редактиране
+
 if (!isset($_GET['pid']) || !isset($_GET['i'])) die('Insufficient parameters.');
 
 $idir = dirname(dirname(dirname(__FILE__))).'/';
@@ -37,8 +45,15 @@ $page_id = 1*$_GET['pid'];
 // Данни за страницата
 $page_data = db_select_1('*', 'pages', "`ID`=$page_id");
 
-// Проверка на правата на потребителя
-usermenu(true);
+// Дали има право за редактуране, получено с код $_GET['code']
+if(isset($_GET['code'])){
+  $pm = db_select_1('*', 'permissions', "`type`='bycode' AND `user_id`='".addslashes($_GET['code'])."'");
+  if(!$pm) $can_edit = false;
+  else $can_edit = preg_match("/".stripslashes($pm['object'])."/", $_GET['i']);
+}
+else
+  // Проверка на правата на влезлия в сайта потребител
+  usermenu(true);
 
 // Край ако няма право да редактира
 if (!$can_edit) die('You have no permission to edit this text');
@@ -47,16 +62,16 @@ $page_header = '<link href="'.$pth.'_style.css" rel="stylesheet" type="text/css"
 
 // Номер на записа от таблица content
 $i = 1*$_GET['i'];
+// Ако вместо номер е изпратено име и език
+if(!$i && isset($_GET['lang'])){
+   $i = db_table_field('`ID`', 'content', "`name`='".addslashes($_GET['i'])."' AND `language`='".addslashes($_GET['lang'])."'");
+//   die("$i");
+}
 
 $cp = array(
-'ID' => 1*$_GET['i'],
+'ID' => $i,
 'text' => translate('usermenu_texttoedit')
 );
-
-
-$page_content = '<h1>'.translate('usermenu_edittext').'</h1>
-<p>Name: '.db_table_field('name','content','`ID`='.(1*$_GET['i']))."</p>\n".
-mod_picker();
 
 // Обработване на изпратени данни
 if (count($_POST)){
@@ -71,7 +86,7 @@ if (count($_POST)){
   // Запазване на редактираните данни
   if ($i) process_record($cp, 'content');
   else {
-    db_insert_1(array(
+    $i = db_insert_1(array(
       'name' => addslashes($_GET['i']),
       'date_time_1'=>'NOW()',
       'date_time_2'=>'NOW()',
@@ -80,14 +95,21 @@ if (count($_POST)){
      ), 'content');
   }
   purge_page_cache($_SESSION['http_referer']);
-  header('Location: '.$_SESSION['http_referer']);
+  if(isset($_GET['code'])) header('Location: '.$main_index.'?pid='.$_GET['pid']."&lang=$language#$i");
+  else header('Location: '.$_SESSION['http_referer']);
 }
 else if (isset($_SERVER['HTTP_REFERER'])) $_SESSION['http_referer'] = $_SERVER['HTTP_REFERER'];
+
+$page_content = '<h1>'.translate('usermenu_edittext').'</h1>
+<p>Name: '.db_table_field('name','content','`ID`='.(1*$_GET['i']))."</p>\n";
+
+if(!isset($_GET['code'])) $page_content .= mod_picker();
 
 // Форма за редактиране на текста
 $page_content .= edit_record_form($cp, 'content');
 
-$pt = $_SESSION['http_referer'];
+if(isset($_GET['code'])) $pt = $main_index.'?pid='.$_GET['pid']."&lang=$language#$i";
+else $pt = $_SESSION['http_referer'];
 
 $page_content .= '<p><a href="'.$pt.'">'.translate('usermenu_back').'</a></p>';
 
