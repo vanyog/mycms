@@ -30,7 +30,7 @@ return outer_links();
 // ----------------------------------------------
 function outer_links(){
 
-global $tn_prefix, $db_link, $site_encoding, $page_header;
+global $tn_prefix, $db_link, $site_encoding, $page_header, $adm_pth;
 
 if (!$site_encoding) $site_encoding = 'windows-1251';
 
@@ -191,21 +191,28 @@ $rz .= start_edit_form();
 $ca = db_select_m('*','outer_links',"`up`=$lid AND (`link`='' OR `link` IS NULL)$qp ORDER BY `place`");
 //print_r($ca); die;
 $p = current_pth(__FILE__);
-if (count($ca)) $rz .= '<p>'.count($ca).' '.translate('outerlinks_sub')."</p>\n";
+$rzc = '';
+$tc = 0;
 foreach($ca as $c){// print_r($c); die;
- $cl = '';
- if ($c['private']) $cl = ' class="private"';
- $sid = ''; // ID на записа
- // ѕоказва се само в режим на редактиране
- if(in_edit_mode()) $sid = '<span class="sid" onclick="sid_clicked(this);">'.$c['ID']."</span> ";
- $rz .= "<p$cl>".edit_radio($c['ID'],$c['place']).'<img src="'.$p.'folder.gif" alt=""> '.$sid.
-        '<a href="'.
-        set_self_query_var('lid',$c['ID']).'" id="lk'.$c['ID'].'">'.stripslashes($c['Title'])."</a>";
- $rz .= outerlinks_autocomment($c);
- if (in_edit_mode()) $rz .= ' <a href="'.$seng.
-    urlencode( iconv($site_encoding, 'UTF-8', stripslashes($c['Title'])) ).'" target="_blank">g</a>';
- $rz .= "</p>\n";
+   $cl = '';
+   if ($c['private']) $cl = ' class="private"';
+   $sid = ''; // ID на записа
+   // ѕоказва се само в режим на редактиране
+   if(in_edit_mode()) $sid = '<span class="sid" onclick="sid_clicked(this);">'.$c['ID']."</span> ";
+   $rzc .= "<p$cl>".edit_radio($c['ID'],$c['place']).'<img src="'.$p.'folder.gif" alt=""> '.$sid.
+          '<a href="'.
+          set_self_query_var('lid',$c['ID']).'" id="lk'.$c['ID'].'">'.stripslashes($c['Title'])."</a>";
+   $t1 = uoterlinks_count($c, $qp);
+   $tc += $t1;
+   $rzc .= " - $t1";
+   $rzc .= outerlinks_autocomment($c);
+   if (in_edit_mode()) $rzc .= ' <a href="'.$seng.
+      urlencode( iconv($site_encoding, 'UTF-8', stripslashes($c['Title'])) ).'" target="_blank">g</a> '.
+      '<a href="'.$adm_pth.'duplicate_record.php?t=outer_links&r='.$c['ID'].'">2</a>';
+   $rzc .= "</p>\n";
 }
+if (count($ca)) $rz .= '<p>'.count($ca).' '.translate('outerlinks_sub').", $tc ".translate('outerlinks_tcs')."</p>\n".$rzc;
+
 
 // „етене и показване на линковете
 $la = db_select_m('*','outer_links',"`up`=$lid AND `link`>''$qp ORDER BY `place`");
@@ -218,7 +225,8 @@ $rz .= "<p$cl>".edit_radio($l['ID'],$l['place']).'<img src="'.$p.'go.gif" alt=""
         '" target="_blank" id="lk'.$l['ID'].'">'.stripslashes($l['Title'])."</a>";
  $rz .= outerlinks_autocomment($l);
  if (in_edit_mode()) $rz .= ' <a href="'.$seng.
-    urlencode( iconv($site_encoding, 'UTF-8', stripslashes($l['Title'])) ).'" target="_blank">g</a>';
+    urlencode( iconv($site_encoding, 'UTF-8', stripslashes($l['Title'])) ).'" target="_blank">g</a> '.
+    '<a href="'.$adm_pth.'duplicate_record.php?t=outer_links&r='.$l['ID'].'">2</a>';
  $rz .= "</p>\n";
 }
 
@@ -534,6 +542,13 @@ if (!(strpos($d['link'], 'scholar.google.bg')===false)) return ' - '.translate('
 if (!(strpos($d['link'], 'google.bg')===false)) return ' - '.translate('outerlinks_sresult').' google.bg';
 if (!(strpos($d['link'], 'bg.wikipedia.org')===false)) return ' - '.translate('outerlinks_wiki').'bg.wikipedia.org';
 if (!(strpos($d['link'], 'en.wikipedia.org')===false)) return ' - '.translate('outerlinks_wiki').'en.wikipedia.org';
-
 }
+
+function uoterlinks_count($c, $qp){
+$c1 = db_table_field('COUNT(*)','outer_links', "`up`=".$c['ID']." AND `link`>' ' $qp ORDER BY `place`");
+$dt = db_select_m('ID',         'outer_links', "`up`=".$c['ID']." AND (`link`='' OR `link` IS NULL)$qp ORDER BY `place`");
+if(count($dt)) foreach($dt as $d) $c1 += uoterlinks_count($d, $qp);
+return $c1;
+}
+
 ?>

@@ -17,17 +17,26 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Филтърът търси в 
+// Филтър bibfinish замества в $t стринга BIBLIO_LIST със списък на литературни източници,
+// намиращи се масива $GLOBALS['biblio_list'], който се съставя от модул BIBLIO
 
 function bibfinish($t){ //print_r($GLOBALS['biblio_list']);
-if(!isset($GLOBALS['biblio_list'])) return $t;
+global $biblio_list;
+if(!isset($biblio_list)) return $t;
+// Съставяне на нов масив с изчистени описания на библ. източници
+$na = array();
+foreach($biblio_list as $k=>$v) $na[$k] = preg_replace('/\|\d*\|. /', '', strip_tags($v));
+// Сортиране на новия масив
 $oldLocal = setlocale(LC_COLLATE, 'bg_BG.utf8');
-if(is_array($GLOBALS['biblio_list'])) uasort($GLOBALS['biblio_list'], 'strcasecmp');//  print_r($GLOBALS['biblio_list']);
+if(is_array($biblio_list)) uasort($na, 'strcasecmp');
+//  print_r($biblio_list);  print_r($na); die;
 setlocale(LC_COLLATE, $oldLocal);
+// Вземане само на ключовете от сортирания масив
+$na = array_keys($na);
 $rz = '';
-foreach($GLOBALS['biblio_list'] as $k=>$v) $rz .= "<p id=\"bib$k\">$v</p>\n";
+foreach($na as $k) $rz .= "<p id=\"bib$k\">$biblio_list[$k]</p>\n";
 $c = 1;
-foreach($GLOBALS['biblio_list'] as $k=>$v){
+foreach($na as $k){
   $t  = str_replace("|$k|", "<a href=\"#bib$k\">$c</a>", $t);
   $rz = str_replace("|$k|", "$c", $rz);
   $c++;
