@@ -24,6 +24,7 @@ include_once($idir."lib/translation.php");
 include_once($idir."lib/f_db_select_m.php");
 include_once($idir."lib/o_form.php");
 include_once($idir."lib/f_db_insert_1.php");
+include_once($idir."lib/f_db_update_where.php");
 
 // Този скрипт се използва на многоезични сайтове за превеждане на съдържанието.
 // Намира първият непреведен стринг и показва форма за превеждането му.
@@ -43,7 +44,7 @@ $w = '';
 if (isset($_GET['p'])) $w = " AND `name` LIKE '%".$_GET['p']."%'"; 
 
 // Четат се иманата на всички стрингове на езика по подразбиране.
-$na = db_select_m('name','content',"`language`='$default_language'$w"); //print_r($na); die;
+$na = db_select_m('name','content',"`language`='$default_language'$w ORDER BY `date_time_2` DESC"); //print_r($na); die;
 
 // Кодовете на всички останали езици без езика по подразбиране
 $la = $languages;
@@ -76,12 +77,15 @@ include_once("build_page.php");
 function new_translation($n1,$l){
 global $languages, $default_language;
   $d = db_select_1('*','content',"`name`='$n1' AND `language`='$default_language'");
+  $v = $d['text'];
+  $t = db_select_1('*','content',"`name`='$n1' AND `language`='$l'");
+  if(isset($t['text'])) $v = $t['text'];
   $f = new HTMLForm('new_tralslation');
   $f->add_input(new FormInput('','name','hidden',$n1));
   $f->add_input(new FormSelect('Not editable','nolink',array('0','1'),$d['nolink']));
   $f->add_input(new FormInput('','language','hidden',$l));
   $f->add_input(new FormTextArea('Text in '.$languages[$l],'text',100,15,
-                                  str_replace('&','&amp;',stripslashes($d['text']))) );
+                                  str_replace('&','&amp;',stripslashes($v))) );
   $f->add_input(new FormInput('','','submit','Save'));
   return "<p>String name: '".$d['name']."'<br>\nIn ".$languages[$default_language].
          ":</p>\n".'<textarea id="deflang" cols="100" rows="10"  disabled="disabled">'.
@@ -95,11 +99,14 @@ global $languages, $default_language;
 // на всички езици се връща празен стринг.
 //
 function untraslated_string($n1){
-global $la;
+global $la, $default_language;
   // За всеки език, различен от подразбиращия се
   foreach($la as $l){
     $r = db_select_1('*','content',"`name`='$n1' AND `language`='$l'");
-    if (!$r) return new_translation($n1,$l);
+    if (!$r
+        || $r['date_time_2']<db_table_field('date_time_2', 'content', "`name`='$n1' AND `language`='$default_language'")
+       )
+       return new_translation($n1,$l);
   }
   return '';
 }
@@ -108,9 +115,15 @@ global $la;
 // Функцията обработва изпратените данни
 //
 function process_trans(){
-  $_POST['date_time_1']='NOW()';
   $_POST['date_time_2']='NOW()';
-  db_insert_1($_POST,'content');
+  $id = db_table_field('ID', 'content', "`name`='".$_POST['name']."' AND `language`='".$_POST['language']."'");
+  if($id) {
+    db_update_where($_POST, 'content', "`ID`=$id");
+  }
+  else {
+    $_POST['date_time_1']='NOW()';
+    db_insert_1($_POST,'content');
+  }
 }
 
 ?>
