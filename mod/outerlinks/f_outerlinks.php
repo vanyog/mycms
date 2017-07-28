@@ -171,7 +171,8 @@ f.place.value = t.substring(0, i);
 t = l.parentElement.innerHTML;
 i = t.indexOf("</a>") + 7;
 t = t.substring(i);
-var j = t.indexOf("<a ");
+var j = -1;
+if(t.substr(0,6)!=" href=") j = t.indexOf("<a ");
 if (j>-1) f.comment.value = t.substring(0, j);
 else f.comment.value = "";
 }
