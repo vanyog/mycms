@@ -40,7 +40,7 @@ if (isset($_GET['template'])){
 
 // Четене на шаблона на страницата от таблица `templates`
 $t = db_select_1('*','templates',"ID=$tid");
-if (!$t) return 'No page template found. May be the system is not installed.';
+if (!$t) return 'No page template found. May be the system is not installed.  See <a href="http://vanyog.com/_new/index.php?pid=91" target="_blank">USAGE.txt</a> file.';
 $cnt = stripslashes($t['template']);
 
 // Ако шаблонът е празен или не същуствува

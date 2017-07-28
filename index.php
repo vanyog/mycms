@@ -24,12 +24,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Всяка страница се описва с шаблон, заглавие, съдържание и др., които са зададени
 // в запис от таблица $tn_prefix.`pages`.
 
+error_reporting(E_ALL); ini_set('display_errors',1);
 
+// Осигурява zip компресиране на отговора
 if(!ob_start("ob_gzhandler")) ob_start();
 
 $exe_time = microtime(true);
-
-error_reporting(E_ALL); ini_set('display_errors',1);
 
 if (phpversion()>'5.0') date_default_timezone_set("Europe/Sofia");
 

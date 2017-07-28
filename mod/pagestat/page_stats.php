@@ -123,7 +123,7 @@ $tn = db_table_field('title', 'pages', "`ID`=$i");
 $tn = db_table_field('text', 'content', "`name`='$tn' AND `language`='$language'");
 $rz = "<p>Page: <a href=\"$main_index?pid=$i\">$tn</a></p>".'
 <p>See: <a href="page_stats.php">All pages statistics</a></p>
-'."Minimum visit count: $min, average: ".number_format($ave, 1).", Maximum: $max".encode('
+'."Minimum visit count: $min, average: ".number_format(1*$ave, 1).", Maximum: $max".encode('
 <table>
 <tr><th>Дата</th><th>Посещения</th></tr>');
 foreach($da as $d){
