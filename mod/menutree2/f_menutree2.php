@@ -52,8 +52,10 @@ if (!$pr) return $rz;
 $pg = $page_data;
 // Четене записа на главната страница на менюто
 $pg = db_select_1('*','pages','ID='.$pr['index_page']);
-$rz = '<a id="sm_'.$page_data['menu_group'].'" href="'.$main_index.'?pid='.$pg['ID'].
-           '" onclick="show_sub('.$page_data['menu_group'].');return false;">'.translate($pg['title']).' &#9660;</a>'.$rz;
+$rz1 = '<a id="sm_'.$page_data['menu_group'].'" href="'.$main_index.'?pid='.$pg['ID'].
+           '" onclick="show_sub('.$page_data['menu_group'].');return false;">'.translate($pg['title']).' &#9660;</a>';
+if(in_edit_mode()) $rz1 .= " ".$pr['group'];
+$rz = $rz1.$rz;
 //if($page_id!=$pr['index_page']) $rz .= "&nbsp;&#10093; \n".'<span>'.translate($page_data['title'])."</span>\n";
 // Ако менюто има родители се добавят и те.
 $psd = array(0=>$pr['group']);

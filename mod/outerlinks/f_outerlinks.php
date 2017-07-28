@@ -180,6 +180,14 @@ function sid_clicked(a){
 var u = document.forms.link_edit_form.up;
 u.value = a.innerText;
 }
+function pl_clicked(a){
+var u = document.forms.link_edit_form.place;
+var v = a.innerText;
+var l = v.slice(-1);
+var n = "0";
+if(l=="0") n = "5";
+u.value = v.substring(0, v.length-1) + n;
+}
 --></script>
 <style>
 .sid { cursor: pointer; }
@@ -277,7 +285,7 @@ return $rz;
 // Показване резултат от търсене
 // -----------------------------
 function link_search(){
-global $pth, $page_id; //die(print_r($_POST,true));
+global $pth, $page_id;
 if (!isset($_POST['search_for']) || !$_POST['search_for']) return '';
 $p = current_pth(__FILE__);
 $q = '';
@@ -329,7 +337,7 @@ foreach($ra as $r){
   else  $rz1 .= '<img src="'.$p.'folder.gif" alt=""> '.$lk;
 }
 return '<p class="link_tree"><a href="'.$pth.'index.php?pid='.$page_id.'">'.translate('outerlinks_home').'</a>   '
-.translate('outerlinks_found')." ".count($ra)."</p>
+.translate('outerlinks_found')." ".count($ra)." (".substr($_POST['search_for'],0,30).")</p>
 $rz1$rz2".search_link_form();
 }
 
@@ -352,6 +360,10 @@ function start_edit_form(){
 if (!in_edit_mode()) return '';
 else return '
 <script type="text/javascript"><!--
+// Създаване на обект за ajax заявки
+if (window.XMLHttpRequest) ajaxO = new XMLHttpRequest();
+else ajaxO = new ActiveXObject("Microsoft.XMLHTTP");
+// Изпълнява се при щракване на бутон "Delete"
 function doDelete_link(){
 var f = document.forms.link_edit_form;
 var r = f.link_id;
@@ -362,6 +374,23 @@ if (confirm("Do you really want to delete the checked link?")){
   f.action.value = "delete";
   f.submit();
 }
+}
+// Изпълнява се при преместване на фокуса в поле Title:
+function enter_title_field(){
+// Адреса от поле URL
+var u = document.forms.link_edit_form.link.value;
+// Не са прави нищо ако адреса е празен
+if(!u) return;
+// Поле Title
+var t = document.forms.link_edit_form.title;
+// Ако не е празно се се прави нищо
+if(t.value.length>0) return;
+// Отваряне на адреса
+ajaxO.open("GET", "'.current_pth(__FILE__).'get_site_title.php?url=" + encodeURIComponent(u) + "&a=" + Math.random(), false);
+ajaxO.send(null);
+// HTML код получен от адреса
+var h = ajaxO.responseText;
+t.value = h;
 }
 --></script>
 <form method="POST" name="link_edit_form">';
@@ -377,7 +406,7 @@ else return '
 Place: <input type="text" name="place" size="5"> 
 Group: <input type="text" name="up" size="5" value="'.$i.'" onfocus="this.select();">
 Private: <input type="text" name="private" size="1"></p>
-<p>Title: <input type="text" name="title" size="100"></p>
+<p>Title: <input type="text" name="title" size="100" onfocus="enter_title_field();"></p>
 <p>Comment: <textarea name="comment" cols="83" rows="4" style="vertical-align:top"></textarea></p>
 <input type="submit" value="Add/Update"> 
 <input type="button" value="Delete" onclick="doDelete_link();">
@@ -388,12 +417,13 @@ Private: <input type="text" name="private" size="1"></p>
 // ------------------------------------------------------
 function edit_radio($id,$p){
 if (!in_edit_mode()) return '';
-else return '<input type="radio" name="link_id" value="'.$id.'" onclick="linkradioclicked();">'.$p.' ';
+else return '<input type="radio" name="link_id" value="'.$id.'" onclick="linkradioclicked();">'.
+            '<span onclick="pl_clicked(this);" class="sid">'.$p.'</span> ';
 }
 
 // Добавяне/променяне на данните в режим на редактиране
 // ----------------------------------------------------
-function edit_link($lid){// die(print_r($_POST,true));
+function edit_link($lid){
 if ( ! in_edit_mode() ) return;
 global $tn_prefix,$db_link;
 
@@ -424,10 +454,8 @@ else {
           $q2 .= "`place`=".(db_table_field('MAX(`place`)', 'outer_links', '1')+10).", ";
   if (!$q2) return '';
   $q = $q1.substr($q2,0,strlen($q2)-2)." ".$q3;
-//  die($q);
 }
-//die(print_r($_POST,true).'<p>'.$q2.'<p>'."`up`=$lid, "." $lid");
-if ($q2!="`up`=$lid, ") mysqli_query($db_link,$q);
+if ( ($q2!="`up`=$lid, ") && (($_POST['action']=='delete') || $_POST['link'] || $_POST['title']) ) mysqli_query($db_link,$q);
 }
 
 //

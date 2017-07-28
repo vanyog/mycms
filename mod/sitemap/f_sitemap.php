@@ -106,7 +106,10 @@ foreach($mi as $m){// die(print_r($m,true));
        $h = db_table_field('hidden', 'pages', "`ID`=".$pid);
        if( !$h || in_edit_mode() ){
           $rz1 .= '<a href="'.$lk.'">'.translate($m['name']).'</a>';
-          if( $h && in_edit_mode() ) $rz .= ' hiddeh';
+          if( in_edit_mode() ) {
+             if ($h) $rz .= 'hiddeh';
+             $rz .= $m['place'];
+          }
           $rz1 .= "<br>\n";
        }
     }

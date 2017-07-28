@@ -38,7 +38,7 @@ return $t;
 
 function nextpage_data($gr, $page_id){
 // Данни за линка към текущата страница в менюто й.
-$ld = db_select_1('*', 'menu_items', "`group`='$gr' AND `link`='$page_id'");
+$ld = db_select_1('*', 'menu_items', "`group`='$gr' AND `link`='$page_id'  OR `link` LIKE '%pid=$page_id%'");
 if (!$ld) return '';
 // Данни за следващия линк в менюто
 $nl = db_select_1('*', 'menu_items', "`group`='$gr' AND `place`>".$ld['place'].
