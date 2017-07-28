@@ -114,6 +114,7 @@ array_unshift( $da, $d );
 //die(print_r($da, true));
 $min = db_table_field('MIN(`count`)', 'visit_history', "`page_id`=$i AND $w");
 $max = db_table_field('MAX(`count`)', 'visit_history', "`page_id`=$i AND $w");
+$ave = db_table_field('AVG(`count`)', 'visit_history', "`page_id`=$i AND $w");
 if ($max<$da[0]['count']) $max = $da[0]['count'];
 if (!$max) $max = 1;
 //die("$min $max");
@@ -122,7 +123,7 @@ $tn = db_table_field('title', 'pages', "`ID`=$i");
 $tn = db_table_field('text', 'content', "`name`='$tn' AND `language`='$language'");
 $rz = "<p>Page: <a href=\"$main_index?pid=$i\">$tn</a></p>".'
 <p>See: <a href="page_stats.php">All pages statistics</a></p>
-'."Minimum visit count: $min, Maximum: $max".encode('
+'."Minimum visit count: $min, average: ".number_format($ave, 1).", Maximum: $max".encode('
 <table>
 <tr><th>Дата</th><th>Посещения</th></tr>');
 foreach($da as $d){

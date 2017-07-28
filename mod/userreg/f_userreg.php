@@ -77,6 +77,7 @@ $s = substr($js, 2, $l-4);
 $a = explode(',', $s);
 foreach($a as $v){
   $p = explode(':',$v);
+  if(count($p)!=2) continue;
   $k = trim($p[0]);
   $k = substr($k, 1, strlen($k)-2);
   $v = trim($p[1]);
@@ -210,7 +211,7 @@ $f->add_input( new FormInput('', 'type', 'hidden', $t) );
 $f->add_input( new FormInput(translate('user_email'),'email','text',$email) );
 $f->add_input( new FormInput(translate('user_password'),'password','password'));
 $f->add_input( new FormInput(translate('user_passwordconfirm'),'password2','password'));
-$f->add_input( new FormReCaptcha(translate('userreg_recaptcha'), stored_value('recaptcha_pub') ) );
+if(!is_local()) $f->add_input( new FormReCaptcha(translate('userreg_recaptcha'), stored_value('recaptcha_pub') ) );
 $fi = new FormInput('','','button',translate('userreg_regsubmit'));
 $fi->js = ' onclick="ifNotEmpty_userreg_form();"';
 $f->add_input( $fi );
@@ -235,7 +236,7 @@ if (isset($_POST["g-recaptcha-response"])){
                     '&response='.$_POST['g-recaptcha-response']);
   error_reporting($erl);
   $rd = json_to_array($verifyResponse);
-  if ($rd['success']!='true')
+  if ( !isset($rd['success']) || ($rd['success']!='true') )
     return translate('reCAPTCHA_error');
 }
 // Мерки за сигурност
@@ -435,7 +436,7 @@ return $rz;
 function userreg_edit($t){
 // Проверяване дали има влязъл потребител
 $r = userreg_check($t);
-//if (!$r) die("No user is log in to edit");
+if (!isset($_SESSION['user_username'])) return '<p class="message">'.translate('userreg_mustlogin').'</p>';
 // Превключване към https, ако се изисква
 if((stored_value('userreg_https')=='on') && !(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']=='on')) ){
   header('Location: https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
