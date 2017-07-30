@@ -50,7 +50,8 @@ if(stored_value('stop_https', 1) && isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS
   }
 }
 $l = strlen($pth);
-if( ($l>1) && (substr($main_index,0,$l)!=$pth) ){
+//die("$ind_fl -- $main_index -- $pth");
+if( ($l>1) && ($ind_fl!=$main_index) && (substr($main_index,0,$l)!=$pth) ){
   $l1 = strlen($_SERVER['REQUEST_URI']);
   $_SERVER['REQUEST_URI'] = substr($_SERVER['REQUEST_URI'], $l-1, $l1-$l+1);
   $redir = true;
@@ -58,7 +59,6 @@ if( ($l>1) && (substr($main_index,0,$l)!=$pth) ){
 }
 if( $redir && isset($_SERVER['HTTP_HOST']) ) {
   $h = 'Location: http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-  die($h);
   header($h);
   die();
 }
