@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Филтър bibfinish замества в $t стринга BIBLIO_LIST със списък на литературни източници,
 // намиращи се масива $GLOBALS['biblio_list'], който се съставя от модул BIBLIO
 
-function bibfinish($t){ //print_r($GLOBALS['biblio_list']);
+function bibfinish($t){ //print_r($GLOBALS['biblio_list']); die();
 global $biblio_list;
 if(!isset($biblio_list)) return $t;
 // Съставяне на нов масив с изчистени описания на библ. източници
@@ -29,15 +29,15 @@ foreach($biblio_list as $k=>$v) $na[$k] = preg_replace('/\|\d*\|. /', '', strip_
 // Сортиране на новия масив
 $oldLocal = setlocale(LC_COLLATE, 'bg_BG.utf8');
 if(is_array($biblio_list)) uasort($na, 'strcasecmp');
-//  print_r($biblio_list);  print_r($na); die;
 setlocale(LC_COLLATE, $oldLocal);
 // Вземане само на ключовете от сортирания масив
-$na = array_keys($na);
+$nk = array_keys($na);
 $rz = '';
-foreach($na as $k) $rz .= "<p id=\"bib$k\">$biblio_list[$k]</p>\n";
+foreach($nk as $k) $rz .= "<p id=\"bib$k\">$biblio_list[$k]</p>\n";
 $c = 1;
-foreach($na as $k){
-  $t  = str_replace("|$k|", "<a href=\"#bib$k\">$c</a>", $t);
+foreach($nk as $k){
+  $tt = $na[$k];
+  $t  = str_replace("|$k|", "<a href=\"#bib$k\" title=\"$tt\">$c</a>", $t);
   $rz = str_replace("|$k|", "$c", $rz);
   $c++;
 }

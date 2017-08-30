@@ -110,7 +110,7 @@ case 'all': $rz .= '<h2><a href="'.unset_self_query_var('lid').'">'.translate('o
 case 'cat': $rz .= search_link_form().
                    '<p><img src="'.$p.'folder.gif" alt=""> '.
                    '<a href="'.unset_self_query_var('lid').'">'.translate('outerlinks_home').
-                   "<p>\n".
+                   "</a></p>\n".
                    outerlenks_cat(0, '');
             break;
 // Показване на най-новите
