@@ -18,10 +18,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-function set_query_var($n,$v){
+function set_query_var($n,$v,$a = true){
 $r = $_GET;
 $r[$n] = $v;
-return str_replace('&','&amp;',http_build_query($r));
+$rz = http_build_query($r);
+if($a) $rz = str_replace('&','&amp;',$rz);
+return $rz;
 }
 
 function http_parse_query( $array = NULL, $convention = '%s' ){

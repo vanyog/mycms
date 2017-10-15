@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // Връща уникода на първия символ от стринг.
-// В гобалната променлива $utf8_char_lenght се записва дължината на символа в байтове.
+// В глобалната променлива $utf8_char_lenght се записва дължината на символа в байтове.
 
 // За създаване на функцията е използван кода от:
 // http://stackoverflow.com/questions/9361303/can-i-get-the-unicode-value-of-a-character-or-vise-versa-with-php
@@ -57,6 +57,46 @@ function first_unicode($c) {
         return FALSE;
     }
     return 0;
+}
+
+// Връща истина ако $c е уникод на кирилица
+
+function is_cirillic($c){
+return (($c>=1040) && ($c<=1103));
+}
+
+// Връща истина ако $c е уникод на българска гласна буква
+
+function bg_vowel($c){
+return in_array($c, array(1040,1045,1048,1054,1059,1066,1070,1071,
+                          1072,1077,1080,1086,1092,1098,1102,1103));
+}
+
+
+// Съкращение на дума по българските правописни правила
+
+function bg_word_abrev($a){
+global $utf8_char_lenght;
+$c = first_unicode($a);
+$i = $utf8_char_lenght;
+// Ако първата буква е на кирилица се оставят още букви по българските правила
+if(is_cirillic($c)) {
+  $end = false; // Флаг, че не е открита съгласна
+  // Търсене на гласна след съгласна
+  while( ($i<strlen($a)-1) ){
+    $v = bg_vowel($c); // Поредната буква е гласна
+    // Ако е гласна след съгласна - край
+    if($v && $end){ $i -= $utf8_char_lenght; break; }
+    // Ако не е гласна вдигаме фага, че е открита съгласна
+    if(!$v) $end = true;
+    // Минаваме към следващата буква
+    $c = first_unicode(substr($a, $i));
+    $i += $utf8_char_lenght;
+  }
+}
+$rz = substr($a, 0, $i);
+if($rz) $rz .= '.';
+return $rz;
 }
 
 ?>

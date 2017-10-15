@@ -32,7 +32,8 @@ include_once($idir."lib/usedatabase.php");
 
 function db_select_m($fn,$tb,$whr,$y=false){
 global $db_link, $tn_prefix, $db_req_count;
-$q="SELECT $fn FROM `$tn_prefix$tb` WHERE $whr;"; 
+if( $tb[0]!='`' ) $tb = "`$tn_prefix$tb`";
+$q="SELECT $fn FROM $tb WHERE $whr;";
 if ($y) echo "$q<br>";
 $dbr=mysqli_query($db_link,$q);
 $db_req_count++;

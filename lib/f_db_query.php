@@ -31,8 +31,8 @@ global $db_link, $db_req_count;
 $r = mysqli_query($db_link, $q);
 $db_req_count++;
 $a = array();
-if ($r)
-while($a[] = mysqli_fetch_assoc($r));
+if (!is_bool($r) && $r)
+   while($a[] = mysqli_fetch_assoc($r));
 return $a;
 }
 

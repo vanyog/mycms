@@ -37,9 +37,10 @@ var tefc;
 function onTeFocus(){
 tefc = document.activeElement;
 }
+var tgToIn = "";
 function doInsertTag(){
-var t = prompt("Enter a html tag to be inserted");
-insert_tag(t,t);
+tgToIn = prompt("Enter a html tag to be inserted", tgToIn);
+insert_tag(tgToIn,tgToIn);
 }
 function insert_tag(t1,t2){
 var te = tefc;
@@ -82,9 +83,15 @@ var tag_a1 = "a href=\"/index.php?pid=\"";
 var tag_a2 ="a";
 var tag_s1 = "<script type=\"text/javascript\"><!--\n";
 var tag_s2 = "\n--><"+"/script>";
+var metaPressed = false;
 function showCharCount(a){
 var s = document.getElementById(a.id + "_count");
 s.innerHTML = a.value.length;
+metaPressed = false;
+}
+function editor_onKey(e,v){
+if(metaPressed && (v.key=="Enter")) insert_tag(tgToIn,tgToIn);
+metaPressed = true;
 }
 --></script>
 '.mod_picker();
@@ -103,7 +110,7 @@ return $js.
 '.make_insert_2_button('<!--$$_','\'<!--$$_\'','\'_$$-->\'').'
 '.make_insert_2_button('javascript','tag_s1','tag_s2').ckeb($tec).'
 <span id="editor'.$tec.'_count"></span>
-<textarea id="editor'.$tec.'" cols="120" name="'.$n.'" rows="22" style="font-size:120%;" onfocus="onTeFocus();" onkeyup="showCharCount(this);">'.
+<textarea id="editor'.$tec.'" cols="120" name="'.$n.'" rows="22" style="font-size:120%;" onfocus="onTeFocus();" onkeyup="showCharCount(this);" onkeydown="editor_onKey(this,event);">'.
 str_replace($ta_ctag,$ta_fctag,$tx).$ta_ctag;
 
 }

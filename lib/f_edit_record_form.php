@@ -31,7 +31,7 @@ include_once($idir."lib/f_db_show_columns.php");
 include_once($idir."lib/f_db_enum_values.php");
 include_once($idir."lib/o_form.php");
 
-function edit_record_form($cp, $tn, $ck = true){
+function edit_record_form($cp, $tn, $ck = true){// print_r($cp); die;
 global $countries;
 // Прочитане имената на полетата на таблицата
 $fn = db_field_names($tn);
@@ -44,7 +44,7 @@ $fd = db_show_columns($tn, '', 'Default');
 // Съставяне на нов асоциативен масив с ключове имената на полетата и стойности - типовете им
 $fd = array_combine($fn, $fd);
 // Прочитане на записа, който ще се редактира
-$d = db_select_1('*', $tn, "`ID`=".$cp['ID']);// print_r($d); die;
+$d = db_select_1('*', $tn, "`ID`=".$cp['ID']);
 // Връщан резултат
 $rz = '';
 // Максимална дължина на текстовите полета
@@ -63,6 +63,7 @@ foreach($cp as $n => $v){
     $hf->add_input($fi);
     break;
   default:
+    if(!isset($ft[$n])) die("Field $n do not exist in table $tn.");
     // Анализиране типа на полетата
     preg_match('/([a-z]*)\((.*)\)/', $ft[$n], $tp);
     if (count($tp)<2) $tp[1] = $ft[$n];

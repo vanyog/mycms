@@ -64,9 +64,10 @@ $page_header = '<link href="'.$pth.'_style.css" rel="stylesheet" type="text/css"
 $i = 1*$_GET['i'];
 // Àêî âìåñòî íîìåğ å èçïğàòåíî èìå è åçèê
 if(!$i && isset($_GET['lang'])){
-   $i = db_table_field('`ID`', 'content', "`name`='".addslashes($_GET['i'])."' AND `language`='".addslashes($_GET['lang'])."'");
-//   die("$i");
+   $i = db_table_field('`ID`', 'content', "`name`='".addslashes($_GET['i'])."' AND `language`='".addslashes($_GET['lang'])."'", 0);
 }
+
+if(!$i) die("Incorrect value of i parameter.");
 
 $cp = array(
 'ID' => $i,

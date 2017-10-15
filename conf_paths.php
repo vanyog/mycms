@@ -115,7 +115,7 @@ return $r;
 }
 
 // Проверява дали стринг $a започва със стринг $b
-function starts_width($a, $b){
+function starts_with($a, $b){
 $l = strlen($b);
 return substr($a, 0, $l) == $b;
 }

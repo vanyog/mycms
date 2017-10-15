@@ -34,7 +34,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 function stop_https($a){
 global $language, $pth, $ind_fl, $main_index;
 $redir = false;
-if((stored_value('prefere_www')=='yes') && isset($_SERVER['HTTP_HOST']) && (substr($_SERVER['HTTP_HOST'],0,4)!='www.') ){
+if((stored_value('prefere_www')=='yes')
+    && isset($_SERVER['HTTP_HOST'])
+    && (substr($_SERVER['HTTP_HOST'],0,4)!='www.')
+    && (substr($_SERVER['HTTP_HOST'],0,4)!='xn--')
+){
   $_SERVER['HTTP_HOST'] = 'www.'.$_SERVER['HTTP_HOST'];
   $redir = true;
 }

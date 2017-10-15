@@ -24,12 +24,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 global $h_id, $tof_contents;
 
-function toc($s){
+function toc($s){// die($s);
 global $h_id, $tof_contents;
 $h_id = 0;
 $tof_contents = '';
-$s = preg_replace_callback('/<h(\d+)\s*(id=".+")*>(.*)<\/h\1>/', 'toc_cb', $s);
-$tof_contents = "<div id=\"toc\">\n".
+$s = preg_replace_callback('/<h(\d+)\s*(id=".+")*>(.*?)<\/h\1>/s', 'toc_cb', $s);
+if($h_id<2) $tof_contents = '';
+else $tof_contents = "<div id=\"toc\">\n".
                 '<h2>'.translate('filtertoc_toc')."</h2>\n".
                 $tof_contents."</div>\n";
 $s = str_replace('TOFCONTENTS', $tof_contents, $s);
@@ -50,7 +51,7 @@ function toc_cb($a){
     preg_match_all('/id="(.*)"/', $a[2], $m);
     if(isset($m[1][0])) $id = $m[1][0];
   }
-  $tof_contents .= '<a href="#'.$id.'" style="padding-left:'.$a[1].'em;">'.strip_tags($a[3])."</a>\n";
+  $tof_contents .= '<a href="#'.$id.'" class="lev'.$a[1].'">'.strip_tags($a[3])."</a>\n";
   return '<h'.$a[1].' '.$a[2].'>'.$a[3].'</h'.$a[1].'>';
 }
 

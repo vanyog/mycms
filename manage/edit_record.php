@@ -70,6 +70,8 @@ if ($r) foreach($r as $k => $v){
  $page_content .= '</tr>';
  $i++;
 }
+else die("<p>Record ID=$id do not exist.</p>
+<p>Click <a href=\"new_record.php?t=$t&ID=$id\">here</a> to create.</p>");
 
 $rfr = $adm_pth.'show_table.php?t='.$t;
 if (isset($_SESSION['http_referer'])) $rfr = $_SESSION['http_referer'];
