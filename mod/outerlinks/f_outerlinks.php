@@ -64,7 +64,7 @@ if (!$tr && !$what && !$sr4) $rz .= translate('outerlinks_homemessage');
 
 // Показване на бройките
 $rz .= '<div id="outer_links">'."\n".'
-<p class="counts">'.
+<p class="counts" id="counts">'.
 translate('outerlinks_totalcount')." $lc ".
 translate('outerlinks_in')." $cc\n".
 translate('outerlinks_categories')." &nbsp; ";
@@ -207,7 +207,7 @@ foreach($ca as $c){// print_r($c); die;
    if ($c['private']) $cl = ' class="private"';
    $sid = ''; // ID на записа
    // Показва се само в режим на редактиране
-   if(in_edit_mode()) $sid = '<span class="sid" onclick="sid_clicked(this);">'.$c['ID']."</span> ";
+   if(in_edit_mode()) $sid = '<span class="sid" onclick="sid_clicked(this);" title="Group ID">'.$c['ID']."</span> ";
    $rzc .= "<p$cl>".edit_radio($c['ID'],$c['place']).'<img src="'.$p.'folder.gif" alt=""> '.$sid.
           '<a href="'.
           set_self_query_var('lid',$c['ID']).'" id="lk'.$c['ID'].'">'.stripslashes($c['Title'])."</a>";
@@ -399,8 +399,10 @@ t.value = h;
 // Край на формата за редактиране
 // --------------------------------
 function end_edit_form($i){
+global $adm_pth;
 if (!in_edit_mode()) return '';
 else return '
+<p><a href="'.$adm_pth.'places10.php?t=outer_links">10 20...</a></p>
 <input type="hidden" name="action" value="update">
 <p>URL: <input type="text" name="link" size="50"> 
 Place: <input type="text" name="place" size="5"> 
@@ -418,7 +420,7 @@ Private: <input type="text" name="private" size="1"></p>
 function edit_radio($id,$p){
 if (!in_edit_mode()) return '';
 else return '<input type="radio" name="link_id" value="'.$id.'" onclick="linkradioclicked();">'.
-            '<span onclick="pl_clicked(this);" class="sid">'.$p.'</span> ';
+            '<span onclick="pl_clicked(this);" class="sid" title="Place">'.$p.'</span> ';
 }
 
 // Добавяне/променяне на данните в режим на редактиране
@@ -455,6 +457,7 @@ else {
   if (!$q2) return '';
   $q = $q1.substr($q2,0,strlen($q2)-2)." ".$q3;
 }
+//if($_POST['action']=='delete') die("$q2<br>".print_r($_POST,true));
 if ( ($q2!="`up`=$lid, ") && (($_POST['action']=='delete') || $_POST['link'] || $_POST['title']) ) mysqli_query($db_link,$q);
 }
 
