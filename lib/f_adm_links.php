@@ -104,7 +104,7 @@ if (e.keyCode==13){
 }
 }
 --></script>
-<p id="adm_links">&nbsp;
+<p id="adm_links">&nbsp; '.$_SERVER['REMOTE_ADDR'].'
 <a href="'.$pth.'">Home</a> :: '.$enmch.'
 <a href="'.$main_index.'?pid='.$ppid.'">&lt;</a>
 <input type="text" size="4" id="gtpNumber" onkeypress="gotoPageNumber(event);">
