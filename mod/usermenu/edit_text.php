@@ -67,7 +67,7 @@ if(!$i && isset($_GET['lang'])){
    $i = db_table_field('`ID`', 'content', "`name`='".addslashes($_GET['i'])."' AND `language`='".addslashes($_GET['lang'])."'", 0);
 }
 
-if(!$i) die("Incorrect value of i parameter.");
+if(isset($_GET['code']) && !$i) die("Incorrect value of i parameter.");
 
 $cp = array(
 'ID' => $i,

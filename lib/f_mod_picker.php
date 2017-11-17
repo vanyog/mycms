@@ -41,7 +41,7 @@ asort($mn);
 foreach($mn as $i=>$m) {
   $rm = $ml[$i].'README.txt';
   $rz .= '<span><span onclick="toClip(this);">'.$m.'</span>';
-  if (file_exists($rm)) $rz .= ' <a href="'.$pth.'mod/help.php?m='.$m.'">help</a>';
+  if (file_exists($rm)) $rz .= ' <a href="'.$pth.'mod/help.php?m='.$m.'" target="_blank">help</a>';
   $rz .= '</span> '."\n";
 }
 $rz .= '</p>';

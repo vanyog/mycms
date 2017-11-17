@@ -77,7 +77,7 @@ if (!$dont_translate) foreach($ls as $l) if ($l!=$language){
   }
   $r .= "</a>\n";
 }
-return encode("\n<!--Флагчета за смяна на езика-->\n$r<!--Край на флагчетата-->\n");
+return encode("\n<!--Флагчета за смяна на езика-->\n").$r.encode("<!--Край на флагчетата-->\n");
 }
 
 ?>

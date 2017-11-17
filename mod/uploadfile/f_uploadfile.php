@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Функцията uploadfile($n) генерира html кода за показване на
 // качен на сървъра файл.
 // В режим на редактиране зад хипервръзката се показват знаци:
-// +  за качване на файл и 
+// +  за качване на файл и
 // -  за изтриване на качения файл.
 
 global $can_manage;
@@ -82,7 +82,7 @@ else {
   $l = strlen($_SERVER['DOCUMENT_ROOT']);
   // document_root деректорията на другия сървър, зададена с настройката uploadfile_otherroot
   $or = stored_value('uploadfile_otherroot');// print_r($or); die;
-  if ($or){ 
+  if ($or){
     $l = strlen($or);
     // Истина, ако файлът не е бил в document_root на другия сървър
     $ne = $or != substr($fr['filename'], 0, $l); // echo "$or ".substr($fr['filename'], 0, $l); die;
@@ -103,7 +103,7 @@ else {
   // Ако няма файл или е извън DOCUMENT_ROOT, или не е във време за показване
   if ( (!$fr['filename'] || $ne || !$cs) && !in_edit_mode() ){
     // Показване на текста на връзката, "няма качен файл" или нищо
-    if (in_edit_mode()) $rz .= stripslashes($fr['text']); 
+    if (in_edit_mode()) $rz .= stripslashes($fr['text']);
     else switch ($show_text){
     case '0': $rz .= ''; break;
     case '1': $rz .= stripslashes($fr['text']); break;
@@ -122,7 +122,7 @@ else {
 if (in_edit_mode() || can_upload()){
   $cp = current_pth(__FILE__);
   $rz .= ' <a href="'.$cp."upload.php?pid=$pid&amp;fid=$fid&amp;fn=$n"."\" title=\"Update\">+</a>\n";
-  if ( isset($fr['filename']) && $fr['filename'] && !$ne ) 
+  if ( isset($fr['filename']) && $fr['filename'] && !$ne )
     $rz .= ' <a href="'.$cp."delete.php?fid=$fid".'" title="Delete" onclick="return confirm(\''.
       translate('uploadfile_confdel').$f.' ?\');">-</a>'."\n";
 }

@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // иначе час не се показва, само ако е 00:00:00.
 
 function db2user_date_time($dts, $tm = true){
-$c = translate('month_names',false);// print_r($c); die;
+$c = translate('month_names',false);
 eval($c);
 if ((substr($dts,11,8)=="00:00:00")||!$tm) $t = '';
 else {
@@ -43,6 +43,19 @@ return $t.' '.
   $d.' '.
   $month[1*substr($dts,5,2)].' '.
   substr($dts,0,4);
+}
+
+function db2user_from_to($d1,$d2){
+$c = translate('month_names',false);
+eval($c);
+$n1 = 1*substr($d1, 8, 2); $n2 = 1*substr($d2, 8, 2);
+$m1 = 1*substr($d1, 5, 2); $m2 = 1*substr($d2, 5, 2);
+$y1 = 1*substr($d1, 0, 4); $y2 = 1*substr($d2, 0, 4);
+$s1 = '';                 $s2 = "$n2 ".$month[1*$m2]." $y2";
+if( $y1!=$y2)              $s1 = $y1;
+if(($m1!=$m2)||($y1!=$y2)) $s1 = $month[1*$m1]." ".$s1;
+                           $s1 = $n1." ".$s1;
+return "$s1 - $s2";
 }
 
 ?>

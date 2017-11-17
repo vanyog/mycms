@@ -36,7 +36,10 @@ foreach($fn as $i => $n){
   switch ($n){
   case 'ID': if (isset($_GET[$n])) $q .= '`ID`='.(1*$_GET[$n]).', ';
      break;
-  case 'date_time_1': $q .= "`$n`=NOW(), "; break;
+  case 'date_time_1':
+     if (!isset($_GET['date_time_1'])) $q .= "`$n`=NOW(), ";
+     else $q .= "`$n`='".addslashes($_GET['date_time_1'])."', ";
+     break;
   case 'hidden': break;
   case 'place': $pl = db_table_field('MAX(`place`)',$tb,'1')+10;
      $q .= "`$n`='$pl', "; break;
