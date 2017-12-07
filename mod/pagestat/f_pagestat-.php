@@ -17,21 +17,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Показване на хипервръзка от модул OUTERLINKS
-// Параметърът $a е номерът на хипервръзката от таблица outer_links
+// В режим на администриране функцията pagestat() показва броя на посещенията на страницата -
+// общия брой и за деня, както и линк "page stats", който отваря страница с таблица на статистиката 
+// на посещенията на страниците от сайта
 
-// Параметърът може да съдържа и текст, отделен от номера с |, който да замени надписа на линка
-
-function outerlink($a){
-global $main_index;
-$aa = explode('|',$a);
-// Четене данните за хипервръзката
-$d = db_select_1('*', 'outer_links', "`ID`=".$aa[0] );
-if (!isset($aa[1])) $aa[1] = $d['Title'];
-$rz = '<a href="'.$main_index.'?lid='.$aa[0].'&pid=6" target="_blank" title="'.
-        urldecode($d['link']).'">'.$aa[1].'</a>';
-if(in_edit_mode()) $rz .= ' *';
-return $rz;
-}
+function pagestat(){
+global $page_data, $can_edit;
+if ( !(show_adm_links() || $can_edit) ) return '';
+$pth = current_pth(__FILE__);
+return 'Total '.$page_data['tcount'].' Today '.$page_data['dcount'].' See <a href="'.$pth.'page_stats.php?pid='.
+$page_data['ID'].'">page stats</a>';}
 
 ?>

@@ -20,6 +20,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Показва стойността на глобална PHP променлива с име $a
 
 function variable($a){
+$r = array();
+$j = preg_match_all('/(.*)\[\'(.*)\'\]/', $a, $r);
+if($j) switch($r[1][0]){
+case 'GET': return $_GET[$r[2][0]]; break;
+}
 global $$a;
 return stripslashes($$a);
 }

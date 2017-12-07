@@ -68,7 +68,7 @@ if ($r){ // Ако има такъв запис
   $rz = apply_filters($n,parse_content($t));
   if ((!isset($r['nolink']) || !$r['nolink']) && $elink) $rz .= $el;
 }
-else if (/*is_local() ||*/ in_edit_mode()){
+else if (in_edit_mode() && $elink){
          // На локелен сървър или в режим на редактиране се показва името на стринга като линк,
          // който отваря форма за въвеждане на липсващия надпис
          if ($can_edit) $h = $pth.'mod/usermenu/edit_text.php?i='.$n.
