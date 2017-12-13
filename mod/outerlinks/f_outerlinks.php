@@ -108,7 +108,7 @@ case 'all': $rz .= '<h2><a href="'.unset_self_query_var('lid').'">'.translate('o
             break;
 // Показване само на категориите
 case 'cat': $rz .= search_link_form().
-                   '<p><img src="'.$p.'folder.gif" alt=""> '.
+                   '<p><img src="'.$p.'folder.png" alt=""> '.
                    '<a href="'.unset_self_query_var('lid').'">'.translate('outerlinks_home').
                    "</a></p>\n".
                    outerlenks_cat(0, '');
@@ -226,7 +226,7 @@ foreach($ca as $c){// print_r($c); die;
    $sid = ''; // ID на записа
    // Показва се само в режим на редактиране
    if(in_edit_mode()) $sid = '<span class="sid" onclick="sid_clicked(this);" title="Group ID">'.$c['ID']."</span> ";
-   $rzc .= "<p$cl>".edit_radio($c['ID'],$c['place'],2).'<img src="'.$p.'folder.gif" alt=""> '.$sid.
+   $rzc .= "<p$cl>".edit_radio($c['ID'],$c['place'],2).'<img src="'.$p.'folder.png" alt=""> '.$sid.
           '<a href="'.
           set_self_query_var('lid',$c['ID']).'" id="lk'.$c['ID'].'">'.stripslashes($c['Title'])."</a>";
    $t1 = uoterlinks_count($c, $qp);
@@ -350,7 +350,7 @@ foreach($ra as $r){
   $lk .= "<br>\n";
   // Добавяне към резултата
   if ($r['link']) $rz2 .= '<img src="'.$p.'go.gif" alt=""> '.$lk;
-  else  $rz1 .= '<img src="'.$p.'folder.gif" alt=""> '.$lk;
+  else  $rz1 .= '<img src="'.$p.'folder.png" alt=""> '.$lk;
 }
 return '<p class="link_tree"><a href="'.$pth.'index.php?pid='.$page_id.'">'.translate('outerlinks_home').'</a>   '
 .translate('outerlinks_found')." ".count($ra)." (".substr($_POST['search_for'],0,30).")</p>
@@ -520,7 +520,7 @@ $da = db_select_m('*', 'outer_links', "`up`=$up AND (`link`='' OR `link` IS NULL
 foreach($da as $d){
   $n = '';
   if(in_edit_mode()) $n = $d['ID'].' ';
-  $t = '<p style="margin-left:'.(20*$lv).'px" class="lv'.$lv.'"><img src="'.$p.'folder.gif" alt=""> '.$n.
+  $t = '<p style="margin-left:'.(20*$lv).'px" class="lv'.$lv.'"><img src="'.$p.'folder.png" alt=""> '.$n.
        '<a href="'.set_self_query_var('lid',$d['ID']).'">'.$d['Title'].
        "</a></p>\n";
   $rz .= outerlenks_cat( $d['ID'], $t, $lv + 1 );
