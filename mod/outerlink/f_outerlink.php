@@ -30,11 +30,7 @@ $d = db_select_1('*', 'outer_links', "`ID`=".$aa[0] );
 if (!isset($aa[1])) $aa[1] = $d['Title'];
 $rz = '<a href="'.$main_index.'?lid='.$aa[0].'&pid=6" target="_blank" title="'.
         urldecode($d['link']).'">'.$aa[1].'</a>';
-<<<<<<< HEAD
 if(in_edit_mode()) $rz .= ' <a href="/index.php?pid=6&lid='.$d['up'].'">&gt;&gt;</a>';
-=======
-if(in_edit_mode()) $rz .= ' *';
->>>>>>> 50263f496d301dae61ab48111ae8c4c5bd92a823
 return $rz;
 }
 
