@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 function addtovariable($a){
 $b = explode('|', $a);
 global $$b[0];
-$$b[0] .= $b[1];
+$$b[0] .= stripslashes($b[1]);
 return '';
 }
 

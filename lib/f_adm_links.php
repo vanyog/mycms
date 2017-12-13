@@ -80,7 +80,7 @@ else {
   if (!in_admin_path()) $enmch .= edit_normal_link(false).' ::
 <a href="" onclick="doNewPage();return false">New page</a> :: ';
 
-  $rz = '<script type="text/javascript"><!--
+  $rz = '<script>
 function doNewPage(){
 if (confirm("Do you want to create new page?"))
 na = "'.$adm_pth.'new_record.php?t=pages&menu_group='.$page_data['menu_group'].
@@ -103,7 +103,7 @@ if (e.keyCode==13){
   }
 }
 }
---></script>
+</script>
 <p id="adm_links">&nbsp; '.$_SERVER['REMOTE_ADDR'].'
 <a href="'.$pth.'">Home</a> :: '.$enmch.'
 <a href="'.$main_index.'?pid='.$ppid.'">&lt;</a>
@@ -113,7 +113,8 @@ if (e.keyCode==13){
 <a href="'.$pth.'mod/all_pages.php">all</a> ::
 <a href="'.$adm_pth.'edit_file.php">File system</a> :: 
 <a href="'.$adm_pth.'edit_data.php">Database</a> :: 
-<a href="'.stored_value('adm_links_cpanel').'" target="_blank">cPanel</a> :: 
+<a href="'.$pth.'lib/f_page_cache.php?purge='.(1*(isset($_GET['pid'])?$_GET['pid']:0)).'">Purge</a> ::
+<a href="'.stored_value('adm_links_cpanel').'" target="_blank">cPanel</a> ::
 <a href="'.$mphp.'" target="_blank">phpMyAdmin</a> :: 
 <a href="'.$adm_pth.'showenv.php?AAAAAAA" target="_blank">$_SERVER</a> :: 
 <a href="https://github.com/vanyog/mycms/wiki" target="_blank">Help</a> :: 

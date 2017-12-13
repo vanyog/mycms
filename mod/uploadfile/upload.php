@@ -102,7 +102,10 @@ global $pid, $fid, $fd, $tn_prefix, $fn, $db_link, $pth;
 
 // Път до директория за качване на файлове. Ако не е зададена друга, съвпада с директорията на модула.
 $fld = current_pth(__FILE__);
-$fld = $_SERVER['DOCUMENT_ROOT'].stored_value('uploadfile_dir',$fld); //echo "$fld<br>"; die;
+$fld = $_SERVER['DOCUMENT_ROOT'].stored_value('uploadfile_dir',$fld);
+
+if(!file_exists($fld)) die("Directory '$fld' do not exist.");
+if (!is_writable($fld)) die("Directory '$fld' is not writable.");
 
 // Път до качения файл
 $fln = $fld.$_FILES['file']['name'];
