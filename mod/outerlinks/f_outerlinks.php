@@ -149,6 +149,27 @@ else $rz .="\n";
 // Показване на формата за търсене
 if ($what!='all') $rz .= search_link_form();
 
+// Невидима форма за отваряне на страницат "Търсене на информация"
+$rz .= '<form method="POST" action="/index.php?pid=25" id="gotsearchpage" target="_blank">
+<input type="hidden" name="words" value="aaa bbb">
+</form>
+';
+$page_header .= '<script type="text/javascript"><!--
+function onSearchClick(a){
+var f = document.getElementById("gotsearchpage");
+var t = a.parentElement.innerText;
+var i = t.search(/ \- \d*/i);
+if(i<0) i = t.length;
+t = t.substring(0, i);
+f.words.value = t;
+f.submit();
+}
+--></script>
+<style>
+.sid { cursor: pointer; }
+</style>
+';
+
 // Част от SQL заявката за пропускане на private линковете
 $qp = '';
 if (!in_edit_mode()) $qp = 'AND `private`=0';
@@ -156,7 +177,7 @@ if (!in_edit_mode()) $qp = 'AND `private`=0';
 $seng = stored_value('outerlenks_sengin', 'https://www.google.bg/search?q=');
 
 if (in_edit_mode()) $page_header .= '<script type="text/javascript"><!--
-function linkradioclicked(){
+function linkradioclicked(fi){
 var f = document.forms.link_edit_form;
 var r = f.link_id.value;
 var l = document.getElementById("lk"+r);
@@ -171,10 +192,9 @@ f.place.value = t.substring(0, i);
 t = l.parentElement.innerHTML;
 i = t.indexOf("</a>") + 7;
 t = t.substring(i);
-var j = -1;
-if(t.substr(0,6)!=" href=") j = t.indexOf("<a ");
-if (j>-1) f.comment.value = t.substring(0, j);
-else f.comment.value = "";
+var a = t.split(" ");
+t = a.slice(fi, a.length - 8).join(" ");
+f.comment.value = t;
 }
 function sid_clicked(a){
 var u = document.forms.link_edit_form.up;
@@ -189,9 +209,7 @@ if(l=="0") n = "5";
 u.value = v.substring(0, v.length-1) + n;
 }
 --></script>
-<style>
-.sid { cursor: pointer; }
-</style>';
+';
 
 // Добавяне началото на формата за редактиране
 $rz .= start_edit_form();
@@ -208,16 +226,15 @@ foreach($ca as $c){// print_r($c); die;
    $sid = ''; // ID на записа
    // Показва се само в режим на редактиране
    if(in_edit_mode()) $sid = '<span class="sid" onclick="sid_clicked(this);" title="Group ID">'.$c['ID']."</span> ";
-   $rzc .= "<p$cl>".edit_radio($c['ID'],$c['place']).'<img src="'.$p.'folder.gif" alt=""> '.$sid.
+   $rzc .= "<p$cl>".edit_radio($c['ID'],$c['place'],2).'<img src="'.$p.'folder.gif" alt=""> '.$sid.
           '<a href="'.
           set_self_query_var('lid',$c['ID']).'" id="lk'.$c['ID'].'">'.stripslashes($c['Title'])."</a>";
    $t1 = uoterlinks_count($c, $qp);
    $tc += $t1;
    $rzc .= " - $t1";
    $rzc .= outerlinks_autocomment($c);
-   if (in_edit_mode()) $rzc .= ' <a href="'.$seng.
-      urlencode( iconv($site_encoding, 'UTF-8', stripslashes($c['Title'])) ).'" target="_blank">g</a> '.
-      '<a href="'.$adm_pth.'duplicate_record.php?t=outer_links&r='.$c['ID'].'">2</a>';
+   if (in_edit_mode()) $rzc .= ' <a href="'.$adm_pth.'duplicate_record.php?t=outer_links&r='.$c['ID'].'">2</a>';
+   $rzc .= ' <img class="sid" src="'.$p.'search.png" alt="" onclick="onSearchClick(this);"> ';
    $rzc .= "</p>\n";
 }
 if (count($ca)) $rz .= '<p>'.count($ca).' '.translate('outerlinks_sub').", $tc ".translate('outerlinks_tcs')."</p>\n".$rzc;
@@ -233,9 +250,8 @@ $rz .= "<p$cl>".edit_radio($l['ID'],$l['place']).'<img src="'.$p.'go.gif" alt=""
         set_self_query_var('lid',$l['ID']).'" title="'.urldecode($l['link']).
         '" target="_blank" id="lk'.$l['ID'].'">'.stripslashes($l['Title'])."</a>";
  $rz .= outerlinks_autocomment($l);
- if (in_edit_mode()) $rz .= ' <a href="'.$seng.
-    urlencode( iconv($site_encoding, 'UTF-8', stripslashes($l['Title'])) ).'" target="_blank">g</a> '.
-    '<a href="'.$adm_pth.'duplicate_record.php?t=outer_links&r='.$l['ID'].'">2</a>';
+ if (in_edit_mode()) $rz .= ' <a href="'.$adm_pth.'duplicate_record.php?t=outer_links&r='.$l['ID'].'">2</a>';
+ $rz .= ' <img class="sid" src="'.$p.'search.png" alt="" onclick="onSearchClick(this);"> ';
  $rz .= "</p>\n";
 }
 
@@ -417,9 +433,9 @@ Private: <input type="text" name="private" size="1"></p>
 
 // Радио бутони, които се показват в режим на редактиране
 // ------------------------------------------------------
-function edit_radio($id,$p){
+function edit_radio($id,$p,$f=0){
 if (!in_edit_mode()) return '';
-else return '<input type="radio" name="link_id" value="'.$id.'" onclick="linkradioclicked();">'.
+else return '<input type="radio" name="link_id" value="'.$id.'" onclick="linkradioclicked('.$f.');">'.
             '<span onclick="pl_clicked(this);" class="sid" title="Place">'.$p.'</span> ';
 }
 
@@ -570,8 +586,8 @@ if (!isset($d['Comment'])) return '';
 if ($d['Comment']>' ') return ' - '.stripslashes($d['Comment']);
 if (substr($d['link'],-4)=='.pdf') return encode(' - pdf файл');
 if (substr($d['link'],-4)=='.doc') return encode(' - doc файл');
-if (!(strpos($d['link'], 'scholar.google.bg')===false)) return ' - '.translate('outerlinks_sresult').' scholar.google.bg';
-if (!(strpos($d['link'], 'google.bg')===false)) return ' - '.translate('outerlinks_sresult').' google.bg';
+if (!(strpos($d['link'], 'scholar.google.bg')===false)) return ' - '.translate('outerlinks_sresult').'scholar.google.bg';
+if (!(strpos($d['link'], 'google.bg')===false)) return ' - '.translate('outerlinks_sresult').'google.bg';
 if (!(strpos($d['link'], 'bg.wikipedia.org')===false)) return ' - '.translate('outerlinks_wiki').'bg.wikipedia.org';
 if (!(strpos($d['link'], 'en.wikipedia.org')===false)) return ' - '.translate('outerlinks_wiki').'en.wikipedia.org';
 }

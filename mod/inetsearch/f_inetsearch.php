@@ -23,7 +23,11 @@ include_once($idir.'lib/o_form.php');
 include_once($idir.'lib/f_encode.php');
 
 function inetsearch(){
+$kw = '';
+if(isset($_POST['words'])) $kw = $_POST['words'];
+
 global $page_header;
+
 $page_header = '<script type="text/javascript"><!--
 function stopRKey(evt) {
   var evt = (evt) ? evt : ((event) ? event : null);
@@ -47,6 +51,7 @@ if (e.keyCode == 13) searchBy("https://google.bg/search?q=", "");
 return false;
 }
 --></script>';
+
 $rz = '<p><span id="sengine">'.encode('Резултат').'</span>: <a href="" id="selink" target="_blank"></a></p>'."\n";
 
 if (in_edit_mode()){ // Бутон за добавяне в Интернет връзки
@@ -89,7 +94,7 @@ encode(' в Интернет връзки').'</a>.</p>
 } // if (in_edit_mode())
 
 $f = new HTMLForm('inetsearch');
-$i = new FormInput(encode('Ключови думи:'), 'words', 'text');
+$i = new FormInput(encode('Ключови думи:'), 'words', 'text', $kw);
 $i -> size = 100;
 $i -> js = 'onkeypress="words_enter_pressed(event);"';
 $f -> add_input( $i );

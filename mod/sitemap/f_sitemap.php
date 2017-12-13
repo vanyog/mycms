@@ -107,7 +107,7 @@ foreach($mi as $m){// die(print_r($m,true));
        if( !$h || in_edit_mode() ){
           $rz1 .= '<a href="'.$lk.'">'.translate($m['name']).'</a>';
           if( in_edit_mode() ) {
-             if ($h) $rz .= 'hiddeh';
+             if ($h) $rz .= 'hidden ';
              $rz .= $m['place'];
           }
           $rz1 .= "<br>\n";

@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 function bibfinish($t){ //print_r($GLOBALS['biblio_list']); die();
 global $biblio_list;
-if(!isset($biblio_list)) return $t;
+if(!isset($biblio_list)) return str_replace("BIBLIO_LIST", "No citations found on this page", $t);;
 // Съставяне на нов масив с изчистени описания на библ. източници
 $na = array();
 foreach($biblio_list as $k=>$v) $na[$k] = preg_replace('/\|\d*\|. /', '', strip_tags($v));
