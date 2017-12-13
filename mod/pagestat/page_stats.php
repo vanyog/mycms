@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Ако има параметър $_GET['days'] показва статистиката от последните, зададени с този параметър брой дни.
 // $_GET['pid'] - статистиката по дати на страницата с този номер
 // $_GET['date'] - статистиката за определена дата
+// $_GET['group'] - статистика на страниците от раздел
 
 
 error_reporting(E_ALL); ini_set('display_errors',1);
@@ -58,7 +59,9 @@ if (isset($_GET['pid'])){
 else if (isset($_GET['date'])){
   $page_content = one_day($_GET['date']);
 }
-else $page_content .= all_pages($w);
+else if (isset($_GET['group'])){
+  $page_content = page_group();
+} else $page_content .= all_pages($w);
 
 include($idir.'lib/build_page.php');
 
@@ -79,17 +82,18 @@ foreach($da as $d){ $dt[$d['page_id']] = $d['sum(`count`)']; }
 arsort($dt);
 
 $page_content = '<table style="border-bottom:solid 1px black;">
-<tr><th>'.encode('Посещения').'</th><th>ID</th><th>'.encode('Страница').'</th></tr>';
+<tr><th>'.encode('Посещения').'</th><th></th><th>ID</th><th>'.encode('Страница').'</th></tr>';
 
 $t = 0;
 foreach($dt as $i=>$c){
-  // Име на заглавието на страница с номер $i
-  $ptn = db_table_field('title','pages','`ID`='.$i);
+  // Дани за страница с номер $i
+  $ptn = db_select_1('menu_group,title','pages','`ID`='.$i);
   // Текст на заглавието на страницата
-  $pt = translate($ptn);
+  $pt = translate($ptn['title']);
   $page_content .= "<tr>
-<td align=\"right\"><a href=".set_self_query_var('pid',$i).">$c</a></td>
-<td align=\"center\"><a href=\"$pth"."index.php?pid=$i\" target=\"_blank\">$i</a>
+<td align=\"right\"> <a href=".set_self_query_var('pid',$i).">$c</a> </td>
+<td> <a href=".set_self_query_var('group', $ptn['menu_group']).">g</a> </td>
+<td align=\"center\"> <a href=\"$pth"."index.php?pid=$i\" target=\"_blank\">$i</a>
 </td><td>$pt</td>
 </tr>\n";
   $t += $c;
@@ -108,8 +112,9 @@ function one_page($i, $w){
 global $language, $main_index;
 // Четене на записите за страница с номер $i
 $da = db_select_m('*', 'visit_history', "`page_id`=$i AND $w ORDER BY `date` DESC");
-// Добавяне на дрешна дата
-$d = array( 'date'=>date("Y-m-d", time() + 24*3600), 'count'=>db_table_field('dcount', 'pages', "`ID`=$i") );
+$pd = db_select_1('*', 'pages', "`ID`=$i");
+// Добавяне на днешна дата
+$d = array( 'date'=>date("Y-m-d", time() + 24*3600), 'count'=>$pd['dcount'] );
 array_unshift( $da, $d );
 //die(print_r($da, true));
 $min = db_table_field('MIN(`count`)', 'visit_history', "`page_id`=$i AND $w");
@@ -119,9 +124,9 @@ if ($max<$da[0]['count']) $max = $da[0]['count'];
 if (!$max) $max = 1;
 //die("$min $max");
 $m = 800;
-$tn = db_table_field('title', 'pages', "`ID`=$i");
+$tn = $pd['title'];
 $tn = db_table_field('text', 'content', "`name`='$tn' AND `language`='$language'");
-$rz = "<p>Page: <a href=\"$main_index?pid=$i\">$tn</a></p>".'
+$rz = "<p>Page: <a href=\"$main_index?pid=$i\">$tn</a>, Group <a href=\"?group=".$pd['menu_group']."\">".$pd['menu_group']."</p>".'
 <p>See: <a href="page_stats.php">All pages statistics</a></p>
 '."Minimum visit count: $min, average: ".number_format(1*$ave, 1).", Maximum: $max".encode('
 <table>
@@ -152,4 +157,30 @@ foreach($dt as $t){
 $rz .= '</table>';
 return $rz;
 }
+
+//
+// Статистика на страниците от група $_GET['group']
+
+function page_group(){
+global $main_index;
+$gr = 1*$_GET['group'];
+$pd = db_select_m('ID', 'pages', "`menu_group`=$gr");
+$q = '';
+foreach($pd as $p){
+  if($q) $q .= ' OR ';
+  $q .= "`page_id`=".$p['ID'];
+}
+$vh = db_select_m('SUM(`count`),page_id', 'visit_history', "$q GROUP BY `page_id` ORDER BY SUM(`count`) DESC");
+$rz = '<h1>'.encode('Статистика на страниците от група ').$gr."</h1>\n".
+      "<table>\n";
+foreach($vh as $d)
+   $rz .= '<tr><td style="text-align:right;">'.$d['SUM(`count`)'].
+          "</td><td><a href=\"$main_index?pid=".$d['page_id'].'">'.$d['page_id'].'</a> '.
+          '</td><td>'.translate( db_table_field('title', 'pages', "`ID`=".$d['page_id']) ).
+          "</td></tr>\n";
+$rz .= "</table>\n";
+return $rz;
+}
+
+
 ?>

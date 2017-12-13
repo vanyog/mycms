@@ -172,7 +172,7 @@ $page_content .= '<p><input type="button" value="New record" onclick="document.l
 include('build_page.php');
 
 function set_filter(){
-if (isset($_POST['value']) && $_POST['value']){
+if (isset($_POST['value']) && strlen($_POST['value'])){
 return '`'.$_POST['field']."` LIKE '".$_POST['value']."'";
 }
 return '1';

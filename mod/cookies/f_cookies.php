@@ -45,20 +45,20 @@ return $rz;
 
 function cookies_message(){
 global $cookies_msg, $page_header;
-$page_header .= '<script type="text/javascript"><!--
+$page_header .= '<script>
 function cookies_accept(){
 var d = new Date();
 d = new Date(d.valueOf()+30*24*3600*1000);
 document.cookie = "cookies_accept=Yes;expires="+d.toGMTString();
 }
---></script>';
-return '<script type="text/javascript"><!--
+</script>';
+return '<script>
 if (document.cookie && (document.cookie.indexOf("cookies_accept=Yes")<0)){
 document.write("<div id=\"cookies_message\">");
 '.to_javascipt_write(translate('cookies_message')).'
 document.write("</div>");
 }
---></script>';
+</script>';
 }
 
 function to_javascipt_write($a){

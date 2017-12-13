@@ -27,7 +27,7 @@ include_once($idir.'lib/f_db_select_1.php');
 
 function menutree2(){
 global $pth, $page_id, $page_data, $main_index, $page_header, $body_adds;
-$page_header .= '<script type="text/javascript"><!--
+$page_header .= '<script>
 var visible_sub;
 function hide_sub(){
 var d = document.getElementById("sub_"+visible_sub);
@@ -42,7 +42,7 @@ d.style.left = l.offsetLeft+"px";
 d.style.top = (l.offsetTop+l.offsetHeight)+"px";
 visible_sub = a;
 }
---></script>';
+</script>';
 $rz = '';
 // Четене записа на менюто на страницата
 $pr = db_select_1('*','menu_tree',"`group`=".$page_data['menu_group']);

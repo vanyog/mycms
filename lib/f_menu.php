@@ -51,18 +51,18 @@ foreach($d as $m){
   $sm1 = '';
   if ($pp && ($i==$page_data['menu_group'])) $sm1 = submenu($m,$si);
   if ($pp && ($i==$page_data['menu_group'])) $js = ' onMouseOver="show_layer('.$si.',this);"';
+  $nm = translate($m['name'],false); // Преведен такст върху линка
   if ($once || !is_parrent_menu($i, $m['link'])) {
      // За да може на някой език да се зададе линк към различна страница, този линк се слага в съответния превод
-     $nm = translate($m['name'],false);
-     // Ако преводът съдържа html тагове, то не се добавя <a> таг
-     if($nm != strip_tags($nm)) $rz .= preg_replace('/>/', "$js>", $nm, 1);
+     // Ако преводът вече съдържа <a> таг, то не се добавя <a> таг
+     if(!(strpos($nm,'<a ')===false)) $rz .= preg_replace('/>/', "$js>", $nm, 1);
      // инече се добавя <a> таг
-     else $rz .= "<a href=\"$ln\"$js>".$pl.translate($m['name'],false).'</a> '."\n";
+     else $rz .= "<a href=\"$ln\"$js>".$pl.$nm.'</a> '."\n";
   }
   else {
      $once = true;
-     if ($lk) $rz .= '<a href="'.$ln.'" class="current"'.$js.'>'.$pl.translate($m['name'],false).'</a> '."\n";
-     else $rz .= '<span class="current">'.$pl.translate($m['name'],false)."</span> \n";
+     if ($lk) $rz .= '<a href="'.$ln.'" class="current"'.$js.'>'.$pl.$nm.'</a> '."\n";
+     else $rz .= '<span class="current">'.$pl.$nm."</span> \n";
   }
   // Добавяне на * за редактиране
   if (in_edit_mode()){

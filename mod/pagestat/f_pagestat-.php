@@ -17,16 +17,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Показва стойността на глобална PHP променлива с име $a
+// В режим на администриране функцията pagestat() показва броя на посещенията на страницата -
+// общия брой и за деня, както и линк "page stats", който отваря страница с таблица на статистиката 
+// на посещенията на страниците от сайта
 
-function variable($a){
-$r = array();
-$j = preg_match_all('/(.*)\[\'(.*)\'\]/', $a, $r);
-if($j) switch($r[1][0]){
-case 'GET': return $_GET[$r[2][0]]; break;
-}
-global $$a;
-return stripslashes($$a);
-}
+function pagestat(){
+global $page_data, $can_edit;
+if ( !(show_adm_links() || $can_edit) ) return '';
+$pth = current_pth(__FILE__);
+return 'Total '.$page_data['tcount'].' Today '.$page_data['dcount'].' See <a href="'.$pth.'page_stats.php?pid='.
+$page_data['ID'].'">page stats</a>';}
 
 ?>

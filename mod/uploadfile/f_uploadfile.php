@@ -64,7 +64,7 @@ if (isset($na[1])){ $pid = 1*$na[1]; $n = $na[0]; }
 $rz = '';
 
 // Четене на данните за файла
-$fr = db_select_1('*','files',"`pid`=$pid AND `name`='$n'"); //print_r($fr); die;
+$fr = db_select_1('*','files',"`pid`=$pid AND `name`='$n'");// print_r($fr); die;
 
 $ne = true; // Флаг, който ако е истина файлът не се показва
 $imgs = array('jpg','gif','png','svg'); // Разширения на файлове - изображения
@@ -101,7 +101,7 @@ else {
   $cs = ( (!$t1 || ($t1<0) || ($t3>$t1)) && (!$t2 || ($t2<0) || ($t3<$t2)) );
 //  echo "$t1<br>".date("Y-m-d H:i:s", $t3)."<br>$t2<br><br>";
   // Ако няма файл или е извън DOCUMENT_ROOT, или не е във време за показване
-  if ( (!$fr['filename'] || $ne || !$cs) && !in_edit_mode() ){
+  if ( (!$fr['filename'] || $ne || !($cs || (isset($na[2])&&($na[2]==3)) ) ) && !in_edit_mode() ){
     // Показване на текста на връзката, "няма качен файл" или нищо
     if (in_edit_mode()) $rz .= stripslashes($fr['text']);
     else switch ($show_text){
@@ -113,7 +113,10 @@ else {
   else { // Показване на картинка или хипервръзка към файла
     $e = strtolower(pathinfo($f, PATHINFO_EXTENSION));
     if (in_array($e, $imgs)) $rz .= '<img src="'.$f."\"$ss alt=\"".stripslashes($fr['text']).'">';
-    else $rz .= '<a href="'.$f."\"$ss>".upload_file_addimage($add_image,$e).stripslashes($fr['text']).'</a>';
+    else {
+       $rz .= '<a href="'.$f."\"$ss>".upload_file_addimage($add_image,$e).stripslashes($fr['text']).'</a>';
+       if(!$cs && isset($na[2]) && ($na[2]==3)) $rz .= translate('uploadfile_old');
+    }
   }
   $fid = $fr['ID'];
 }

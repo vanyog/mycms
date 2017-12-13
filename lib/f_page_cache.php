@@ -17,6 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+if(!isset($idir)) $idir = dirname(dirname(__FILE__)).'/';
+if(!isset($ddir)) $ddir = $idir;
+
 include_once($idir.'lib/f_stored_value.php');
 include_once($idir.'lib/f_db_delete_where.php');
 
@@ -31,6 +34,13 @@ include_once($idir.'lib/f_db_delete_where.php');
 // save_cache($cnt) записва html кова на страницата в таблица $tn_prefix.'page_cache'
 // Настройката от таблица 'options' с име 'acceptable_params' съдържа имената на допустимите за сайта
 // $_GET параметри. Стрингът с параметрите започва и завършва със знак =, а имената се отделят също с =.
+
+// При самостоятелно извекване, този файл предизвиква почестване на кеша на страница $_GET['purge']
+
+if(isset($_GET['purge'])){
+  db_delete_where('page_cache',"`page_ID`=".(1*$_GET['purge']));
+  die('Page cache '.$_GET['purge'].' purged.');
+}
 
 function page_cache(){
 // Случаи, в които не се използва кеш:
@@ -101,7 +111,7 @@ function purge_page_cache($a){
 $b = parse_url($a);
 $c = array(); 
 if (isset($b['query'])) parse_str($b['query'],$c);
-if (isset($c['pid'])) db_delete_where('page_cache',"`page_ID`=".(1*$c['pid']), true);
+if (isset($c['pid'])) db_delete_where('page_cache',"`page_ID`=".(1*$c['pid']));
 }
 
 //
