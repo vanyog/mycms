@@ -71,9 +71,9 @@ if (!$dont_translate) foreach($ls as $l) if ($l!=$language){
   $r .= '<a href="'.$h.'" style="display:inline-block; height:20px;">'."\n";
   switch ($how){
   case 'text': $r .= $languages[$l]."\n"; break;
-  case 'flag&text': $r .= '<img src="'.$pth.'images/flag-'.$l.'.gif" alt="'.$l.'" border="0">'."<br>$languages[$l]\n"; break;
-  case 'flag text': $r .= '<img src="'.$pth.'images/flag-'.$l.'.gif" alt="'.$l.'" border="0" align="left">'." $languages[$l]\n"; break;
-  default: $r .= '<img src="'.$pth.'images/flag-'.$l.'.gif" alt="'.$l.'">'."\n"; break;
+  case 'flag&text': $r .= '<img src="'.$pth.'images/flag-'.$l.'.png" alt="'.$l.'" border="0">'."<br>$languages[$l]\n"; break;
+  case 'flag text': $r .= '<img src="'.$pth.'images/flag-'.$l.'.png" alt="'.$l.'" border="0" align="left">'." $languages[$l]\n"; break;
+  default: $r .= '<img src="'.$pth.'images/flag-'.$l.'.png" alt="'.$l.'">'."\n"; break;
   }
   $r .= "</a>\n";
 }
