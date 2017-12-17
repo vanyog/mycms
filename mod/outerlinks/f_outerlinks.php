@@ -71,25 +71,25 @@ translate('outerlinks_categories')." &nbsp; ";
 
 // Хипервръзка "Само категориите" или "Преглед по категории"
 if($what!='cat')
-   $rz .= "<a href=\"".set_self_query_var('lid', 'cat')."\">".translate('outerlinks_catonly').
+   $rz .= "<a href=\"".set_self_query_var('lid', 'cat')."#outer_links\">".translate('outerlinks_catonly').
    "</a> &nbsp; ";
 else
-   $rz .= "<a href=\"".unset_self_query_var('lid')."\">".translate('outerlinks_cat').
+   $rz .= "<a href=\"".unset_self_query_var('lid')."#outer_links\">".translate('outerlinks_cat').
           "</a> &nbsp; ";
 
 // Хипервръзка "Преглед по категории" или "Преглед на всички"
 if ( in_array($what, array('all','new','click')) )
-   $rz .= "<a href=\"".unset_self_query_var('lid')."\">".translate('outerlinks_cat')."</a>";
+   $rz .= "<a href=\"".unset_self_query_var('lid')."#outer_links\">".translate('outerlinks_cat')."</a>";
 else
-   $rz .= "<a href=\"".set_self_query_var('lid', 'all')."\">".translate('outerlinks_all')."</a>";
+   $rz .= "<a href=\"".set_self_query_var('lid', 'all')."#outer_links\">".translate('outerlinks_all')."</a>";
 
 $rz .= "</p>\n";
 
 // Линкове "Най-нови", "Най-стари", "Най-кликвани"
 $rzl = '<p class="most">'."\n";
-if ($what!='new') $rzl .= '<a href="'.set_self_query_var('lid','new').'">'.translate('outerlinks_new')."</a> &nbsp; ";
-if ($what!='old') $rzl .= '<a href="'.set_self_query_var('lid','old').'">'.translate('outerlinks_old')."</a> &nbsp; ";
-if ($what!='click') $rzl .= '<a href="'.set_self_query_var('lid','click').'">'.translate('outerlinks_click')."</a> &nbsp; ";
+if ($what!='new') $rzl .= '<a href="'.set_self_query_var('lid','new').'#outer_links">'.translate('outerlinks_new')."</a> &nbsp; ";
+if ($what!='old') $rzl .= '<a href="'.set_self_query_var('lid','old').'#outer_links">'.translate('outerlinks_old')."</a> &nbsp; ";
+if ($what!='click') $rzl .= '<a href="'.set_self_query_var('lid','click').'#outer_links">'.translate('outerlinks_click')."</a> &nbsp; ";
 $rzl .= "</p>";
 
 $p = current_pth(__FILE__);
@@ -149,12 +149,12 @@ else $rz .="\n";
 // Показване на формата за търсене
 if ($what!='all') $rz .= search_link_form();
 
-// Невидима форма за отваряне на страницат "Търсене на информация"
+// Невидима форма за отваряне на страницат "Търсене на информация", при щракване на "лупата"
 $rz .= '<form method="POST" action="/index.php?pid=25" id="gotsearchpage" target="_blank">
 <input type="hidden" name="words" value="aaa bbb">
 </form>
 ';
-$page_header .= '<script type="text/javascript"><!--
+$page_header .= '<script><!--
 function onSearchClick(a){
 var f = document.getElementById("gotsearchpage");
 var t = a.parentElement.innerText;
@@ -176,7 +176,7 @@ if (!in_edit_mode()) $qp = 'AND `private`=0';
 // Сайт за търсене
 $seng = stored_value('outerlenks_sengin', 'https://www.google.bg/search?q=');
 
-if (in_edit_mode()) $page_header .= '<script type="text/javascript"><!--
+if (in_edit_mode()) $page_header .= '<script><!--
 function linkradioclicked(fi){
 var f = document.forms.link_edit_form;
 var r = f.link_id.value;
@@ -227,8 +227,7 @@ foreach($ca as $c){// print_r($c); die;
    // Показва се само в режим на редактиране
    if(in_edit_mode()) $sid = '<span class="sid" onclick="sid_clicked(this);" title="Group ID">'.$c['ID']."</span> ";
    $rzc .= "<p$cl>".edit_radio($c['ID'],$c['place'],2).'<img src="'.$p.'folder.png" alt=""> '.$sid.
-          '<a href="'.
-          set_self_query_var('lid',$c['ID']).'" id="lk'.$c['ID'].'">'.stripslashes($c['Title'])."</a>";
+          '<a href="'.set_self_query_var('lid',$c['ID']).'#outer_links" id="lk'.$c['ID'].'">'.stripslashes($c['Title'])."</a>";
    $t1 = uoterlinks_count($c, $qp);
    $tc += $t1;
    $rzc .= " - $t1";
@@ -281,18 +280,18 @@ do {
   $l = db_select_1('*','outer_links',"`ID`=$lid");
   $lid = $l['up'];
   if ($rz) $rz = " > \n".$rz;
-  if ($lk) $rz = '<a href="'.$lk.'">'.$l['Title']."</a>".$rz;
+  if ($lk) $rz = '<a href="'.$lk.'#outer_links">'.$l['Title']."</a>".$rz;
   else{
      if (!$page_title) $page_title = translate($page_data['title'],false);
      $page_title .= ' - '.$l['Title'];
-     $rz = '<span><a href="'.$lk.'">'.$l['Title'].'</a></span>'.$rz;
+     $rz = '<span><a href="'.$lk.'#outer_links">'.$l['Title'].'</a></span>'.$rz;
      $cm = '';
      if (isset($l['Comment'])) $cm = $l['Comment'];
   }
   $lk = set_self_query_var('lid',$l['up']);
 } while ($lid);
 if ($rz) $rz = " > \n".$rz;
-if ($lk) $rz = '<a href="'.$lk.'">'.translate('outerlinks_home')."</a>".$rz;
+if ($lk) $rz = '<a href="'.$lk.'#outer_links">'.translate('outerlinks_home')."</a>".$rz;
 $rz = "<p class=\"link_tree\">\n".$rz."\n</p>\n";
 if ($cm) $rz .= "<p>$cm</p>\n";
 return $rz;
@@ -346,13 +345,13 @@ foreach($ra as $r){
   if ($r['link']) $t1 = ($r['link']); else $t1 = '';
   // Сглобяване на реда с линка  
   $lk = '<a href="'.$lk.'" title="'.urldecode($t1).'" target="_blank">'.stripslashes($r['Title']).'</a>   '.
-        '<a href="'.set_self_query_var('lid',$r['up']).'" title="'.urldecode($t2).'">>></a>';
+        '<a href="'.set_self_query_var('lid',$r['up']).'#outer_links" title="'.urldecode($t2).'">>></a>';
   $lk .= "<br>\n";
   // Добавяне към резултата
   if ($r['link']) $rz2 .= '<img src="'.$p.'go.gif" alt=""> '.$lk;
   else  $rz1 .= '<img src="'.$p.'folder.png" alt=""> '.$lk;
 }
-return '<p class="link_tree"><a href="'.$pth.'index.php?pid='.$page_id.'">'.translate('outerlinks_home').'</a>   '
+return '<p class="link_tree"><a href="'.$pth.'index.php?pid='.$page_id.'#outer_links">'.translate('outerlinks_home').'</a>   '
 .translate('outerlinks_found')." ".count($ra)." (".substr($_POST['search_for'],0,30).")</p>
 $rz1$rz2".search_link_form();
 }
@@ -375,7 +374,7 @@ return '<form method="POST" action="'.$_SERVER['PHP_SELF'].'?pid='.$page_id.'">
 function start_edit_form(){
 if (!in_edit_mode()) return '';
 else return '
-<script type="text/javascript"><!--
+<script><!--
 // Създаване на обект за ajax заявки
 if (window.XMLHttpRequest) ajaxO = new XMLHttpRequest();
 else ajaxO = new ActiveXObject("Microsoft.XMLHTTP");
@@ -499,7 +498,7 @@ $da = db_select_m('*', 'outer_links', "`up`=$up AND (`link`='' OR `link` IS NULL
 foreach($da as $d){
   $pr = '';
   if($d['private']) $pr = ' class="private"';
-  $t = '<h'.($lv+1).$pr.'><a href="'.set_self_query_var('lid',$d['ID']).'">'.$d['Title'].'</a></h'.($lv+1).">\n";
+  $t = '<h'.($lv+1).$pr.'><a href="'.set_self_query_var('lid',$d['ID']).'#outer_links">'.$d['Title'].'</a></h'.($lv+1).">\n";
   if ($d['Comment']) $t .= '<p>'.outerlinks_autocomment($d)."</p>\n";
   $rz .= outerlenks_all( $d['ID'], $t, $lv + 1 );
 }
@@ -521,7 +520,7 @@ foreach($da as $d){
   $n = '';
   if(in_edit_mode()) $n = $d['ID'].' ';
   $t = '<p style="margin-left:'.(20*$lv).'px" class="lv'.$lv.'"><img src="'.$p.'folder.png" alt=""> '.$n.
-       '<a href="'.set_self_query_var('lid',$d['ID']).'">'.$d['Title'].
+       '<a href="'.set_self_query_var('lid',$d['ID']).'#outer_links">'.$d['Title'].
        "</a></p>\n";
   $rz .= outerlenks_cat( $d['ID'], $t, $lv + 1 );
 }
@@ -573,7 +572,7 @@ foreach($da as $d){
   }
   else $t2 = translate('outerlinks_home', false);
   if (show_adm_links()) $rz .= ' &nbsp; '.$d['clicked'];
-  $rz .= ' &nbsp; <a href="'.set_self_query_var('lid',$d['up']).'" title="'.urldecode($t2).'">'.
+  $rz .= ' &nbsp; <a href="'.set_self_query_var('lid',$d['up']).'#outer_links" title="'.urldecode($t2).'">'.
          ">></a>";
   $rz .= "</p>\n";
 }

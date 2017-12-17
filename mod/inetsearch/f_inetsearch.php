@@ -28,7 +28,7 @@ if(isset($_POST['words'])) $kw = $_POST['words'];
 
 global $page_header;
 
-$page_header = '<script type="text/javascript"><!--
+$page_header = '<script><!--
 function stopRKey(evt) {
   var evt = (evt) ? evt : ((event) ? event : null);
   var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
@@ -58,7 +58,7 @@ if (in_edit_mode()){ // Бутон за добавяне в Интернет връзки
 $sc = 'http';
 if (isset($_SERVER['REQUEST_SCHEME'])) $sc = $_SERVER['REQUEST_SCHEME'];
 $v = (isset($_COOKIE['lid']) ? $_COOKIE['lid'] : '');
-$rz .= '<script type="text/javascript"><!--
+$rz .= '<script><!--
 function sendLink(){
 var f = document.forms.send_link_form;
 var i = f.up.value;

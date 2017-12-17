@@ -161,7 +161,7 @@ $this->text = str_replace(chr(60).'!--$$_',chr(60).' !--$$_',$t);
 // Домавяне на бутон за зареждане на CKEditor.
 $cka = $_SERVER['DOCUMENT_ROOT'].$ckpth.'ckeditor.js';
 if (file_exists($cka)){
-  $sc = '   <script type="text/javascript" src="'.$ckpth.'ckeditor.js"></script>'."\n";
+  $sc = '   <script src="'.$ckpth.'ckeditor.js"></script>'."\n";
   if (strpos($page_header,$sc)===false) $page_header .= $sc;
   $this->ckbutton = '<input type="button" value="CKEditor" onclick="CKEDITOR.replace(\''.$this->name.'\');"><br>';
 }
@@ -618,7 +618,7 @@ $this->l2->js = ' multiple="multiple" size="'.count($sp).'" onclick="chooserClic
 
 function html($it){
 global $page_header;
-$page_header .= '<script type="text/javascript"><!--
+$page_header .= '<script><!--
 function chooserChosen(t){
 var l = document.getElementById("formChoices");
 for(var i=0; i<l.length; i++){

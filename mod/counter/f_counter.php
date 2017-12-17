@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 function counter(){
 return '<div id="counter_result"></div>
-<script type="text/javascript">
+<script>
 
 if (window.XMLHttpRequest) ajaxObj = new XMLHttpRequest();
 else ajaxObj = new ActiveXObject("Microsoft.XMLHTTP");

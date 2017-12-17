@@ -43,20 +43,24 @@ d.style.top = (l.offsetTop+l.offsetHeight)+"px";
 visible_sub = a;
 }
 </script>';
+
 $rz = '';
+
 // Четене записа на менюто на страницата
 $pr = db_select_1('*','menu_tree',"`group`=".$page_data['menu_group']);
 // Съставяне на подменю
-$sm = menutree2_submenu($page_data['menu_group']);
+$sm = menutree2_submenu($page_data['menu_group'], $page_id);
 if (!$pr) return $rz;
+
 $pg = $page_data;
+
 // Четене записа на главната страница на менюто
 $pg = db_select_1('*','pages','ID='.$pr['index_page']);
 $rz1 = '<a id="sm_'.$page_data['menu_group'].'" href="'.$main_index.'?pid='.$pg['ID'].
-           '" onclick="show_sub('.$page_data['menu_group'].');return false;">'.translate($pg['title']).' &#9660;</a>';
+       '" onclick="show_sub('.$page_data['menu_group'].');return false;">'.translate($pg['title']).' &#9660;</a>';
 if(in_edit_mode()) $rz1 .= " ".$pr['group'];
 $rz = $rz1.$rz;
-//if($page_id!=$pr['index_page']) $rz .= "&nbsp;&#10093; \n".'<span>'.translate($page_data['title'])."</span>\n";
+
 // Ако менюто има родители се добавят и те.
 $psd = array(0=>$pr['group']);
 while ($pr['parent'])
@@ -64,14 +68,16 @@ while ($pr['parent'])
   // Мярка против зацикляве
   if (in_array($pr['parent'],$psd)) break;
   $psd[] = $pr['parent'];
-  $pi = $pr['parent'];
+
+  $pi = $pr['parent']; $ci = $pg['ID'];
   $pr = db_select_1('*','menu_tree',"`group`=".$pr['parent']);
   if (!$pr) $pg = db_select_1('*','pages',"`menu_group`=$pi");
   else $pg = db_select_1('*','pages','ID='.$pr['index_page']);
+
   if ($rz) $rz = "&nbsp;&#10093; \n".$rz;
   $rz = '<a id="sm_'.$pg['menu_group'].'" href="'.$main_index.'?pid='.$pg['ID'].
         '" onclick="show_sub('.$pg['menu_group'].');return false;">'.translate($pg['title']).' &#9660;</a>'.$rz;
-  $sm .= menutree2_submenu($pg['menu_group']);
+  $sm .= menutree2_submenu($pg['menu_group'], $ci);
 }
 return '<div id="menu_tree">
 '.translate('menutree_start').$rz.'
@@ -79,8 +85,8 @@ return '<div id="menu_tree">
 }
 
 
-function menutree2_submenu($g){
-global $main_index, $page_id;
+function menutree2_submenu($g, $i){
+global $main_index, $pth;
 $rz = '<div id="sub_'.$g.'">
 <a href="#" class="ra" onclick="hide_sub();return false;">'.translate('close', false).'</a>
 ';
@@ -100,8 +106,14 @@ foreach($md as $d){
   }
   else $rf = $d['link'];
   $cr = '';
-  if($page_id==$d['link']) $cr = ' class="current"';
-  $rz .= "<a href=\"$rf\"$cr>".translate($d['name'], false)."</a>\n";
+  if($i==$d['link']) $cr = ' class="current"';
+  $el = '';
+  // Добавяне на * за редактиране
+  if (in_edit_mode()){
+    $el = '<a href="'.$pth.'mod/usermenu/edit_menu_link.php?pid='.$i.'&id='.$d['ID'].
+           '"  style="color:#000000;background-color:#ffffff;margin:0;padding:0;">*</a>';
+  }
+  $rz .= "<a href=\"$rf\"$cr>".translate($d['name'], false)."</a>$el\n";
 }
 $rz .= '</div>';
 return $rz;

@@ -36,7 +36,7 @@ $rz = '';
 foreach($nk as $k) $rz .= "<p id=\"bib$k\">$biblio_list[$k]</p>\n";
 $c = 1;
 foreach($nk as $k){
-  $tt = $na[$k];
+  $tt = str_replace('"','&quot;', $na[$k]);
   $t  = str_replace("|$k|", "<a href=\"#bib$k\" title=\"$tt\">$c</a>", $t);
   $rz = str_replace("|$k|", "$c", $rz);
   $c++;

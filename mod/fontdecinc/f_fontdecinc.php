@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 function fontdecinc(){
 global $page_header, $body_adds;
-$page_header .= '<script type="text/javascript"><!--
+$page_header .= '<script><!--
 function font_inc(){
 s = document.body.style.fontSize;
 if (!s.length){

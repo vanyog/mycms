@@ -35,7 +35,7 @@ $id = 1*$_GET['r'];
 $ft = db_field_types($t);//print_r($ft); die;
 $r = db_select_1('*',$t,"ID=$id");
 
-$page_content = '<script type="text/javascript"><!--
+$page_content = '<script><!--
 function saveAndClose(){
 var f = document.edit_form;
 f.go_to_close.value = 1;

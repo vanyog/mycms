@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 function mod_picker(){
 global $page_header, $pth;
-$page_header .= '<script type="text/javascript"><!--
+$page_header .= '<script><!--
 function toClip(a){
 window.prompt("Copy to clipboard: Ctrl+C, Enter", "<!--$$_"+a.innerHTML+"_$$-->" );
 }

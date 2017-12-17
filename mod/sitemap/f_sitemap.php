@@ -39,11 +39,19 @@ $page_passed = array();
 $map_level = 0;
 $i_root    = 0;
 $ar = explode('|',$a);
-$page_header .= '<script type="text/javascript"><!--
+$page_header .= '<script><!--
 function mapHideShow(e){
 var p = e.parentElement;
+var ls = document.links;
+for(i=0;i<ls.length;i++) if(ls[i].parentElement==p) break;
+var sl = window.getComputedStyle(ls[i]);
 var h = p.style.height;
+var sp = window.getComputedStyle(p);
 var v = "'.stored_value('sitemap_colapsed_height', '1.45em').'";
+var v = ( Number(sp.lineHeight.slice(0,-2)) +
+          Number(sl.paddingTop.slice(0,-2)) +
+          Number(sl.paddingBottom.slice(0,-2))
+        ) + "px";
 if (h!=v){
   e.innerHTML = "&#9658;"
   p.style.height = v;

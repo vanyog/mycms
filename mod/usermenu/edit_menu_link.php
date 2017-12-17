@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Редактиране на линк от меню, след щракване върху линка * зад този линк в режим на редактиране
 
+error_reporting(E_ALL); ini_set('display_errors',1);
+
 if (!isset($_GET['pid']) || !isset($_GET['id'])) die('Insufficient parameters.');
 
 $idir = dirname(dirname(dirname(__FILE__))).'/';

@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 function hmenu2($a){
 global $ind_fl, $page_header, $pth, $page_id;
 $p = current_pth(__FILE__);
-$page_header .= '<script type="text/javascript">'."\n";
+$page_header .= '<script>'."\n";
 // Цветове
 $c1 = stored_value('hmenu_color1');  $page_header .= "var color1 = \"$c1\";\n";
 $c1 = stored_value('hmenu_bcolor1'); $page_header .= "var bcolor1 = \"$c1\";\n";
@@ -33,7 +33,7 @@ $c1 = stored_value('hmenu_bcolor2'); $page_header .= "var bcolor2 = \"$c1\";\n";
 $c1 = stored_value('hmenu_color3');  $page_header .= "var color3 = \"$c1\";\n";
 $c1 = stored_value('hmenu_bcolor3'); $page_header .= "var bcolor3 = \"$c1\";\n";
 $page_header .= '</script>'."\n";
-$page_header .= '<script type="text/javascript" src="'.$p.'functions.js"></script>'."\n";
+$page_header .= '<script src="'.$p.'functions.js"></script>'."\n";
 $il = db_select_m('*','menu_items',"`group`=$a ORDER BY `place` ASC");
 $sm = '';
 $rz = '';

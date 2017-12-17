@@ -53,7 +53,7 @@ if ($f) $f .= '/';
 // can_delete_files със стойност 1.
 $cdel = stored_value('can_delete_files','false') || is_local();
 
-$page_header = '<script type="text/javascript"><!--
+$page_header = '<script><!--
 function fileName(){
 var frm = document.forms.file_form;
 var f = frm.file;
@@ -155,7 +155,7 @@ $e = pathinfo($d,PATHINFO_EXTENSION);
 if (is_file($d) && in_array($e,$can_edit)) $fc=file($d);
 else {
   $page_content .= '
-<script type="text/javascript"><!--
+<script><!--
 function desableEditForm(){
 var f = document.forms.edit_form;
 f.submit_button.disabled = "disabled";
@@ -174,7 +174,7 @@ $tx = '';
 foreach($fc as $l) $tx .= $l;
 $tx = iconv("windows-1251", $site_encoding, $tx);
 
-$page_content .= '<script type="text/javascript"><!--
+$page_content .= '<script><!--
 function doSaveAs(){
   var fn = prompt("Save file as");
   if (!fn) return;
