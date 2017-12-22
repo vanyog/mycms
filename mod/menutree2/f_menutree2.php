@@ -29,11 +29,16 @@ function menutree2(){
 global $pth, $page_id, $page_data, $main_index, $page_header, $body_adds;
 $page_header .= '<script>
 var visible_sub;
-function hide_sub(){
+var donot_hide;
+function hide_sub(){// alert("hide "+visible_sub+" "+donot_hide);
+var dh = donot_hide;
+donot_hide = 0;
+if(dh && (dh==visible_sub)) return;
+//alert("hide "+visible_sub);
 var d = document.getElementById("sub_"+visible_sub);
 if(d) d.style.display = "none";
 }
-function show_sub(a){
+function show_sub(a){// alert("show A");
 hide_sub();
 var d = document.getElementById("sub_"+a);
 var l = document.getElementById("sm_"+a);
@@ -41,6 +46,9 @@ d.style.display = "inline-block";
 d.style.left = l.offsetLeft+"px";
 d.style.top = (l.offsetTop+l.offsetHeight)+"px";
 visible_sub = a;
+donot_hide = a;
+return false;
+//alert("show B");
 }
 </script>';
 
@@ -57,7 +65,7 @@ $pg = $page_data;
 // Четене записа на главната страница на менюто
 $pg = db_select_1('*','pages','ID='.$pr['index_page']);
 $rz1 = '<a id="sm_'.$page_data['menu_group'].'" href="'.$main_index.'?pid='.$pg['ID'].
-       '" onclick="show_sub('.$page_data['menu_group'].');return false;">'.translate($pg['title']).' &#9660;</a>';
+       '" onclick="show_sub('.$page_data['menu_group'].');return false;">'.translate($pg['title']).'</a>';
 if(in_edit_mode()) $rz1 .= " ".$pr['group'];
 $rz = $rz1.$rz;
 
@@ -74,9 +82,8 @@ while ($pr['parent'])
   if (!$pr) $pg = db_select_1('*','pages',"`menu_group`=$pi");
   else $pg = db_select_1('*','pages','ID='.$pr['index_page']);
 
-  if ($rz) $rz = "&nbsp;&#10093; \n".$rz;
   $rz = '<a id="sm_'.$pg['menu_group'].'" href="'.$main_index.'?pid='.$pg['ID'].
-        '" onclick="show_sub('.$pg['menu_group'].');return false;">'.translate($pg['title']).' &#9660;</a>'.$rz;
+        '" onclick="show_sub('.$pg['menu_group'].');return false;">'.translate($pg['title']).'</a>'.$rz;
   $sm .= menutree2_submenu($pg['menu_group'], $ci);
 }
 return '<div id="menu_tree">

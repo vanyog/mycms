@@ -63,8 +63,9 @@ $sr4 = (count($_POST) && isset($_POST['search_by']));
 if (!$tr && !$what && !$sr4) $rz .= translate('outerlinks_homemessage');
 
 // Показване на бройките
-$rz .= '<div id="outer_links">'."\n".'
-<p class="counts" id="counts">'.
+$rz .= '<div id="outer_links">'."\n".
+translate('outer_links_intro').
+'<p class="counts" id="counts">'.
 translate('outerlinks_totalcount')." $lc ".
 translate('outerlinks_in')." $cc\n".
 translate('outerlinks_categories')." &nbsp; ";
@@ -161,8 +162,16 @@ var t = a.parentElement.innerText;
 var i = t.search(/ \- \d*/i);
 if(i<0) i = t.length;
 t = t.substring(0, i);
-f.words.value = t;
+t = t.replace(/\"/g, "&quot;");
+';
+if(in_edit_mode()) $page_header .= 'var j = t.indexOf(" ");
+t = t.slice(j+2);
+alert(t);';
+$page_header .= 'f.words.value = t;
 f.submit();
+}
+function duDuplicate(e){
+if(confirm("Duplicate link?")) window.open(e);
 }
 --></script>
 <style>
@@ -232,7 +241,8 @@ foreach($ca as $c){// print_r($c); die;
    $tc += $t1;
    $rzc .= " - $t1";
    $rzc .= outerlinks_autocomment($c);
-   if (in_edit_mode()) $rzc .= ' <a href="'.$adm_pth.'duplicate_record.php?t=outer_links&r='.$c['ID'].'">2</a>';
+   if (in_edit_mode()) $rzc .= ' <a href="'.$adm_pth.'duplicate_record.php?t=outer_links&r='.$c['ID'].
+                               '" onclick="duDuplicate(this);return false;">2</a>';
    $rzc .= ' <img class="sid" src="'.$p.'search.png" alt="" onclick="onSearchClick(this);"> ';
    $rzc .= "</p>\n";
 }
@@ -249,7 +259,8 @@ $rz .= "<p$cl>".edit_radio($l['ID'],$l['place']).'<img src="'.$p.'go.gif" alt=""
         set_self_query_var('lid',$l['ID']).'" title="'.urldecode($l['link']).
         '" target="_blank" id="lk'.$l['ID'].'">'.stripslashes($l['Title'])."</a>";
  $rz .= outerlinks_autocomment($l);
- if (in_edit_mode()) $rz .= ' <a href="'.$adm_pth.'duplicate_record.php?t=outer_links&r='.$l['ID'].'">2</a>';
+ if (in_edit_mode()) $rz .= ' <a href="'.$adm_pth.'duplicate_record.php?t=outer_links&r='.$l['ID'].
+                            '" onclick="duDuplicate(this);return false;">2</a>';
  $rz .= ' <img class="sid" src="'.$p.'search.png" alt="" onclick="onSearchClick(this);"> ';
  $rz .= "</p>\n";
 }
@@ -455,6 +466,7 @@ if ($_POST['action']=='delete'){
      // Ако подкатегорията не е празна не се изтрива
      if (db_table_field('COUNT(*)', 'outer_links', "`up`=$id")) die('This is a not empty folder!');
   }
+  if(db_table_field('ID', 'bib_title', "`url`=$id")) die(translate('outer_links_inbib'));
   $q = "DELETE FROM$q0 WHERE `ID`=$id;";
 }
 else {
