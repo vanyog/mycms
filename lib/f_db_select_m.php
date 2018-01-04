@@ -1,4 +1,4 @@
-<script language="php">
+<?php
 
 /*
 MyCMS - a simple Content Management System
@@ -46,4 +46,4 @@ mysqli_free_result($dbr);
 return $r;
 }
 
-</script>
+?>

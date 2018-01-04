@@ -1,4 +1,4 @@
-<script language="php">
+<?php
 
 /*
 MyCMS - a simple Content Management System
@@ -54,4 +54,4 @@ global $tn_prefix, $temp_prefix;
 $tn_prefix = $temp_prefix;
 }
 
-</script>
+?>

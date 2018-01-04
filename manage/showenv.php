@@ -7,7 +7,7 @@
 </HEAD>
 
 <BODY>
-<script language="php">
+<?php
 
 //Показва се съдържанието на $_SERVER променливата
 
@@ -20,6 +20,6 @@ foreach ($k as $k0){
 echo '</table>';
 phpinfo();
 
-</script>
+?>
 </BODY>
 </HTML>

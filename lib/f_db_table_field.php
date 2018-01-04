@@ -1,4 +1,4 @@
-<script language="php">
+<?php
 
 /*
 MyCMS - a simple Content Management System
@@ -41,4 +41,4 @@ if (isset($rc[$fn])) return stripslashes($rc[$fn]);
 else return $def;
 }
 
-</script>
+?>

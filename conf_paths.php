@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Скрипт за указване на пътя до някои директории
 // Настройките де не се задават вече тук, а в таблица $tn_prefix.'options' !
 
-$idir = dirname(__FILE__).'/';
+if(!isset($idir)) $idir = dirname(__FILE__).'/';
 
 include_once($idir.'lib/f_stored_value.php');
 
