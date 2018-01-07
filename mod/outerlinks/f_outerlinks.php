@@ -202,7 +202,8 @@ t = l.parentElement.innerHTML;
 i = t.indexOf("</a>") + 7;
 t = t.substring(i);
 var a = t.split(" ");
-t = a.slice(fi, a.length - 8).join(" ");
+t = a.slice(fi, a.length - 11).join(" ");
+if(t.substring(0,8)==" href=\"/") t = "";
 f.comment.value = t;
 }
 function sid_clicked(a){
