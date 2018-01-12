@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // +  за качване на файл и
 // -  за изтриване на качения файл.
 
+include_once($idir."lib/f_db2user_date_time.php");
+
 global $can_manage;
 
 function uploadfile($n){
@@ -31,7 +33,7 @@ global $mod_pth, $page_id;
 
 $n = stripslashes($n);
 
-// CSS дефиниции на html тага за показване на файла
+// Проверка за наличие на style атрибут
 $ss = ''; $m = array();
 $i = preg_match_all('/,style=".*"/', $n, $m);
 if (!$i) $i = preg_match_all('/,style=&quot;.*&quot;/', $n, $m);
@@ -48,6 +50,22 @@ $i = preg_match_all('/,img/', $n, $m);
 if ($i){
   $add_image = true;
   $n = str_replace(',img','',$n);
+}
+
+// Проверка за наличие на show-t-s опция
+$add_time = false;
+$add_size = false;
+$i = preg_match_all('/,show(-[ts])(-[ts])?/', $n, $m);
+if ($i){
+  switch ($m[1][0]){
+  case '-t': $add_time = true; break;
+  case '-s': $add_size = true; break;
+  }
+  if(isset($m[1][1])) switch ($m[1][0]){
+  case '-t': $add_time = true; break;
+  case '-s': $add_size = true; break;
+  }
+  $n = str_replace($m[0],'',$n);
 }
 
 // Разпадане на параметъра $a на: име, номер на страница и опция за показване на текста
@@ -116,6 +134,10 @@ else {
     else {
        $rz .= '<a href="'.$f."\"$ss>".upload_file_addimage($add_image,$e).stripslashes($fr['text']).'</a>';
        if(!$cs && isset($na[2]) && ($na[2]==3)) $rz .= translate('uploadfile_old');
+       if($add_time || $add_size) $rz .= ' -';
+       if($add_time) $rz .= " ".db2user_date_time($fr['date_time_2']);
+       if($add_size && file_exists($fr['filename']))
+       $rz .= " ".($fr['filename']);
     }
   }
   $fid = $fr['ID'];
