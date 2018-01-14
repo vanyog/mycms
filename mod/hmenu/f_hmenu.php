@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Данните за менюто се четат от таблица 'menu_items'.
 // Параметърът $a е стойността на полето `group` в таблица 'menu_items'.
 
+include_once($idir.'mod/rawfile/f_rawfile.php');
+
 function hmenu($a){
 global $ind_fl, $page_header, $pth, $adm_pth, $page_id;
 $p = current_pth(__FILE__);
@@ -32,11 +34,12 @@ $c1 = stored_value('hmenu_color2');  $page_header .= "var color2 = \"$c1\";\n";
 $c1 = stored_value('hmenu_bcolor2'); $page_header .= "var bcolor2 = \"$c1\";\n";
 $c1 = stored_value('hmenu_color3');  $page_header .= "var color3 = \"$c1\";\n";
 $c1 = stored_value('hmenu_bcolor3'); $page_header .= "var bcolor3 = \"$c1\";\n";
-$page_header .= '</script>'."\n";
-$page_header .= '<script src="'.$p.'functions.js"></script>'."\n";
+$page_header .= rawfile('mod/hmenu/functions.js');
+$page_header .= "\n</script>\n";
 $il = db_select_m('*','menu_items',"`group`=$a ORDER BY `place` ASC");
 $sm = '';
 $rz = '';
+//$ci = hmenu_c($a);
 $ia = index_array();
 $j = 1;
 foreach($il as $i){
@@ -45,6 +48,7 @@ foreach($il as $i){
   if ($lk) {
     $sm .= hsubmenu($lk,$ia,$j);
     if (in_array($lk,$ia)) $c = ' class="current"';
+//    if ($lk==$ci) $c = ' class="current"';
     $lk = $ind_fl.'?pid='.$lk;
   }
   else $lk = $i['link'];
@@ -85,7 +89,7 @@ if (count($da)>1) foreach($da as $d){
   $rz .= '<a href="'.$lk.'"'.$c.'>'.translate($d['name'], false)."</a>\n";
 }
 if (in_edit_mode()) $rz .= 'id '.$g;
-if ($rz) $rz = '<div id="HLayer'.$j.'">'."\n".$rz."</div>\n";
+if ($rz) $rz = '<div id="HLayer'.$j.'" onmouseleave="hide_layer('.$j.',this);">'."\n".$rz."</div>\n";
 return $rz;
 }
 
@@ -119,5 +123,27 @@ foreach($da as $d){
 return array_keys($rz);
 }
 
+// Опит за съставяне на функция за откриване от кой линк на меню с номер $m се стига до текущата страница
+
+function hmenu_c($m){
+global $page_data;
+$pd = $page_data;
+// Масив с прегледаните менюта. Изпилзва се за откриване на зацикляне
+$pa = array($m);
+// Ако текущата страница е от меню $m
+if($m == $pd['menu_group']) return $pd['ID'];
+// Запис(и) за групата на текущата страница от таблица menu_tree
+$mt = db_select_m('*', 'menu_tree', "`group`=".$pd['menu_group']);
+$c = count($mt);
+// Ако няма запис текущата страница не принадлежи на описана група
+if(!$c) return 0;
+// При повече от един запис - фатална грешка в таблицата
+if($c>1) die("More than one record for $m group in menu_tree table!");
+// Преминаване към родителското меню
+$pg = db_select_1('*', 'pages', "`ID`=".$mt[0]['index_page']);
+//if($m == $mt[0]['parent']) return $mt[0]['index_page'];
+//$pd = db_select_
+die(print_r($pg,true));
+}
 
 ?>

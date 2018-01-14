@@ -32,7 +32,7 @@ include_once($idir."lib/f_db_update_record.php");
 include_once($idir."lib/f_db_update_where.php");
 //include_once($idir."lib/translation.php");
 //include_once($idir."lib/f_edit_record_form.php");
-//include_once($idir."lib/f_db_insert_1.php");
+include_once($idir."lib/f_db_insert_or_1.php");
 //include_once($idir."lib/f_page_cache.php");
 //include_once($idir."/lib/f_mod_picker.php");
 
@@ -84,8 +84,10 @@ function process_data(){
 global $language;
 $d['text'] = addslashes($_POST['text']);
 $d['date_time_2'] = 'NOW()';
+$d['language'] = $language;
 $i = db_table_field('name', 'menu_items', "`ID`=".(1*$_POST['ID']) );
-db_update_where($d, 'content', "`name`='$i' AND `language`='$language'");
+$d['name'] = $i;
+db_insert_or_1($d, 'content', "`name`='$i' AND `language`='$language'");
 unset($_POST['text']);
 db_update_record($_POST, 'menu_items');
 header('Location: '.$_SESSION['http_referer']);

@@ -21,6 +21,10 @@ if (el){
   s.left = Math.round(e.getBoundingClientRect().left) + "px";
   last_hlayer = id;
 }
+set_layer_colors(e);
+}
+
+function set_layer_colors(e){
 if (last_hitem && (last_hitem!=e)){
   if (last_hitem.className!="current"){
       if (color2)  last_hitem.style.color = color2;
@@ -36,4 +40,10 @@ if (e){
   if (bcolor1) e.style.backgroundColor = bcolor1;
   last_hitem = e;
 }
+}
+
+function hide_layer(i,e){
+  var eh = document.getElementById("HLayer"+i);
+  if(eh) eh.style.visibility = "hidden";
+  set_layer_colors(e)
 }
