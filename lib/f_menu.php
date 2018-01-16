@@ -38,7 +38,7 @@ $lk = stored_value('menu_aslink'); // Дали линкът на текущата страница да се пок
 $pp = stored_value('menu_popup');  // Дали да се показват изскачащи подменюта
 $hm = stored_value('menu_hide',1); // Дали да се скриват линкове към скрити страници
 foreach($d as $m){
-  $lnn = 1*$m['link'];
+  if(is_numeric($m['link'])) $lnn = 1*$m['link']; else $lnn = 0;
   $ln = $m['link']; 
   if ($lnn){
     $h = db_table_field('hidden', 'pages', "`ID`=$lnn");
@@ -89,7 +89,7 @@ global $page_data, $ind_fl;
   // Ако $mlk е текущата страница - истина.
   if (($mlk==$page_data['ID']) || !(strpos($mlk,'pid='.$page_data['ID'])===false)) return true;
   // Ако $mlk не е число, а друг линк
-  if (!(1*$mlk)) return html_entity_decode($mlk) == $_SERVER['REQUEST_URI'];
+  if (!is_numeric($mlk)) return html_entity_decode($mlk) == $_SERVER['REQUEST_URI'];
   // Ако $i е номер на менюто на текущата страница не търси повече - неистина
   // защото менюто на текущата страница, се обхожда цялото и се стига до текущата страница.
   if ($i==$page_data['menu_group']) return false;

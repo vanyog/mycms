@@ -80,7 +80,11 @@ return $rz;
 }
 
 function translate_if($a, $b){
-if (function_exists('translate')) return translate($a, false);
+if (function_exists('translate')){
+  $rz = translate($a, false);
+  if($rz==$a){ return $b; }
+  else return $rz;
+}
 else return $b;
 }
 
@@ -253,6 +257,7 @@ function __construct($c, $pk =''){
 $this->caption = $c;
 if (!$pk) $this->public_key = stored_value('recaptcha_pub');
 else $this->public_key = $pk;
+if(!$this->public_key) die("'recaptcha_pub' setting not found.");
 }
 
 public function html($it){
@@ -262,7 +267,8 @@ $rz = '';
 if ($it) $rz = "<tr>\n<th>";
 $rz .= $this->caption;
 if ($it) $rz .= "</th>\n<td>"; else $rz .= " ";
-$rz .= '<div class="g-recaptcha" data-sitekey="'.$this->public_key.'" data-size="compact"></div>';
+if(!is_local()) $rz .= '<div class="g-recaptcha" data-sitekey="'.$this->public_key.'" data-size="compact"></div>';
+else $rz .= "<div class=\"g-recaptcha\">reCapcha will be shown here if online</div>";
 if ($it) $rz .= "</td>\n<tr>\n"; else $rz .= "<br>\n";
 return $rz;
 }

@@ -33,12 +33,13 @@ $map_level = 0; // Ниво на рекурсията
 $i_root    = 0; // Номер на входното меню
 $id_pre    = ''; // Представка, с която започват id атрибутите на <div> елементите
 
-function sitemap($a){
+function sitemap($a = ''){
 global $page_passed, $map_level, $i_root, $id_pre, $page_header;
 $page_passed = array();
 $map_level = 0;
 $i_root    = 0;
 $ar = explode('|',$a);
+if(!$ar[0]) $ar[0] = stored_value('main_index_pageid',1);
 $page_header .= '<script><!--
 function mapHideShow(e){
 var p = e.parentElement;
@@ -98,7 +99,9 @@ foreach($mi as $m){// die(print_r($m,true));
   $rz2 = '';
   $h = false;
   
-  $pid = 1*$m['link']; // Номер на страницата от поредния линк
+  // Номер на страницата от поредния линк
+  if(is_numeric($m['link'])) $pid = 1*$m['link'];
+  else $pid = 0;
   if (($i==$i_root)||($pid!=$index))
   {
     $lk = $m['link'];

@@ -76,8 +76,8 @@ else if (in_edit_mode() && $elink){
              '&amp;pid='.$page_data['ID'];
          else $h = $adm_pth."new_content.php?n=$n&l=$language";
          return "<a href=\"$h\">$n</a>";
-       }
-       else { // На отдалечен сървър в работен режим
+     }
+     else { // На отдалечен сървър в работен режим
          // Четене на записа на езика по подразбиране
          $r = db_select_1('*','content',"`name`='$n' AND `language`='$default_language'");
          // Ако няма запис се показва името на текста
@@ -89,7 +89,7 @@ else if (in_edit_mode() && $elink){
          $t = stripslashes($r['text']);
          // Заместват се със съдържание евентуални <!--$$_XXX_$$--> елементи
          $rz = apply_filters($n,parse_content($t));
-       }
+     }
 // Запазване в кеш
 $string[$n] = $rz;
 
