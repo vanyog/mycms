@@ -39,7 +39,7 @@ $page_header .= "\n</script>\n";
 $il = db_select_m('*','menu_items',"`group`=$a ORDER BY `place` ASC");
 $sm = '';
 $rz = '';
-//$ci = hmenu_c($a);
+$ci = hmenu_c($a);
 $ia = index_array();
 $j = 1;
 foreach($il as $i){
@@ -47,8 +47,8 @@ foreach($il as $i){
   $c = '';
   if ($lk) {
     $sm .= hsubmenu($lk,$ia,$j);
-    if (in_array($lk,$ia)) $c = ' class="current"';
-//    if ($lk==$ci) $c = ' class="current"';
+//    if (in_array($lk,$ia)) $c = ' class="current"';
+    if ($lk==$ci) $c = ' class="current"';
     $lk = $ind_fl.'?pid='.$lk;
   }
   else $lk = $i['link'];
@@ -75,18 +75,23 @@ function hsubmenu($lk,$ia,$j){
 global $ind_fl;
 // Номер на менюто, на което страница $lk е главна
 $g = db_table_field('`group`','menu_tree',"`index_page`=$lk");
-// Записите на това меню
+$ci = hmenu_c($g);
+// Записите от това меню
 $da = db_select_m('*','menu_items',"`group`=$g ORDER BY `place` ASC");
 $rz = '';
 if (count($da)>1) foreach($da as $d){
   $lk = 1*$d['link'];
   $c = '';
   if ($lk) {
-    if (in_array($lk,$ia)) $c = ' class="current"';
+    // Проверка дали страницата не е скрита
+    $h = db_table_field('hidden', 'pages', "`ID`=$lk") && !in_edit_mode();
+    if ($lk==$ci) $c = ' class="current"';
+//    if (in_array($lk,$ia)) $c = ' class="current"';
     $lk = $ind_fl.'?pid='.$lk;
   }
-  else $lk = $d['link']; 
-  $rz .= '<a href="'.$lk.'"'.$c.'>'.translate($d['name'], false)."</a>\n";
+  else $lk = $d['link'];
+
+  if(!$h) $rz .= '<a href="'.$lk.'"'.$c.'>'.translate($d['name'], false)."</a>\n";
 }
 if (in_edit_mode()) $rz .= 'id '.$g;
 if ($rz) $rz = '<div id="HLayer'.$j.'" onmouseleave="hide_layer('.$j.',this);">'."\n".$rz."</div>\n";
@@ -104,8 +109,7 @@ $rz = array($page_id=>0);
 $da = db_select_m('`group`','menu_items',"`link`='$page_id'");
 foreach($da as $d){
  $g = $d['group'];
- // Мярка против зацикляне
- // Масив с проверените в цикъла групи
+ // Против зацикляне се съставя масив с проверените в цикъла групи
  $c = array($g);
  do {
    $t = db_select_1('parent,index_page','menu_tree',"`group`=$g");
@@ -127,23 +131,47 @@ return array_keys($rz);
 
 function hmenu_c($m){
 global $page_data;
+
+// Масив с прегледаните менюта. Използва се за откриване на зацикляне
+$pa = array();
+
+// Текуща страница
 $pd = $page_data;
-// Масив с прегледаните менюта. Изпилзва се за откриване на зацикляне
-$pa = array($m);
-// Ако текущата страница е от меню $m
-if($m == $pd['menu_group']) return $pd['ID'];
-// Запис(и) за групата на текущата страница от таблица menu_tree
-$mt = db_select_m('*', 'menu_tree', "`group`=".$pd['menu_group']);
-$c = count($mt);
-// Ако няма запис текущата страница не принадлежи на описана група
-if(!$c) return 0;
-// При повече от един запис - фатална грешка в таблицата
-if($c>1) die("More than one record for $m group in menu_tree table!");
-// Преминаване към родителското меню
-$pg = db_select_1('*', 'pages', "`ID`=".$mt[0]['index_page']);
-//if($m == $mt[0]['parent']) return $mt[0]['index_page'];
-//$pd = db_select_
-die(print_r($pg,true));
+
+// Група на текущата страница
+$gr = $pd['menu_group'];
+
+$c = 0;
+do { //echo "$m $gr - ".$pd['ID']."<br>";
+
+  // Ако е нула
+  if($gr==0) return 0;
+
+  // Ако текущата страница е от меню $m
+  if($m == $gr) return $pd['ID'];
+
+  // Запис(и) за групата на текущата страница от таблица menu_tree
+  $mt = db_select_m('*', 'menu_tree', "`group`=".$gr); //echo print_r($mt,true)."<br>";
+  $c = count($mt);
+  // Ако няма запис текущата страница не принадлежи на описана група
+  if(!$c) return 0;
+  // При повече от един запис - фатална грешка в таблицата
+  if($c>1) die("More than one record for $m group in menu_tree table!");
+
+  // Текуща става главната страница на групата
+  $pd = db_select_1('*', 'pages', "`ID`=".$mt[0]['index_page']);
+
+  // Преминаване към родителското меню
+  $gr = $mt[0]['parent'];
+
+  // Проверка за зацикляне
+  if(in_array($gr, $pa)) die("Loop structue in menu system");
+  $pa[] = $gr;
+
+  $c++;
+  if($c>20) die("Infinit Loop");
+} while (true);
+
 }
 
 ?>

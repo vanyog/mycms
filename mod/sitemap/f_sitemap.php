@@ -93,7 +93,7 @@ $mi = db_select_m('*', 'menu_items', "`group`=$i ORDER BY `place`");
 $index = db_table_field('index_page','menu_tree',"`group`=$i");
 
 // Цикъл за обработка на всяка хипервръзка от менюто $i
-foreach($mi as $m){// die(print_r($m,true));
+foreach($mi as $m){
   $rz .= '<div id="map'.$m['ID']."\">\n";
   $rz1 = '';
   $rz2 = '';
@@ -102,6 +102,10 @@ foreach($mi as $m){// die(print_r($m,true));
   // Номер на страницата от поредния линк
   if(is_numeric($m['link'])) $pid = 1*$m['link'];
   else $pid = 0;
+  if($pid){
+     // Извличат се данните за страницата
+     $p = db_select_1('*','pages','`ID`='.$pid);
+  }
   if (($i==$i_root)||($pid!=$index))
   {
     $lk = $m['link'];
@@ -114,7 +118,7 @@ foreach($mi as $m){// die(print_r($m,true));
        }
     }
     if ($pid!=$page_id){
-       $h = db_table_field('hidden', 'pages', "`ID`=".$pid);
+       $h = $p['hidden'];
        if( !$h || in_edit_mode() ){
           $rz1 .= '<a href="'.$lk.'">'.translate($m['name']).'</a>';
           if( in_edit_mode() ) {
@@ -128,13 +132,10 @@ foreach($mi as $m){// die(print_r($m,true));
   }
 
   if ($pid) { // Обработва се ако е страница с номер от настоящата CMS
-
-    // Извличат се данните за страницата
-    $p = db_select_1('*','pages','`ID`='.$pid);
-
     if ($p['menu_group']!=$i){ // Ако е страница от друго меню
+      $mtd = db_select_1('parent,index_page', 'menu_tree', '`group`='.$p['menu_group']);
       // Рекурсивно извикване за получаване карта на подменюто
-      if (!in_array($p['menu_group'],$page_passed)){
+      if ( !in_array($p['menu_group'],$page_passed) && ($p['ID']==$mtd['index_page']) && ($i==$mtd['parent']) ){
         $map_level++;
         if ($map_level<$max_level){
            if(in_edit_mode() || !$h) $rz1 .= sitemap_rec($p['menu_group'], $count);
