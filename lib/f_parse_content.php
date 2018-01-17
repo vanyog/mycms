@@ -67,7 +67,7 @@ if (!$sc){ // Ако няма такъв скрипт се търси модул с това име
   if ($fn){
     // Зареждане на файл _style.css, ако в директорията на модула има такъв
     $sf = dirname($fn).'/_style.css';
-    if(file_exists($sf)){
+    if(file_exists($sf) && !function_exists($f)){
       $sfn = substr($sf,strlen($apth));
       $page_header .= "<style>\n".rawfile($sfn)."</style>\n";
     }

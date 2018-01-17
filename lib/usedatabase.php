@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Този файл инициализира променливата $db_link
 // която се използва в mysql_query($q,$db_link);
 
-if (!isset($ddir) || !file_exists($ddir."conf_database.php")) die("Database is not configured");
+if (!isset($ddir) || !file_exists($ddir."conf_database.php")) die($ddir."conf_database.php - file not found.");
 if (!isset($colation)) $colation = 'cp1251';
 
 include_once($ddir."conf_database.php");

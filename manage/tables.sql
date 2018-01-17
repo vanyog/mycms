@@ -206,7 +206,7 @@ CREATE TABLE IF NOT EXISTS `templates` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
-INSERT INTO `vsu4_templates` (`ID`, `parent`, `template`, `comment`) VALUES
+INSERT INTO `templates` (`ID`, `parent`, `template`, `comment`) VALUES
 (1, 0, '<!DOCTYPE HTML>\r\n<html lang="<!--$$_VARIABLE_default_language_$$-->">\r\n<head>\r\n  <title><!--$$_HEADTITLE_$$--></title>\r\n  <meta http-equiv="Content-Type" content="text/html; charset=<!--$$_VARIABLE_site_encoding_$$-->">\r\n  <meta name=viewport content="width=device-width, initial-scale=1">\r\n  <link href="style.css" rel="stylesheet" type="text/css">\r\n<!--$$_PAGEHEADER_$$--></head>\r\n<body<!--$$_BODYADDS_$$-->>\r\n\r\n<!--$$_ADMINMENU_$$-->\r\n\r\n<!--$$_MENU_$$-->\r\n\r\n<div id="page_content">\r\n<h1><!--$$_PAGETITLE_$$--></h1>\r\n<!--$$_CONTENT_$$-->\r\n\r\n<p id="powered_by">Направено с <a href="https://github.com/vanyog/mycms/wiki" target="_blank">MyCMS</a> <!--$$_PAGESTAT_$$--></p>\r\n</div>\r\n\r\n<!--$$_USERMENU_/index.php?pid=2&amp;user=logout_$$-->\r\n</body>\r\n</html>\r\n\r\n', 'Шаблон по подразбиране');
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `visit_history` (

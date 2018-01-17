@@ -243,7 +243,7 @@ if(!$start) $start = count($r) - 1;
 $r = implode('/', $rz);
 //echo "$r<br>";
 $s = array_slice($p, $start, -1);
-if(count($s)) $r .= '/'.implode('/',$s);
+if(count($s)) $r .= implode('/',$s);
 return $r;
 }
 

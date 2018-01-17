@@ -102,6 +102,7 @@ foreach($mi as $m){
   // Номер на страницата от поредния линк
   if(is_numeric($m['link'])) $pid = 1*$m['link'];
   else $pid = 0;
+  $p['hidden'] = 0;
   if($pid){
      // Извличат се данните за страницата
      $p = db_select_1('*','pages','`ID`='.$pid);

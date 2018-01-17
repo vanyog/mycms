@@ -81,6 +81,11 @@ $da = db_select_m('*','menu_items',"`group`=$g ORDER BY `place` ASC");
 $rz = '';
 if (count($da)>1) foreach($da as $d){
   $lk = 1*$d['link'];
+  if(!$lk){
+    $ar = array();
+    if(preg_match_all('/pid=(\d+)/',$ar);
+    die(print_r($ar,true));
+  }
   $c = '';
   if ($lk) {
     // ѕроверка дали страницата не е скрита
