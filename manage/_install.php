@@ -66,7 +66,7 @@ $fc = str_replace('INSERT INTO `',   "INSERT INTO `$tn_prefix",$fc);
 $fa = explode('-- --------------------------------------------------------',$fc);
 
 foreach($fa as $q){
-//  echo "$q<p>";
+  echo ("<pre>$q</pre><p>");
   mysqli_query($db_link,$q);
 }
 

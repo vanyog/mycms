@@ -23,14 +23,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include("conf_manage.php");
 include_once($idir."conf_paths.php");
 include_once($idir."lib/f_is_local.php");
+include_once($idir."lib/f_relative_to.php");
 include_once($idir."lib/f_strip_last_name.php");
 
 $f = ''; // Име на файла или директорията, които ще се редактират
 if (isset($_GET['f'])) $f = $_GET['f'];
+
 // Абсолютен път до файла или директорията във файловата система на сървъра
 $d = realpath($apth.$f);
 
-$f = relative_to($apth,$d.'/');
+$f = relative_to($apth,$d.'/'); echo("$apth$f<br>$d<br>$f<br>");
 
 $page_content = '';
 
@@ -46,7 +48,7 @@ if (isset($_SESSION['edit_result_message'])){
 if (is_dir($d)){ // Ако е директория се показва таблица с файловете в нея
                  // ------------------------------------------------------
 
-if($f) $f .= '/';
+//if($f) $f .= '/';
 
 // Дали е разрешено изтриване на файлове.
 // Разрешено е на локален сървър, а на отдалечен сървър,
@@ -124,7 +126,7 @@ sort($dl);
 $cls = 3; $rw = 0; $j = 0; $stp = floor(count($dl)/$cls); $cln=0;
 $rem = count($dl) % $cls; $rc = 0;
 for($i=0; $i<count($dl); $i++){
-  $a = $dl[$j];
+  $a = $dl[$j];// die("<br>$d $f $a");
   $j += $stp;
   if ($rc<$rem) $j++;
   $rc++;
@@ -133,7 +135,7 @@ for($i=0; $i<count($dl); $i++){
   if (is_dir($d.'/'.$a)){ $s1 = '<strong>'; $s2 = '</strong>'; }
   $page_content .= '<td style="width:1%;"><input type="radio" name="file" value="'.$f.$a."\"></td>";
   if(is_dir($d.'/'.$a) && ($a=='..') && !$alls)
-     $page_content .= "<td>$s1$a$s2</td>\n";
+     $page_content .= "<td>$s1$a$s2</td>\n"; //  Без линк
   else
      $page_content .= "<td>$s1<a href=\"edit_file.php?f=$f$a\">$a</a>$s2</td>\n";
   $cln++;
@@ -217,6 +219,8 @@ function doOpen(){
 
 }
 
+// Стара функция. Вече не се използва.
+
 function remove_dots($p){
 $a = explode('/',$p);
 $rz = ''; $rm = false;
@@ -226,34 +230,6 @@ for($i=count($a)-1; $i>=0; $i--)
 foreach($a as $b) $rz .= '/'.$b;
 $rz = substr($rz,1);
 return $rz;
-}
-
-function relative_to($apth,$d){
-$r = explode('/', $apth);
-$p = explode('/', $d);
-//echo("$apth<br>$d<br>".print_r($r,true)."<br>".print_r($p,true)."<br>");
-$start = 0;
-$rz =  array();
-foreach($r as $i => $n){
-   if(!isset($p[$i]) || ($n!=$p[$i]) ) $start = $i;
-   if($start && !empty($n)) $rz[] = '..';
-}
-if(!$start) $start = count($r) - 1;
-//echo "$start<br>".print_r($rz,true)."<br>";
-$r = implode('/', $rz);
-//echo "$r<br>";
-$s = array_slice($p, $start, -1);
-if(count($s)) $r .= implode('/',$s);
-return $r;
-}
-
-function identic_letter($a, $b){
-$la = strlen($a);
-$lb = strlen($b);
-$ml = $la;
-if($ml>$lb) $ml=$lb;
-for($i=0; $i<$ml; $i++) if($a[$i]!=$b[$i]) return $i;
-return $i;
 }
 
 include("build_page.php");

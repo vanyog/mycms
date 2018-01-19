@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 $idir = dirname(dirname(__FILE__)).'/';
 
 include_once($idir.'conf_paths.php');
+include_once($idir."lib/f_relative_to.php");
 include_once($idir."lib/f_is_local.php");
 include_once($idir.'lib/f_set_query_var.php');
 include_once($idir.'lib/f_db_select_1.php');
@@ -38,7 +39,7 @@ include_once($idir.'lib/f_parse_content.php');
 include_once($idir."lib/f_edit_normal_links.php");
 
 function adm_links(){
-global $pth, $adm_pth, $edit_name, $edit_value, $web_host, $local_host, $main_index,
+global $pth, $apth, $adm_pth, $edit_name, $edit_value, $web_host, $local_host, $main_index,
        $phpmyadmin_site, $phpmyadmin_local, $page_data;
 if ( !show_adm_links() ) return '';
 else {
@@ -80,6 +81,8 @@ else {
   if (!in_admin_path()) $enmch .= edit_normal_link(false).' ::
 <a href="" onclick="doNewPage();return false">New page</a> :: ';
 
+$f = relative_to($apth,dirname($_SERVER['DOCUMENT_ROOT'].$main_index).'/');
+
   $rz = '<script>
 function doNewPage(){
 if (confirm("Do you want to create new page?"))
@@ -105,13 +108,13 @@ if (e.keyCode==13){
 }
 </script>
 <p id="adm_links">&nbsp; '.$_SERVER['REMOTE_ADDR'].'
-<a href="'.$pth.'">Home</a> :: '.$enmch.'
+<a href="'.$main_index.'">Home</a> :: '.$enmch.'
 <a href="'.$main_index.'?pid='.$ppid.'">&lt;</a>
 <input type="text" size="4" id="gtpNumber" onkeypress="gotoPageNumber(event);">
 <a href="'.$main_index.'?pid='.$npid.'">&gt;</a>
 <a href="'.$main_index.'?pid='.$lpid.'&amp;'.$edit_name.'='.urlencode($edit_value).'">'.$lpid.'</a> ::
 <a href="'.$pth.'mod/all_pages.php">all</a> ::
-<a href="'.$adm_pth.'edit_file.php">File system</a> :: 
+<a href="'.$adm_pth.'edit_file.php?f='.$f.'">File system</a> ::
 <a href="'.$adm_pth.'edit_data.php">Database</a> :: 
 <a href="'.$pth.'lib/f_page_cache.php?purge='.(1*(isset($_GET['pid'])?$_GET['pid']:0)).'">Purge</a> ::
 <a href="'.stored_value('adm_links_cpanel').'" target="_blank">cPanel</a> ::
