@@ -50,7 +50,8 @@ $what = '';
 
 if (isset($_GET['lid'])){
   $what = strtolower($_GET['lid']);
-  $lid = 1*$_GET['lid'];
+  if(is_numeric($_GET['lid'])) $lid = 1*$_GET['lid'];
+  else $lid = 0;
 }
 
 // Път към началната страница
@@ -70,6 +71,9 @@ translate('outerlinks_totalcount')." $lc ".
 translate('outerlinks_in')." $cc\n".
 translate('outerlinks_categories')." &nbsp; ";
 
+
+if($cc){ // Ако има категории
+
 // Хипервръзка "Само категориите" или "Преглед по категории"
 if($what!='cat')
    $rz .= "<a href=\"".set_self_query_var('lid', 'cat')."#outer_links\">".translate('outerlinks_catonly').
@@ -84,14 +88,19 @@ if ( in_array($what, array('all','new','click')) )
 else
    $rz .= "<a href=\"".set_self_query_var('lid', 'all')."#outer_links\">".translate('outerlinks_all')."</a>";
 
+}
+
 $rz .= "</p>\n";
 
 // Линкове "Най-нови", "Най-стари", "Най-кликвани"
+if($lc>10){
 $rzl = '<p class="most">'."\n";
 if ($what!='new') $rzl .= '<a href="'.set_self_query_var('lid','new').'#outer_links">'.translate('outerlinks_new')."</a> &nbsp; ";
 if ($what!='old') $rzl .= '<a href="'.set_self_query_var('lid','old').'#outer_links">'.translate('outerlinks_old')."</a> &nbsp; ";
 if ($what!='click') $rzl .= '<a href="'.set_self_query_var('lid','click').'#outer_links">'.translate('outerlinks_click')."</a> &nbsp; ";
 $rzl .= "</p>";
+}
+else $rzl = '';
 
 $p = current_pth(__FILE__);
 
@@ -148,15 +157,19 @@ if ($tr) $rz .= $tr;
 else $rz .="\n";
 
 // Показване на формата за търсене
-if ($what!='all') $rz .= search_link_form();
+if ( $cc && ($what!='all') ) $rz .= search_link_form();
 
+$page_header .= "<script><!--\n";
+
+$spage = stored_value('outerlinks_spage');
+
+if($spage){
 // Невидима форма за отваряне на страницат "Търсене на информация", при щракване на "лупата"
-$rz .= '<form method="POST" action="/index.php?pid=25" id="gotsearchpage" target="_blank">
+$rz .= '<form method="POST" action="'.$spage.'" id="gotsearchpage" target="_blank">
 <input type="hidden" name="words" value="aaa bbb">
 </form>
 ';
-$page_header .= '<script><!--
-function onSearchClick(a){
+$page_header .= 'function onSearchClick(a){
 var f = document.getElementById("gotsearchpage");
 var t = a.parentElement.innerText;
 var i = t.search(/ \- \d*/i);
@@ -170,7 +183,10 @@ alert(t);';
 $page_header .= 'f.words.value = t;
 f.submit();
 }
-function duDuplicate(e){
+';
+}
+
+$page_header .= 'function duDuplicate(e){
 if(confirm("Duplicate link?")) window.open(e);
 }
 --></script>
@@ -244,7 +260,7 @@ foreach($ca as $c){// print_r($c); die;
    $rzc .= outerlinks_autocomment($c);
    if (in_edit_mode()) $rzc .= ' <a href="'.$adm_pth.'duplicate_record.php?t=outer_links&r='.$c['ID'].
                                '" onclick="duDuplicate(this);return false;">2</a>';
-   $rzc .= ' <img class="sid" src="'.$p.'search.png" alt="" onclick="onSearchClick(this);"> ';
+   if($spage) $rzc .= ' <img class="sid" src="'.$p.'search.png" alt="" onclick="onSearchClick(this);"> ';
    $rzc .= "</p>\n";
 }
 if (count($ca)) $rz .= '<p>'.count($ca).' '.translate('outerlinks_sub').", $tc ".translate('outerlinks_tcs')."</p>\n".$rzc;
@@ -262,7 +278,7 @@ $rz .= "<p$cl>".edit_radio($l['ID'],$l['place']).'<img src="'.$p.'go.gif" alt=""
  $rz .= outerlinks_autocomment($l);
  if (in_edit_mode()) $rz .= ' <a href="'.$adm_pth.'duplicate_record.php?t=outer_links&r='.$l['ID'].
                             '" onclick="duDuplicate(this);return false;">2</a>';
- $rz .= ' <img class="sid" src="'.$p.'search.png" alt="" onclick="onSearchClick(this);"> ';
+ if($spage) $rz .= ' <img class="sid" src="'.$p.'search.png" alt="" onclick="onSearchClick(this);"> ';
  $rz .= "</p>\n";
 }
 
@@ -481,7 +497,7 @@ else {
   if ($_POST['private']>'') $q2 .= "`private`=".(1*$_POST['private']).", ";
   if ($_POST['place'])   $q2 .= "`place`=".(1*$_POST['place']).", ";
   else if (!$id && ($q2!="`up`=".(1*$_POST['up']).", "))
-          $q2 .= "`place`=".(db_table_field('MAX(`place`)', 'outer_links', '1')+10).", ";
+          $q2 .= "`place`=".(intval(db_table_field('MAX(`place`)', 'outer_links', '1'))+10).", ";
   if (!$q2) return '';
   $q = $q1.substr($q2,0,strlen($q2)-2)." ".$q3;
 }

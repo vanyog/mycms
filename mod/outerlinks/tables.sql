@@ -18,12 +18,31 @@ CREATE TABLE IF NOT EXISTS `outer_links` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 PACK_KEYS=0 AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
 INSERT INTO `content` (`name`,`nolink`,`date_time_1`,`date_time_2`,`language`,`text`) VALUES
+('outerlinks_all',0,NOW(),NOW(),'bg','Всички'),
+('outerlinks_cat',0,NOW(),NOW(),'bg','По категории'),
 ('outerlinks_categories',0,NOW(),NOW(),'bg','категории'),
+('outerlinks_categories',0,NOW(),NOW(),'en','categories'),
+('outerlinks_catonly',0,NOW(),NOW(),'bg','Само категориите'),
+('outerlinks_click',0,NOW(),NOW(),'bg','Най-кликвани'),
+('outerlinks_clicked',0,NOW(),NOW(),'bg','Най-кликваните'),
 ('outerlinks_find',1,NOW(),NOW(),'bg','Търсене'),
 ('outerlinks_found',0,NOW(),NOW(),'bg','намерени връзки'),
-('outerlinks_home',0,NOW(),NOW(),'bg','Начало'),
+('outerlinks_home',1,NOW(),NOW(),'bg','Начало'),
+('outerlinks_homemessage',0,NOW(),NOW(),'bg','<!--p>Всяко изследване започва с търсене на информация. В днешни дни най-достъпният източник на информация за всички е Интернет. Всеки щом иска да научи нещо, първо претърсва мрежата с любимата си търсеща машина.</p>\r\n\r\n<p>В този раздел "Интернет връзки" участниците в настоящия проект публикуват хипервръзките към страниците на които са попадали, търсейки информация по различни въпроси. Интернет връзките представляват важна част от съдържанието на сайта. Те играят ролата на библиографска справка за изследването, на което е посветен сайта.</p>\r\n\r\n<p>Стараем се всички хипервръзки, сложени в страниците на сайта, да бъдат регистрирани първо в този раздел.</p-->\r\n'),
+('outerlinks_homemessage',0,NOW(),NOW(),'en','Links to pages on other sites are an important part of the contents of this site. They play a role of bibliographic reference for the study presented on the site.'),
 ('outerlinks_in',0,NOW(),NOW(),'bg','в'),
+('outerlinks_in',0,NOW(),NOW(),'en','in'),
 ('outerlinks_intitles',0,NOW(),NOW(),'bg','надписите'),
 ('outerlinks_inurls',0,NOW(),NOW(),'bg','адресите'),
+('outerlinks_links',0,NOW(),NOW(),'bg','хипервръзки в тази подкатегория'),
+('outerlinks_new',0,NOW(),NOW(),'bg','Най-нови'),
+('outerlinks_newest',0,NOW(),NOW(),'bg','Най-новите'),
+('outerlinks_old',0,NOW(),NOW(),'bg','Най-стари'),
+('outerlinks_oldest',0,NOW(),NOW(),'bg','Най-старите'),
 ('outerlinks_searchin',0,NOW(),NOW(),'bg','Търсене в:'),
-('outerlinks_totalcount',0,NOW(),NOW(),'bg','Общ брой');
+('outerlinks_sresult',1,NOW(),NOW(),'bg','резултат от търсене в '),
+('outerlinks_sub',0,NOW(),NOW(),'bg','подкатегории'),
+('outerlinks_tcs',0,NOW(),NOW(),'bg','хипервръзки в подкатегориите'),
+('outerlinks_totalcount',0,NOW(),NOW(),'bg','Общ брой'),
+('outerlinks_totalcount',0,NOW(),NOW(),'en','Total count of links'),
+('outerlinks_wiki',1,NOW(),NOW(),'bg','статия в ');

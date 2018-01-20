@@ -61,7 +61,8 @@ if (!$can_edit) die('You have no permission to edit this text');
 $page_header = '<link href="'.$pth.'_style.css" rel="stylesheet" type="text/css">'."\n";
 
 // Номер на записа от таблица content
-$i = 1*$_GET['i'];
+if(is_numeric($_GET['i'])) $i = 1*$_GET['i'];
+else $i = 0;
 // Ако вместо номер е изпратено име и език
 if(!$i && isset($_GET['lang'])){
    $i = db_table_field('`ID`', 'content', "`name`='".addslashes($_GET['i'])."' AND `language`='".addslashes($_GET['lang'])."'", 0);
@@ -102,7 +103,7 @@ if (count($_POST)){
 else if (isset($_SERVER['HTTP_REFERER'])) $_SESSION['http_referer'] = $_SERVER['HTTP_REFERER'];
 
 $page_content = '<h1>'.translate('usermenu_edittext').'</h1>
-<p>Name: '.db_table_field('name','content','`ID`='.(1*$_GET['i']))."</p>\n";
+<p>Name: '.db_table_field('name','content','`ID`='.(is_numeric($_GET['i'])?1*$_GET['i']:0) )."</p>\n";
 
 if(!isset($_GET['code'])) $page_content .= mod_picker();
 
