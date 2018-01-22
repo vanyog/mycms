@@ -24,9 +24,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 error_reporting(E_ALL); ini_set('display_errors',1);
 
 // Главно директория на системата.
-$idir = dirname(dirname(dirname(__FILE__))).'/1/';
+$idir = dirname(dirname(__FILE__)).'/';
 
 // Директория с файла conf_database.php
-$ddir = dirname(dirname(__FILE__)).'/';
+$ddir = $idir;
 
 ?>
