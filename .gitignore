@@ -3,5 +3,7 @@
 mod/bgdic
 _*
 conf_database.php
+googleac*
+robots.txt
 mod/uploadfile/conf_uploadfile.php
 manage/ckeditor
