@@ -99,13 +99,14 @@ $rz = '<div id="sub_'.$g.'">
 ';
 $tm = '';
 if(isset($_GET['template'])){
-  $t = 1*$_GET['template'];
+  if(is_numeric($_GET['template'])) $t = 1*$_GET['template'];
+  else $t = 0;
   $at = stored_value('allowed_templates');
   if(!(strpos($at, ",$t,")===false)) $tm = "&template=$t";
 }
 $md = db_select_m('*','menu_items',"`group`=$g ORDER BY `place` ASC");
 foreach($md as $d){
-  $rf = 1*$d['link'];
+  $rf = is_numeric($d['link']) ? 1*$d['link'] : 0;
   if($rf){
      $h = db_table_field('hidden', 'pages', "`ID`=$rf") && !in_edit_mode();
      if($h) continue;

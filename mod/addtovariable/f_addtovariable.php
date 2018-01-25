@@ -19,8 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 function addtovariable($a){
 $b = explode('|', $a);
-global $$b[0];
-$$b[0] .= stripslashes($b[1]);
+//global $$b[0];
+if(!isset($GLOBALS[$b[0]])) $GLOBALS[$b[0]] = stripslashes($b[1]);
+else $GLOBALS[$b[0]] .= stripslashes($b[1]);
 return '';
 }
 
