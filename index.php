@@ -78,7 +78,7 @@ $can_visit = true;     // Право на влязъл потребител да вижда съдържанието на ст
 
 // Номер на страницата
 $page_id = stored_value('main_index_pageid',1);
-if (isset($_GET['pid'])) $page_id = 1*$_GET['pid'];
+if (isset($_GET['pid'])) $page_id = is_numeric($_SERVER['HTTP_USER_AGENT']) ? 1*$_GET['pid'] : 0;
 
 // Заглавие на страницата
 $page_title = '';

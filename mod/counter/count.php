@@ -46,7 +46,7 @@ $agent = addslashes( $_SERVER['HTTP_USER_AGENT'] );
 
 $q = "INSERT INTO `$tn_prefix"."mod_counter` (`url`, `page`, `referrer`, `agent`, `date_time`, `IP`) VALUES ('$url', '$page', '".addslashes($_SERVER['QUERY_STRING'])."', '$agent', NOW(), '".$_SERVER['REMOTE_ADDR']."');";
 
-mysql_query($q,$db_link);
+mysqli_query($db_link, $q);
 
 $fc = file_get_contents("Untitled.png");
 
