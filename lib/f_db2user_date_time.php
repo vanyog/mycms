@@ -27,22 +27,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Ако вторият параметър $tm = false не се показва час.
 // иначе час не се показва, само ако е 00:00:00.
 
-function db2user_date_time($dts, $tm = true){
+// Третият параметър позволява/забранява добавянето на интервали пред датата.
+
+function db2user_date_time($dts, $tm = true, $ts = true){
 $c = translate('month_names',false);
 eval($c);
 if ((substr($dts,11,8)=="00:00:00")||!$tm) $t = '';
 else {
   $h = (1*substr($dts,11,2));
-  if ($h<10) $t = ' &nbsp;'; else $t = ' ';
+  if ( ($h<10) && $ts ) $t = ' &nbsp;'; else $t = ' ';
   $t .= $h.substr($dts,13,3);
   if (1*substr($dts,17,2)) $t .= substr($dts,16,3);
 }
 $d = 1*substr($dts,8,2);
-if ($d<10) $d = '&nbsp;'.$d;
-return $t.' '.
+if ( ($d<10) && $ts ) $d = '&nbsp;'.$d;
+if($t) $t .= ' ';
+$rz = $t.
   $d.' '.
   $month[1*substr($dts,5,2)].' '.
   substr($dts,0,4);
+return $rz;
 }
 
 function db2user_from_to($d1,$d2){

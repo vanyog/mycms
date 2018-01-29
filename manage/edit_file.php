@@ -33,7 +33,7 @@ if (isset($_GET['f'])) $f = $_GET['f'];
 $d = realpath($apth.$f);
 
 $f = relative_to($apth,$d.'/');
-echo("$apth$f<br>$d<br>$f<br>");
+//echo("$apth$f<br>$d<br>$f<br>");
 
 $page_content = '';
 

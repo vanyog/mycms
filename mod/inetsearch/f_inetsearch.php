@@ -101,7 +101,7 @@ $f -> add_input( $i );
 $i = new FormInput(encode('Търсене в:'), '', 'button', 'google.bg');
 $i -> js = 'onclick="searchBy(\'https://google.bg/search?q=\', \'\');"';
 $f -> add_input( $i );
-$i = new FormInput(encode('Търсене в:'), '', 'button', 'duckduckgo.com');
+$i = new FormInput('', '', 'button', 'duckduckgo.com');
 $i -> js = 'onclick="searchBy(\'https://duckduckgo.com/?q=\', \'\');"';
 $f -> add_input( $i );
 $i = new FormInput('', '', 'button', 'scholar.google.bg');

@@ -49,7 +49,10 @@ var sl = window.getComputedStyle(ls[i]);
 var h = p.style.height;
 var sp = window.getComputedStyle(p);
 var v = "'.stored_value('sitemap_colapsed_height', '1.45em').'";
-var v = ( Number(sp.lineHeight.slice(0,-2)) +
+var lh = sp.lineHeight.slice(0,-2);
+if(lh=="norm") lh = Number(sp.fontSize.slice(0,-2))  * 1.2;
+else lh = Number(lh);
+var v = ( lh +
           Number(sl.paddingTop.slice(0,-2)) +
           Number(sl.paddingBottom.slice(0,-2))
         ) + "px";

@@ -207,7 +207,7 @@ var f = document.forms.link_edit_form;
 var r = f.link_id.value;
 var l = document.getElementById("lk"+r);
 f.link.value = l.title;
-f.title.value = l.text;
+f.title.value = l.innerHTML;
 var p = l.parentElement;
 if (p.className=="private") f.private.value = 1;
 else  f.private.value = 0;
