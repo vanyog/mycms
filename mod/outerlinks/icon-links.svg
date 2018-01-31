@@ -15,7 +15,10 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="icon-links.svg">
+   sodipodi:docname="icon-links.svg"
+   inkscape:export-filename="/Users/vanyog/Sites/vanyog.tk/public_html/sci.vanyog.com/mod/outerlinks/icon-links.png"
+   inkscape:export-xdpi="1.3683501"
+   inkscape:export-ydpi="1.3683501">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -44,7 +47,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -61,7 +64,9 @@
        x="-717.37457"
        y="740.85028"
        rx="2.6874499"
-       transform="matrix(0.70710678,-0.70710678,0.70710678,0.70710678,0,0)" />
+       transform="matrix(0.70710678,-0.70710678,0.70710678,0.70710678,0,0)"
+       inkscape:export-xdpi="71.133026"
+       inkscape:export-ydpi="71.133026" />
     <rect
        style="opacity:0.83999999;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#453939;stroke-width:2.48031497;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect4142-4"
@@ -70,11 +75,15 @@
        x="-740.53571"
        y="740.85028"
        rx="2.6874499"
-       transform="matrix(0.70710678,-0.70710678,0.70710678,0.70710678,0,0)" />
+       transform="matrix(0.70710678,-0.70710678,0.70710678,0.70710678,0,0)"
+       inkscape:export-xdpi="71.133026"
+       inkscape:export-ydpi="71.133026" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#453939;stroke-width:2.48031497;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="m 10.703485,1041.6515 10.714562,-10.7146"
        id="path4176"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-xdpi="71.133026"
+       inkscape:export-ydpi="71.133026" />
   </g>
 </svg>
