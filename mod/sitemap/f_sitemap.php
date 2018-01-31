@@ -121,7 +121,8 @@ foreach($mi as $m){
           if(!(strpos($at, ",$t,")===false)) $lk .= "&template=$t";
        }
     }
-    if ($pid!=$page_id){
+//    if ($pid!=$page_id)
+    {
        $h = $p['hidden'];
        if( !$h || in_edit_mode() ){
           $rz1 .= '<a href="'.$lk.'">'.translate($m['name']).'</a>';
