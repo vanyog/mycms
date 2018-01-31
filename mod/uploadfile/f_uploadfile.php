@@ -61,7 +61,7 @@ if ($i){
   case '-t': $add_time = true; break;
   case '-s': $add_size = true; break;
   }
-  if(isset($m[1][1])) switch ($m[1][0]){
+  if(isset($m[2][0])) switch ($m[2][0]){
   case '-t': $add_time = true; break;
   case '-s': $add_size = true; break;
   }
@@ -99,11 +99,14 @@ else {
   // Проверка дали файлът не идва от друг сървър
   $l = strlen($_SERVER['DOCUMENT_ROOT']);
   // document_root деректорията на другия сървър, зададена с настройката uploadfile_otherroot
-  $or = stored_value('uploadfile_otherroot');// print_r($or); die;
+  $or = stored_value('uploadfile_otherroot');
+  // Път до файла на този сървър
+  $thfn = $fr['filename'];
   if ($or){
     $l = strlen($or);
     // Истина, ако файлът не е бил в document_root на другия сървър
-    $ne = $or != substr($fr['filename'], 0, $l); // echo "$or ".substr($fr['filename'], 0, $l); die;
+    $ne = $or != substr($fr['filename'], 0, $l);
+    if(!file_exists($thfn)) $thfn = $_SERVER['DOCUMENT_ROOT'].substr($fr['filename'],$l);
   }
   if ($ne){
     $l = strlen($_SERVER['DOCUMENT_ROOT']);
@@ -135,9 +138,12 @@ else {
        $rz .= '<a href="'.$f."\"$ss>".upload_file_addimage($add_image,$e).stripslashes($fr['text']).'</a>';
        if(!$cs && isset($na[2]) && ($na[2]==3)) $rz .= translate('uploadfile_old');
        if($add_time || $add_size) $rz .= ' -';
-       if($add_time) $rz .= " ".db2user_date_time($fr['date_time_2']);
-       if($add_size && file_exists($fr['filename']))
-       $rz .= " ".($fr['filename']);
+       if($add_time && file_exists($thfn)){
+         $ft =  date("Y-m-d H:i:s", filemtime($thfn));
+         $rz .= " ".db2user_date_time($ft);
+       }
+       if($add_size && file_exists($thfn))
+         $rz .= ", ".filesize($thfn)." bytes";
     }
   }
   $fid = $fr['ID'];

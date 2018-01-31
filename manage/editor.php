@@ -37,7 +37,7 @@ var tefc;
 function onTeFocus(){
 tefc = document.activeElement;
 }
-var tgToIn = "";
+var tgToIn = "p";
 function doInsertTag(){
 tgToIn = prompt("Enter a html tag to be inserted", tgToIn);
 insert_tag(tgToIn,tgToIn);

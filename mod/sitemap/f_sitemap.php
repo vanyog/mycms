@@ -49,9 +49,12 @@ var sl = window.getComputedStyle(ls[i]);
 var h = p.style.height;
 var sp = window.getComputedStyle(p);
 var v = "'.stored_value('sitemap_colapsed_height', '1.45em').'";
-var v = ( Number(sp.lineHeight.slice(0,-2)) +
-          Number(sl.paddingTop.slice(0,-2)) +
-          Number(sl.paddingBottom.slice(0,-2))
+var lh = sp.lineHeight.slice(0,-2);
+if(lh=="norm") lh = Number(sp.fontSize.slice(0,-2))  * 1.5;
+else lh = Number(lh);
+var v = ( lh
+          + Number(sl.paddingTop.slice(0,-2))
+//          + Number(sl.paddingBottom.slice(0,-2))
         ) + "px";
 if (h!=v){
   e.innerHTML = "&#9658;"
@@ -118,7 +121,8 @@ foreach($mi as $m){
           if(!(strpos($at, ",$t,")===false)) $lk .= "&template=$t";
        }
     }
-    if ($pid!=$page_id){
+//    if ($pid!=$page_id)
+    {
        $h = $p['hidden'];
        if( !$h || in_edit_mode() ){
           $rz1 .= '<a href="'.$lk.'">'.translate($m['name']).'</a>';

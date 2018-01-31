@@ -64,11 +64,11 @@ else {
        $w3c = '';  $mob = ''; $spt = '';
     }
     else {
-       $w3c = ' :: <a href="http://validator.w3.org/check?uri='.
+       $w3c = ' &#x25C7; <a href="http://validator.w3.org/check?uri='.
               urlencode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).'" target="_blank">w3c</a>';
-       $mob = ' :: <a href="https://www.google.com/webmasters/tools/mobile-friendly/?url='.
+       $mob = ' &#x25C7; <a href="https://www.google.com/webmasters/tools/mobile-friendly/?url='.
               urlencode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).'" target="_blank">mob</a>';
-       $spt = ' :: <a href="https://developers.google.com/speed/pagespeed/insights/?url='.
+       $spt = ' &#x25C7; <a href="https://developers.google.com/speed/pagespeed/insights/?url='.
               urlencode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).'" target="_blank">sp</a>';
     }
   }
@@ -77,11 +77,13 @@ else {
   $clink = stored_value('adm_links_custom','');
 
   $enmch = '';
-  if ($pth!='/') $enmch = '<a href="/">/</a> :: '."\n";
-  if (!in_admin_path()) $enmch .= edit_normal_link(false).' ::
-<a href="" onclick="doNewPage();return false">New page</a> :: ';
+  if ($pth!='/') $enmch = '<a href="/">/</a> &#x25C7; '."\n";
+  if (!in_admin_path()) $enmch .= edit_normal_link(false).' &#x25C7;
+<a href="" onclick="doNewPage();return false">New page</a> &#x25C7; ';
 
 $f = relative_to($apth,dirname($_SERVER['DOCUMENT_ROOT'].$main_index).'/');
+
+$rp = random_page();
 
   $rz = '<script>
 function doNewPage(){
@@ -108,22 +110,23 @@ if (e.keyCode==13){
 }
 </script>
 <p id="adm_links">&nbsp; '.$_SERVER['REMOTE_ADDR'].'
-<a href="'.$main_index.'">Home</a> :: '.$enmch.'
+<a href="'.$main_index.'">Home</a> &#x25C7; '.$enmch.'
 <a href="'.$main_index.'?pid='.$ppid.'">&lt;</a>
 <input type="text" size="4" id="gtpNumber" onkeypress="gotoPageNumber(event);">
 <a href="'.$main_index.'?pid='.$npid.'">&gt;</a>
-<a href="'.$main_index.'?pid='.$lpid.'&amp;'.$edit_name.'='.urlencode($edit_value).'">'.$lpid.'</a> ::
-<a href="'.$pth.'mod/all_pages.php">all</a> ::
-<a href="'.$adm_pth.'edit_file.php?f='.$f.'">File system</a> ::
-<a href="'.$adm_pth.'edit_data.php">Database</a> :: 
-<a href="'.$pth.'lib/f_page_cache.php?purge='.(1*(isset($_GET['pid'])?$_GET['pid']:0)).'">Purge</a> ::
-<a href="'.stored_value('adm_links_cpanel').'" target="_blank">cPanel</a> ::
-<a href="'.$mphp.'" target="_blank">phpMyAdmin</a> :: 
-<a href="'.$adm_pth.'showenv.php?AAAAAAA" target="_blank">$_SERVER</a> :: 
-<a href="https://github.com/vanyog/mycms/wiki" target="_blank">Help</a> :: 
-<a href="'.$go.'">'.$gon.'</a><!--:: 
+<a href="'.$main_index.'?pid='.$lpid.'&amp;'.$edit_name.'='.urlencode($edit_value).'">'.$lpid.'</a>
+<a href="'.$rp.'">R</a> &#x25C7;
+<a href="'.$pth.'mod/all_pages.php">all</a> &#x25C7;
+<a href="'.$adm_pth.'edit_file.php?f='.$f.'">File system</a> &#x25C7;
+<a href="'.$adm_pth.'edit_data.php">Database</a> &#x25C7;
+<a href="'.$pth.'lib/f_page_cache.php?purge='.(1*(isset($_GET['pid'])?$_GET['pid']:0)).'">Purge</a> &#x25C7;
+<a href="'.stored_value('adm_links_cpanel').'" target="_blank">cPanel</a> &#x25C7;
+<a href="'.$mphp.'" target="_blank">phpMyAdmin</a> &#x25C7;
+<a href="'.$adm_pth.'showenv.php?AAAAAAA" target="_blank">$_SERVER</a> &#x25C7;
+<a href="https://github.com/vanyog/mycms/wiki" target="_blank">Help</a> &#x25C7;
+<a href="'.$go.'">'.$gon.'</a><!--&#x25C7;
 <a hr  ="'.$adm_pth.'dump_data.php">Dump</a-->
-'.$w3c.$mob.$spt.' ::
+'.$w3c.$mob.$spt.' &#x25C7;
 '.$clink.' <!--DB_REQ_COUNT-->
 <a href="'.$pth.'lib/exit.php">x</a>&nbsp; 
 </p>';
@@ -148,6 +151,17 @@ $a = substr($_SERVER['REQUEST_URI'],0,strlen($adm_pth))==$adm_pth;
 // - получена е стойност $_GET[$adm_name] = $adm_value
 // - има бисквитка с име $adm_name и стойност $adm_value
 return is_local() /*|| in_edit_mode()*/ || $a || query_or_cookie($adm_name,$adm_value);
+}
+
+function random_page(){
+global $main_index;
+$mid = db_table_field('MAX(`ID`)', 'pages', 1, 0);
+$c = 0;
+do {
+  $rid = rand(1,$mid);
+  $c++;
+} while (!db_table_field('ID', 'pages', "`IP`=$rid") && ($c<5) );
+return "$main_index?pid=$rid";
 }
 
 ?>

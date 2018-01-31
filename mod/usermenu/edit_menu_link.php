@@ -90,7 +90,7 @@ $d['name'] = $i;
 db_insert_or_1($d, 'content', "`name`='$i' AND `language`='$language'");
 unset($_POST['text']);
 db_update_record($_POST, 'menu_items');
-header('Location: '.$_SESSION['http_referer']);
+header('Location: '.(isset($_SESSION['http_referer']) ? $_SESSION['http_referer'] : '') );
 die;
 }
 

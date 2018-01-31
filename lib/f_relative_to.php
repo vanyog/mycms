@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Р’СЂСЉС‰Р° РѕС‚РЅРѕСЃРёС‚РµР»РЅРёСЏ РїСЉС‚ РґРѕ С„Р°Р№Р»/РґРёСЂРµРєС‚РѕСЂРёСЏ, СЃ Р°Р±СЃРѕР»СЏС‚РµРЅ РїСЉС‚ $d
-// СЃРїСЂСЏРјРѕ Р°Р±СЃРѕР»СЋС‚РЅР° РґРёСЂРµРєС‚РѕСЂРёСЏ $apth
+// Връща относителния път до файл/директория, с абсолютен път $d
+// спрямо абсолютна директория $apth
 
 function relative_to($apth,$d){
 $r = explode('/', $apth);

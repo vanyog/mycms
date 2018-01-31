@@ -123,6 +123,7 @@ foreach($md as $d){
   }
   $rz .= "<a href=\"$rf\"$cr>".translate($d['name'], false)."</a>$el\n";
 }
+if(in_edit_mode()) $rz .= "$g";
 $rz .= '</div>';
 return $rz;
 }
