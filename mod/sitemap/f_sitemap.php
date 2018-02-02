@@ -54,7 +54,7 @@ if(lh=="norm") lh = Number(sp.fontSize.slice(0,-2))  * 1.5;
 else lh = Number(lh);
 var v = ( lh
           + Number(sl.paddingTop.slice(0,-2))
-//          + Number(sl.paddingBottom.slice(0,-2))
+          + Number(sl.paddingBottom.slice(0,-2))
         ) + "px";
 if (h!=v){
   e.innerHTML = "&#9658;"

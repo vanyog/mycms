@@ -17,8 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Форма за обратна информация
-// Записва се в таблица feedback и се изпраща на имейл translate("feedback_to_$page_id")
+// Форма за обратна информация.
+// Написаното от посетител съобщение се запазва в таблица feedback и се изпраща на имейл translate("feedback_to_$page_id")
+// или на имейла на потребителя с номер $_GET['uid'].
 // Параметър $t е типът потребители.
 // За постигане на съвместимост с най-старата версия на този скрипт, която не изискваше параметър,
 // стойността по подразбиране на този параметър е празен стринг.
@@ -30,11 +31,12 @@ function feedback($t = ''){
 
 global $page_id, $language;
 
-// Проверка дали има зададен имейл адрес, до който да се изпращат съобщенията от текущата страница
-$n = db_table_field('name', 'content', "`name`='feedback_to_$page_id'");
-// Ако не е зададен се показва съобщение да се зададе
-if(!$n) return "<p class=\"message\">No 'feedback_to_$page_id' setting found by FEEDBACK module.</p>";
-$to = translate($n, false);
+// До кого е адресирано съобщението
+$to = feedback_to();
+
+// Ако не е зададен се показва съобщение вместо форма за попълване
+if(!$to) return "<p class=\"message\">No 'feedback_to_$page_id' setting or 'uid' parameter found by FEEDBACK module.</p>";
+
 // Ако е 'no' се показва съобщение, че формата не е активна
 if($to == 'no') return '<p class="message">'.translate('feedback_disabled').'</p>';
 
@@ -53,6 +55,7 @@ if ($sb) $sb = translate($sb);
 
 if (isset($_SERVER['HTTP_REFERER'])) $rf = $_SERVER['HTTP_REFERER'];
 
+// Ако има влязъл потребител името и имейла на изпращача се попълват
 if (isset($_SESSION['user_username'])&&isset($_SESSION['user_password'])){
   $ud = db_select_1('*', stored_value('user_table', 'users'), 
        "`username`='".$_SESSION['user_username']."' AND `password`='".$_SESSION['user_password']."'" );
@@ -71,6 +74,8 @@ else {
      $ms = translate('feedback_tologin').'<a href="'.$lp.'"><strong>'.translate('userreg_login').'</strong></a>.';
   }
 }
+
+$rz = '<h2>'.translate('feedback_to')."$to</h2>\n";
 
 $f = new HTMLForm('feedback_form');
 
@@ -109,7 +114,7 @@ $f->add_input( $fb );
 
 if ($ms) $ms = '<p class="message">'.$ms."</p>\n";
 
-return $ms.$f->html();
+return $rz.$ms.$f->html();
 
 }
 
@@ -144,6 +149,18 @@ if ($to){ // Изпращане на имейла
 //  db_insert_1($d, 'feedback');
 }
 return translate('feedback_thanks');
+}
+
+function feedback_to(){
+global $page_id;
+// ID на потребител
+$uid = 0;
+if( isset($_GET['uid']) && is_numeric($_GET['uid']) ) $uid = $_GET['uid'];
+// Имейл на потребителя
+if($uid) return db_table_field('email', 'users', "`ID`=$uid");
+// Проверка дали има зададен имейл адрес, до който да се изпращат съобщенията от текущата страница
+$n = db_table_field('name', 'content', "`name`='feedback_to_$page_id'");
+return translate($n, false);
 }
 
 ?>

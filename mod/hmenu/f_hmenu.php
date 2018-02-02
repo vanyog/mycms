@@ -63,8 +63,7 @@ foreach($il as $i){
 }
 if (in_edit_mode()){
   $ni = db_table_field('MAX(`ID`)','menu_items','1')+1;
-  $rz .= " ".'<a href="'.$adm_pth.'new_record.php?t=menu_items&group='.$a.'&link='.$page_id.
-         '&name=p'.$ni.'_link">New</a> '."\n";
+  $rz .= " $a ".'<a href="'.$adm_pth.'new_record.php?t=menu_items&group='.$a.'&link='.$page_id.'&name=p'.$ni.'_link">New</a> '."\n";
 }
 return $sm.'<div id="menu_'.$a."\">\n".$rz.'</div>';
 }

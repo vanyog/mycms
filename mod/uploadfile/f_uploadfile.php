@@ -115,6 +115,7 @@ else {
   }
   // href - атрибут на файла
   $f = substr($fr['filename'],  $l, strlen($fr['filename'])-$l);
+  $f = str_replace(' ', '%20', $f);
   // Дали файлът е във време за показване
   $t1 = strtotime(str_replace('-','/',$fr['date_time_3']));
   $t2 = strtotime(str_replace('-','/',$fr['date_time_4']));
