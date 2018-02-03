@@ -65,7 +65,7 @@ return $rz;
 function text_to_imagefile($t, $f){
 // Ако файл $f съществува се връща URL-а му
 $pt = substr($f, strlen($_SERVER['DOCUMENT_ROOT']) );
-$rz = '<img src="'.$pt.'" alt="" style="height:1em;">';
+$rz = '<img src="'.$pt.'" alt="&#64;" class="emimage">';
 if(file_exists($f)) return $rz;
 // Ако файлът не съществува се създава
 $im = imagecreatetruecolor(strlen($t)*12, 21);//die($im);

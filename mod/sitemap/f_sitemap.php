@@ -27,14 +27,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 include_once($idir.'lib/f_db_table_field.php');
 
+global $smfile, $smday;
+
 $page_passed = array(); // Номера на менюта, които вече са обработени,
                         // използва са за да не се получи зацикляне
 $map_level = 0; // Ниво на рекурсията
 $i_root    = 0; // Номер на входното меню
 $id_pre    = ''; // Представка, с която започват id атрибутите на <div> елементите
 
+$smday     = 0;
+if(file_exists($_SERVER['DOCUMENT_ROOT'].'/sitemap.xml'))
+       $smday = date('j', filemtime($_SERVER['DOCUMENT_ROOT'].'/sitemap.xml') );
+$smfile    = stored_value("today");
+
 function sitemap($a = ''){
-global $page_passed, $map_level, $i_root, $id_pre, $page_header;
+global $page_passed, $map_level, $i_root, $id_pre, $page_header, $smfile, $smday;
 $page_passed = array();
 $map_level = 0;
 $i_root    = 0;
@@ -71,15 +78,23 @@ else {
 $id_pre = 'map'.$ar[0];
 $id = 'site_map';
 if (isset($ar[1])) $id = $ar[1];
-return '<div id="'.$id.'">'."\n".sitemap_rec($ar[0], 1)."
+$rz = '<div id="'.$id.'">'."\n".sitemap_rec($ar[0], 1)."
 <p class=\"clear\"></p></div>\n";
+if($smday != $smfile){
+   $smfile = '<?xml version="1.0" encoding="UTF-8"?>'."\n".
+             '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n".
+             $smfile.
+             "</urlset>";
+   file_put_contents($_SERVER['DOCUMENT_ROOT'].'/sitemap.xml', $smfile);
+}
+return $rz;
 }
 
 //
 // Рекурсивна функция, която съставя картата
 
 function sitemap_rec($i, $j){
-global $pth, $page_passed, $map_level, $max_level, $i_root, $ind_fl, $id_pre, $page_id;
+global $pth, $page_passed, $map_level, $max_level, $i_root, $ind_fl, $id_pre, $page_id, $smfile, $smday;
 if(!isset($max_level)) $max_level = 100;
 
 $page_passed[] = $i;
@@ -125,6 +140,13 @@ foreach($mi as $m){
     {
        $h = $p['hidden'];
        if( !$h || in_edit_mode() ){
+          if($smday != $smfile)
+             $smfile .= "<url>\n".
+                        "<loc>http://".$_SERVER['HTTP_HOST']."$lk</loc>\n".
+                        "<lastmod>".date("Y-m-d")."</lastmod>\n".
+                        "<changefreq>monthly</changefreq>\n".
+                        "<priority>".(1-0.2*$map_level)."</priority>\n".
+                        "</url>\n";
           $rz1 .= '<a href="'.$lk.'">'.translate($m['name']).'</a>';
           if( in_edit_mode() ) {
              if ($h) $rz .= 'hidden ';

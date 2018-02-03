@@ -39,7 +39,7 @@ $i = preg_match_all('/,style=".*"/', $n, $m);
 if (!$i) $i = preg_match_all('/,style=&quot;.*&quot;/', $n, $m);
 if ($i==1){
  $ss = $m[0][0];
- $n = str_replace($ss,'', $n);
+ $n  = str_replace($ss,'', $n);
  $ss = str_replace('&quot;','"',$ss);
  $ss[0] = ' ';
 }
@@ -116,6 +116,7 @@ else {
   // href - атрибут на файла
   $f = substr($fr['filename'],  $l, strlen($fr['filename'])-$l);
   $f = str_replace(' ', '%20', $f);
+  $f = str_replace('_', '%5F', $f);
   // Дали файлът е във време за показване
   $t1 = strtotime(str_replace('-','/',$fr['date_time_3']));
   $t2 = strtotime(str_replace('-','/',$fr['date_time_4']));
@@ -134,7 +135,7 @@ else {
   }
   else { // Показване на картинка или хипервръзка към файла
     $e = strtolower(pathinfo($f, PATHINFO_EXTENSION));
-    if (in_array($e, $imgs)) $rz .= '<img src="'.$f."\"$ss alt=\"".stripslashes($fr['text']).'">';
+    if (in_array($e, $imgs)) $rz .= '<img src="'.$f."\"$ss alt=\"".stripslashes($fr['text']).'" id="'.$fr['name'].'">';
     else {
        $rz .= '<a href="'.$f."\"$ss>".upload_file_addimage($add_image,$e).stripslashes($fr['text']).'</a>';
        if(!$cs && isset($na[2]) && ($na[2]==3)) $rz .= translate('uploadfile_old');

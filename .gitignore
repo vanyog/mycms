@@ -1,9 +1,14 @@
 .htaccess
 .DS_Store
-mod/bgdic
 _*
+browserconfig.xml
 conf_database.php
+favicons
 googleac*
-robots.txt
-mod/uploadfile/conf_uploadfile.php
 manage/ckeditor
+mod/bgdic
+mod/uploadfile/conf_uploadfile.php
+robots.txt
+site.webmanifest
+sitemap.xml
+upload*
