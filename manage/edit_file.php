@@ -55,7 +55,8 @@ if (is_dir($d)){ // Ако е директория се показва таблица с файловете в нея
 // Разрешено е на локален сървър, а на отдалечен сървър,
 // по подразбиране не е разрешено, освен ако е зададена настройка
 // can_delete_files със стойност 1.
-$cdel = stored_value('can_delete_files','false') || is_local();
+$cdel = stored_value('can_delete_files','false');
+if(is_local()) $cdel = 'true';
 
 $page_header = '<script><!--
 function fileName(){

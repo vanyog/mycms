@@ -78,14 +78,16 @@ $can_visit = true;     // Право на влязъл потребител да вижда съдържанието на ст
 
 // Номер на страницата
 $page_id = stored_value('main_index_pageid',1);
-if (isset($_GET['pid'])) $page_id = is_numeric($_GET['pid']) ? 1*$_GET['pid'] : $page_id;
+if (isset($_GET['pid'])) $page_id = is_numeric($_GET['pid']) ? 1*$_GET['pid'] : $_GET['pid'];
 
 // Заглавие на страницата
 $page_title = '';
 
 // Чете се описанието на страницата от таблица $tn_prefix.'pages'
-$page_data = db_select_1('*','pages',"ID=$page_id");
+if($seo_names && !is_numeric($page_id)) $page_data = db_select_1('*','pages',"ID=".db_table_field('page_id', 'seo_names', "`seo_name`='$page_id'") );
+else $page_data = db_select_1('*','pages',"ID=$page_id");
 if (!$page_data) $page_data = page404();
+//die(print_r($page_data,true));
 
 // Пренасочване към http, ако не е необходим https протокол
 include_once($idir.'lib/f_stop_https.php');

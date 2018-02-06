@@ -36,7 +36,9 @@ load_options(array(
   'admin_path',
   'admin_path',
   'main_index_file',
-  'document_root'
+  'document_root',
+  'SEO_names',
+  'RewriteEngine'
 ));
 
 // Задаване друга стойност на $_SERVER['DOCUMENT_ROOT'], ако връщаната от сървъра не е правилна
@@ -85,6 +87,12 @@ default: die("Unknown colation $colation in conf_paths.php");
 
 // Кодировка на php файловете на сървъра
 $file_encoding = 'windows-1251';
+
+// Дали да се използват SEO имена, вместо номера на страниците
+$seo_names = stored_value('SEO_names') == 'on';
+
+// Дали се използва RewriteEngine
+$rewrite_on = stored_value('RewriteEngine') == 'on';
 
 // Тайни стойности, на които се базира сигурността на административния достъп до сайта:
 

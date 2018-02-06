@@ -37,7 +37,7 @@ return $rz;
 }
 
 function email_image($a){
-global $main_index;
+global $main_index, $seo_names, $rewrite_on;
 // Номер на потребител, с имейл
 $uid = db_table_field('ID', 'users', "`email`='".$a[0]."'");
 // Ако няма се създава
@@ -58,7 +58,14 @@ if(!$p) die("No 'filter_email_pageid' setting found by email filter");
 // Директория с имейли-картинки
 $imd = $_SERVER['DOCUMENT_ROOT'].stored_value('uploadfile_dir');
 if(!is_writable($imd)) die("Folder '$imd' is not writable.");
-$rz = "<a href=\"$main_index?pid=$p&uid=$uid\">".text_to_imagefile($a[0], $imd.'/email_'.$uid.'.png')."</a>";
+if($seo_names){
+  $pn = db_table_field('seo_name', 'seo_names', "`page_id`=$p");
+  $rz = "<a href=\"/$pn&amp;uid=$uid\">".text_to_imagefile($a[0], $imd.'/email_'.$uid.'.png')."</a>";
+}
+else if($rewrite_on)
+        $rz = "<a href=\"/$p/uid/$uid/\">".text_to_imagefile($a[0], $imd.'/email_'.$uid.'.png')."</a>";
+     else
+        $rz = "<a href=\"$main_index?pid=$p&uid=$uid\">".text_to_imagefile($a[0], $imd.'/email_'.$uid.'.png')."</a>";
 return $rz;
 }
 

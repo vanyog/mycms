@@ -98,7 +98,7 @@ $page_content .= $uf->html();
 // Обработка на изпратени данни.
 //
 function process_data(){
-global $pid, $fid, $fd, $tn_prefix, $fn, $db_link, $pth;
+global $pid, $fid, $fd, $tn_prefix, $fn, $db_link, $pth, $site_encoding;
 
 // Път до директория за качване на файлове. Ако не е зададена друга, съвпада с директорията на модула.
 $fld = current_pth(__FILE__);
@@ -116,15 +116,24 @@ $dt = db_select_1('*','files',"`filename`='$fln'");
 
 // Ако има такъв запис - прекратяване със съобщение за грешка 
 if ($dt && ($dt['ID']!=$fid)){
-  header("Content-Type: text/html; charset=windows-1251");
+  header("Content-Type: text/html; charset=$site_encoding");
   die(translate('uploadfile_fileinuse'));
 }
 // Ако има друг файл на сървъра за този запис, файлът се изтрива.
-if ($fd && $_FILES['file']['tmp_name'] && file_exists($fd['filename'])) unlink($fd['filename']);
+if ($fd && // има данни в таблица 'files'
+    $_FILES['file']['tmp_name'] // има успешно качен файл
+){
+   // document_root деректорията на друг сървър
+   $or = stored_value('uploadfile_otherroot');
+   // Път до файла на този сървър
+   $thfn = $fd['filename'];
+   if($or && (substr($thfn,0,strlen($or))==$or)) $thfn = $_SERVER['DOCUMENT_ROOT'].substr($thfn,strlen($or));
+   if( file_exists($thfn) ) unlink($thfn);
+}
 
 // Проверка дали има файл на сървъра със същото име, който вероятно не се отнася за същия запис.
 if (($fln!=$fld) && file_exists($fln) && (!$dt || ($dt['ID']!=$fid)) ){
-  header("Content-Type: text/html; charset=windows-1251");
+  header("Content-Type: text/html; charset=$site_encoding");
   die(translate('uploadfile_fileexists'));
 }
 

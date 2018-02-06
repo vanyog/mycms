@@ -28,7 +28,7 @@ include_once($idir.'conf_paths.php');
 include_once($idir.'lib/f_db_select_m.php');
 
 function menu($i, $id = 'page_menu'){
-global $ind_fl, $adm_pth, $page_id, $page_data, $pth;
+global $ind_fl, $adm_pth, $page_id, $page_data, $pth, $seo_names, $rewrite_on;
 $d = db_select_m('*','menu_items',"`group`=$i ORDER BY `place`");
 $rz = ''; // Връщания резултат
 $once = false; // Флаг, който се използва за да се покаже само веднъж различно линка от менюто на текущата страница
@@ -43,7 +43,9 @@ foreach($d as $m){
   if ($lnn){
     $h = db_table_field('hidden', 'pages', "`ID`=$lnn");
     if ($hm && $h && !in_edit_mode() /*&& !show_adm_links()*/) continue;
-    $ln = $ind_fl.'?pid='.$lnn;
+    if($seo_names) $ln = '/'.db_table_field('seo_name', 'seo_names', "`page_id`='$lnn'").'/';
+    else if($rewrite_on) $ln = "/$lnn/";
+         else $ln = $ind_fl.'?pid='.$lnn;
   }
   $pl = '';
   if (in_edit_mode()) $pl = $m['place'].".";

@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include_once($idir.'mod/rawfile/f_rawfile.php');
 
 function hmenu($a){
-global $ind_fl, $page_header, $pth, $adm_pth, $page_id;
+global $ind_fl, $page_header, $pth, $adm_pth, $page_id, $seo_names, $rewrite_on;
 $p = current_pth(__FILE__);
 $page_header .= '<script>'."\n";
 // Цветове
@@ -49,7 +49,9 @@ foreach($il as $i){
     $sm .= hsubmenu($lk,$ia,$j);
 //    if (in_array($lk,$ia)) $c = ' class="current"';
     if ($lk==$ci) $c = ' class="current"';
-    $lk = $ind_fl.'?pid='.$lk;
+    if($seo_names) $lk = '/'.db_table_field('seo_name', 'seo_names', "`page_id`='$lk'").'/';
+    else if($rewrite_on) $lk = "/$lk/";
+         else $lk = $ind_fl.'?pid='.$lk;
   }
   else $lk = $i['link'];
   $rz .= '<a href="'.$lk.'"'.$c.' onMouseOver="show_hlayer('.$j.',this)">'.translate($i['name'],false);
@@ -71,7 +73,7 @@ return $sm.'<div id="menu_'.$a."\">\n".$rz.'</div>';
 // Връща подменюто към линк $lk
 
 function hsubmenu($lk,$ia,$j){
-global $ind_fl;
+global $ind_fl, $seo_names, $rewrite_on;
 // Номер на менюто, на което страница $lk е главна
 $g = db_table_field('`group`','menu_tree',"`index_page`=$lk");
 $ci = hmenu_c($g);
@@ -92,10 +94,11 @@ if (count($da)>1) foreach($da as $d){
     if ($lk==$ci) $c = ' class="current"';
 //    if (in_array($lk,$ia)) $c = ' class="current"';
     if(count($ar)) $lk = $d['link'];
-    else $lk = $ind_fl.'?pid='.$lk;
+    else if($seo_names) $lk = '/'.db_table_field('seo_name', 'seo_names', "`page_id`='$lk'").'/';
+         else if($rewrite_on) $lk = "/$lk/";
+         else $lk = $ind_fl.'?pid='.$lk;
   }
   else $lk = $d['link'];
-
   if(!$h) $rz .= '<a href="'.$lk.'"'.$c.'>'.translate($d['name'], false)."</a>\n";
 }
 if (in_edit_mode()) $rz .= 'id '.$g;

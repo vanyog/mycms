@@ -30,7 +30,7 @@ return outer_links();
 // ----------------------------------------------
 function outer_links(){
 
-global $tn_prefix, $db_link, $site_encoding, $page_header, $adm_pth;
+global $tn_prefix, $db_link, $site_encoding, $page_header, $adm_pth, $rewrite_on, $page_id;
 
 if (!$site_encoding) $site_encoding = 'windows-1251';
 
@@ -76,11 +76,15 @@ if($cc){ // Ако има категории
 
 // Хипервръзка "Само категориите" или "Преглед по категории"
 if($what!='cat')
-   $rz .= "<a href=\"".set_self_query_var('lid', 'cat')."#outer_links\">".translate('outerlinks_catonly').
-   "</a> &nbsp; ";
+   if($rewrite_on)
+      $rz .= "<a href=\"".set_self_query_var('lid', 'cat')."#outer_links\">".translate('outerlinks_catonly')."</a> &nbsp; ";
+   else
+      $rz .= "<a href=\"".set_self_query_var('lid', 'cat')."#outer_links\">".translate('outerlinks_catonly')."</a> &nbsp; ";
 else
-   $rz .= "<a href=\"".unset_self_query_var('lid')."#outer_links\">".translate('outerlinks_cat').
-          "</a> &nbsp; ";
+   if($rewrite_on)
+      $rz .= "<a href=\"".unset_self_query_var('lid')."#outer_links\">".translate('outerlinks_cat')."</a> &nbsp; ";
+   else
+      $rz .= "<a href=\"".unset_self_query_var('lid')."#outer_links\">".translate('outerlinks_cat')."</a> &nbsp; ";
 
 // Хипервръзка "Преглед по категории" или "Преглед на всички"
 if ( in_array($what, array('all','new','click')) )
@@ -272,8 +276,12 @@ if (count($la)) $rz .= '<p>'.count($la).' '.translate('outerlinks_links')."</p>\
 foreach($la as $l){
 $cl = '';
 if ($l['private']) $cl = ' class="private"';
-$rz .= "<p$cl>".edit_radio($l['ID'],$l['place']).'<img src="'.$p.'go.gif" alt=""> <a href="'.
-        set_self_query_var('lid',$l['ID']).'" title="'.urldecode($l['link']).
+$rz .= "<p$cl>".edit_radio($l['ID'],$l['place']).'<img src="'.$p.'go.gif" alt=""> <a href="';
+if($rewrite_on)
+    $rz .= "/$page_id/lid/".$l['ID']."/";
+else
+    $rz .= set_self_query_var('lid',$l['ID']);
+$rz .= '" title="'.urldecode($l['link']).
         '" target="_blank" id="lk'.$l['ID'].'">'.stripslashes($l['Title'])."</a>";
  $rz .= outerlinks_autocomment($l);
  if (in_edit_mode()) $rz .= ' <a href="'.$adm_pth.'duplicate_record.php?t=outer_links&r='.$l['ID'].

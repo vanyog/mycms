@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Функцията db_insert_m($d,$t) вмъква масив $d данни
-// като множество записи в таблица $t от базата данни.
+// Функцията db_replace_m($d,$t) вмъква или замества масив $d данни
+// като записи в таблица $t от базата данни.
 
 // Всеки елемент на масива е асоциативен масив, съдържащ стойности на полета за един запис.
 // Ако към функцията е изпратен трети параметър $y = true
@@ -27,9 +27,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 include_once($idir.'lib/usedatabase.php');
 
-function db_insert_m($d,$t,$y=false){
+function db_replace_m($d,$t,$y=false){
 global $tn_prefix, $db_link;
-$q = "INSERT INTO `$tn_prefix$t` (";
+$q = "REPLACE INTO `$tn_prefix$t` (";
 $ka = array_keys($d[0]);
 foreach($ka as $k) $q .= "`$k`, ";
 $q = substr($q,0,strlen($q)-2).") VALUES\n";

@@ -35,7 +35,7 @@ $map_level = 0; // Ниво на рекурсията
 $i_root    = 0; // Номер на входното меню
 $id_pre    = ''; // Представка, с която започват id атрибутите на <div> елементите
 
-$smday     = 0;
+$smday     = 0; // Ден от месеца на файла с картата на сайта
 if(file_exists($_SERVER['DOCUMENT_ROOT'].'/sitemap.xml'))
        $smday = date('j', filemtime($_SERVER['DOCUMENT_ROOT'].'/sitemap.xml') );
 $smfile    = stored_value("today");
@@ -80,7 +80,7 @@ $id = 'site_map';
 if (isset($ar[1])) $id = $ar[1];
 $rz = '<div id="'.$id.'">'."\n".sitemap_rec($ar[0], 1)."
 <p class=\"clear\"></p></div>\n";
-if($smday != $smfile){
+if($smday !== $smfile){
    $smfile = '<?xml version="1.0" encoding="UTF-8"?>'."\n".
              '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n".
              $smfile.
@@ -94,7 +94,7 @@ return $rz;
 // Рекурсивна функция, която съставя картата
 
 function sitemap_rec($i, $j){
-global $pth, $page_passed, $map_level, $max_level, $i_root, $ind_fl, $id_pre, $page_id, $smfile, $smday;
+global $pth, $page_passed, $map_level, $max_level, $i_root, $ind_fl, $id_pre, $page_id, $smfile, $smday, $rewrite_on;
 if(!isset($max_level)) $max_level = 100;
 
 $page_passed[] = $i;
@@ -129,7 +129,8 @@ foreach($mi as $m){
   {
     $lk = $m['link'];
     if ($pid){
-       $lk = $ind_fl.'?pid='.$pid;
+       if($rewrite_on) $lk = "/$pid/";
+       else $lk = $ind_fl.'?pid='.$pid;
        if(isset($_GET['template'])){
           $t = 1*$_GET['template'];
           $at = stored_value('allowed_templates');
@@ -140,17 +141,20 @@ foreach($mi as $m){
     {
        $h = $p['hidden'];
        if( !$h || in_edit_mode() ){
-          if($smday != $smfile)
+          if($smday !== $smfile){
+            if( strlen($smfile) < 3 ) $smfile = '';
              $smfile .= "<url>\n".
                         "<loc>http://".$_SERVER['HTTP_HOST']."$lk</loc>\n".
                         "<lastmod>".date("Y-m-d")."</lastmod>\n".
                         "<changefreq>monthly</changefreq>\n".
                         "<priority>".(1-0.2*$map_level)."</priority>\n".
                         "</url>\n";
+          }
           $rz1 .= '<a href="'.$lk.'">'.translate($m['name']).'</a>';
+          if( $pid==$page_id ) $rz1 .= translate('sitemap_currentpage');
           if( in_edit_mode() ) {
-             if ($h) $rz .= 'hidden ';
-             $rz .= $m['place'];
+             $rz1 .= " ".$m['place'];
+             if ($h) $rz .= ' hidden ';
           }
           $rz1 .= "<br>\n";
        }
