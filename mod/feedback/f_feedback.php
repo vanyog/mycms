@@ -75,7 +75,7 @@ else {
   }
 }
 
-$rz = '<h2>'.translate('feedback_to')."$to</h2>\n";
+$rz = '<h2>'.translate('feedback_to')." $to</h2>\n";
 
 $f = new HTMLForm('feedback_form');
 
@@ -121,6 +121,8 @@ return $rz.$ms.$f->html();
 // Обработва изпратените данни от попълнена форма.
 
 function feedback_process($to = ''){
+$c = count($_POST);
+if( ($c<5) || ($c>6) ) return '<p class="message">'.translate('feedback_incorrectdata')."</p>\n";
 global $page_id, $site_encoding;
 $d = Array(
 'page_id'=>$page_id,
@@ -146,7 +148,7 @@ if ($to){ // Изпращане на имейла
         "From: $nm <$e>\r\n";
   if( ! mail($to,$sb,$ms,$hd) )
         return translate('feedback_notsent');
-//  db_insert_1($d, 'feedback');
+  if(db_table_exists('feedback')) db_insert_1($d, 'feedback');
 }
 return translate('feedback_thanks');
 }
