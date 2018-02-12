@@ -60,7 +60,8 @@ $ta = explode('|', $t);
 if (isset($ta[1])) switch($ta[1]){
 case 'logout': return userreg_outlink($ta[0]); break;
 case 'mydata': return userreg_mydata($ta[0]); break;
-default: if(!(1*$ta[1])) die("Undefined parameter '".$ta[1]."' for USERREG module"); break;
+case 'edit'  : if(!isset($_GET['user2']) || ($_GET['user2']=='edit')) return userreg_edit($ta[0]);   break;
+default: if(!(1*$ta[1])&&($ta[1]!='edit')) die("Undefined parameter '".$ta[1]."' for USERREG module"); break;
 }
 if (isset($_GET['user2'])) switch ($_GET['user2']){
 case 'newreg': return userreg_newform($ta[0]); break;
@@ -388,7 +389,7 @@ $rp = stored_value("userreg_newreg_$t");
 if (!$rp) die("'userreg_newreg_$t' option is not set.");
 return translate('userreg_logintext').
        '<a href="'.$rp.'">'.translate('userreg_newreg').
-       "</a></p>".$guf->html();
+       "</a></p>\n".$guf->html();
 }
 
 //
@@ -443,7 +444,11 @@ return $rz;
 function userreg_edit($t){
 // Проверяване дали има влязъл потребител
 $r = userreg_check($t);
-if (!isset($_SESSION['user_username'])) return '<p class="message">'.translate('userreg_mustlogin').'</p>';
+//if (!isset($_SESSION['user_username'])){
+if (!$r){
+   $lp = stored_value("userreg_login_$t");
+   return '<p class="message">'.translate('userreg_mustlogin').' <a href="'.$lp.'">Log in</a></p>';
+}
 // Превключване към https, ако се изисква
 if((stored_value('userreg_https')=='on') && !(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']=='on')) ){
   header('Location: https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);

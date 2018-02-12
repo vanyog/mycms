@@ -30,32 +30,44 @@ include("f_usermenu.php");
 include_once($idir."lib/f_db_table_field.php");
 //include_once($idir."conf_paths.php");
 //include_once($idir."lib/f_db_insert_or_1.php");
+include_once($idir."lib/f_db_insert_1.php");
 include_once($idir."lib/f_db_update_record.php");
 include_once($idir."lib/f_page_cache.php");
 
 // Номер на страницата, която се премества
 $p = 1*$_GET['p'];
 $page_id = $p;
+
 // Проверяване правата на потребителя да премести страницата
 $tx = usermenu(true);
 // Ако потребителят няма право да премести страницата - край.
 if (!$can_create) echo die("Your have no permission to move this page.");
 
+// Данни за текущата страницата от таблица 'pages'
+$pd = db_select_1('`ID`,`menu_group`', 'pages', "`ID`=$p");
+
 // Номер на групата, в която се премества
 $g = 1*$_GET['g'];
-// Номер на главната страница на групата
+
+// Номер на главната страница на групата, в която се премества
 $page_id = db_table_field('index_page', 'menu_tree', "`group`=$g");
-// Ако не се открие главна страница - край.
-if (!$page_id) die("Group $g does no exists or have no main page");
+
+$newg = false; // Дали е създадена нова група
+
+// Ако не се открие главна страница, групата не съществува и
+// настоящата страница става главна страница на нова група, която се създава.
+if (!$page_id) {
+  $page_id = $p;
+  db_insert_1(array('group'=>$g, 'parent'=>$pd['menu_group'], 'index_page'=>$p), 'menu_tree');
+  $newg = true;
+}
+
 // Проверяване правата на потребителя да създава страници в новата група
 $tx = usermenu(true);
 // Ако потребителят няма право да създава страницата в новата група - край.
 if (!$can_create) echo die("Your have no permission to move pages in group $g.");
 
-// Данни за страницата от таблица 'pages'
-$pd = db_select_1('`ID`,`menu_group`', 'pages', "`ID`=$p");
-
-// Данни за групата от таблица 'menu_tree'
+// Данни за групата на текущата страница от таблица 'menu_tree'
 $td = db_select_1('`ID`,`parent`,`index_page`', 'menu_tree', "`group`=".$pd['menu_group']);
 
 // Ако страницата е главна на групата, се премества цялата група
@@ -85,13 +97,15 @@ else { // Ако страницата не е главна на групата, се премества само страницата
   $pd['menu_group'] = $g;
   db_update_record($pd, 'pages');
 
-  // Задава се нов номер на група на ленка в менюто
-  $ld['group'] = $g;
-  db_update_record($ld, 'menu_items');
+  // Ако другата група не е нова в нея се премества и линка
+  if(!$newg){
+     $ld['group'] = $g;
+     db_update_record($ld, 'menu_items');
+  }
 
 }
 
-// Връщане на страницата
+// Връщане на страницата, която се премества
 $p = $main_index.'?pid='.$p;
 $q = 'http://'.$_SERVER['HTTP_HOST'].$p;
 purge_page_cache($q);

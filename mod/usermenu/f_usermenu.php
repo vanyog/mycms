@@ -47,6 +47,7 @@ $user_table = stored_value('user_table','users');
 // $id - номер на влязъл потребител
 $ud = db_select_1('*',$user_table, 
       "`username`='".addslashes($_SESSION['user_username'])."' AND `password`='".$_SESSION['user_password']."'");
+//print_r($_SESSION);
 
 // Ако няма потребител със запазените в сесията име и парола, връща празен стринг.
 if (!$ud) return '';

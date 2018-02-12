@@ -99,7 +99,11 @@ if (count($da)>1) foreach($da as $d){
          else $lk = $ind_fl.'?pid='.$lk;
   }
   else $lk = $d['link'];
-  if(!$h) $rz .= '<a href="'.$lk.'"'.$c.'>'.translate($d['name'], false)."</a>\n";
+  if(!$h){
+    $pl = '';
+    if(in_edit_mode()) $pl = $d['place']." ";
+    $rz .= '<a href="'.$lk.'"'.$c.'>'.$pl.translate($d['name'], false)."</a>\n";
+  }
 }
 if (in_edit_mode()) $rz .= 'id '.$g;
 if ($rz) $rz = '<div id="HLayer'.$j.'" onmouseleave="hide_layer('.$j.',this);">'."\n".$rz."</div>\n";

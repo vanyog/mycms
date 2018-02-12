@@ -93,7 +93,7 @@ return '<div id="menu_tree">
 
 
 function menutree2_submenu($g, $i){
-global $main_index, $pth;
+global $main_index, $pth, $adm_pth;
 $rz = '<div id="sub_'.$g.'">
 <a href="#" class="ra" onclick="hide_sub();return false;">'.translate('close', false).'</a>
 ';
@@ -113,17 +113,21 @@ foreach($md as $d){
      $rf = "$main_index?pid=$rf$tm";
   }
   else $rf = $d['link'];
-  $cr = '';
+  $cr = ''; $pl = '';
   if($i==$d['link']) $cr = ' class="current"';
   $el = '';
   // Добавяне на * за редактиране
   if (in_edit_mode()){
     $el = '<a href="'.$pth.'mod/usermenu/edit_menu_link.php?pid='.$i.'&id='.$d['ID'].
            '"  style="color:#000000;background-color:#ffffff;margin:0;padding:0;">*</a>';
+    $pl = ' '.$d['place'];
   }
-  $rz .= "<a href=\"$rf\"$cr>".translate($d['name'], false)."</a>$el\n";
+  $rz .= "<a href=\"$rf\"$cr>".translate($d['name'], false).$pl."</a>$el\n";
 }
-if(in_edit_mode()) $rz .= "$g";
+if(in_edit_mode()){
+  $m = db_table_field('MAX(`ID`)', 'menu_items', 1) + 1;
+  $rz .= "$g <a href=\"$adm_pth"."new_record.php?t=menu_items&group=$g&name=p$m"."_link&link=$i\">new</a>\n";
+}
 $rz .= '</div>';
 return $rz;
 }

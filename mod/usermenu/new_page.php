@@ -48,7 +48,9 @@ if (!$can_create) echo die("Your have no permission to create new page here.");
 if (count($_POST)) process_data();
 
 // Позиция  на новата страница в менюто - по подразбиране най-отдолу.
-$pz = db_table_field('MAX(`place`)', 'menu_items', "1")+10;
+$pz = db_table_field('place', 'menu_items', '`group`='.$page_data['menu_group'].' AND `link`='.$page_data['ID']);
+$pz1 = db_table_field('ROUND(AVG(`place`))', 'menu_items', '`group`='.$page_data['menu_group']." AND `place`>=$pz  AND `place`<=".($pz+10)." ORDER BY `place` ASC");
+if($pz1==$pz) $pz  += 10; else $pz = $pz1;
 
 // Създаване на форма за попълване на данни за нова страница 
 $pf = new HTMLForm('new_page_fotm');
