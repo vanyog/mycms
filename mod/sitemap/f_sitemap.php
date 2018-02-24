@@ -144,7 +144,7 @@ foreach($mi as $m){
           if($smday !== $smfile){
             if( strlen($smfile) < 3 ) $smfile = '';
              $smfile .= "<url>\n".
-                        "<loc>http://".$_SERVER['HTTP_HOST']."$lk</loc>\n".
+                        "<loc>http://".$_SERVER['HTTP_HOST'].str_replace('&','&amp;',$lk)."</loc>\n".
                         "<lastmod>".date("Y-m-d")."</lastmod>\n".
                         "<changefreq>monthly</changefreq>\n".
                         "<priority>".(1-0.2*$map_level)."</priority>\n".

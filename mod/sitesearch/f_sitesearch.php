@@ -23,6 +23,25 @@ include_once($idir.'lib/o_form.php');
 include_once($idir.'lib/translation.php');
 include_once($idir.'lib/f_db_select_m.php');
 
+global $page_header, $main_index;
+$page_header .= '<style>
+#search_button{ background-image:url('.current_pth(__FILE__).'images/search19x19.png); background-repeat: no-repeat; background-position: center; }
+#search_clear { background-image:url('.current_pth(__FILE__).'images/clear19x19.png); background-repeat: no-repeat; background-position: center; }
+</style>
+<script>
+function doSiteSearch(){
+var f = document.forms.site_search_form;
+var t = f.searchtext.value;
+if(Number.isInteger(1*t)){
+  if(confirm("'.translate('sitesearch_gpn').'"+t)){
+    document.location = "'.$main_index.'?pid="+t;
+  }
+}
+else f.submit();
+}
+</script>
+';
+
 // 
 // Основна функция на модула, която връща html код на форма за търсене,
 // но ако вече са изпратени данни за търсене, изпратеният за търсене стринг
@@ -45,42 +64,34 @@ if (isset($_SESSION['text_to_search'])) $tx = $_SESSION['text_to_search'];
 else $tx = '';
 $tx = str_replace('"','&quot;',$tx);
 $f->add_input(new FormInput('','searchtext','text',$tx));
-$b = new FormInput('','','submit', ' ');
+$b = new FormInput('','','button', ' ');
 $p = current_pth(__FILE__);
-$b->js = 'style="background-image:url('.$p.'images/search19x19.png); background-repeat: no-repeat; background-position: center;" '.
+$b->js = 'onclick="doSiteSearch();" id="search_button"'.
          ' title="'.translate('sitesearch_submit').'"'; 
 $f->add_input($b);
 if (isset($_SESSION['text_to_search'])){
-  //  " "
-//  $p = stored_value('sitesearch_resultpage');
-//  $b = new FormInput('','','button',translate('sitesearch_last'));
-//  $b->js = 'onclick="document.location=\''.$p.'\';"';
-//  $f->add_input( $b );
-  //  ""
   $b = new FormInput('','','button',' ');
-  $b->js = 'onclick="document.location=\''.$p.'clear.php\';" style="background-image:url('.$p.
-           'images/clear19x19.png); background-repeat: no-repeat; background-position: center;" '.
+  $b->js = 'onclick="document.location=\''.$p.'clear.php\';" '.
+           ' id="search_clear"'.
            ' title="'.translate('sitesearch_clear').'"';
   $f->add_input( $b );
 }
 return translate('sitesearch_start').$f->html();
 }
 
-//
-//         $_SESSION
-//         .
-//
+
+// Запомняне на търсения стринг $_SESSION
+// и пренасочване кам страницата за показване на резултат от търсене
+
 function do_site_search($txs){
   $trt = trim($txs);
-  //      -    
   if (!$trt) return;
-  //      $_SESSION
   if (!session_id()) session_start();
   $_SESSION['text_to_search']=$trt;
   $_SESSION['sitesearch_saved']=0;
-  //       
-  $l = stored_value('sitesearch_resultpage'); //     
-  //   ,      result.php  
+  // Страница за показване на резултат
+  $l = stored_value('sitesearch_resultpage');
+  // Ако не е зададена се пренасочва към result.php
   if (!$l) $l = current_pth(__FILE__).'result.php';
   header("Location: $l");
 }

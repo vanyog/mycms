@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Втората част, ако има такава, може да има стойност:
 // 'logout' за да се се покаже потребителското име и линк "Изход", или нищо, ако няма влязъл потребител.
+// 'name' за да се покажат трите имена на влезлия потребител
 // 'return' за да се осъществи връщане на предишната страница, след влизане на потребителя.
 // Ако е номер на страница, към тази страница се извършва препращане, ако потребителят е успешно влязъл.
 
@@ -50,6 +51,10 @@ include_once($idir.'lib/f_db_update_record.php');
 include_once($idir.'lib/f_view_record.php');
 include_once($idir.'mod/user/f_user.php');
 
+// Име на таблицата с данни за потребителите
+global $user_table;
+$user_table = stored_value('user_table','users');
+
 function userreg($t = ''){
 global $main_index, $can_visit;
 if (!$t) die('No user type specified in userreg module.');
@@ -61,6 +66,7 @@ if (isset($ta[1])) switch($ta[1]){
 case 'logout': return userreg_outlink($ta[0]); break;
 case 'mydata': return userreg_mydata($ta[0]); break;
 case 'edit'  : if(!isset($_GET['user2']) || ($_GET['user2']=='edit')) return userreg_edit($ta[0]);   break;
+case 'name'  : return userreg_name($ta[0]);    break;
 default: if(!(1*$ta[1])&&($ta[1]!='edit')) die("Undefined parameter '".$ta[1]."' for USERREG module"); break;
 }
 if (isset($_GET['user2'])) switch ($_GET['user2']){
@@ -277,8 +283,7 @@ return 'OK';
 // Завършване на регистрацията/смяната на паролата
 
 function confirm_userreg($t){
-// Име на таблицата с данни за потребителите
-$user_table = stored_value('user_table','users');
+global $user_table;
 // Четене на записа, съдържащ изпратения код за регистрация
 $d = db_select_1('*', $user_table, "`code`='".addslashes($_GET['code'])."'");
 // Ако кодът не е валиден - съобщение
@@ -327,7 +332,7 @@ return '';
 // Връща номера на влезлия потребител или 0 ако няма такъв
 
 function userreg_id($t){
-global $can_visit;
+global $can_visit, $user_table;
 if (!session_id() && isset($_COOKIE['PHPSESSID'])) session_start();
 if (!isset($_SESSION)) return 0;
 if (!isset($_SESSION['user_username'])){
@@ -340,7 +345,6 @@ if (!isset($_SESSION['user_password'])){
    unset($_SESSION['session_start']);
    return 0;
 }
-$user_table = stored_value('user_table','users');
 $id = db_table_field('ID', $user_table, "`username`='".$_SESSION['user_username'].
       "' AND `password`='".$_SESSION['user_password']."' AND `type`='$t'", 0);
 if (!$id) return 0;
@@ -362,6 +366,19 @@ $lp = stored_value("userreg_logout_$t");
 if (!$lp) die("'userreg_logout_$t' option is not set.");
 $_SESSION['user2_returnpage'] = $_SERVER['REQUEST_URI'];
 return '<p class="user">'.$_SESSION['user_username'].' <a href="'.$lp.'">'.translate('user_logaut').'</a></p>';
+}
+
+//
+// Връща трите имена на потребителя
+
+function userreg_name($t){
+global $user_table;
+$id = userreg_id($t);
+if (!$id) return '';
+$d = db_select_1('*', $user_table, "`ID`=$id");
+$rz = $d['firstname'].' '.$d['secondname'].' '.$d['thirdname'];
+if(strlen($rz)<3) $rz = $d['email'];
+return $rz;
 }
 
 //
@@ -442,8 +459,9 @@ return $rz;
 // Форма за редактиране данните на потребител
 
 function userreg_edit($t){
+global $user_table;
 // Проверяване дали има влязъл потребител
-$r = userreg_check($t);
+$r = userreg_id($t);
 //if (!isset($_SESSION['user_username'])){
 if (!$r){
    $lp = stored_value("userreg_login_$t");
@@ -454,8 +472,6 @@ if((stored_value('userreg_https')=='on') && !(isset($_SERVER['HTTPS']) && ($_SER
   header('Location: https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
   die();
 }
-// Име на таблицата с данни за потребители
-$user_table = stored_value('user_table','users');
 // Масив с надписи на съответните полета
 $cp = array(
 'username'=>translate('user_username'),
@@ -542,10 +558,8 @@ return $rz;
 // Показване на таблица с личните данни на потребителя
 
 function userreg_mydata($t){
-global $userreg_locked;
+global $userreg_locked, $user_table;
 $uid = userreg_id($t);
-// Име на таблицата с данни за потребителите
-$user_table = stored_value('user_table','users');
 // Лични данни на потребителя
 $d = db_select_1('*', $user_table, "`ID`=$uid");
 $cp = array(

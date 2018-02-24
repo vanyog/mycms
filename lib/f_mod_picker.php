@@ -21,11 +21,79 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 function mod_picker(){
 global $page_header, $pth;
-$page_header .= '<script><!--
-function toClip(a){
-window.prompt("Copy to clipboard: Ctrl+C, Enter", "<!--$$_"+a.innerHTML+"_$$-->" );
+
+$page_header .= '<script>
+var tefc;
+function onTeFocus(){
+tefc = document.activeElement;
 }
---></script>
+var tgToIn = "p";
+function doInsertTag(){
+tgToIn = prompt("Enter a html tag to be inserted", tgToIn);
+insert_tag(tgToIn,tgToIn);
+}
+function insert_tag(t1,t2){
+var te = tefc;
+te.focus();
+var s = te.selectionStart;
+var e = te.selectionEnd;
+var v = te.value;
+if (t2.length) v = v.substring(0,e)+"</"+t2+">"+v.substring(e,v.length);
+te.value = v.substring(0,s)+"<"+t1+">"+v.substring(s,v.length);
+s += t1.length + 2;
+e += t1.length + 2;
+te.selectionStart = s;
+te.selectionEnd = e;
+}
+function insert_text(t1){
+var te = tefc;
+te.focus();
+var s = te.selectionStart;
+var e = te.selectionEnd;
+var v = te.value;
+te.value = v.substring(0,s)+t1+v.substring(e,v.length);
+e = s + t1.length;
+te.selectionStart = s;
+te.selectionEnd = e;
+}
+function insert_2_texts(t1,t2){
+var te = tefc;
+te.focus();
+var s = te.selectionStart;
+var e = te.selectionEnd;
+var v = te.value;
+if (t2.length) v = v.substring(0,e)+t2+v.substring(e,v.length);
+te.value = v.substring(0,s)+t1+v.substring(s,v.length);
+s += t1.length;
+e += t1.length;
+te.selectionStart = s;
+te.selectionEnd = e;
+}
+var tag_a1 = "a href=\"/index.php?pid=\"";
+var tag_a2 ="a";
+var tag_s1 = "<script type=\"text/javascript\"><!--\n";
+var tag_s2 = "\n--><"+"/script>";
+var metaPressed = false;
+function showCharCount(a){
+var s = document.getElementById(a.id + "_count");
+s.innerHTML = a.value.length;
+metaPressed = false;
+}
+function editor_onKey(e,v){
+if(metaPressed && (v.key=="Enter")) insert_tag(tgToIn,tgToIn);
+metaPressed = true;
+}
+function toClip(a){
+if(tefc){
+  var n = a.innerText;
+  var f = n.toLowerCase() + "_params";
+  var p = "";
+  if( eval("typeof "+f+"===\"function\"") )
+      eval("p = "+f+"();");
+  insert_text("<!--$$_"+a.innerHTML+p+"_$$-->");
+}
+}
+</script>
 <style type="text/css">
 #modbtn span { display:inline-block; width:160px; padding:0 5px; font-size:80%; }
 #modbtn span span { display:inline; font-size:100%; padding:0; cursor:default; }
@@ -33,6 +101,7 @@ window.prompt("Copy to clipboard: Ctrl+C, Enter", "<!--$$_"+a.innerHTML+"_$$-->"
 #modbtn span a { }
 </style>
 ';
+
 $rz = "<p id=\"modbtn\"><strong>Modules:</strong><br>\n";
 $ml = mod_list();
 $mn = array();
@@ -40,8 +109,10 @@ foreach($ml as $i=>$m){ $mn[$i] = strtoupper(pathinfo($m,  PATHINFO_BASENAME)); 
 asort($mn);
 foreach($mn as $i=>$m) {
   $rm = $ml[$i].'README.txt';
+  $pj = $ml[$i].'params.js';
   $rz .= '<span><span onclick="toClip(this);">'.$m.'</span>';
   if (file_exists($rm)) $rz .= ' <a href="'.$pth.'mod/help.php?m='.$m.'" target="_blank">help</a>';
+  if (file_exists($pj)) $page_header .= "<script>\n".file_get_contents($pj)."\n</script>\n";
   $rz .= '</span> '."\n";
 }
 $rz .= '</p>';

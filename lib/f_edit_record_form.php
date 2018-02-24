@@ -104,6 +104,7 @@ foreach($cp as $n => $v){
       if ($lc>$max_lines) $lc = $max_lines;
       $fi = new FormTextArea($cp[$n].$ms, $n, $max_cols, $lc, $vl);
       if (!$ck) $fi->ckbutton = '';
+      $fi->js = ' onclick="onTeFocus();"';
       $hf->add_input( $fi );
       break;
     case 'int':

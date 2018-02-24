@@ -61,7 +61,7 @@ else {
            else {
               if (!session_id()) session_start();
               $_SESSION['user_username'] = addslashes($d['username']);
-              $_SESSION['user_password'] = $d['password'];print_r($_SESSION);
+              $_SESSION['user_password'] = $d['password'];
               $page_content = '<p class="message"> <a href="/index.php?pid=386">Open page 386</a></p>';
            }
         }

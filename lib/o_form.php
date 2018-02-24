@@ -152,7 +152,7 @@ public $cols = '';
 public $rows = '';
 public $text = '';
 public $js = '';
-public $ckbutton = '';
+public $ckbutton = ''; // Бутон CKEditor
 public $size = true;
 
 function __construct($c,$n,$cl=100,$r=10,$t=''){
