@@ -11,4 +11,4 @@ mod/uploadfile/conf_uploadfile.php
 robots.txt
 site.webmanifest
 sitemap.xml
-upload*
+upload*.

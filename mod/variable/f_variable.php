@@ -21,12 +21,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 function variable($a){
 $r = array();
+// Случай на елемент от масив
 $j = preg_match_all('/(.*)\[\'(.*)\'\]/', $a, $r);
 if($j) switch($r[1][0]){
-case 'GET': return $_GET[$r[2][0]]; break;
+case 'GET':    return $_GET[$r[2][0]];    break;
+case 'SERVER': return $_SERVER[$r[2][0]]; break;
 }
-global $$a;
-return stripslashes($$a);
+//global $$a;
+//return stripslashes($$a);
+return isset($GLOBALS[$a]) ? stripslashes($GLOBALS[$a]) : '';
 }
 
 ?>

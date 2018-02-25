@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Показване списък на наличните модули за по-лесно добавяне
 
+include_once($idir.'lib/f_parse_content.php');
+
 function mod_picker(){
 global $page_header, $pth;
 
@@ -112,7 +114,7 @@ foreach($mn as $i=>$m) {
   $pj = $ml[$i].'params.js';
   $rz .= '<span><span onclick="toClip(this);">'.$m.'</span>';
   if (file_exists($rm)) $rz .= ' <a href="'.$pth.'mod/help.php?m='.$m.'" target="_blank">help</a>';
-  if (file_exists($pj)) $page_header .= "<script>\n".file_get_contents($pj)."\n</script>\n";
+  if (file_exists($pj)) $page_header .= "<script>\n".parse_content(file_get_contents($pj))."\n</script>\n";
   $rz .= '</span> '."\n";
 }
 $rz .= '</p>';
