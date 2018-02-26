@@ -39,7 +39,7 @@ include_once($idir.'lib/f_parse_content.php');
 include_once($idir."lib/f_edit_normal_links.php");
 
 function adm_links(){
-global $pth, $apth, $adm_pth, $edit_name, $edit_value, $web_host, $local_host, $main_index,
+global $idir, $pth, $apth, $adm_pth, $edit_name, $edit_value, $web_host, $local_host, $main_index,
        $phpmyadmin_site, $phpmyadmin_local, $page_data;
 if ( !show_adm_links() ) return '';
 else {
@@ -81,7 +81,10 @@ else {
   if (!in_admin_path()) $enmch .= edit_normal_link(false).' &#x25C7;
 <a href="" onclick="doNewPage();return false">New page</a> &#x25C7; ';
 
-$f = relative_to($apth,dirname($_SERVER['DOCUMENT_ROOT'].$main_index).'/');
+//if(in_admin_path())
+   $f = relative_to($apth, $idir);
+//else
+//   $f = relative_to($apth, dirname($_SERVER['DOCUMENT_ROOT'].$main_index).'/');
 
 $rp = random_page();
 
@@ -160,7 +163,7 @@ $c = 0;
 do {
   $rid = rand(1,$mid);
   $c++;
-} while (!db_table_field('ID', 'pages', "`IP`=$rid") && ($c<5) );
+} while ((db_table_field('ID', 'pages', "`ID`=$rid",0)<1) && ($c<10) );
 return "$main_index?pid=$rid";
 }
 

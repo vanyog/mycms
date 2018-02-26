@@ -28,7 +28,10 @@ $start = 0;
 $rz =  array();
 foreach($r as $i => $n){
    if(!$start && (!isset($p[$i]) || ($n!=$p[$i])) ) $start = $i;
-   if($start && !empty($n)) $rz[] = '..';
+   if($start && !empty($n)){ 
+      $rz[] = '..';
+//      $rz[] = $n;
+   }
 }
 if(!$start) $start = count($r) - 1;
 //echo "$start<br>".print_r($rz,true)."<br>";
@@ -38,7 +41,7 @@ if($rt) $rt .= '/';
 $s = array_slice($p, $start, -1);
 if(count($s)) $rt .= implode('/',$s);
 if(count($p)>=count($r)) $rt .= '/';
-//echo (print_r($s,true)."<br>$rt");
+//echo (print_r($s,true)."<br>$rt<p>\n");
 return $rt;
 }
 

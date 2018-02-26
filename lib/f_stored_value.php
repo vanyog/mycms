@@ -25,12 +25,13 @@ include_once($idir.'lib/f_db_select_m.php');
 // Ако не съществува такъв запис, връща стойността $def.
 
 function stored_value($n, $def = false){
-global $option_value; // Глобална променлива, която служи за кеш.
-  if (!isset($option_value[$n])) $option_value[$n] = db_table_field('value', 'options',"`name`='$n'", $def);
-  return $option_value[$n];
+global $option_value, $db_req_count; // Глобална променлива, която служи за кеш.
+if (!isset($option_value[$n])) $option_value[$n] = db_table_field('value', 'options',"`name`='$n'", $def);
+return $option_value[$n];
 }
 
 // Функцията store_value($n,$v) записва стойността $v в запис с `name`=$n на таблица $tn_prifix.'options'
+
 function store_value($n,$v){
 global $tn_prefix, $db_link;
 // четене на зеписа с име $n за проверка дали има такъв
@@ -42,15 +43,18 @@ mysqli_query($db_link,$q);
 
 // Само с една SQL заявка, чете стойностите на всички опциии с имена, зададени в масива $option_name 
 // и ги присвоява на елементите на глобалния масив $option_value
-function load_options($option_name){ 
-global $option_value;
+
+function load_options($option_name){
+global $option_value, $db_req_count;
 $q = '';
 foreach($option_name as $n){
 if ($q) $q .= ' OR ';
 if (!isset($option_value[$n])) $q .= "`name`='$n'";
 }
-$d = db_select_m('`name`,`value`','options',"$q");
+if($q) $d = db_select_m('`name`,`value`','options',"$q");
+else $d = array();
 foreach($d as $r) $option_value[$r['name']]=$r['value'];
+foreach($option_name as $n) if(!isset($option_value[$n])) $option_value[$n] = '';
 $option_name = array();
 }
 

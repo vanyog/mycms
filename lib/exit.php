@@ -25,7 +25,10 @@ $ddir = $idir;
 include($idir."lib/f_is_local.php");
 include($idir."lib/f_page_cache.php");
 
-if (is_local()){ setcookie('noadm','yes',time()+30*24*3600, '/'); } else 
+if (is_local()){ 
+  setcookie('noadm','yes',time()+30*24*3600, '/');
+}
+else 
 {
   $past = time() - 3600;
   foreach ( $_COOKIE as $key => $value ) setcookie( $key, $value, $past, '/' );

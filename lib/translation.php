@@ -33,7 +33,6 @@ include_once($idir."lib/f_set_self_query_var.php");
 eval(stored_value('languages','$languages = array("bg"=>"Български");'));
 $default_language = stored_value('default_language','bg');
 
-
 $language = getLanguage();
 
 // Връща избрания от посетителя език, като прави различни проверки

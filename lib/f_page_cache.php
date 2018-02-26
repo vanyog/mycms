@@ -35,7 +35,7 @@ include_once($idir.'lib/f_db_delete_where.php');
 // Настройката от таблица 'options' с име 'acceptable_params' съдържа имената на допустимите за сайта
 // $_GET параметри. Стрингът с параметрите започва и завършва със знак =, а имената се отделят също с =.
 
-// При самостоятелно извекване, този файл предизвиква почестване на кеша на страница $_GET['purge']
+// При самостоятелно извикване, този файл предизвиква почестване на кеша на страница $_GET['purge']
 
 if(isset($_GET['purge'])){
   db_delete_where('page_cache',"`page_ID`=".(1*$_GET['purge']));
@@ -43,7 +43,7 @@ if(isset($_GET['purge'])){
 }
 
 function page_cache(){
-// Случаи, в които не се използва кеш:
+// При случаи, в които не се използва кеш - празен стринг
 if (do_not_cache()) return '';
 global $language, $page_data;
 $t = stored_value('cache_time');

@@ -57,16 +57,16 @@ if (in_edit_mode() && $elink){
 }
 
 // Връщан резултат
-$rz = ''; 
+$rz = '';
 
 // Четене на записа за надпис с име $n на език $language
-$r = db_select_1('*','content',"`name`='$n' AND `language`='$language'");
-if ($r){ // Ако има такъв запис
-  $content_create_time = $r['date_time_1']; 
-  $content_date_time = $r['date_time_2'];
-  $t = stripslashes($r['text']);
+$r1 = db_select_1('*','content',"`name`='$n' AND `language`='$language'");
+if ($r1){ // Ако има такъв запис
+  $content_create_time = $r1['date_time_1'];
+  $content_date_time = $r1['date_time_2'];
+  $t = stripslashes($r1['text']);
   $rz = apply_filters($n,parse_content($t));
-  if ((!isset($r['nolink']) || !$r['nolink']) && $elink) $rz .= $el;
+  if ((!isset($r1['nolink']) || !$r1['nolink']) && $elink) $rz .= $el;
 }
 else if (in_edit_mode() && $elink){
          // На локелен сървър или в режим на редактиране се показва името на стринга като линк,
@@ -79,14 +79,14 @@ else if (in_edit_mode() && $elink){
      }
      else { // На отдалечен сървър в работен режим
          // Четене на записа на езика по подразбиране
-         $r = db_select_1('*','content',"`name`='$n' AND `language`='$default_language'");
+         $r2 = db_select_1('*','content',"`name`='$n' AND `language`='$default_language'");
          // Ако няма запис се показва името на текста
-         if ( !$r ) $r['text'] = $n; 
+         if ( !$r2 ) $r2['text'] = $n;
          else {
-           $content_create_time = $r['date_time_1'];
-           $content_date_time = $r['date_time_2'];
+           $content_create_time = $r2['date_time_1'];
+           $content_date_time = $r2['date_time_2'];
          }
-         $t = stripslashes($r['text']);
+         $t = stripslashes($r2['text']);
          // Заместват се със съдържание евентуални <!--$$_XXX_$$--> елементи
          $rz = apply_filters($n,parse_content($t));
      }
@@ -113,7 +113,6 @@ foreach($fla as $fln){
   $flp = "filter/$fln/$fln.php"; // Път до файла на филтъра от директорията на сайта
   $afp = "$idir$flp"; // Абсолютен път до файла на филтъра
   if (file_exists($afp)){ // Ако има такъв филтър
-//    print_r($fl); die;
     include_once($afp);
     if(isset($fl['param']) && ($fl['param']>" ")) $rz = $fln($rz, $fl['param']);
     else $rz = $fln($rz);

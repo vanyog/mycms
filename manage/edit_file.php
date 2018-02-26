@@ -167,7 +167,7 @@ if(substr($f,-1)=='/') $f = substr($f,0,-1);
 include("editor.php");
 
 $fc = array();
-$can_edit = array('css', 'js', 'htaccess', 'html', 'php', 'sql', 'svg', 'txt', 'xml', '');
+$can_edit = array('css', 'gitignore', 'js', 'htaccess', 'html', 'php', 'sql', 'svg', 'txt', 'xml', '');
 $e = pathinfo($d,PATHINFO_EXTENSION);
 if (is_file($d) && in_array($e,$can_edit)) $fc=file($d);
 else {

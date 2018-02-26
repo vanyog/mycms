@@ -27,18 +27,20 @@ include_once($idir.'lib/f_stored_value.php');
 
 load_options(array(
   'admin_path',
-  'ckeditor_file',
-  'mod_path',
   'adm_name',
   'adm_value',
+  'ckeditor_file',
+  'document_root',
   'edit_name',
   'edit_value',
-  'admin_path',
-  'admin_path',
+  'host_local',
+  'host_web',
   'main_index_file',
-  'document_root',
-  'SEO_names',
-  'RewriteEngine'
+  'mod_path',
+  'phpmyadmin_local',
+  'phpmyadmin_web',
+  'RewriteEngine',
+  'SEO_names'
 ));
 
 // Задаване друга стойност на $_SERVER['DOCUMENT_ROOT'], ако връщаната от сървъра не е правилна
