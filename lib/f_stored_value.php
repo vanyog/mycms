@@ -27,6 +27,7 @@ include_once($idir.'lib/f_db_select_m.php');
 function stored_value($n, $def = false){
 global $option_value, $db_req_count; // Глобална променлива, която служи за кеш.
 if (!isset($option_value[$n])) $option_value[$n] = db_table_field('value', 'options',"`name`='$n'", $def);
+if(empty($option_value[$n]) && $def) $option_value[$n] = $def;
 return $option_value[$n];
 }
 

@@ -34,7 +34,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 function stop_https($a){
 global $language, $pth, $ind_fl, $main_index;
 $redir = false;
-if((stored_value('prefere_www')=='yes')
+$www = stored_value('prefere_www');
+if(($www=='yes')
     && isset($_SERVER['HTTP_HOST'])
     && (substr($_SERVER['HTTP_HOST'],0,4)!='www.')
     && (substr($_SERVER['HTTP_HOST'],0,4)!='xn--')
@@ -42,11 +43,12 @@ if((stored_value('prefere_www')=='yes')
   $_SERVER['HTTP_HOST'] = 'www.'.$_SERVER['HTTP_HOST'];
   $redir = true;
 }
-if((stored_value('prefere_www')=='no') && isset($_SERVER['HTTP_HOST']) && (substr($_SERVER['HTTP_HOST'],0,4)=='www.') ){
+if(($www=='no') && isset($_SERVER['HTTP_HOST']) && (substr($_SERVER['HTTP_HOST'],0,4)=='www.') ){
   $_SERVER['HTTP_HOST'] = substr($_SERVER['HTTP_HOST'],4);
   $redir = true;
 }
-if(stored_value('stop_https', 1) && isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']=='on')){
+$stps = stored_value('stop_https', 1);
+if($stps && isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']=='on')){
   $cnt = db_table_field('text', 'content', "`name`='$a' AND `language`='$language'");
   $pos = strpos($cnt, '$$_USERREG_');
   if($pos===false){
@@ -54,15 +56,15 @@ if(stored_value('stop_https', 1) && isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS
   }
 }
 $l = strlen($pth);
-//die("$ind_fl -- $main_index -- $pth");
+//die("$l $ind_fl -- $main_index -- $pth<p>");
 if( ($l>1) && ($ind_fl!=$main_index) && (substr($main_index,0,$l)!=$pth) ){
   $l1 = strlen($_SERVER['REQUEST_URI']);
   $_SERVER['REQUEST_URI'] = substr($_SERVER['REQUEST_URI'], $l-1, $l1-$l+1);
   $redir = true;
-//  die($_SERVER['REQUEST_URI']);
+//  die('|'.$_SERVER['REQUEST_URI'].'|');
 }
 if( $redir && isset($_SERVER['HTTP_HOST']) ) {
-  $h = 'Location: http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+  $h = 'Location: http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; die($h);
   header($h);
   die();
 }

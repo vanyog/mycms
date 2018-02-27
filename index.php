@@ -55,10 +55,12 @@ load_options(array(
   'error_404_template',
   'today',
   'sitesearch_nocoleron',
-  'acceptable_params'
+  'acceptable_params',
+  'languages',
+  'default_language'
 ));
-include_once($idir.'lib/f_db_select_1.php');
-include_once($idir.'lib/f_db_select_m.php');
+//include_once($idir.'lib/f_db_select_1.php');
+//include_once($idir.'lib/f_db_select_m.php');
 include_once($idir.'lib/f_parse_template.php');
 include_once($idir.'lib/translation.php');
 include_once($idir.'lib/f_page_cache.php');
@@ -87,14 +89,15 @@ $page_title = '';
 if($seo_names && !is_numeric($page_id)) $page_data = db_select_1('*','pages',"ID=".db_table_field('page_id', 'seo_names', "`seo_name`='$page_id'") );
 else $page_data = db_select_1('*','pages',"ID=$page_id");
 if (!$page_data) $page_data = page404();
-//die(print_r($page_data,true));
 
 // Пренасочване към http, ако не е необходим https протокол
 include_once($idir.'lib/f_stop_https.php');
 stop_https($page_data['content']);
 
+//echo "$db_req_count - ";
 // Заглавие на страницата
 $page_title = translate($page_data['title']);
+//die("$db_req_count");
 
 // Масив с опции
 $page_options = '';
