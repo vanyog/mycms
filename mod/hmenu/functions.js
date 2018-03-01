@@ -47,3 +47,7 @@ function hide_layer(i,e){
   if(eh) eh.style.visibility = "hidden";
   set_layer_colors(e)
 }
+
+function hide_layer2(i,el,ev){
+if ( (ev.clientY - el.offsetTop) < 0 ) hide_layer(i,el);
+}

@@ -36,17 +36,18 @@ $c1 = stored_value('hmenu_color3');  $page_header .= "var color3 = \"$c1\";\n";
 $c1 = stored_value('hmenu_bcolor3'); $page_header .= "var bcolor3 = \"$c1\";\n";
 $page_header .= rawfile('mod/hmenu/functions.js');
 $page_header .= "\n</script>\n";
+// Четене на записите за менюто
 $il = db_select_m('*','menu_items',"`group`=$a ORDER BY `place` ASC");
-$sm = '';
-$rz = '';
+$sm = ''; // HTML код на подменютата
+$rz = ''; // HTML код ма линковете от менюто
 $ci = hmenu_c($a);
-$ia = index_array();
+//$ia = index_array();
 $j = 1;
 foreach($il as $i){
   $lk = 1*$i['link'];
   $c = '';
   if ($lk) {
-    $sm .= hsubmenu($lk,$ia,$j);
+    $sm .= hsubmenu($lk,/*$ia,*/$j);
 //    if (in_array($lk,$ia)) $c = ' class="current"';
     if ($lk==$ci) $c = ' class="current"';
     if($seo_names) $lk = '/'.db_table_field('seo_name', 'seo_names', "`page_id`='$lk'").'/';
@@ -54,7 +55,8 @@ foreach($il as $i){
          else $lk = $ind_fl.'?pid='.$lk;
   }
   else $lk = $i['link'];
-  $rz .= '<a href="'.$lk.'"'.$c.' onMouseOver="show_hlayer('.$j.',this)">'.translate($i['name'],false);
+  $rz .= '<a href="'.$lk.'"'.$c.' onMouseOver="show_hlayer('.$j.',this)" onmouseleave="hide_layer2('.$j.', this, event);">'.
+         translate($i['name'],false);
   // Добавяне на * за редактиране 
   if (in_edit_mode()){
      $rz .= '<a href="'.$pth.'mod/usermenu/edit_menu_link.php?pid='.$page_id.'&amp;id='.$i['ID'].
@@ -72,7 +74,7 @@ return $sm.'<div id="menu_'.$a."\">\n".$rz.'</div>';
 
 // Връща подменюто към линк $lk
 
-function hsubmenu($lk,$ia,$j){
+function hsubmenu($lk,/*$ia,*/ $j){
 global $ind_fl, $seo_names, $rewrite_on;
 // Номер на менюто, на което страница $lk е главна
 $g = db_table_field('`group`','menu_tree',"`index_page`=$lk");
