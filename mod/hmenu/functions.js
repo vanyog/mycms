@@ -49,5 +49,10 @@ function hide_layer(i,e){
 }
 
 function hide_layer2(i,el,ev){
-if ( (ev.clientY - el.offsetTop) < 0 ) hide_layer(i,el);
+var l = document.getElementById("HLayer"+i);
+if ( ((ev.clientY - el.offsetTop) < 0) || (!l)){
+    hide_layer(i,el);
+    if (color2)  last_hitem.style.color = color2;
+    if (bcolor2) last_hitem.style.backgroundColor = bcolor2;
+}
 }
