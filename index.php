@@ -48,8 +48,9 @@ die('The system is not propperly installed. See <a href="http://vanyog.com/_new/
 
 $page_header = ''; // Добавки към хедъра на страницата
 
+include_once($idir.'conf_paths.php');
 include_once($idir.'lib/f_stored_value.php');
-load_options(array(
+/*load_options(array(
   'main_index_pageid',
   'cache_time',
   'error_404_template',
@@ -58,7 +59,7 @@ load_options(array(
   'acceptable_params',
   'languages',
   'default_language'
-));
+));*/
 //include_once($idir.'lib/f_db_select_1.php');
 //include_once($idir.'lib/f_db_select_m.php');
 include_once($idir.'lib/f_parse_template.php');
@@ -94,20 +95,18 @@ if (!$page_data) $page_data = page404();
 include_once($idir.'lib/f_stop_https.php');
 stop_https($page_data['content']);
 
-//echo "$db_req_count - ";
-// Заглавие на страницата
-$page_title = translate($page_data['title']);
-//die("$db_req_count");
-
-// Масив с опции
-$page_options = '';
-if ($page_data['options']) { $page_options = explode(' ',$page_data['options']); }
-
 // Четене на html кода на страницата от кеша
 $cnt = page_cache();
 
 // Ако страницата не е извлечена от кеша се генерира
 if (!$cnt){
+
+  // Заглавие на страницата
+  $page_title = translate($page_data['title']);
+
+  // Масив с опции
+  $page_options = '';
+  if ($page_data['options']) { $page_options = explode(' ',$page_data['options']); }
 
  // Попълване със съдържание на елементите в шаблона
  $cnt = parse_template($page_data);

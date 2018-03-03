@@ -26,20 +26,27 @@ if(!isset($idir)) $idir = dirname(__FILE__).'/';
 include_once($idir.'lib/f_stored_value.php');
 
 load_options(array(
+  'acceptable_params',
   'admin_path',
   'adm_name',
   'adm_value',
+  'cache_time',
   'ckeditor_file',
+  'default_language',
   'document_root',
   'edit_name',
   'edit_value',
   'host_local',
   'host_web',
+  'languages',
   'main_index_file',
+  'main_index_pageid',
   'mod_path',
   'phpmyadmin_local',
   'phpmyadmin_web',
+  'prefere_www',
   'RewriteEngine',
+  'stop_https',
   'SEO_names'
 ));
 

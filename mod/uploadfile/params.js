@@ -20,7 +20,7 @@ var r = "";
 if(n) r += "_"+n;
 if(p) r += ","+ p;
 if(o) r += ","+ o;
-if(s) r += ",style=\""+ p +"\"";
+if(s) r += ",style=\""+ s +"\"";
 if(i) r += ",img";
 var h = "";
 if(t) h += "-t";

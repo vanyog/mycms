@@ -102,6 +102,7 @@ public $id = '';
 public $js = '';
 public $max_file_size = '50000000';
 public $textAfter = '';
+public $help = '';
 
 function __construct($c,$n,$t,$v = '',$ta = ''){
 $this->caption = $c;
@@ -129,6 +130,7 @@ if ($this->checked) $rz .= " $this->checked";
 $rz .= "$dsbl>";
 if ($this->type=='file') $rz .= '<input type="hidden" name="MAX_FILE_SIZE" value="'.$this->max_file_size.'">';
 if ($this->textAfter) $rz .= ' '.$this->textAfter;
+if ($this->help) $rz .= "\n<br>".$this->help;
 if (!$it) $rz .= "\n";
 else $rz .= "</td></tr>\n";
 return $rz;
