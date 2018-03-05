@@ -52,16 +52,22 @@ include_once($idir.'lib/f_view_record.php');
 include_once($idir.'mod/user/f_user.php');
 
 // Име на таблицата с данни за потребителите
-global $user_table;
+global $user_table, $userreg_altt;
 $user_table = stored_value('user_table','users');
 
 function userreg($t = ''){
-global $main_index, $can_visit;
+global $main_index, $can_visit, $userreg_altt;
 if (!$t) die('No user type specified in userreg module.');
-$n = "USERREG_$t";
-$altt = translate($n,false);
-if( $altt && ($altt!=$n) && !in_edit_mode() ) return $altt;
 $ta = explode('|', $t);
+$n = "USERREG_".$ta[0];
+$altt = translate($n,false);
+if( $altt && ($altt!=$n) && !in_edit_mode() && !empty($ta[1]) ){
+   if(empty($userreg_altt)) {
+      $userreg_altt = true;
+      return $altt;
+   }
+   else return '';
+}
 if (isset($ta[1])) switch($ta[1]){
 case 'logout': return userreg_outlink($ta[0]); break;
 case 'mydata': return userreg_mydata($ta[0]); break;
@@ -404,7 +410,9 @@ $guf->add_input( new FORMInput(translate('user_password'),'password','password')
 $guf->add_input( new FORMInput('','','submit', translate('user_login_button')) );
 $rp = stored_value("userreg_newreg_$t");
 if (!$rp) die("'userreg_newreg_$t' option is not set.");
-return translate('userreg_logintext').
+$altt = '';
+if(in_edit_mode()) $altt = translate("USERREG_$t");
+return $altt.translate('userreg_logintext').
        '<a href="'.$rp.'">'.translate('userreg_newreg').
        "</a></p>\n".$guf->html();
 }
