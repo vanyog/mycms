@@ -1,0 +1,49 @@
+<?php
+
+/*
+MyCMS - a simple Content Management System
+Copyright (C) 2018  Vanyo Georgiev <info@vanyog.com>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+// Оптимизиране на изображения
+
+if(!isset($_GET['f'])) die("No file is specified to be optimized");
+
+$idir = dirname(__DIR__).'/';
+$ddir = $idir;
+
+include_once($idir.'conf_paths.php');
+
+$e = strtolower(pathinfo($_GET['f'], PATHINFO_EXTENSION));
+
+switch ($e){
+case 'png': $f = "/opt/local/bin/mogrify -strip ".$idir.$_GET['f'];
+            echo passthru("$f");
+            echo $f;
+            break;
+case 'jpg' :
+case 'jpeg':$f = "/opt/local/bin/mogrify -sampling-factor 4:2:0 -strip -quality 85 -interlace JPEG -colorspace sRGB ".$idir.$_GET['f'];
+            echo passthru("$f");
+            echo $f;
+            break;
+case 'gif': $f = "/opt/local/bin/convert ".$idir.$_GET['f']." -strip ".dirname($idir.$_GET['f']).'/'.pathinfo($_GET['f'], PATHINFO_FILENAME).'.png';
+            echo passthru("$f");
+            echo $f;
+            break;
+default: echo $e;
+}
+
+?>

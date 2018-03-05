@@ -48,15 +48,16 @@ mysqli_query($db_link,$q);
 function load_options($option_name){
 global $option_value, $db_req_count;
 $q = '';
-foreach($option_name as $n){
-if ($q) $q .= ' OR ';
-if (!isset($option_value[$n])) $q .= "`name`='$n'";
+foreach($option_name as $n) if (!isset($option_value[$n])) {
+    if ($q) $q .= ' OR ';
+    $q .= "`name`='$n'";
 }
-if($q) $d = db_select_m('`name`,`value`','options',"$q");
+if($q){
+    $d = db_select_m('`name`,`value`','options',"$q");
+}
 else $d = array();
 foreach($d as $r) $option_value[$r['name']]=$r['value'];
 foreach($option_name as $n) if(!isset($option_value[$n])) $option_value[$n] = '';
-$option_name = array();
 }
 
 ?>

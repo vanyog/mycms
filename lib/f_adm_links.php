@@ -54,13 +54,23 @@ else {
   if (!$npid) $npid = $lpid;
 
   $mphp = $phpmyadmin_site;
-  $go = $local_host; $gon = 'go to LOCAL';
+  $go = 'http://'.$local_host.$_SERVER['REQUEST_URI'];
+  $gon = 'go to LOCAL';
   if (is_local()){
     $mphp = $phpmyadmin_local;
-    $go = $web_host; $gon = 'go to WEB'; $w3c = ''; $mob = ''; $spt = '';
+    $go = 'http://'.$web_host.$_SERVER['REQUEST_URI'];
+    if (substr($_SERVER['REQUEST_URI'],0,strlen($adm_pth))==$adm_pth){
+       $wp = stored_value('admin_path','manage').'/';
+       if ($wp[0]!='/') $wp = $pth.$wp;
+       $go = str_replace($adm_pth, $wp, $go);
+    }
+    $gon = 'go to WEB';
+    $w3c = ''; $mob = ''; $spt = '';
   }
   else {
     if (substr($_SERVER['REQUEST_URI'],0,strlen($adm_pth))==$adm_pth){
+       $lp = $pth.'manage/';
+       $go = str_replace($adm_pth, $lp, $go);
        $w3c = '';  $mob = ''; $spt = '';
     }
     else {
@@ -72,7 +82,6 @@ else {
               urlencode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).'" target="_blank">sp</a>';
     }
   }
-  $go = 'http://'.$go.$_SERVER['REQUEST_URI'];
   
   $clink = stored_value('adm_links_custom','');
 

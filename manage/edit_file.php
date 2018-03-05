@@ -86,6 +86,14 @@ if (fn && confirm("Do you really want to delete file "+fn)){
 }
 else return;
 }
+function doOptimize(){
+var fn = fileName();
+if (fn){
+    var fp = "'.$adm_pth.'optimize.php?f=" + fn;
+    document.location = fp;
+}
+else alert("Choose a file to optimize");
+}
 function doView(){
 var fn = fileName();
 var lc = "'.$pth.'"+fn;
@@ -137,9 +145,15 @@ for($i=0; $i<count($dl); $i++){
   if (is_dir($d.'/'.$a)){ $s1 = '<strong>'; $s2 = '</strong>'; }
   $page_content .= '<td style="width:1%;"><input type="radio" name="file" value="'.$f.$a."\"></td>";
   if(is_dir($d.'/'.$a) && ($a=='..') && !$alls)
-     $page_content .= "<td>$s1$a$s2</td>\n"; //  Без линк
+     $page_content .= "<td>$s1$a$s2"; //  Без линк
   else
-     $page_content .= "<td>$s1<a href=\"edit_file.php?f=$f$a\">$a</a>$s2</td>\n";
+     if(in_array(strtolower(pathinfo($a, PATHINFO_EXTENSION)), array('png', 'jpg', 'jpeg', 'gif')))
+        $page_content .= "<td>$s1<a href=\"$pth$f".urlencode($a)."\">$a</a>$s2";
+     else
+        $page_content .= "<td>$s1<a href=\"edit_file.php?f=".urlencode($f.$a)."\">$a</a>$s2";
+  $page_content .= '</td><td style="width:1%;text-align:right;">';
+  if (is_file($d.'/'.$a)) $page_content .= filesize($d.'/'.$a);
+  $page_content .= "</td>\n";
   $cln++;
   if (($cln % $cls)==0){ $page_content .= "</tr><tr>\n"; $rc = 0; }
 }
@@ -152,8 +166,10 @@ $page_content .= '</table>
 <input type="button" value="Make dir" onclick="doMakeDir();">
 <input type="button" value="View" onclick="doView();">
 <input type="button" value="Rename" onclick="doRename();">
-<input type="button" value="Delete" onclick="doDelete();"></p>
-</form>';
+<input type="button" value="Delete" onclick="doDelete();">
+<input type="button" value="Optimize" onclick="doOptimize();"></p>
+</form>
+<p>&nbsp;</p>';
 
 }
 
@@ -167,7 +183,7 @@ if(substr($f,-1)=='/') $f = substr($f,0,-1);
 include("editor.php");
 
 $fc = array();
-$can_edit = array('css', 'gitignore', 'js', 'htaccess', 'html', 'php', 'sql', 'svg', 'txt', 'xml', '');
+$can_edit = array('css', 'js', 'htaccess', 'html', 'php', 'sql', 'svg', 'txt', 'xml', '');
 $e = pathinfo($d,PATHINFO_EXTENSION);
 if (is_file($d) && in_array($e,$can_edit)) $fc=file($d);
 else {
@@ -220,6 +236,7 @@ function doOpen(){
 <input type="button" value="Close" onclick="document.location=\''.$adm_pth.'edit_file.php?f='.strip_last_name($f).'\'">
 <input type="button" value="Open" onclick="doOpen();">
 </form>
+<p>&nbsp;</p>
 ';
 
 }

@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 if(!isset($idir)) $idir = dirname(__FILE__).'/';
 
 include_once($idir.'lib/f_stored_value.php');
+include_once($idir.'lib/f_is_local.php');
 
 load_options(array(
   'acceptable_params',
@@ -67,7 +68,7 @@ $apth = $_SERVER['DOCUMENT_ROOT'].$pth;
 
 // Директория за администриране
 $adm_pth = stored_value('admin_path','manage').'/';
-//die("$pth.$adm_pth");
+if(is_local()) $adm_pth = 'manage/';
 if ($adm_pth[0]!='/') $adm_pth = $pth.$adm_pth;
 
 // Абсолютна директория на директорията за администриране във файловата система на сървъра
