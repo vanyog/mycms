@@ -21,8 +21,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // форма за редактиране на запис от таблица $tn на базата данни.
 // Параметърът $cp e асоциативен масив с ключове - имената на полетата,
 // и стойности - пояснителни надписи, които се поставят пред тези полета във формата.
-// В този масив трябва да има и елемент 'ID'=>НомерНаЗаписа, който се редактира.
+// В този масив трябва да има и елемент 'ID'=>НомерНаЗаписа, който не се редактира.
 // $ck определя дали пред textarea полетата да се показва бутон за включване на CKEditor
+
+// След име на поле, може да има добавка:
+// '|file', когато полето съдържа път до файл, който се качва в директория $GLOBALS['upfile_path']
+
 
 include_once($idir."lib/f_db_field_names.php");
 include_once($idir."lib/f_db_field_types.php");
@@ -53,6 +57,8 @@ $max_size = 80;
 $max_cols = 60;
 // Максимален брой редове на текстовите области
 $max_lines = 25;
+// Масив за специални опции, като '|file'
+$opt = array();
 // Съставяне на формата
 $hf = new HTMLForm('editrecord_form');
 // Добавяне на елементи за всяко от полетата, които ще се редактират
@@ -63,7 +69,12 @@ foreach($cp as $n => $v){
     $hf->add_input($fi);
     break;
   default:
-    if(!isset($ft[$n])) die("Field $n do not exist in table $tn.");
+    if(!isset($ft[$n])){
+       $fa = explode('|',$n);
+       if(count($fa)==1) die("Field $n do not exist in table $tn.");
+       $n = $fa[0];
+       $opt[$n] = $fa[1];
+    }
     // Анализиране типа на полетата
     preg_match('/([a-z]*)\((.*)\)/', $ft[$n], $tp);
     if (count($tp)<2) $tp[1] = $ft[$n];
@@ -90,6 +101,10 @@ foreach($cp as $n => $v){
       else { $vl = htmlspecialchars(stripslashes($d[$n]), ENT_COMPAT, 'cp1251'); }
       // Ако полето е за попълване на дата и час, се попълва с текущите дата и час
       if (($tp[1]=='datetime')&& !$vl) $vl = date("Y-m-d H:i:s");
+      if(!empty($opt[$n])){
+         $t = $opt[$n];
+//         die($vl);
+      }
       $fi =  new FORMInput($v, $n, $t, $vl);
       $fi->size = 80;
       $hf->add_input($fi);
@@ -170,6 +185,18 @@ $w = ''; // WHERE частта на SQL заявката.
 $pu = false; // Дали да се обновят данните за потребителя в текущата сесия.
 // Използва се, когато се редактира записът с данни на текущия потребител.
 foreach($k as $n) switch($n){
+case 'MAX_FILE_SIZE':
+  foreach($_FILES as $f=>$a)
+  {
+     if(empty($GLOBALS['upfile_path'])) die('$GLOBALS[\'upfile_path\'] is not defined.');
+     $fln = $_SERVER['DOCUMENT_ROOT'].$GLOBALS['upfile_path'].$_POST['ID'].'.'.pathinfo($a['name'], PATHINFO_EXTENSION );
+     $m = move_uploaded_file($a['tmp_name'], $fln);
+     if($m){
+        if ($q) $q .= ', ';
+        $q .= "`$f`='$fln'";
+     }
+  }
+  break;
 case 'ID':
   // Ако не е изпратен номер на запис, не се прави нищо.
   if (!isset($_POST['ID'])) return;
@@ -223,10 +250,10 @@ return $rz;
 // Функция, която коригира елементите --$$_ _$$-- елементите
 
 function element_correction($v1){
- $v1 = str_replace( chr(60).' !--$$_',     chr(60).'!--$$_', $v1);
- $v1 = str_replace( chr(38).'lt; !--$$_',  chr(60).'!--$$_', $v1);
+ $v1 = str_replace( chr(60).' !--$$_',    chr(60).'!--$$_', $v1);
+ $v1 = str_replace( chr(38).'lt; !--$$_', chr(60).'!--$$_', $v1);
  $v1 = str_replace( chr(38).'lt;!--$$_',  chr(60).'!--$$_', $v1);
- $v1 = str_replace( '_$$--'.chr(38).'gt;', '_$$--'.chr(62),  $v1);
+ $v1 = str_replace( '_$$--'.chr(38).'gt;','_$$--'.chr(62),  $v1);
  return $v1;
 }
 

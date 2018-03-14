@@ -119,8 +119,13 @@ $this->js = " $e=\"$js\"";
 public function html($it){
 $dsbl = lock_form_fields();
 $rz = '';
-if (!$it) $rz .= "$this->caption <input type=\"$this->type\" ";
-else $rz .= "<tr><th>$this->caption </th><td><input type=\"$this->type\" ";
+if (!$it) $rz .= "$this->caption ";
+else $rz .= "<tr><th>$this->caption </th><td>";
+if( ($this->type=='file') && $this->value){
+   $vl = current_pth($this->value).pathinfo($this->value, PATHINFO_BASENAME );
+   $rz .= "<a href=\"$vl\" target=\"_blank\">$vl</a><br>\n";
+}
+$rz .= "<input type=\"$this->type\" ";
 if ($this->name) $rz .= "name=\"$this->name\"";
 if (strlen($this->value)) $rz .= " value=\"$this->value\"";
 if ($this->size) $rz .= " size=\"$this->size\"";
@@ -128,7 +133,9 @@ if ($this->id) $rz .= " id=\"$this->id\"";
 if ($this->js) $rz .= " $this->js";
 if ($this->checked) $rz .= " $this->checked";
 $rz .= "$dsbl>";
-if ($this->type=='file') $rz .= '<input type="hidden" name="MAX_FILE_SIZE" value="'.$this->max_file_size.'">';
+if ($this->type=='file'){
+   $rz .= '<input type="hidden" name="MAX_FILE_SIZE" value="'.$this->max_file_size.'">';
+}
 if ($this->textAfter) $rz .= ' '.$this->textAfter;
 if ($this->help) $rz .= "\n<br>".$this->help;
 if (!$it) $rz .= "\n";
@@ -651,15 +658,18 @@ for(var i=l.length-1; i>=0; i--){
   l.removeChild(l.options[i]);
 }
 }
-function chooserSubmit(){
+function chooserMakeValue(){
 var l = document.getElementById("formChoices");
 var r = "";
 for(var i=0; i<l.length; i++) if (l.options[i].text) r = r + "," + l.options[i].text;
 if (r) r = r + ",";
 var v = document.getElementById("chooserValue");
 v.value = r;
+return v;
+}
+function chooserSubmit(){
+var v = chooserMakeValue();
 v.form.submit();
-
 }
 --></script>';
 $rz = '';

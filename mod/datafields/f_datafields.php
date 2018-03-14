@@ -21,16 +21,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Параметърат $a трябва да съдържа стринг от вида:
 // 'Таблица[.поле][|условие|разделител записи|разделител полета]'
 
-function datafields($a){
+function datafields($a = ''){
 $b = explode('|',$a);
-if (!empty($b[1])) $w  = stripslashes($b[1]); else $w = '1';
+if (!empty($b[1]))    $w  = stripslashes($b[1]); else $w = '1';
 if (isset($b[2]))    $rs  = $b[2];               else $rs = ', ';
 if (isset($b[3]))    $fs  = $b[3];               else $fs = ' ';
 $c = explode('.',$b[0]);
 if (isset($c[1])) $f = $c[1];
 else $f = '*';
 $n = $c[0];
-$r = db_select_m($f, $n, $w);
+$r = array();
+if($n) $r = db_select_m($f, $n, $w);
 $rz = '';
 foreach($r as $d){
   if (!$rz) $rz = $rs; else $rz .= $rs;
