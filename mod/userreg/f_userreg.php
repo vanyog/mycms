@@ -339,7 +339,7 @@ return '';
 
 function userreg_id($t){
 global $can_visit, $user_table;
-if (!session_id() && isset($_COOKIE['PHPSESSID'])) session_start();
+if (!session_id() && isset($_COOKIE['PHPSESSID'])) session_start();// die("$t");
 if (!isset($_SESSION)) return 0;
 if (!isset($_SESSION['user_username'])){
    unset($_SESSION['user_password']);

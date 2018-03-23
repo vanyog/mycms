@@ -177,7 +177,7 @@ $ft = db_field_types($tn);
 // Прочитане имената на полетата на таблицата
 $fn = db_field_names($tn);
 // Съставяне на нов асоциативен масив с ключове имената на полетата и стойности - типовете им
-$ft = array_combine($fn, $ft); //print_r($ft); die;
+$ft = array_combine($fn, $ft);// print_r($ft); die;
 $k = array_keys($cp); // Масив от имената на полетата, за които са изпратени данни.
 $rz = ''; // Връщан резултат - надпис, относно резултата от запазването на данните.
 $q = ''; // SQL заявка, която се генерира.
@@ -229,7 +229,10 @@ default:
   }
   else {
     $v1 = element_correction($_POST[$n]);
-    $q .= "`$n`='".addslashes($v1)."'";
+    if( ($ft[$n]==12) && ($_POST[$n]=='NOW()') )
+       $q .= "`$n`=NOW()";
+    else
+       $q .= "`$n`='".addslashes($v1)."'";
   }
 }
 // Обновяване данните за потребителя в текущата сесия.
@@ -241,8 +244,9 @@ else {
   if (in_array('date_time_1', $fn)) $q = "`date_time_1`=NOW(), $q";
   $q = "INSERT INTO `$tn_prefix"."$tn` SET $q;";
 }
-//print_r($q); die;
+//print_r($q);
 if (mysqli_query($db_link,$q) && $m) $rz .= '<span class="message">'.translate('dataSaved')."</span>";
+//die;
 if ($rz) $rz = '<p class="message">'.$rz.'</p>';
 return $rz;
 }
