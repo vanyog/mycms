@@ -96,7 +96,7 @@ return $f->html();
 // Показване таблицата на събитията от графика с име $n
 
 function schedules_table($n){
-$d = db_select_m('*', 'schedules', "`sch_name`='$n' ORDER BY `date_time_1` ASC, `date_time_2` DESC");
+$d = db_select_m('*', 'schedules', "`sch_name`='$n' ORDER BY `date_time_1` ASC, `date_time_2` ASC");
 $d = schedules_data_prepare($d);
 $a = array(
 'ID'=>'ID',
@@ -141,7 +141,7 @@ function schedules_current($s){
 $ct = date('Y-m-d H:i:s', time());
 // Четене на текущите събития
 $ce = db_select_m('*','schedules',
-      "`sch_name`='$s' AND `date_time_1`<='$ct' AND `date_time_2`>='$ct' ORDER BY `date_time_1` ASC");
+      "`sch_name`='$s' AND `date_time_1`<='$ct' AND `date_time_2`>='$ct' ORDER BY `date_time_1` ASC, `date_time_2` ASC");
 // Връщан резултат
 $rz = '';
 foreach($ce as $e){
@@ -160,7 +160,7 @@ $t1 = date('Y-m-d H:i:s', time());
 $t2 = date('Y-m-d H:i:s', time()+$n*24*3600);
 // Четене на събитията, започващи през следващите $n дни
 $ce = db_select_m('*','schedules',
-      "`sch_name`='$s' AND `date_time_1`>='$t1' AND `date_time_1`<='$t2' ORDER BY `date_time_1` ASC");
+      "`sch_name`='$s' AND `date_time_1`>='$t1' AND `date_time_1`<='$t2' ORDER BY `date_time_1` ASC, `date_time_2` ASC");
 // Връщан резултат
 $rz = '';
 foreach($ce as $e){
@@ -175,8 +175,7 @@ return $rz;
 
 function schedules_all($s){
 // Четене на събитията
-$ce = db_select_m('*','schedules',
-      "`sch_name`='$s' ORDER BY `date_time_1` ASC, `date_time_2` DESC");
+$ce = db_select_m('*', 'schedules', "`sch_name`='$s' ORDER BY `date_time_1` ASC, `date_time_2` ASC");
 // Текущата дата и час в MySQL формат
 $ct = date('Y-m-d H:i:s', time());
 // Връщан резултат
@@ -185,6 +184,7 @@ $y0 = ''; // Последно показана година
 $m0 = ''; // Последно показан ден
 $hr = false; // Дали и сложена линия на днешната дата
 eval(translate('month_names'));
+$c = 0; // Брой показани събития
 foreach($ce as $e){
  $y = substr($e['date_time_1'], 0, 4);
  $m = substr($e['date_time_1'], 5, 2);
@@ -193,21 +193,32 @@ foreach($ce as $e){
    $y0 = $y;
  }
  if($m!=$m0){
-   $rz .= "<h3>".$month[1*$m]."</h3>\n";
+   $rz .= "<h4>".$month[1*$m]."</h3>\n";
    $m0 = $m;
  }
  $st = '';
  if($ct>=$e['date_time_1'] && $ct<=$e['date_time_2']) $st = ' class="current"';
  if($ct>$e['date_time_2'])                            $st = ' class="past"';
  // Хоризонтална линия на днешната дата
- if(!$hr && $e['date_time_1']>$ct){
-   $rz .= "<hr id=\"today\">\n";
+ if(!$hr && ($e['date_time_1']>$ct) ){
    $hr = true;
+   if($c){// echo("<p>$c<br>$rz");
+     if(!isset($GLOBALS['schedules_tcount'])) $GLOBALS['schedules_tcount'] = 0;
+     else $GLOBALS['schedules_tcount']++;
+     $rz .= "<hr id=\"today".$GLOBALS['schedules_tcount']."\">\n";
+   }
  }
- $rz .= "<p$st>".'<span class="date_time">'.db2user_from_to($e['date_time_1'],$e['date_time_2']).'</span>
-<br>'.translate($e['ev_name'])."</p>\n";
+ $rz .= "<p$st>".'<span class="date_time">';
+ $rz .= db2user_from_to($e['date_time_1'],$e['date_time_2']);
+ if(in_edit_mode()){
+   $p = current_pth(__FILE__);
+   $rz .= ' <a href="'.$p.'edit.php?id='.$e['ID'].'">*</a>';
+ }
+ $rz .= "</span>\n".
+        '<br>'.translate($e['ev_name'])."</p>\n";
+ $c++;
 }
-return $rz;
+return '<div class="schedule">'."\n$rz</div>\n";
 }
 
 //

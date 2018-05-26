@@ -37,6 +37,7 @@ $d = db_select_1('*','schedules',"`ID`=$i");
 
 $n = array(
 'ID'=>$i,
+'sch_name'=>translate('schedules_schname'),
 'date_time_1'=>translate('schedules_datetime1'),
 'date_time_2'=>translate('schedules_datetime2')
 );
@@ -56,6 +57,7 @@ include_once($idir.'lib/build_page.php');
 function process_schdata(){
 $cp = array(
 'ID'=>1*$_POST['ID'],
+'sch_name'   =>addslashes($_POST['sch_name']),
 'date_time_1'=>addslashes($_POST['date_time_1']),
 'date_time_2'=>addslashes($_POST['date_time_2'])
 );

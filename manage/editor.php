@@ -133,8 +133,8 @@ global $page_header, $ckpth;
 // Път до основния файл на CKEditor
 $ckep = $_SERVER['DOCUMENT_ROOT'].$ckpth.'ckeditor.js';
 // Проверка дали CKEditor съществува
-if (file_exists($ckep)) $page_header .= '<script src="'.$ckpth.'ckeditor.js"></script>';
-else $page_header .= '<script src="//cdn.ckeditor.com/4.5.7/full/ckeditor.js"></script>';
+if (file_exists($ckep)) $page_header .= '<script src="'.$ckpth."ckeditor.js\"></script>\n";
+else $page_header .= "<script src=\"//cdn.ckeditor.com/4.5.7/full/ckeditor.js\"></script>\n";
 return '
 <input type="button" onclick="CKEDITOR.replace( \'editor'.$n.'\' );" value="CKEditor">';
 }

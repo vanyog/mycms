@@ -136,7 +136,7 @@ foreach($ka as $k){
 }
 ksort($b);
 $a['query'] = http_build_query($b);
-$rz = $a['path'];
+$rz = isset($a['path']) ? $a['path'] : '';
 if ($a['query']) $rz .= '?'.$a['query'];
 return $rz;
 }
