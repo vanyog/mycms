@@ -206,24 +206,32 @@ if (!in_edit_mode()) $qp = 'AND `private`=0';
 $seng = stored_value('outerlenks_sengin', 'https://www.google.bg/search?q=');
 
 if (in_edit_mode()) $page_header .= '<script><!--
+function chCaseClick(){
+var f = document.forms.link_edit_form.title;
+var t = f.value;
+t = t.substring(0,1) + t.substring(1).toLowerCase();
+f.value = t;
+}
 function linkradioclicked(fi){
 var f = document.forms.link_edit_form;
 var r = f.link_id.value;
 var l = document.getElementById("lk"+r);
-f.link.value = l.title;
-f.title.value = l.innerHTML;
+f.link.value = l.title; // Link
+f.title.value = l.innerHTML; // Title
 var p = l.parentElement;
-if (p.className=="private") f.private.value = 1;
-else  f.private.value = 0;
-t = p.innerText;
+var t = p.innerText;
 var i = t.indexOf(" ");
-f.place.value = t.substring(0, i);
+f.place.value = t.substring(0, i); // Place
+if (p.className=="private") f.private.value = 1;
+else  f.private.value = 0; // Private
 t = l.parentElement.innerHTML;
 i = t.indexOf("</a>") + 7;
 t = t.substring(i);
-var a = t.split(" ");
-t = a.slice(fi, a.length - 11).join(" ");
 if(t.substring(0,8)==" href=\"/") t = "";
+else {
+  var a = t.split(" ");
+  t = a.slice(fi, a.length - 10).join(" ");
+}
 f.comment.value = t;
 }
 function sid_clicked(a){
@@ -255,9 +263,9 @@ foreach($ca as $c){// print_r($c); die;
    if ($c['private']) $cl = ' class="private"';
    $sid = ''; // ID на записа
    // ѕоказва се само в режим на редактиране
-   if(in_edit_mode()) $sid = '<span class="sid" onclick="sid_clicked(this);" title="Group ID">'.$c['ID']."</span> ";
-   $rzc .= "<p$cl>".edit_radio($c['ID'],$c['place'],2).'<img src="'.$p.'folder.png" alt=""> '.$sid.
-          '<a href="'.set_self_query_var('lid',$c['ID']).'#outer_links" id="lk'.$c['ID'].'">'.stripslashes($c['Title'])."</a>";
+   if(in_edit_mode()) $sid = '<span class="sid" onclick="sid_clicked(this);" title="Group ID">'.$c['ID']."</span> \n";
+   $rzc .= "<p$cl>".edit_radio($c['ID'],$c['place'],2).'<img src="'.$p.'folder.png" alt=""> '."\n".$sid.
+          '<a href="'.set_self_query_var('lid',$c['ID']).'#outer_links" id="lk'.$c['ID'].'">'.stripslashes($c['Title'])."</a>\n";
    $t1 = uoterlinks_count($c, $qp);
    $tc += $t1;
    $rzc .= " - $t1";
@@ -276,7 +284,7 @@ if (count($la)) $rz .= '<p>'.count($la).' '.translate('outerlinks_links')."</p>\
 foreach($la as $l){
 $cl = '';
 if ($l['private']) $cl = ' class="private"';
-$rz .= "<p$cl>".edit_radio($l['ID'],$l['place']).'<img src="'.$p.'go.gif" alt=""> <a href="';
+$rz .= "<p$cl>".edit_radio($l['ID'],$l['place']).'<img src="'.$p.'go.gif" alt=""> '."\n".'<a href="';
 if($rewrite_on)
     $rz .= "/$page_id/lid/".$l['ID']."/";
 else
@@ -459,7 +467,8 @@ else return '
 Place: <input type="text" name="place" size="5"> 
 Group: <input type="text" name="up" size="5" value="'.$i.'" onfocus="this.select();">
 Private: <input type="text" name="private" size="1"></p>
-<p>Title: <input type="text" name="title" size="100" onfocus="enter_title_field();"></p>
+<p>Title: <input type="text" name="title" size="100" onfocus="enter_title_field();">
+<input type="button" value="Aa" onclick="chCaseClick();"></p>
 <p>Comment: <textarea name="comment" cols="83" rows="4" style="vertical-align:top"></textarea></p>
 <input type="submit" value="Add/Update"> 
 <input type="button" value="Delete" onclick="doDelete_link();">
@@ -470,8 +479,8 @@ Private: <input type="text" name="private" size="1"></p>
 // ------------------------------------------------------
 function edit_radio($id,$p,$f=0){
 if (!in_edit_mode()) return '';
-else return '<input type="radio" name="link_id" value="'.$id.'" onclick="linkradioclicked('.$f.');">'.
-            '<span onclick="pl_clicked(this);" class="sid" title="Place">'.$p.'</span> ';
+else return '<input type="radio" name="link_id" value="'.$id.'" onclick="linkradioclicked('.$f.');">'."\n".
+            '<span onclick="pl_clicked(this);" class="sid" title="Place">'.$p."</span> \n";
 }
 
 // ƒобав€не/промен€не на данните в режим на редактиране

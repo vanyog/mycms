@@ -1,7 +1,7 @@
 <?php
-/*
+/* 
 MyCMS - a simple Content Management System
-Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>
+Copyright (C) 2018 Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -10,20 +10,20 @@ the Free Software Foundation, either version 3 of the License, or
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-include_once($idir."lib/f_adm_links.php");
+// Връща броя на записите от таблица files + 1
 
-if (!isset($page_header)) $page_header = '';
-$page_header .= "\n".'<link href="'.$adm_pth.'style.css" rel="stylesheet" type="text/css">';
+$idir = dirname(dirname(__DIR__)).'/';
+$ddir = $idir;
 
-$page_content = adm_links().'
-'.$page_content;
+include_once($idir.'lib/f_db_table_field.php');
 
-include($idir."lib/build_page.php");
+echo db_table_field('MAX(`ID`)', 'formula', 1) + 1;
+
 ?>

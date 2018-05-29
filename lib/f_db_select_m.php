@@ -34,7 +34,7 @@ function db_select_m($fn,$tb,$whr,$y=false){
 global $db_link, $tn_prefix, $db_req_count;
 if( $tb[0]!='`' ) $tb = "`$tn_prefix$tb`";
 $q="SELECT $fn FROM $tb WHERE $whr;";
-if ($y) echo "$q<br>";
+if ($y) echo "$q<br>\n";
 $dbr=mysqli_query($db_link,$q);
 $db_req_count++;
 $r=array();

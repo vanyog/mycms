@@ -28,18 +28,19 @@ $ddir = $idir;
 include_once($idir.'conf_paths.php');
 
 $e = strtolower(pathinfo($_GET['f'], PATHINFO_EXTENSION));
+$fe = str_replace(' ', '\ ', $_GET['f']);
 
 switch ($e){
-case 'png': $f = "/opt/local/bin/mogrify -strip ".$idir.$_GET['f'];
+case 'png': $f = "/opt/local/bin/mogrify -strip ".$idir.$fe;
             echo passthru("$f");
             echo $f;
             break;
 case 'jpg' :
-case 'jpeg':$f = "/opt/local/bin/mogrify -sampling-factor 4:2:0 -strip -quality 85 -interlace JPEG -colorspace sRGB ".$idir.$_GET['f'];
+case 'jpeg':$f = "/opt/local/bin/mogrify -sampling-factor 4:2:0 -strip -quality 85 -interlace JPEG -colorspace sRGB ".$idir.$fe;
             echo passthru("$f");
             echo $f;
             break;
-case 'gif': $f = "/opt/local/bin/convert ".$idir.$_GET['f']." -strip ".dirname($idir.$_GET['f']).'/'.pathinfo($_GET['f'], PATHINFO_FILENAME).'.png';
+case 'gif': $f = "/opt/local/bin/convert ".$idir.$_GET['f']." -strip ".dirname($idir.$_GET['f']).'/'.pathinfo($fe, PATHINFO_FILENAME).'.png';
             echo passthru("$f");
             echo $f;
             break;
