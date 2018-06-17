@@ -54,6 +54,22 @@ if (isset($_GET['lid'])){
   else $lid = 0;
 }
 
+// Ако са изпратени данни за редактиране
+if (count($_POST) && isset($_POST['link'])) edit_link($lid);
+
+// Четене на данните за линка
+$l = db_select_1('*','outer_links',"`ID`=$lid");
+
+// Ако е линк се изброява кликването и се препраща към адреса на линка
+if (isset($l['link']) && $l['link']>''){
+ if (!show_adm_links()){ // Броят се кликванията само ако посетителят не е администратор
+   $q = "UPDATE `$tn_prefix"."outer_links` SET clicked = clicked+1 WHERE `ID`=".$l['ID'].";";
+   mysqli_query($db_link,$q);
+ }
+ header('Location: '.$l['link']);
+ die;
+}
+
 // Път към началната страница
 $tr = link_tree($lid);
 
@@ -136,22 +152,6 @@ case 'old': $rz .= outerlenks_old();
 // Показване на най-клекваните
 case 'click': $rz .= outerlenks_click();
             break;
-}
-
-// Ако са изпратени данни за редактиране
-if (count($_POST) && isset($_POST['link'])) edit_link($lid);
-
-// Четене на данните за линка
-$l = db_select_1('*','outer_links',"`ID`=$lid");
-
-// Ако е линк се изброява кликването и се препраща към адреса на линка
-if (isset($l['link']) && $l['link']>''){
- if (!show_adm_links()){ // Броят се кликванията само ако посетителят не е администратор
-   $q = "UPDATE `$tn_prefix"."outer_links` SET clicked = clicked+1 WHERE `ID`=".$l['ID'].";";
-   mysqli_query($db_link,$q);
- }
- header('Location: '.$l['link']);
- die;
 }
 
 if (!$what || $lid) {
