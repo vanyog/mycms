@@ -27,6 +27,8 @@ include_once($idir.'lib/translation.php');
 // Записи от таблица content, в които има места за качване на файлове
 $da = db_select_m('*', 'content', '`text` LIKE \'%!--$$_UPLOADFILE_%\'');
 
+// Забележка: Това не изчерпва всички възможни места за качване на файлове. Някои може да са създадени от шаблони от таблица templates, а други - от модули! Настоящият скрипт трябва да се допълни с проверяване и на тези места.
+
 // Масив с намерените страници:
 $pgs = array();
 
@@ -47,7 +49,10 @@ foreach($da as $d){
   check_file($pid, $d);
 }
 
-foreach($pgs as $k=>$p) echo "<a href=\"$main_index?pid=$k\">$k</a> ";
+$rz = '';
+foreach($pgs as $k=>$p) $rz .= "<a href=\"$main_index?pid=$k\">$k</a> ";
+if(!$rz) $rz = "No missing files in pages's content.";
+echo $rz;
 
 //================ Functions ================
 
