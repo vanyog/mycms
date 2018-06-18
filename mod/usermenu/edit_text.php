@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Редактиране на текст, след щракване върху линка * зад този текст в режим на редактиране
+// Редактиране на текст, показван на някоя страница, след щракване върху линка * след този текст в режим на редактиране
 
 // Параметри, изпращани с $_GET:
 // Задължителни:
@@ -97,7 +97,10 @@ if (count($_POST)){
      ), 'content');
   }
   purge_page_cache($_SESSION['http_referer']);
-  if(isset($_GET['code'])) header('Location: '.$main_index.'?pid='.$_GET['pid']."&lang=$language#$i");
+  if(isset($_GET['code'])){
+    db_delete_where('page_cache',"`page_ID`=".(1*$_GET['pid']) );
+    header('Location: '.$main_index.'?pid='.$_GET['pid']."&lang=$language#$i");
+  }
   else header('Location: '.$_SESSION['http_referer']);
 }
 else if (isset($_SERVER['HTTP_REFERER'])) $_SESSION['http_referer'] = $_SERVER['HTTP_REFERER'];

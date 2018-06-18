@@ -19,9 +19,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // Скрипт за указване на пътя до някои директории
-// Настройките де не се задават вече тук, а в таблица $tn_prefix.'options' !
+// и четене на настройки от таблица $tn_prefix.'options'
 
 if(!isset($idir)) $idir = dirname(__FILE__).'/';
+
+if( isset($_GET['debug']) && $_GET['debug'] ) $GLOBALS['debug_mode'] = true;
 
 include_once($idir.'lib/f_stored_value.php');
 include_once($idir.'lib/f_is_local.php');

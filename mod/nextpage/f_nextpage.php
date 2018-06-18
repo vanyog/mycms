@@ -30,7 +30,7 @@ while (true){
   if( in_edit_mode() || !$pd['hidden'] ) break;
 }
 // Заглавие на страницата
-$t = translate('nextpage_next').'<a href="'.$main_index.'?pid='.$pd['ID'].'">'.strip_tags(translate($pd['title'], false)).'</a>';
+$t = translate('nextpage_next').'<a href="'.$main_index.'?pid='.$pd['ID'].'#cont">'.strip_tags(translate($pd['title'], false)).'</a>';
 return $t;
 }
 

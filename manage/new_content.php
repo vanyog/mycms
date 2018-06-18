@@ -32,6 +32,6 @@ mysqli_query($db_link,$q);
 
 $i = mysqli_insert_id($db_link);
 
-header('Location: '.$adm_pth.'edit_record.php?t=content&r='.$i);
+header('Location: '.(isset($adm_pth) ? $adm_pth : '').'edit_record.php?t=content&r='.$i);
 
 ?>

@@ -95,14 +95,17 @@ mysqli_query($db_link,$q);
 // Връща истина във всички случаи, в който не следва да се прави кеширане
 
 function do_not_cache(){
-global $page_data;
-return
-  ($page_data['ID']==0) ||
-  (isset($page_data['donotcache']) && ($page_data['donotcache']==1)) ||
-  in_edit_mode() || 
-  count($_POST) || 
-  isset($_COOKIE['PHPSESSID']) || 
-  (!is_local() && show_adm_links());
+global $page_data, $debug_mode;
+$rz = false
+  || ($page_data['ID']==0)
+  || (isset($page_data['donotcache']) && ($page_data['donotcache']==1))
+  || in_edit_mode()
+  || count($_POST)
+  || isset($_COOKIE['PHPSESSID'])
+  || (!is_local() && show_adm_links())
+  || !empty($debug_mode)
+  ;
+return $rz;
 }
 
 //
@@ -121,13 +124,14 @@ if (isset($c['pid'])) db_delete_where('page_cache',"`page_ID`=".(1*$c['pid']));
 // При $y=false - само премахва недопустимите параметри
 
 function acceptable($u,$y){
+global $edit_name;
 $a = parse_url($u);
 $b = array();
 if (isset($a['query'])) parse_str($a['query'],$b);
 $ka = array_keys($b);
 $o = stored_value('acceptable_params');
 foreach($ka as $k){
-  if ($k=='lang') {
+  if ( ($k=='lang') || ($k==$edit_name) ) {
      unset($b[$k]);
      continue;
   }

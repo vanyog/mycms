@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include_once($idir.'lib/translation.php');
 
 function parse_template($p){
-global $content_date_time;
+global $content_date_time, $debug_mode, $db_req_count;
 
 // Номер на използвания за показване на страницата шаблон
 $tid = $p['template_id'];
@@ -41,6 +41,7 @@ if (isset($_GET['template'])){
 // Четене на шаблона на страницата от таблица `templates`
 $t = db_select_1('*','templates',"ID=$tid");
 if (!$t) return 'No page template found. May be the system is not installed.  See <a href="http://vanyog.com/_new/index.php?pid=91" target="_blank">USAGE.txt</a> file.';
+if(!empty($debug_mode)) echo "Template(".$tid.") $db_req_count<br>\n";
 $cnt = stripslashes($t['template']);
 
 // Ако шаблонът е празен или не същуствува
@@ -51,6 +52,7 @@ if (!$cnt) $cnt = '<h1><!--$$_PAGETITLE_$$--></h1>
 // Повтаря се до шаблон без родител
 while ($t['parent']){
   $t0 = db_select_1('*','templates',"ID=".$t['parent']);
+  if(!empty($debug_mode)) echo "Template(".$t['parent'].") $db_req_count<br>\n";
   $cnt = str_replace('<!--$$_TEMPLATE_$$-->', $cnt, stripslashes($t0['template']) );
   $t = $t0;
 }

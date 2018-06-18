@@ -43,7 +43,9 @@ static $string = array();
 // Ако стрингът вече е съставен се връща от кеша
 if (isset($string[$n]) && !in_edit_mode()) return $string[$n];
 
-global $language, $pth, $adm_pth, $default_language, $content_date_time, $content_create_time, $can_edit, $page_data;
+global $language, $pth, $adm_pth, $default_language, $content_date_time, $content_create_time, $can_edit, $page_data, $debug_mode;
+
+//if( !empty($debug_mode) ) echo "$n ";
 
 $content_date_time = '';
 $content_create_time = '';
@@ -60,12 +62,13 @@ if (in_edit_mode() && $elink){
 $rz = '';
 
 // Четене на записа за надпис с име $n на език $language
-$r1 = db_select_1('*','content',"`name`='$n' AND `language`='$language'");
+$r1 = db_select_1('c.*, f.filters', '`content` c LEFT JOIN `filters` f ON c.name=f.name', "c.name='$n' AND `language`='$language'");
+//if($n=='VSU_location_resources') die(print_r($r1,true));
 if ($r1){ // Ако има такъв запис
   $content_create_time = $r1['date_time_1'];
   $content_date_time = $r1['date_time_2'];
   $t = stripslashes($r1['text']);
-  $rz = apply_filters($n,parse_content($t));
+  $rz = apply_filters($r1['filters'], parse_content($t));
   if ((!isset($r1['nolink']) || !$r1['nolink']) && $elink) $rz .= $el;
 }
 else if (in_edit_mode() && $elink){
@@ -79,16 +82,16 @@ else if (in_edit_mode() && $elink){
      }
      else { // На отдалечен сървър в работен режим
          // Четене на записа на езика по подразбиране
-         $r2 = db_select_1('*','content',"`name`='$n' AND `language`='$default_language'");
+         $r2 = db_select_1('c.*, f.filters', '`content` c LEFT JOIN `filters` f ON c.name=f.name', "c.name='$n' AND `language`='$default_language'");
          // Ако няма запис се показва името на текста
-         if ( !$r2 ) $r2['text'] = $n;
+         if ( !$r2 ){ $r2['text'] = $n; $r2['filters'] = ''; }
          else {
            $content_create_time = $r2['date_time_1'];
            $content_date_time = $r2['date_time_2'];
          }
          $t = stripslashes($r2['text']);
          // Заместват се със съдържание евентуални <!--$$_XXX_$$--> елементи
-         $rz = apply_filters($n,parse_content($t));
+         $rz = apply_filters($r2['filters'], parse_content($t));
      }
 // Запазване в кеш
 $string[$n] = $rz;
@@ -100,14 +103,12 @@ return $rz;
 
 // Функцията apply_filters($n, $t) прилага върху текста $t, определените за текста с име $n филтри
 
-function apply_filters($n, $t){
+function apply_filters($fs, $t){
 global $idir, $adm_pth;
 $rz = $t; // Връщан резултат
-// Четене на списъка от имена на филтри, които се прилагат върху текста
-$fl = db_select_1('*', 'filters', "`name`='$n'");
 // Масив от имена на филтри
 $fla = array();
-if ($fl) $fla = explode(',', $fl['filters']);
+if ($fs) $fla = explode(',', $fs);
 // Прилагане на списъка от филтри      
 foreach($fla as $fln){
   $flp = "filter/$fln/$fln.php"; // Път до файла на филтъра от директорията на сайта
@@ -117,7 +118,8 @@ foreach($fla as $fln){
     if(isset($fl['param']) && ($fl['param']>" ")) $rz = $fln($rz, $fl['param']);
     else $rz = $fln($rz);
   }
-  else if (show_adm_links()) $rz .= '<p><br>Unknown fliter <a href="'.$adm_pth.'new_filter.php?f='.$fln.'">'.$fln.'</a><p>';
+  else // При администриране се показва линк за създаване на филтър
+    if (show_adm_links()) $rz .= '<p><br>Unknown fliter <a href="'.$adm_pth.'new_filter.php?f='.$fln.'">'.$fln.'</a><p>';
 }
 return $rz;
 } 

@@ -49,19 +49,6 @@ die('The system is not propperly installed. See <a href="http://vanyog.com/_new/
 $page_header = ''; // Добавки към хедъра на страницата
 
 include_once($idir.'conf_paths.php');
-include_once($idir.'lib/f_stored_value.php');
-/*load_options(array(
-  'main_index_pageid',
-  'cache_time',
-  'error_404_template',
-  'today',
-  'sitesearch_nocoleron',
-  'acceptable_params',
-  'languages',
-  'default_language'
-));*/
-//include_once($idir.'lib/f_db_select_1.php');
-//include_once($idir.'lib/f_db_select_m.php');
 include_once($idir.'lib/f_parse_template.php');
 include_once($idir.'lib/translation.php');
 include_once($idir.'lib/f_page_cache.php');
@@ -254,4 +241,3 @@ else return $rz;
 }
 
 ?>
-

@@ -32,7 +32,7 @@ include_once($idir.'mod/rawfile/f_rawfile.php');
 function parse_content($cnt){
 global $page_options, $page_data, $page_title, $body_adds, $page_header, $content_date_time,
        $idir, $pth, $adm_pth, $apth, $mod_pth, $mod_apth,
-       $can_visit, $can_manage, $site_encoding;
+       $can_visit, $can_manage, $site_encoding, $debug_mode, $db_req_count;
 
 $l = strlen($cnt);
 $str1 = '<!--$$_'; // Означение за начало на замествания елемент
@@ -56,10 +56,13 @@ $p3 = $p2 + strlen($str2); // Позиция на последния заместван символ
 // Отделяне на името от параметъра
 $tg = explode('_',substr($cnt,$p1,$p2-$p1),2);
 
+if( !empty($debug_mode) ) echo "Module ".$tg[0]."(".( isset($tg[1]) ? $tg[1] : '' ).") ";
+
 $tx = ''; // Html код, който ще замести елемента
 
 // Четене на скрипта с име $tg[0] от таблица $tn_prefix.'scripts'
-$sc = db_select_1('*','scripts',"`name`='".$tg[0]."'");
+//$sc = db_select_1('*','scripts',"`name`='".$tg[0]."'");
+$sc = script($tg[0]);
 
 if (!$sc){ // Ако няма такъв скрипт се търси модул с това име
   $f = strtolower($tg[0]);
@@ -93,10 +96,23 @@ else if (eval(stripslashes($sc['script']))===false){ // Изпълнява се модула
 // Заместване на елемента с генерирания html код, който е присвоен на $tx
 $cnt = substr_replace($cnt,$tx,$p0,$p3-$p0);
 
+if( !empty($debug_mode) ) echo "$db_req_count<br>\n";
+
 } // Край на цикъла за попълване на елементите
 
 return $cnt;
 
 } // Край на функцията parce_content()
+
+function script($nm){
+static $script = array();
+if(!count($script)) {
+  $sn = db_select_m('name', 'scripts', 1);
+  foreach($sn as $n) $script[$n['name']] = '';
+}
+if(!isset($script[$nm])) return false;
+if(empty($script[$nm])) $script[$nm] = db_select_1('*','scripts',"`name`='$nm'");
+return $script[$nm];
+}
 
 ?>
