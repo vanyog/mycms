@@ -32,7 +32,7 @@ include_once($idir.'mod/rawfile/f_rawfile.php');
 function parse_content($cnt){
 global $page_options, $page_data, $page_title, $body_adds, $page_header, $content_date_time,
        $idir, $pth, $adm_pth, $apth, $mod_pth, $mod_apth,
-       $can_visit, $can_manage, $site_encoding, $debug_mode, $db_req_count;
+       $can_visit, $can_manage, $site_encoding, $debug_mode;
 
 $l = strlen($cnt);
 $str1 = '<!--$$_'; // Означение за начало на замествания елемент
@@ -56,8 +56,6 @@ $p3 = $p2 + strlen($str2); // Позиция на последния заместван символ
 // Отделяне на името от параметъра
 $tg = explode('_',substr($cnt,$p1,$p2-$p1),2);
 
-if( !empty($debug_mode) ) echo "Module ".$tg[0]."(".( isset($tg[1]) ? $tg[1] : '' ).") ";
-
 $tx = ''; // Html код, който ще замести елемента
 
 // Четене на скрипта с име $tg[0] от таблица $tn_prefix.'scripts'
@@ -65,6 +63,7 @@ $tx = ''; // Html код, който ще замести елемента
 $sc = script($tg[0]);
 
 if (!$sc){ // Ако няма такъв скрипт се търси модул с това име
+  if( !empty($debug_mode) ) echo "Module ".$tg[0]."(".( isset($tg[1]) ? $tg[1] : '' ).") ";
   $f = strtolower($tg[0]);
   $fn = mod_path($f);
   if ($fn){
@@ -89,14 +88,17 @@ if (!$sc){ // Ако няма такъв скрипт се търси модул с това име
     else $tx = '<p>Can\'t parse content '.$tg[0].'</p>';
   }
 }
-else if (eval(stripslashes($sc['script']))===false){ // Изпълнява се модула
-      store_value("eval_error_uri", $_SERVER['REQUEST_URI']);
-     }
+else {
+  if( !empty($debug_mode) ) echo "Script ".$tg[0]."(".( isset($tg[1]) ? $tg[1] : '' ).") ";
+  if (eval(stripslashes($sc['script']))===false){ // Изпълнява се модула
+     store_value("eval_error_uri", $_SERVER['REQUEST_URI']);
+  }
+}
 
 // Заместване на елемента с генерирания html код, който е присвоен на $tx
 $cnt = substr_replace($cnt,$tx,$p0,$p3-$p0);
 
-if( !empty($debug_mode) ) echo "$db_req_count<br>\n";
+if( !empty($debug_mode) ) echo db_req_count()."<br>\n";
 
 } // Край на цикъла за попълване на елементите
 

@@ -25,12 +25,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 global $can_visit, $can_manage;
 
-//include_once($idir."conf_paths.php");
 include_once($idir."lib/f_db_select_m.php");
 include_once($idir."lib/f_mod_list.php");
 include_once($idir."lib/f_edit_normal_links.php");
 include_once($idir."mod/user/f_user.php");
-//include_once($idir."lib/f_mod_path.php");
 
 if (!session_id() && isset($_COOKIE['PHPSESSID'])) session_start();
 

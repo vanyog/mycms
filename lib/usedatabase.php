@@ -54,4 +54,14 @@ global $tn_prefix, $temp_prefix;
 $tn_prefix = $temp_prefix;
 }
 
+// Показване броя на извършените SQL заявки
+function db_req_count(){
+global $db_req_count;
+static $lcount = 0;
+$rz = $db_req_count;
+if( $db_req_count - $lcount > 1 ) $rz = '<span style="color:#FF0000;">'.$rz.'</span>';
+$lcount = $db_req_count;
+return $rz;
+}
+
 ?>

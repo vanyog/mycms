@@ -49,7 +49,7 @@ if (do_not_cache()) return '';
 global $language, $page_data;
 $t = stored_value('cache_time');
 // Не е зададено време за кеширане, или то е 0
-if (!$t) return '';
+if (!$t && ($page_data['donotcache']!=-1)) return '';
 // Приемлив заявен адрес
 $htp = acceptable($_SERVER['REQUEST_URI'],false);
 // Четене на данните от кеш таблицата
@@ -57,9 +57,10 @@ $d = db_select_1('*', 'page_cache',
      '`page_ID`='.$page_data['ID']." AND `name`='".addslashes($htp)."' AND `language`='$language'");
 if (!$d) return '';
 else{
+  if($page_data['donotcache']==-1) return $d['text'];
   $td = time() - strtotime($d['date_time_1']);
   if ( !($t<0) && ($td > ($t*60)) ) return '';
-  else return $d['text'];
+  return $d['text'];
 }
 }
 
