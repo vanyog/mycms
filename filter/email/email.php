@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include_once($idir.'lib/f_db_insert_1.php');
 
 function email($t){
-$search = '/([a-zA-Z0-9\._-]+@[a-z\-]+(?:.[a-z-]+){1,2})/';
+$search = '/([a-zA-Z0-9\._-]+@[a-z\-0-9]+(?:.[a-z-]+){1,2})/';
 $im = stored_value('filter_email_toimage');
 if($im=='on') return preg_replace_callback($search, 'email_image', $t);
 $rz = preg_replace($search, '<a href="mailto:\1">\1</a>', $t);

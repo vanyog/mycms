@@ -38,14 +38,14 @@ else {
   // Таблица с данни за потребители
   $user_table = stored_value('user_table',$tn_prefix.'users');
   // Номер на влезлия потребител
-  $id = db_table_field('ID', $user_table,
+  $ud = db_select_1('ID,type', $user_table,
         "`username`='".$_SESSION['user_username']."' AND `password`='".$_SESSION['user_password']."'");
   // Ако номерът на влезлия потребител не е валиден - съобщение, че трябва да се влезе
-  if (!$id) $page_content = '<p class="message">'.translate('userreg_mustlogin', false).'</p>';
+  if (!$ud) $page_content = '<p class="message">'.translate('userreg_mustlogin', false).'</p>';
   else { //die("$id");
     // Проверка дали влезлият потребител има право да влиза от името на други потребители
-    $a = db_table_field('yes_no','permissions',"`user_id`=$id AND `type`='all'");
-    $p = db_table_field('yes_no','permissions',"`user_id`=$id AND `type`='module' AND `object`='userreg'");
+    $a = db_table_field('yes_no','permissions',"`user_id`=".$ud['ID']." AND `type`='all'");
+    $p = db_table_field('yes_no','permissions',"`user_id`=".$ud['ID']." AND `type`='module' AND `object`='userreg'");
     if ( !$a && ($p!=1) ) $page_content = '<p class="message">'.translate('userreg_nopermission2').'</p>';
     else {
       if(!isset($_GET['uid'])) $page_content = '<p class="message">'.translate('userreg_nouid', false).'</p>';
@@ -59,10 +59,13 @@ else {
            if( !$d['username'] || !$d['password'] )
               $page_content = '<p class="message">'.translate('userreg_nonameorpass').'</p>';
            else {
+              // Адрес на страницата за редактиране на данните на потребители от съответния тип
+              $p = stored_value('userreg_login_'.$ud['type'], "/index.php?pid=386");
               if (!session_id()) session_start();
               $_SESSION['user_username'] = addslashes($d['username']);
               $_SESSION['user_password'] = $d['password'];
-              $page_content = '<p class="message"> <a href="/index.php?pid=386">Open page 386</a></p>';
+//              header("Location: $p"); die;
+              $page_content = "<p> <a href=\"$p\">$p</a></p>";
            }
         }
 

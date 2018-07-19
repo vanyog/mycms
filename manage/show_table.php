@@ -61,12 +61,14 @@ $or = 'ORDER BY `'.$sbf.'` '.$sos[$so];
 if (!in_array($sbf,$f)) $or = '';
 
 $wh = set_filter(); // Допълнително ограничение за филтриране
+$not_found = false;
 
 // Четене на данни от теблицата
 $r = db_select_m('*',$t,"$wh $or LIMIT 0, $l");
 // Ако няма редове пропуснати от филтъра
 if (!count($r)) { // Ново четене без ограничения 
   $wh = '1';
+  $not_found = true;
   $r = db_select_m('*',$t,"$wh $or LIMIT 0, $l");
 }
 
@@ -136,6 +138,9 @@ rows: <input type="text" name="rows" value="'.$rws.'" size="3">
 </div>
 
 <div style="clear:both;"></div>';
+
+if($not_found) $page_content .= "<p>No records found.</p>\n";
+else $page_content .= "<p>".count($r)." records found.</p>\n";
 
 // Начало на таблицата
 $page_content .= '<table border="1" cellspacing="0"><tr>

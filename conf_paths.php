@@ -106,6 +106,9 @@ $seo_names = stored_value('SEO_names') == 'on';
 // Дали се използва RewriteEngine
 $rewrite_on = stored_value('RewriteEngine') == 'on';
 
+// Списък, разделени със запетая имане на модули, които не трябва да зареждат _style.css файла от директорията си
+$no_style = ',';
+
 // Тайни стойности, на които се базира сигурността на административния достъп до сайта:
 
 // Име на променлива, която се изпраща с GET за да се покаже менюто за администриране 
@@ -129,7 +132,13 @@ function current_pth($f = __FILE__){
 $p1 = $_SERVER['DOCUMENT_ROOT'];         $n1 = strlen($p1);
 if ($p1[$n1-1]=='/') $n1--;
 $p2 = str_replace('\\','/',dirname($f)); $n2 = strlen($p2);
-//die("$p2,$n1,$n2-$n1");
+if(substr($p2, 0, $n1)!=$p1){
+  $or = stored_value('uploadfile_otherroot');
+  if($or){
+    $p1 = $or;
+    $n1 = strlen($p1);
+  }
+}
 $r = substr($p2,$n1,$n2-$n1).'/';
 return $r;
 }

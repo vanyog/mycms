@@ -49,10 +49,12 @@ include_once($idir.'lib/f_rand_string.php');
 include_once($idir.'lib/f_db_insert_or_1.php');
 include_once($idir.'lib/f_db_update_record.php');
 include_once($idir.'lib/f_view_record.php');
+include_once($idir.'lib/f_edit_record_form.php');
 include_once($idir.'mod/user/f_user.php');
 
-// Име на таблицата с данни за потребителите
 global $user_table, $userreg_altt;
+
+// Име на таблицата с данни за потребителите
 $user_table = stored_value('user_table','users');
 
 function userreg($t = ''){
@@ -81,7 +83,7 @@ case 'login' : return userreg_login($ta[0]);   break;
 case 'logout': return userreg_logout($ta[0]);  break;
 case 'edit'  : return userreg_edit($ta[0]);    break;
 }
-else{// die(print_r($ta,false));
+else{
   if (isset($ta[1])){
     $pid = 1*$ta[1];
     if ($pid){ header('Location: '.$main_index.'?pid='.$pid); die; }
@@ -324,11 +326,14 @@ $lp = stored_value("userreg_login_$t");
 if(!$lp) die("'userreg_login_$t' option is not set.");
 // Ако е разрешен https
 if(stored_value('userreg_https')=='on') $lp = 'https://'.$_SERVER['HTTP_HOST'].$lp;
+// Запомняне на текущата страница, като страница за връщане
 $_SESSION['user2_returnpage'] = $_SERVER['REQUEST_URI'];
+// Номер на влезлия потребител
 $id = userreg_id($t);
 // Ако няма номер на влязъл потребител и не сме на страницата за влизане - пренасочване
 // към страницата за влизане
-if (!$id && (strpos($lp,'pid='.$page_id)===false)) { header('Location: '.$lp); die; }
+if (!$id)
+   if (strpos($lp,'pid='.$page_id)===false) { header('Location: '.$lp); die; }
 // Ако потребителят съществува, се връща празен стринг.
 $can_visit = 1;
 return '';
@@ -353,7 +358,9 @@ if (!isset($_SESSION['user_password'])){
 }
 $id = db_table_field('ID', $user_table, "`username`='".$_SESSION['user_username'].
       "' AND `password`='".$_SESSION['user_password']."' AND `type`='$t'", 0);
-if (!$id) return 0;
+$_SESSION['userreg_message'] = translate('userreg_wrong');
+if (!$id){ unset($_SESSION['user_username']); return 0; }
+unset($_SESSION['userreg_message']);
 $can_visit = 1;
 // Отбелязване на часа и IP адреса на влизане
 if (!isset($_SESSION['session_start'])) $_SESSION['session_start'] = time();
@@ -395,12 +402,13 @@ if (count($_POST)) return userreg_loginprocess($t);
 userreg_check($t);
 // Адрес на страницата за излизане
 $lp = stored_value("userreg_logout_$t");
-// Ако вече има влязъл потребител - надпис "Вие сте влезли като: име "Изход"
+// Номер на влезлия потребител
 $id = userreg_id($t);
+// Ако вече има влязъл потребител - надпис "Вие сте влезли като: име "Изход"
 if ($id)
     return '<p class="message">'.translate('userreg_yourin').$_SESSION['user_username'].
            ' <a href="'.$lp.'">'.translate('user_logaut').'</a></span>';
-// Определяне страницата, към която да стане връщане
+// Задаване на страницата, към която да стане връщане
 if (isset($_SERVER['HTTP_REFERER']) && !isset($_SESSION['user2_returnpage'])) 
    $_SESSION['user2_returnpage'] = $_SERVER['HTTP_REFERER'];
 // Форма за влизане
@@ -412,9 +420,11 @@ $rp = stored_value("userreg_newreg_$t");
 if (!$rp) die("'userreg_newreg_$t' option is not set.");
 $altt = '';
 if(in_edit_mode()) $altt = translate("USERREG_$t");
-return $altt.translate('userreg_logintext').
-       '<a href="'.$rp.'">'.translate('userreg_newreg').
-       "</a></p>\n".$guf->html();
+$lk = '<a href="'.$rp.'">'.translate('userreg_newreg')."</a>";
+if(!empty($_SESSION['userreg_message'])) $altt .= '<p class="message">'.$_SESSION['userreg_message']." $lk</p>\n";
+unset($_SESSION['userreg_message']);
+
+return $altt.translate('userreg_logintext').$lk."</p>\n".$guf->html();
 }
 
 //
@@ -432,7 +442,7 @@ if (isset($_POST['username'])){
 if (!isset($_SESSION['user2_returnpage'])) $h = $_SERVER['REQUEST_URI'];
 // Иначе се презарежда текущата страница
 else $h = $_SESSION['user2_returnpage'];
-// От адреса на страницата се премахва параметър user2=logout и user2=logсх.
+// От адреса на страницата се премахва параметър user2=logout и user2=login.
 // Иначе потребителят ще излезе от системата без още да е успял да влезе или
 // ще се изпълни отново процеса про влизане.
 $h = str_replace('&user2=logout','',$h);
@@ -467,7 +477,7 @@ return $rz;
 // Форма за редактиране данните на потребител
 
 function userreg_edit($t){
-global $user_table;
+global $user_table, $idir;
 // Проверяване дали има влязъл потребител
 $r = userreg_id($t);
 //if (!isset($_SESSION['user_username'])){
@@ -502,6 +512,10 @@ $id1 = db_table_field('ID', $user_table, "`username`='".$_SESSION['user_username
 global $can_manage;
 $rz = ''; // Връщан резултат
 if ( $id2 && ($id1!=$id2) ){
+ if(!function_exists('usermenu')){
+   include_once($idir.'mod/usermenu/f_usermenu.php');
+   usermenu(true);
+ }
  if (isset($can_manage['userreg']) && $can_manage['userreg'] ){
    // Проверка дали потребител $id2 е от същия тип
    $ty = db_table_field('type', $user_table, "`ID`=$id2");

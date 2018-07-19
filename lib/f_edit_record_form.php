@@ -180,16 +180,23 @@ $fn = db_field_names($tn);
 $ft = array_combine($fn, $ft);// print_r($ft); die;
 $k = array_keys($cp); // Масив от имената на полетата, за които са изпратени данни.
 $rz = ''; // Връщан резултат - надпис, относно резултата от запазването на данните.
-$q = ''; // SQL заявка, която се генерира.
 $w = ''; // WHERE частта на SQL заявката.
 $pu = false; // Дали да се обновят данните за потребителя в текущата сесия.
 // Използва се, когато се редактира записът с данни на текущия потребител.
+// Създаване на нов запис
+if(empty($cp['ID'])){
+  $q = "INSERT INTO `$tn_prefix$tn` (`ID`) VALUES (NULL);";
+  mysqli_query($db_link,$q);
+  $cp['ID'] = mysqli_insert_id($db_link);
+//  die(print_r($cp,true));
+}
+$q = ''; // SQL заявка, която се генерира.
 foreach($k as $n) switch($n){
 case 'MAX_FILE_SIZE':
-  foreach($_FILES as $f=>$a)
+  if(!empty($cp['ID'])) foreach($_FILES as $f=>$a) if(!$a['error'])
   {
      if(empty($GLOBALS['upfile_path'])) die('$GLOBALS[\'upfile_path\'] is not defined.');
-     $fln = $_SERVER['DOCUMENT_ROOT'].$GLOBALS['upfile_path'].$_POST['ID'].'.'.pathinfo($a['name'], PATHINFO_EXTENSION );
+     $fln = $_SERVER['DOCUMENT_ROOT'].$GLOBALS['upfile_path'].$cp['ID'].'.'.pathinfo($a['name'], PATHINFO_EXTENSION );
      $m = move_uploaded_file($a['tmp_name'], $fln);
      if($m){
         if ($q) $q .= ', ';
@@ -199,19 +206,19 @@ case 'MAX_FILE_SIZE':
   break;
 case 'ID':
   // Ако не е изпратен номер на запис, не се прави нищо.
-  if (!isset($_POST['ID'])) return;
+  if (!isset($cp['ID'])) return;
   // За проверка дали има запис с изпратения номер:
-  $id = db_table_field('ID', $tn, "`ID`=".(1*$_POST['ID']));
+  $id = db_table_field('ID', $tn, "`ID`=".(1*$cp['ID']));
   // Ако има запис с изпратения номер се генерира заявка UPDATE,
   // а в противен случай - заявка INSERT.
-  if ($id) $w = " WHERE `ID`=".(1*$_POST['ID']).";";
+  if ($id) $w = " WHERE `ID`=".(1*$cp['ID']).";";
   break;
 case 'password':
   // Ако е изпратена нова парола и нейно повторение
-  if ( isset($_POST['password2']) && $_POST['password2'])
-    if ( ($_POST['password2']==$_POST['password']) ){
+  if ( isset($cp['password2']) && $cp['password2'])
+    if ( ($cp['password2']==$cp['password']) ){
       if ($q) $q .= ', ';
-      $q .= "`$n`='".sha1($_POST[$n])."'";
+      $q .= "`$n`='".sha1($cp[$n])."'";
       $pu = true;
       $rz .= '<span class="message">'.translate('user_passwordchanged')."</span><br>\n";
     }
@@ -220,16 +227,16 @@ case 'password':
 default:
   if ($q) $q .= ', ';
   if ($ft[$n]==3){ // Цяло число
-    if (isset($_POST[$n])) $q .= "`$n`='".(1*$_POST[$n])."'";
+    if (isset($cp[$n])) $q .= "`$n`='".(1*$cp[$n])."'";
     else $q .= "`$n`=0";
   }
   else if ($ft[$n]==4){ // Реално число
-    $v1 = str_replace(',', '.', $_POST[$n]);// die($v1);
+    $v1 = str_replace(',', '.', $cp[$n]);// die($v1);
     $q .= "`$n`='".addslashes($v1)."'";
   }
   else {
-    $v1 = element_correction($_POST[$n]);
-    if( ($ft[$n]==12) && ($_POST[$n]=='NOW()') )
+    $v1 = element_correction($cp[$n]);
+    if( ($ft[$n]==12) && ($cp[$n]=='NOW()') )
        $q .= "`$n`=NOW()";
     else
        $q .= "`$n`='".addslashes($v1)."'";
@@ -244,14 +251,13 @@ else {
   if (in_array('date_time_1', $fn)) $q = "`date_time_1`=NOW(), $q";
   $q = "INSERT INTO `$tn_prefix"."$tn` SET $q;";
 }
-//print_r($q);
 if (mysqli_query($db_link,$q) && $m) $rz .= '<span class="message">'.translate('dataSaved')."</span>";
-//die;
+//echo "$q<p>".print_r($cp,true)."<p>".print_r($_FILES,true); die();
 if ($rz) $rz = '<p class="message">'.$rz.'</p>';
 return $rz;
 }
 
-// Функция, която коригира елементите --$$_ _$$-- елементите
+// Функция, която коригира --$$_ _$$-- елементите
 
 function element_correction($v1){
  $v1 = str_replace( chr(60).' !--$$_',    chr(60).'!--$$_', $v1);

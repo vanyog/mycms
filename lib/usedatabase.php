@@ -56,11 +56,18 @@ $tn_prefix = $temp_prefix;
 
 // Показване броя на извършените SQL заявки
 function db_req_count(){
-global $db_req_count;
+global $db_req_count, $exe_time;
 static $lcount = 0;
-$rz = $db_req_count;
-if( $db_req_count - $lcount > 1 ) $rz = '<span style="color:#FF0000;">'.$rz.'</span>';
+$rc = $db_req_count - $lcount;
+$rz = "$rc/$db_req_count";
+if( $rc  > 1 ) $rz = '<span style="color:#FF0000;">'.$rz.'</span>';
+if( $rc == 1 ) $rz = '<span style="color:#00FF00;">'.$rz.'</span>';
 $lcount = $db_req_count;
+static $ex_time = 0;
+if($ex_time==0) $ex_time = $exe_time;
+$ext = microtime(true);
+$rz .= " ".number_format(($ext - $ex_time)*100, 3);
+$ex_time = $ext;
 return $rz;
 }
 

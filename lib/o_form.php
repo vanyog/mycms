@@ -108,7 +108,8 @@ function __construct($c,$n,$t,$v = '',$ta = ''){
 $this->caption = $c;
 $this->name = $n;
 $this->type = $t;
-$this->value = "$v";// if ($t=='hidden') {print_r($this->value); die;}
+$this->value = "$v";
+if( ($t=='checkbox') && $v) $this->checked = 'checked';
 $this->textAfter = $ta;
 }
 
@@ -123,6 +124,10 @@ if (!$it) $rz .= "$this->caption ";
 else $rz .= "<tr><th>$this->caption </th><td>";
 if( ($this->type=='file') && $this->value){
    $vl = current_pth($this->value).pathinfo($this->value, PATHINFO_BASENAME );
+   if(!empty($GLOBALS['use_viewer'])){
+     $_SESSION['can_view_file'][] = $vl;
+     $vl = $GLOBALS['pth']."view.php?file=$vl";
+   }
    $rz .= "<a href=\"$vl\" target=\"_blank\">$vl</a><br>\n";
 }
 $rz .= "<input type=\"$this->type\" ";

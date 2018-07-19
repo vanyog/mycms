@@ -158,8 +158,10 @@ global $page_id;
 // ID на потребител
 $uid = 0;
 if( isset($_GET['uid']) && is_numeric($_GET['uid']) ) $uid = $_GET['uid'];
+// Име на таблицата с данни за потребителите
+$user_table = stored_value('user_table','users');
 // Имейл на потребителя
-if($uid) return db_table_field('email', 'users', "`ID`=$uid");
+if($uid) return db_table_field('email', $user_table, "`ID`=$uid");
 // Проверка дали има зададен имейл адрес, до който да се изпращат съобщенията от текущата страница
 $n = db_table_field('name', 'content', "`name`='feedback_to_$page_id'");
 return translate($n, false);

@@ -150,7 +150,7 @@ for($i=0; $i<count($dl); $i++){
      if(in_array(strtolower(pathinfo($a, PATHINFO_EXTENSION)), array('png', 'jpg', 'jpeg', 'gif')))
         $page_content .= "<td>$s1<a href=\"$pth$f".urlencode($a)."\">$a</a>$s2";
      else
-        $page_content .= "<td>$s1<a href=\"edit_file.php?f=".urlencode($f.$a)."\">$a</a>$s2";
+        $page_content .= "<td>$s1<a href=\"edit_file.php?f=".urlencode("$f/$a")."\">$a</a>$s2";
   $page_content .= '</td><td style="width:1%;text-align:right;">';
   if (is_file($d.'/'.$a)) $page_content .= filesize($d.'/'.$a);
   $page_content .= "</td>\n";

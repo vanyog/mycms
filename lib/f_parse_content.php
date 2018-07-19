@@ -32,7 +32,7 @@ include_once($idir.'mod/rawfile/f_rawfile.php');
 function parse_content($cnt){
 global $page_options, $page_data, $page_title, $body_adds, $page_header, $content_date_time,
        $idir, $pth, $adm_pth, $apth, $mod_pth, $mod_apth,
-       $can_visit, $can_manage, $site_encoding, $debug_mode;
+       $can_visit, $can_manage, $site_encoding, $debug_mode, $no_style;
 
 $l = strlen($cnt);
 $str1 = '<!--$$_'; // Означение за начало на замествания елемент
@@ -69,7 +69,7 @@ if (!$sc){ // Ако няма такъв скрипт се търси модул с това име
   if ($fn){
     // Зареждане на файл _style.css, ако в директорията на модула има такъв
     $sf = dirname($fn).'/_style.css';
-    if(file_exists($sf) && !function_exists($f)){
+    if(file_exists($sf) && !function_exists($f) && strpos($no_style, ",$f,")===false ){
       $sfn = substr($sf,strlen($apth));
       $page_header .= "<style>\n".rawfile($sfn)."</style>\n";
     }
