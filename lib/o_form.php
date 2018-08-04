@@ -109,7 +109,10 @@ $this->caption = $c;
 $this->name = $n;
 $this->type = $t;
 $this->value = "$v";
-if( ($t=='checkbox') && $v) $this->checked = 'checked';
+/*if($t=='checkbox'){
+  if($v) $this->checked = 'checked';
+  else $this->value = 1;
+}*/
 $this->textAfter = $ta;
 }
 
@@ -123,7 +126,8 @@ $rz = '';
 if (!$it) $rz .= "$this->caption ";
 else $rz .= "<tr><th>$this->caption </th><td>";
 if( ($this->type=='file') && $this->value){
-   $vl = current_pth($this->value).pathinfo($this->value, PATHINFO_BASENAME );
+   $p = strrpos($this->value, '/');
+   $vl = current_pth($this->value).substr($this->value, $p );
    if(!empty($GLOBALS['use_viewer'])){
      $_SESSION['can_view_file'][] = $vl;
      $vl = $GLOBALS['pth']."view.php?file=$vl";

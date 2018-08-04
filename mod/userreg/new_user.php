@@ -25,6 +25,7 @@ $ddir = $idir;
 
 include($idir.'lib/translation.php');
 include_once($idir.'lib/o_form.php');
+include_once($idir.'lib/f_rand_string.php');
 include_once($idir.'mod/user/f_user.php');
 include_once($idir.'lib/f_db_insert_1.php');
 
@@ -41,10 +42,11 @@ else {
         "`username`='".$_SESSION['user_username']."' AND `password`='".$_SESSION['user_password']."'");
   // Ако номера на влезлия потребител не е валиден - съобщение, че трябва да се влезе
   if (!$id) $page_content = '<p class="message">'.translate('userreg_mustlogin').'</p>';
-  else {
+  else { //die($id);
     // Проверка дали влезлият потребител има право да създава нови потребители
-    $p = db_table_field('yes_no','permissions',"`user_id`=$id AND `type`='module' AND `object`='userreg'");
-    if ($p!=1) $page_content = '<p class="message">'.translate('userreg_nopermission').'</p>';
+    $p = db_table_field('yes_no','permissions',
+           "`user_id`=$id AND ((`type`='module' AND `object`='userreg') OR `type`='all')");
+    if (!$p) $page_content = '<p class="message">'.translate('userreg_nopermission').'</p>';
     else {
       // Тип на влезлия потребител
       $t = db_table_field('type', $user_table, "`ID`=$id");
@@ -55,7 +57,7 @@ else {
       $f = new HTMLForm('newuserreg_form');
       $f->add_input( new FormInput('','type','hidden',$t) );
       $f->add_input( new FormInput(translate('user_email'),'email','text') );
-      $f->add_input( new FormInput(translate('user_password'),'password','text') );
+      $f->add_input( new FormInput(translate('user_password'),'password','text', rand_string(8)) );
       $f->add_input( new FormInput('','','submit', translate('userreg_create')) );
       $page_content = '<h1>'.translate('userreg_new').'</h1>
 '.$ms.$f->html();
