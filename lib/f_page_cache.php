@@ -38,9 +38,11 @@ include_once($idir.'lib/f_db_delete_where.php');
 // ѕри самосто€телно извикване, този файл предизвиква почистване на кеша на страница $_GET['purge']
 
 if(isset($_GET['purge'])){
+global $db_link;
   if(!$_GET['purge']) $_GET['purge'] = stored_value('main_index_pageid',1);
   db_delete_where('page_cache',"`page_ID`=".(1*$_GET['purge']));
-  die('Page cache '.$_GET['purge'].' purged.');
+  $i = mysqli_affected_rows($db_link);
+  die('Page cache '.$_GET['purge']." purged. $i rows.");
 }
 
 function page_cache(){
@@ -57,7 +59,7 @@ $d = db_select_1('*', 'page_cache',
      '`page_ID`='.$page_data['ID']." AND `name`='".addslashes($htp)."' AND `language`='$language'");
 if (!$d) return '';
 else{
-  if($page_data['donotcache']==-1) return $d['text'];
+  if(isset($page_data['donotcache']) && ($page_data['donotcache']==-1) ) return $d['text'];
   $td = time() - strtotime($d['date_time_1']);
   if ( !($t<0) && ($td > ($t*60)) ) return '';
   return $d['text'];
