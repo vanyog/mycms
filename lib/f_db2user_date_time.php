@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Третият параметър позволява/забранява добавянето на интервали пред датата.
 
 function db2user_date_time($dts, $tm = true, $ts = true){
-$c = translate('month_names',false);
+$c = translate('month_names',false); die($c);
 eval($c);
 if ((substr($dts,11,8)=="00:00:00")||!$tm) $t = '';
 else {

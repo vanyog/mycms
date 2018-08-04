@@ -344,7 +344,7 @@ return '';
 
 function userreg_id($t){
 global $can_visit, $user_table;
-if (!session_id() && isset($_COOKIE['PHPSESSID'])) session_start();// die("$t");
+if (!session_id() && isset($_COOKIE['PHPSESSID'])) session_start();
 if (!isset($_SESSION)) return 0;
 if (!isset($_SESSION['user_username'])){
    unset($_SESSION['user_password']);
@@ -359,7 +359,10 @@ if (!isset($_SESSION['user_password'])){
 $id = db_table_field('ID', $user_table, "`username`='".$_SESSION['user_username'].
       "' AND `password`='".$_SESSION['user_password']."' AND `type`='$t'", 0);
 $_SESSION['userreg_message'] = translate('userreg_wrong');
-if (!$id){ unset($_SESSION['user_username']); return 0; }
+if (!$id){
+//   unset($_SESSION['user_username']);
+   return 0;
+}
 unset($_SESSION['userreg_message']);
 $can_visit = 1;
 // Отбелязване на часа и IP адреса на влизане
@@ -423,7 +426,6 @@ if(in_edit_mode()) $altt = translate("USERREG_$t");
 $lk = '<a href="'.$rp.'">'.translate('userreg_newreg')."</a>";
 if(!empty($_SESSION['userreg_message'])) $altt .= '<p class="message">'.$_SESSION['userreg_message']." $lk</p>\n";
 unset($_SESSION['userreg_message']);
-
 return $altt.translate('userreg_logintext').$lk."</p>\n".$guf->html();
 }
 
@@ -457,7 +459,6 @@ die;
 function userreg_logout($t){
 userreg_check($t);
 if (!session_id()) session_start();
-//die(print_r($_SESSION, true));
 unset($_SESSION['user_username']);
 unset($_SESSION['user_password']);
 $rz = '<p>'.translate('userreg_logoutcontent').
@@ -480,7 +481,6 @@ function userreg_edit($t){
 global $user_table, $idir;
 // Проверяване дали има влязъл потребител
 $r = userreg_id($t);
-//if (!isset($_SESSION['user_username'])){
 if (!$r){
    $lp = stored_value("userreg_login_$t");
    return '<p class="message">'.translate('userreg_mustlogin').' <a href="'.$lp.'">Log in</a></p>';
