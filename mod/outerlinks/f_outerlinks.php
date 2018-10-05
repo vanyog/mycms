@@ -238,13 +238,12 @@ function sid_clicked(a){
 var u = document.forms.link_edit_form.up;
 u.value = a.innerText;
 }
-function pl_clicked(a){
+function pl_clicked(a,e){
 var u = document.forms.link_edit_form.place;
 var v = a.innerText;
-var l = v.slice(-1);
-var n = "0";
-if(l=="0") n = "5";
-u.value = v.substring(0, v.length-1) + n;
+var n = Number(v);
+if(e.ctrlKey || e.metaKey) n -= 5; else n += 5;
+u.value = "" + n;
 }
 --></script>
 ';
@@ -480,7 +479,7 @@ Private: <input type="text" name="private" size="1"></p>
 function edit_radio($id,$p,$f=0){
 if (!in_edit_mode()) return '';
 else return '<input type="radio" name="link_id" value="'.$id.'" onclick="linkradioclicked('.$f.');">'."\n".
-            '<span onclick="pl_clicked(this);" class="sid" title="Place">'.$p."</span> \n";
+            '<span onclick="pl_clicked(this,event);" class="sid" title="Place">'.$p."</span> \n";
 }
 
 // Добавяне/променяне на данните в режим на редактиране

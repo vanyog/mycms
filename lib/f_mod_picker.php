@@ -20,9 +20,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Показване списък на наличните модули за по-лесно добавяне
 
 include_once($idir.'lib/f_parse_content.php');
+include_once($idir.'lib/f_encode.php');
 
 function mod_picker(){
-global $page_header, $pth;
+global $page_header, $pth, $adm_pth;
 
 $page_header .= '<script>
 var tefc;
@@ -92,6 +93,10 @@ if(tefc){
   var p = "";
   if( eval("typeof "+f+"===\"function\"") )
       eval("p = "+f+"();");
+  else {
+     p = prompt("'.encode('Въведете стойност на параметър, ако е необходима за този модул'). '");
+     if(p) p = "_" + p;
+  }
   insert_text("<!--$$_"+a.innerHTML+p+"_$$-->");
 }
 }
@@ -113,6 +118,10 @@ foreach($mn as $i=>$m) {
   $rm = $ml[$i].'README.txt';
   $pj = $ml[$i].'params.js';
   $rz .= '<span><span onclick="toClip(this);">'.$m.'</span>';
+  if(show_adm_links()){
+    $elk = $adm_pth.'edit_file.php?f='.current_pth($ml[$i]).strtolower($m);
+    $rz .= ' <a href="'.$elk.'">&gt;</a>';
+  }
   if (file_exists($rm)) $rz .= ' <a href="'.$pth.'mod/help.php?m='.$m.'" target="_blank">help</a>';
   if (file_exists($pj)) $page_header .= "<script>\n".parse_content(file_get_contents($pj))."\n</script>\n";
   $rz .= '</span> '."\n";

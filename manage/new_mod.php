@@ -33,6 +33,7 @@ if (!file_exists($md)) if (!mkdir($md, 0755, true)) die("Can't create directory:
 
 // Име на файла с модулната функция
 $ff = "$md/f_$mf.php";
+$el = $adm_pth.'edit_file.php?f='.current_pth($ff);
 
 // Съдържание на файла
 $fc = '<?php
@@ -56,7 +57,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 function '.$mf.'(){
 $rz = \'\';
-$rz .= \'Module '.$mf.' works\';
+$rz .= \'Module <a href="'.$el.'">'.$mf.'</a> works\';
 $rz .= \'\';
 return $rz;
 }

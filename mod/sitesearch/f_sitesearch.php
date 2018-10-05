@@ -33,7 +33,7 @@ function doSiteSearch(){
 var f = document.forms.site_search_form;
 var t = f.searchtext.value;
 if(Number.isInteger(1*t)){
-  if(confirm("'.translate('sitesearch_gpn').'"+t)){
+  if(confirm("'.translate('sitesearch_gpn', false).'"+t)){
     document.location = "'.$main_index.'?pid="+t;
   }
 }

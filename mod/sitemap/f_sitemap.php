@@ -47,39 +47,51 @@ $map_level = 0;
 $i_root    = 0;
 $ar = explode('|',$a);
 if(!$ar[0]) $ar[0] = stored_value('main_index_pageid',1);
+$id_pre = 'map'.$ar[0];
+$id = 'site_map';
+if (isset($ar[1])) $id = $ar[1];
 $page_header .= '<script><!--
-function mapHideShow(e){
+function mapHideShow(e, a=0){
 var p = e.parentElement;
 var ls = document.links;
-for(i=0;i<ls.length;i++) if(ls[i].parentElement==p) break;
+for(var i=0;i<ls.length;i++) if(ls[i].parentElement==p) break;
 var sl = window.getComputedStyle(ls[i]);
 var h = p.style.height;
 var sp = window.getComputedStyle(p);
-var v = "'.stored_value('sitemap_colapsed_height', '1.45em').'";
+var v = "'.stored_value('sitemap_colapsed_height', '1.35em').'";
 var lh = sp.lineHeight.slice(0,-2);
-if(lh=="norm") lh = Number(sp.fontSize.slice(0,-2))  * 1.5;
+if(lh=="norm") lh = Number(sp.fontSize.slice(0,-2)) * 1.25;
 else lh = Number(lh);
 var v = ( lh
           + Number(sl.paddingTop.slice(0,-2))
           + Number(sl.paddingBottom.slice(0,-2))
         ) + "px";
-if (h!=v){
+if ( ( (h!=v)&&(a==0) ) ||(a==1)){
   e.innerHTML = "&#9658;"
   p.style.height = v;
   p.style.overflow = "hidden";
 }
-else {
+if ( ( (h==v)&&(a==0) ) ||(a==2)){
   e.innerHTML = "&#9660;"
   p.style.height = "auto";
   p.style.overflow = "visible";
 }
+};
+function mapContractExpandAll(a){
+var sm = document.getElementById("'.$id.'");
+var c = sm.children.length;
+for(var i=0; i<c; i++) if(sm.children[i].nodeName=="DIV"){
+  if(sm.children[i].children[0].nodeName=="SPAN"){
+    mapHideShow(sm.children[i].children[0], a);
+  }
+}
 }
 --></script>';
-$id_pre = 'map'.$ar[0];
-$id = 'site_map';
-if (isset($ar[1])) $id = $ar[1];
-$rz = '<div id="'.$id.'">'."\n".sitemap_rec($ar[0], 1)."
-<p class=\"clear\"></p></div>\n";
+$rz = '<div id="'.$id.'">'."\n".
+site_map_buttons().
+sitemap_rec($ar[0], 1).
+site_map_buttons()."
+<p class=\"clear\"></p></div>";
 if($smday !== $smfile){
    $smfile = '<?xml version="1.0" encoding="UTF-8"?>'."\n".
              '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n".
@@ -88,6 +100,17 @@ if($smday !== $smfile){
    file_put_contents($_SERVER['DOCUMENT_ROOT'].'/sitemap.xml', $smfile);
 }
 return $rz;
+}
+
+//
+// Бутони "Сгъване"-"Разгъване"
+
+function site_map_buttons(){
+return '<p class="buttons">
+<a href="" onclick="mapContractExpandAll(2); return false;">'.translate("site_map_expand").'</a>
+<a href="" onclick="mapContractExpandAll(1); return false;">'.translate("site_map_contract").'</a>
+</p>
+';
 }
 
 //
@@ -168,12 +191,16 @@ foreach($mi as $m){
       // Рекурсивно извикване за получаване карта на подменюто
       if ( !in_array($p['menu_group'],$page_passed) && ($p['ID']==$mtd['index_page']) && ($i==$mtd['parent']) ){
         $map_level++;
+        $n = db_table_field('COUNT(*)', 'menu_items', "`group`=".$p['menu_group'],0);
         if ($map_level<$max_level){
            if(in_edit_mode() || !$h) $rz1 .= sitemap_rec($p['menu_group'], $count);
         }
-        else $rz1 .= '...';
+        else {
+           if($n>1) $rz1 .= '...';
+        }
         $map_level--;
-        $rz2 = '<span onclick="mapHideShow(this);" class="bullet">&#9660;</span>&nbsp;';
+//        if($n>1)
+           $rz2 = '<span onclick="mapHideShow(this);" class="bullet">&#9660;</span>&nbsp;';
       }
     }
   }

@@ -29,7 +29,7 @@ include_once($idir.'conf_paths.php');
 $fln = $apth.'README-bg.txt';
 
 if (isset($_GET['m'])) $fln = $_SERVER['DOCUMENT_ROOT'].$mod_pth.strtolower($_GET['m']).'/README.txt';
-if (!file_exists($fln)) $fln = $apth.'mod/'.$_GET['m'].'/README.txt';
+if (!file_exists($fln)) $fln = $apth.'mod/'.strtolower($_GET['m']).'/README.txt';
 
 if (!file_exists($fln)) $cnt = "File not found<br>$fln";
 else $cnt = nl2br( htmlspecialchars( file_get_contents($fln), ENT_COMPAT, 'cp1251' ) );

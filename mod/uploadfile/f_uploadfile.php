@@ -29,7 +29,7 @@ include_once($idir."lib/f_db2user_date_time.php");
 global $can_manage;
 
 function uploadfile($n){
-global $mod_pth, $page_id;
+global $mod_pth, $page_id, $page_data;
 
 $n = stripslashes($n);
 
@@ -135,7 +135,10 @@ else {
   }
   else { // Показване на картинка или хипервръзка към файла
     $e = strtolower(pathinfo($f, PATHINFO_EXTENSION));
-    if (in_array($e, $imgs)) $rz .= '<img src="'.$f."\"$ss alt=\"".stripslashes($fr['text']).'" id="'.$fr['name'].'">';
+    if (in_array($e, $imgs)){
+      $rz .= '<img src="'.$f."\"$ss alt=\"".stripslashes($fr['text']).'" id="'.$fr['name'].'">';
+      $page_data['last_img']=$f;
+    }
     else {
        $rz .= '<a href="'.$f."\"$ss>".upload_file_addimage($add_image,$e).stripslashes($fr['text']).'</a>';
        if(!$cs && isset($na[2]) && ($na[2]==3)) $rz .= translate('uploadfile_old');

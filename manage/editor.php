@@ -42,16 +42,25 @@ function doInsertTag(){
 tgToIn = prompt("Enter a html tag to be inserted", tgToIn);
 insert_tag(tgToIn,tgToIn);
 }
+var lastEv;
 function insert_tag(t1,t2){
 var te = tefc;
 te.focus();
 var s = te.selectionStart;
 var e = te.selectionEnd;
 var v = te.value;
-if (t2.length) v = v.substring(0,e)+"</"+t2+">"+v.substring(e,v.length); 
-te.value = v.substring(0,s)+"<"+t1+">"+v.substring(s,v.length);
-s += t1.length + 2;
-e += t1.length + 2;
+var s1 = "";
+var s2 = "/";
+var p = 0;
+if(lastEv && lastEv.shiftKey) {
+  s1 = "/";
+  s2 = "";
+  p = 1;
+}
+if (t2.length) v = v.substring(0,e)+"<"+s2+t2+">"+v.substring(e,v.length);
+te.value = v.substring(0,s)+"<"+s1+t1+">"+v.substring(s,v.length);
+s += t1.length + 2 + p;
+e += t1.length + 2 + p;
 te.selectionStart = s;
 te.selectionEnd = e;  
 }
@@ -88,8 +97,10 @@ function showCharCount(a){
 var s = document.getElementById(a.id + "_count");
 s.innerHTML = a.value.length;
 metaPressed = false;
+lastEv = "";
 }
 function editor_onKey(e,v){
+lastEv = v;
 if(metaPressed && (v.key=="Enter")) insert_tag(tgToIn,tgToIn);
 metaPressed = true;
 }
