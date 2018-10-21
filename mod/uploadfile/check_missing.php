@@ -49,8 +49,8 @@ foreach($da as $d){
   check_file($pid, $d);
 }
 
-$rz = '';
-foreach($pgs as $k=>$p) $rz .= "<a href=\"$main_index?pid=$k\">$k</a> ";
+$rz = ''; //die(print_r($pgs,true));
+foreach($pgs as $k=>$p) $rz .= "<a href=\"$main_index?pid=$k\">$k</a> $p, ";
 if(!$rz) $rz = "No missing files in pages's content.";
 echo $rz;
 
@@ -60,12 +60,12 @@ echo $rz;
 function check_file($pid, $d){
 global $pgs;
   $m = array();
-  $i = preg_match_all('/--\$\$_UPLOADFILE_(.*?)[_]/si', $d['text'], $m);
+  $i = preg_match_all('/--\$\$_UPLOADFILE_(.*?)[,_]/si', $d['text'], $m);
   if($i) foreach($m[1] as $n) {
     $na = explode(',', $n);
     if(isset($na[1]) && is_numeric($na[1])) $pid = $na[1];
     // Четене на запис от страница
     $f = db_select_1('*', 'files', "`pid`=$pid AND `name`='".$na[0]."'");
-    if(!$f) $pgs[$pid] = '';
+    if(!$f && ($f['pid']==$pid)) $pgs[$pid] = $n;
   }
 }
