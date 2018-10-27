@@ -51,9 +51,11 @@ foreach($da as $d){
     $r = relative_to($_SERVER['CONTEXT_DOCUMENT_ROOT'], $p2)."/$f2";
     $_SESSION['can_view_file'][] = $r;
     echo " <a href=\"$pth"."view.php?file=$r\">$f2</a>";
-}
-else echo ' <a href="'.$d['link'].'" style="color:red;">download</a> '.$f2;
-  echo "<br>\n";
+  }
+  else {//  die("<p>$p1<br>$p2");
+    echo ' <a href="'.$d['link'].'" style="color:red;">download</a> '.$f2;
+  }
+  echo ' <a href="/index.php?pid=6&lid='.$d['up'].'"> '.">> </a><br>\n";
 }
 
 ?>

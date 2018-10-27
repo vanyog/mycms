@@ -208,8 +208,13 @@ $seng = stored_value('outerlenks_sengin', 'https://www.google.bg/search?q=');
 if (in_edit_mode()) $page_header .= '<script><!--
 function chCaseClick(){
 var f = document.forms.link_edit_form.title;
+var s = f.selectionStart;
+var e = f.selectionEnd;
 var t = f.value;
-t = t.substring(0,1) + t.substring(1).toLowerCase();
+if(e>s)
+  t = t.substr(0,s) + t.substring(s, e).toLowerCase() + t.substring(e);
+else
+  t = t.substring(0,1) + t.substring(1).toLowerCase();
 f.value = t;
 }
 function linkradioclicked(fi){
