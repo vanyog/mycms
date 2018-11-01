@@ -33,7 +33,7 @@ foreach($d as $n=>$v){
   else $q .= "`$n`='".addslashes($v)."',";
 }
 $q = substr($q,0,strlen($q)-1).";";
-if ($y) return $q;
+if ($y) return "$q<br>\n";
 else{
  mysqli_query($db_link,$q);
  $db_req_count++;
