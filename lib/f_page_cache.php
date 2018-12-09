@@ -53,7 +53,7 @@ $t = stored_value('cache_time');
 // Ќе е зададено време за кеширане, или то е 0
 if (!$t && ($page_data['donotcache']!=-1)) return '';
 // јко е зададено време за кеширане на отделната страница в поле `donotcache` се вземе предвид това време
-if ($page_data['donotcache']>1) $t = $page_data['donotcache'];
+if (isset($page_data['donotcache']) && ($page_data['donotcache']>1) ) $t = $page_data['donotcache'];
 // ѕриемлив за€вен адрес
 $htp = acceptable($_SERVER['REQUEST_URI'],false);
 // „етене на данните от кеш таблицата

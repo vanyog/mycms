@@ -131,7 +131,7 @@ if (e.keyCode==13){
 <a href="'.$pth.'mod/all_pages.php">all</a> &#x25C7;
 <a href="'.$adm_pth.'edit_file.php?f='.$f.'">File system</a> &#x25C7;
 <a href="'.$adm_pth.'edit_data.php">Database</a> &#x25C7;
-<a href="'.$pth.'lib/f_page_cache.php?purge='.(1*(isset($_GET['pid'])?$_GET['pid']:0)).'">Purge</a> &#x25C7;
+<a href="'.$pth.'lib/f_page_cache.php?purge='.(1*( isset($_GET['pid']) && is_numeric($_GET['pid']) ? $_GET['pid'] : 0 )).'">Purge</a> &#x25C7;
 <a href="'.stored_value('adm_links_cpanel').'" target="_blank">cPanel</a> &#x25C7;
 <a href="'.$mphp.'" target="_blank">phpMyAdmin</a> &#x25C7;
 <a href="'.$adm_pth.'showenv.php?AAAAAAA" target="_blank">$_SERVER</a> &#x25C7;
