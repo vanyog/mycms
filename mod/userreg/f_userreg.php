@@ -357,7 +357,7 @@ if (!isset($_SESSION['user_password'])){
    return 0;
 }
 $id = db_table_field('ID', $user_table, "`username`='".$_SESSION['user_username'].
-      "' AND `password`='".$_SESSION['user_password']."' AND `type`='$t'", 0);
+      "' AND `password`='".$_SESSION['user_password']."' AND `type`='$t'", 0); //, true);
 $_SESSION['userreg_message'] = translate('userreg_wrong');
 if (!$id){
 //   unset($_SESSION['user_username']);
@@ -552,6 +552,7 @@ $id1 = db_table_field('ID', $user_table, "`username`='".$_SESSION['user_username
 $id2 = 1*$_POST['ID'];
 if (isset($_POST['password'])){
   $_POST['password'] = pass_encrypt($_POST['password']);
+  // Паролата се сменя само ако влезлият потребител е потребителят, чиито данни се редактират
   if ($id1==$id2) $_SESSION['user_password'] = $_POST['password'];
 }
 // Ако username е празен стринг или съвпада с този на друг потребител

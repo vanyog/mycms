@@ -196,10 +196,12 @@ if (isset($_GET['user'])&&($_GET['user']=='enter')){
 // Кодиране на паролата по един от два начина
 
 function pass_encrypt($p){
+$rz = '';
 // Ако е зададена опция - както се кодират с mysql функцията password()
-if (stored_value('user_mysqlpass','')=='yes') return '*'.strtoupper(sha1(sha1($p,true)));
+if (stored_value('user_mysqlpass','')=='yes') $rz = '*'.strtoupper(sha1(sha1($p,true)));
 // Иначе така:
-else return sha1($p);
+else $rz = sha1($p);
+return $rz;
 }
 
 // Запазване на данните за нов потребител
