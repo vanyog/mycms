@@ -34,7 +34,7 @@ global $db_link, $tn_prefix, $db_req_count;
 $t = "$tn_prefix$tb";
 if($t[0]!='`') $t = "`$t`";
 $q="SELECT $fn FROM $t WHERE $whr LIMIT 1;";
-if ($y) echo "$q<br>";
+if ($y) echo "$q<br>\n";
 $r=mysqli_query($db_link,$q);
 $db_req_count++;
 if ($r===false) return false;

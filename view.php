@@ -35,10 +35,11 @@ if( empty($_SESSION['can_view_file']) || !in_array($fl, $_SESSION['can_view_file
 $e = strtolower( pathinfo($fpth, PATHINFO_EXTENSION) );
 
 $mt = array(
-'jpg'=>'image/jpeg', 'jpeg'=>'image/jpeg',
+'jpg'=>'image/jpeg', 'jpeg'=>'image/jpeg', 'pdf'=>'application/pdf'
 );
 
 $ct = file_get_contents($fpth);
+if($ct===false) die("Can't read file $fpth");
 
 header('Content-type: '.(isset($mt[$e]) ? $mt[$e] : ''));
 header('Content-Disposition: filename="' . basename ($_GET['file']) . '"');

@@ -208,8 +208,13 @@ $seng = stored_value('outerlenks_sengin', 'https://www.google.bg/search?q=');
 if (in_edit_mode()) $page_header .= '<script><!--
 function chCaseClick(){
 var f = document.forms.link_edit_form.title;
+var s = f.selectionStart;
+var e = f.selectionEnd;
 var t = f.value;
-t = t.substring(0,1) + t.substring(1).toLowerCase();
+if(e>s)
+  t = t.substr(0,s) + t.substring(s, e).toLowerCase() + t.substring(e);
+else
+  t = t.substring(0,1) + t.substring(1).toLowerCase();
 f.value = t;
 }
 function linkradioclicked(fi){
@@ -403,7 +408,7 @@ $rz1$rz2".search_link_form();
 // ----------------------------
 function search_link_form(){
 global $page_id;
-return '<form method="POST" action="'.$_SERVER['PHP_SELF'].'?pid='.$page_id.'">
+return '<form method="POST" action="'.$_SERVER['PHP_SELF'].'?pid='.$page_id.'#outer_links">
 <p class="search">'.translate('outerlinks_searchin').' 
 <input type="radio" name="search_by" value="keyword" checked> '.translate('outerlinks_intitles').' 
 <input type="radio" name="search_by" value="url"> '.translate('outerlinks_inurls').' 
@@ -415,6 +420,7 @@ return '<form method="POST" action="'.$_SERVER['PHP_SELF'].'?pid='.$page_id.'">
 // Ќачало на формата за редактиране
 // --------------------------------
 function start_edit_form(){
+global $page_id;
 if (!in_edit_mode()) return '';
 else return '
 <script><!--
@@ -462,16 +468,17 @@ if (!in_edit_mode()) return '';
 else return '
 <p><a href="'.$adm_pth.'places10.php?t=outer_links">10 20...</a></p>
 <input type="hidden" name="action" value="update">
-<p>URL: <input type="text" name="link" size="50"> 
-Place: <input type="text" name="place" size="5"> 
-Group: <input type="text" name="up" size="5" value="'.$i.'" onfocus="this.select();">
-Private: <input type="text" name="private" size="1"></p>
+<p>URL: <input type="text" name="link" size="50"></p>
 <p>Title: <input type="text" name="title" size="100" onfocus="enter_title_field();">
 <input type="button" value="Aa" onclick="chCaseClick();"></p>
 <p>Comment: <textarea name="comment" cols="83" rows="4" style="vertical-align:top"></textarea></p>
-<input type="submit" value="Add/Update"> 
+<p>Place: <input type="text" name="place" size="5">
+Group: <input type="text" name="up" size="5" value="'.$i.'" onfocus="this.select();">
+Private: <input type="text" name="private" size="1"></p>
+<input type="submit" value="Add/Update">
 <input type="button" value="Delete" onclick="doDelete_link();">
-</form>';
+</form>
+<script>document.forms["link_edit_form"].link.focus();</script>';
 }
 
 // –адио бутони, които се показват в режим на редактиране

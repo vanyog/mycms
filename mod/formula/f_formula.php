@@ -71,7 +71,7 @@ if (!isset($fs[$a])){
   // Ако съществува формула с `ID`=$a, показана на друга страница
   if (db_table_field('ID', 'formula', "`ID`=$a"))
      // Се показва съобщение какво стойност на $a е допустима за текущата страница
-     return '<p>'.translate('formula_incorrectID')." ".(db_table_field('MAX(`ID`)', 'formula', 1)+1).'</p>';
+     return translate('formula_incorrectID')." ".(db_table_field('MAX(`ID`)', 'formula', 1)+1);
   else 
      // Ако не съществува формула с `ID`=$a, се показва форма за въвеждане
      return formula_edit_form();

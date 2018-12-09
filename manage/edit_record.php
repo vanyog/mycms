@@ -55,7 +55,8 @@ if ($r) foreach($r as $k => $v){
  switch ($ft[$i]){
  case 252: $page_content .= '<td class="r">'.$k.':</td><td>'.editor($k,stripslashes($v)).'</td>'."\n"; break;
  case 1  :
- case 3  : 
+ case 2  :
+ case 3  :
  case 4  : 
  case 5  :
  case 10 :

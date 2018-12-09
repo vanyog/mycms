@@ -30,9 +30,9 @@ $h_id = 0;
 $tof_contents = '';
 $s = preg_replace_callback('/<h(\d+)\s*(id=".+?")*>(.*?)<\/h\1>/s', 'toc_cb', $s);
 if($h_id<2) $tof_contents = '';
-else $tof_contents = "<div id=\"toc\">\n".
+else $tof_contents = "<div id=\"toc\"><div>\n".
                 '<h2>'.translate('filtertoc_toc')."</h2>\n".
-                $tof_contents."</div>\n";
+                $tof_contents."</div></div>\n";
 $s = str_replace('TOFCONTENTS', $tof_contents, $s);
 return $s;
 }

@@ -37,7 +37,7 @@ $bs = file_get_contents($bsc);
 $bs = preg_replace('/(\n|^)\/\*.*?\*\//s', '', $bs);
 // Разделяне на CSS кода на части, предназначени за различни медии
 $md = medias($bs);
-die('<pre>'.$md[1].'</pre>');
+die('<pre>'.$md.'</pre>');
 
 
 /*
@@ -58,8 +58,8 @@ echo "<h4> </h4>\n<pre>".$bs."</pre>";
 
 function medias($cnt){
 $nc = preg_replace('/(@media.*?\{)/', '------$1', $cnt);
-$rz = explode('------', $nc);
-return $rz;
+//$rz = explode('------', $nc); return $rz;
+return $nc;
 }
 
 function htags($cnt){

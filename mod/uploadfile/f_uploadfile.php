@@ -142,13 +142,16 @@ else {
     else {
        $rz .= '<a href="'.$f."\"$ss>".upload_file_addimage($add_image,$e).stripslashes($fr['text']).'</a>';
        if(!$cs && isset($na[2]) && ($na[2]==3)) $rz .= translate('uploadfile_old');
-       if($add_time || $add_size) $rz .= ' -';
+//       if($add_time || $add_size) $rz .= ' -';
        if($add_time && file_exists($thfn)){
          $ft =  date("Y-m-d H:i:s", filemtime($thfn));
-         $rz .= " ".db2user_date_time($ft);
+         if($fr['text']) $rz .= ", ";
+         $rz .= db2user_date_time($ft);
        }
-       if($add_size && file_exists($thfn))
-         $rz .= ", ".filesize($thfn)." bytes";
+       if($add_size && file_exists($thfn)){
+         if($fr['text']) $rz .= ",";
+         $rz .= " ".upload_file_bBKM(filesize($thfn));
+       }
     }
   }
   $fid = $fr['ID'];
@@ -164,6 +167,12 @@ if (in_edit_mode() || can_upload()){
 }
 
 return $rz;
+}
+
+function upload_file_bBKM($s){
+if($s>1000000) return number_format($s/1000000,3)." MB";
+if($s>1000) return number_format($s/1000,3)." KB";
+return "$s bytes";
 }
 
 // Добавяне на картинка ако $add_image==true;
