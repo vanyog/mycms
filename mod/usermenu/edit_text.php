@@ -86,15 +86,16 @@ if (count($_POST)){
   if(isset($_GET['pid'])) $d['page_id'] = $_GET['pid'];
   db_insert_1($d,'who_made_change');
   // Запазване на редактираните данни
-  if ($i) process_record($cp, 'content');
+  if ($i) process_record($_POST, 'content');
   else {
-    $i = db_insert_1(array(
-      'name' => addslashes($_GET['i']),
-      'date_time_1'=>'NOW()',
-      'date_time_2'=>'NOW()',
-      'language' => addslashes($_GET['lang']),
-      'text' => addslashes(element_correction($_POST['text']))
-     ), 'content');
+    $d = array(
+    'name' => addslashes($_GET['i']),
+    'date_time_1'=>'NOW()',
+    'date_time_2'=>'NOW()',
+    'language' => addslashes($_GET['lang']),
+    'text' => addslashes(element_correction($_POST['text']))
+    );
+    $i = db_insert_1($d, 'content');
   }
   purge_page_cache($_SESSION['http_referer']);
   if(isset($_GET['code'])){

@@ -85,7 +85,7 @@ $rz = '';
 $fr = db_select_1('*','files',"`pid`=$pid AND `name`='$n'");// print_r($fr); die;
 
 $ne = true; // Флаг, който ако е истина файлът не се показва
-$imgs = array('jpg','jpeg','gif','png','svg'); // Разширения на файлове - изображения
+$imgs = array('jpg','jpeg','jp2','gif','png','svg'); // Разширения на файлове - изображения
 
 // $show_text - Дали да се показва текст
 if (isset($na[2])) $show_text = $na[2];

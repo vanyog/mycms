@@ -23,7 +23,7 @@ include_once($idir.'lib/f_parse_content.php');
 include_once($idir.'lib/f_encode.php');
 
 function mod_picker(){
-global $page_header, $pth, $adm_pth;
+global $page_header, $pth, $apth, $adm_pth;
 
 $page_header .= '<script>
 var tefc;
@@ -119,7 +119,8 @@ foreach($mn as $i=>$m) {
   $pj = $ml[$i].'params.js';
   $rz .= '<span><span onclick="toClip(this);">'.$m.'</span>';
   if(show_adm_links()){
-    $elk = $adm_pth.'edit_file.php?f='.current_pth($ml[$i]).strtolower($m);
+    $elk = relative_to($apth, $ml[$i]);
+    $elk = $adm_pth.'edit_file.php?f='.urlencode($elk);
     $rz .= ' <a href="'.$elk.'">&gt;</a>';
   }
   if (file_exists($rm)) $rz .= ' <a href="'.$pth.'mod/help.php?m='.$m.'" target="_blank">help</a>';
