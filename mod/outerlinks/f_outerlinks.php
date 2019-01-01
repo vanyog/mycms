@@ -35,7 +35,7 @@ global $tn_prefix, $db_link, $site_encoding, $page_header, $adm_pth, $rewrite_on
 if (!$site_encoding) $site_encoding = 'windows-1251';
 
 // Общ брой на връзките
-$lc = db_table_field('COUNT(*)','outer_links',"`link`>''");
+$lc = db_table_field('COUNT(*)','outer_links',"`link`>'' AND (1*`link`=0)");
 
 // Общ брой на категориите
 $cc = db_table_field('COUNT(*)','outer_links',"`link`=''");
@@ -242,6 +242,7 @@ f.comment.value = t;
 function sid_clicked(a){
 var u = document.forms.link_edit_form.up;
 u.value = a.innerText;
+u.focus();
 }
 function pl_clicked(a,e){
 var u = document.forms.link_edit_form.place;
@@ -283,23 +284,25 @@ if (count($ca)) $rz .= '<p>'.count($ca).' '.translate('outerlinks_sub').", $tc "
 
 
 // Четене и показване на линковете
-$la = db_select_m('*','outer_links',"`up`=$lid AND `link`>''$qp ORDER BY `place`");
+$la = db_select_m('*','outer_links',"`up`=$lid AND `link`>'' $qp ORDER BY `place`");
 if (count($la)) $rz .= '<p>'.count($la).' '.translate('outerlinks_links')."</p>\n";
 foreach($la as $l){
-$cl = '';
-if ($l['private']) $cl = ' class="private"';
-$rz .= "<p$cl>".edit_radio($l['ID'],$l['place']).'<img src="'.$p.'go.gif" alt=""> '."\n".'<a href="';
-if($rewrite_on)
+  if(is_numeric($l['link']))
+    $l = db_select_1('*', 'outer_links', '`ID`='.$l['link']);
+  $cl = '';
+  if ($l['private']) $cl = ' class="private"';
+  $rz .= "<p$cl>".edit_radio($l['ID'],$l['place']).'<img src="'.$p.'go.gif" alt=""> '."\n".'<a href="';
+  if($rewrite_on)
     $rz .= "/$page_id/lid/".$l['ID']."/";
-else
+  else
     $rz .= set_self_query_var('lid',$l['ID']);
-$rz .= '" title="'.urldecode($l['link']).
+  $rz .= '" title="'.urldecode($l['link']).
         '" target="_blank" id="lk'.$l['ID'].'">'.stripslashes($l['Title'])."</a>";
- $rz .= outerlinks_autocomment($l);
- if (in_edit_mode()) $rz .= ' <a href="'.$adm_pth.'duplicate_record.php?t=outer_links&r='.$l['ID'].
+  $rz .= outerlinks_autocomment($l);
+  if (in_edit_mode()) $rz .= ' <a href="'.$adm_pth.'duplicate_record.php?t=outer_links&r='.$l['ID'].
                             '" onclick="duDuplicate(this);return false;">2</a>';
- if($spage) $rz .= ' <img class="sid" src="'.$p.'search.png" alt="" onclick="onSearchClick(this);"> ';
- $rz .= "</p>\n";
+  if($spage) $rz .= ' <img class="sid" src="'.$p.'search.png" alt="" onclick="onSearchClick(this);"> ';
+  $rz .= "</p>\n";
 }
 
 }
@@ -376,7 +379,7 @@ case 'url':
   $q = "`link` LIKE '%".addslashes($_POST['search_for'])."%'";
   break;
 }
-// Добавка за пропускане на private линковете
+// За пропускане на private линковете
 $qp = '';
 if (!in_edit_mode()) $qp = 'AND `private`=0';
 // Извличане на данните
@@ -399,7 +402,7 @@ foreach($ra as $r){
   if ($r['link']) $rz2 .= '<img src="'.$p.'go.gif" alt=""> '.$lk;
   else  $rz1 .= '<img src="'.$p.'folder.png" alt=""> '.$lk;
 }
-return '<p class="link_tree"><a href="'.$pth.'index.php?pid='.$page_id.'#outer_links">'.translate('outerlinks_home').'</a>   '
+return '<p class="link_tree"><a href="'.$pth.'index.php?pid='.$page_id.'">'.translate('outerlinks_home').'</a>   '
 .translate('outerlinks_found')." ".count($ra)." (".substr($_POST['search_for'],0,30).")</p>
 $rz1$rz2".search_link_form();
 }
@@ -477,6 +480,7 @@ Group: <input type="text" name="up" size="5" value="'.$i.'" onfocus="this.select
 Private: <input type="text" name="private" size="1"></p>
 <input type="submit" value="Add/Update">
 <input type="button" value="Delete" onclick="doDelete_link();">
+<input type="reset">
 </form>
 <script>document.forms["link_edit_form"].link.focus();</script>';
 }
@@ -564,7 +568,7 @@ return $rz;
 function outerlenks_cat($up, $tx, $lv = 1){
 $rz = '';
 $p = current_pth(__FILE__);
-// Добавка за пропускане на private линковете
+// За пропускане на private линковете
 $qp = '';
 if (!in_edit_mode()) $qp = 'AND `private`=0';
 $da = db_select_m('*', 'outer_links', "`up`=$up AND (`link`='' OR `link` IS NULL)$qp ORDER BY `place`");
@@ -586,8 +590,8 @@ function outerlenks_new(){
 $rz = '<h2>'.translate('outerlinks_newest')."</h2>\n";
 // Добавка за пропускане на private линковете
 $qp = '';
-if (!in_edit_mode()) $qp = ' AND `private`=0';
-$da = db_select_m('*', 'outer_links', "`link`>' '$qp ORDER BY `date_time_1` DESC LIMIT 0,10");
+if (!in_edit_mode()) $qp = '`private`=0';  else $qp = '1';
+$da = db_select_m('*', 'outer_links', "$qp ORDER BY `date_time_1` DESC LIMIT 0,20");
 return $rz.outerlinks_showlinks($da);
 }
 
@@ -616,8 +620,11 @@ return $rz.outerlinks_showlinks($da);
 
 function outerlinks_showlinks($da){
 $rz = '';
+$p = current_pth(__FILE__);
 foreach($da as $d){
-  $rz .= '<p><a href="'.set_self_query_var('lid',$d['ID']).'" title="'.urldecode($d['link']).
+  if($d['link']) $img = '<img src="'.$p.'go.gif" alt=""> ';
+  else $img = '<img src="'.$p.'folder.png" alt=""> ';
+  $rz .= '<p>'.$img.'<a href="'.set_self_query_var('lid',$d['ID']).'" title="'.urldecode($d['link']).
          '" target="_blank">'.stripslashes($d['Title']).'</a>';
   if ($d['up']){
      $t2 = db_table_field('Title', 'outer_links', "`ID`=".$d['up']);
@@ -642,6 +649,8 @@ if (!(strpos($d['link'], 'google.bg')===false)) return ' - '.translate('outerlin
 if (!(strpos($d['link'], 'bg.wikipedia.org')===false)) return ' - '.translate('outerlinks_wiki').'bg.wikipedia.org';
 if (!(strpos($d['link'], 'en.wikipedia.org')===false)) return ' - '.translate('outerlinks_wiki').'en.wikipedia.org';
 }
+
+// Брой връзки в категория и нейните подкатегории
 
 function uoterlinks_count($c, $qp){
 $c1 = db_table_field('COUNT(*)','outer_links', "`up`=".$c['ID']." AND `link`>' ' $qp ORDER BY `place`");
