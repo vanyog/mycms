@@ -39,7 +39,9 @@ tefc = document.activeElement;
 }
 var tgToIn = "p";
 function doInsertTag(){
-tgToIn = prompt("Enter a html tag to be inserted", tgToIn);
+var nt = window.prompt("Enter a html tag to be inserted", tgToIn);
+if(nt == null) return;
+tgToIn = nt;
 insert_tag(tgToIn,tgToIn);
 }
 var lastEv;

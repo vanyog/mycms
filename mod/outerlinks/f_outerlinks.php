@@ -66,6 +66,9 @@ if (isset($l['link']) && $l['link']>''){
    $q = "UPDATE `$tn_prefix"."outer_links` SET clicked = clicked+1 WHERE `ID`=".$l['ID'].";";
    mysqli_query($db_link,$q);
  }
+ if($l['private'].""){ // Ако е лична връзка
+   if (!show_adm_links()) die('Private link. Access denied.');
+ }
  header('Location: '.$l['link']);
  die;
 }

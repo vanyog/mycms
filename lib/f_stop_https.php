@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Параметърът $a е името на съдържанието на текущата страница
 
 function stop_https($a){
-global $language, $pth, $ind_fl, $main_index;
+global $language, $pth, $ind_fl, $main_index, $page_id;
 $redir = false;
 $www = stored_value('prefere_www');
 if(($www=='yes')
@@ -48,7 +48,9 @@ if(($www=='no') && isset($_SERVER['HTTP_HOST']) && (substr($_SERVER['HTTP_HOST']
   $redir = true;
 }
 $stps = stored_value('stop_https', 1);
-if($stps && isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']=='on')){
+$except = array();
+eval(stored_value('do_https', '')); // Списък от номера на страници, които остават на https
+if($stps && isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']=='on') && !in_array($page_id, $except)){
   $cnt = db_table_field('text', 'content', "`name`='$a' AND `language`='$language'");
   $pos = strpos($cnt, '$$_USERREG_');
   if($pos===false){

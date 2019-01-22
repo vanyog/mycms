@@ -58,7 +58,11 @@ while ($t['parent']){
 }
 
 // Заместване на елементите със съдържние и връщане на резултата
-return parse_content($cnt);
+
+$rz = parse_content($cnt);
+$rz = preg_replace('/<!--(.*)-->/Uis', '', $rz);
+$rz = preg_replace('/^\n+|^[\t\s]*\n+/m', '', $rz);
+return $rz;
 }
 
 function show_visits($p){
