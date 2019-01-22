@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Настройки за достъп до MySQL базата данни
 
-$colation = 'cp1251'; // Кодировка в която трябва да се извличат данните от базата
+$colation = 'utf8'; // Кодировка в която трябва да се извличат данните от базата
 $database ='dbname'; // Име на базата данни
 $user     ='dbuser'; // Потребителско име
 $password ='dbpass'; // Парола
