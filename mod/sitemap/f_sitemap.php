@@ -17,11 +17,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Функцията sitemap($i) генерира html код за показване карта на сайта.
-// $i е номера на менюто на страницата, от която се разклонява картата,
+// Функцията sitemap($i) генерира html код за показване карта на сайта
+// и ежедневно генерира файл sitemap.xml, който се записва в DOCUMENT_ROOT.
+
+// Параметърът $i е номера на менюто на страницата, от която се разклонява картата,
 // но може да съдържа и втори, отделен с | параметър,
 // който се задава като id атрибут на <div> тага, в който се представя картата.
-// Когато втори параметър не е зададен id="site_map".
+// Когато втори параметър не е зададен се използва id="site_map".
 
 // Ако е дефинирана глобална променлива $max_level, се показват само връзките до това ниво на вложеност.
 
@@ -31,17 +33,26 @@ global $smfile, $smday;
 
 $page_passed = array(); // Номера на менюта, които вече са обработени,
                         // използва са за да не се получи зацикляне
-$map_level = 0; // Ниво на рекурсията
-$i_root    = 0; // Номер на входното меню
+$map_level = 0;                 // Ниво на рекурсията
+$GLOBALS['has_levels'] = false; // Става истина ако има нива на рекурсия. Използва се за да не се показват,
+                                // ако не е необходимо, бутони "Разгъване всички" - "Сгъване всички"
+$i_root    = 0;  // Номер на входното меню
 $id_pre    = ''; // Представка, с която започват id атрибутите на <div> елементите
 
-$smday     = 0; // Ден от месеца на файла с картата на сайта
+$smday     = 0; // Ден от месеца на файл sitemap.xml
 if(file_exists($_SERVER['DOCUMENT_ROOT'].'/sitemap.xml'))
-       $smday = date('j', filemtime($_SERVER['DOCUMENT_ROOT'].'/sitemap.xml') );
+   $smday = date('j', filemtime($_SERVER['DOCUMENT_ROOT'].'/sitemap.xml') );
+             // Номер на текущия ден от месеца
+             // На същата променлива се присвоява съдържанието на файл sitemap.xml, ако трябва да се генерира
 $smfile    = stored_value("today");
+             // Номер на менюто на главната страница, което е корен на картата на цилия сайт
+$GLOBALS['mpg_id'] = stored_value('main_index_pageid',1);
+$GLOBALS['mpg_id'] = db_table_field('menu_group', 'pages', "`ID`=".$GLOBALS['mpg_id']);
+
+// Главна функция на модула
 
 function sitemap($a = ''){
-global $page_passed, $map_level, $i_root, $id_pre, $page_header, $smfile, $smday;
+global $page_passed, $map_level, $i_root, $id_pre, $page_header, $smfile, $smday, $mpg_id;
 $page_passed = array();
 $map_level = 0;
 $i_root    = 0;
@@ -50,7 +61,9 @@ if(!$ar[0]) $ar[0] = stored_value('main_index_pageid',1);
 $id_pre = 'map'.$ar[0];
 $id = 'site_map';
 if (isset($ar[1])) $id = $ar[1];
-$page_header .= '<script><!--
+$rz = sitemap_rec($ar[0], 1, $ar[0]==$mpg_id);
+//if($map_level)
+$page_header .= '<script>
 function mapHideShow(e, a=0){
 var p = e.parentElement;
 var ls = document.links;
@@ -86,11 +99,9 @@ for(var i=0; i<c; i++) if(sm.children[i].nodeName=="DIV"){
   }
 }
 }
---></script>';
+</script>';
 $rz = '<div id="'.$id.'">'."\n".
-site_map_buttons().
-sitemap_rec($ar[0], 1).
-site_map_buttons()."
+site_map_buttons().$rz.site_map_buttons()."
 <p class=\"clear\"></p></div>";
 if($smday !== $smfile){
    $smfile = '<?xml version="1.0" encoding="UTF-8"?>'."\n".
@@ -106,6 +117,8 @@ return $rz;
 // Бутони "Сгъване"-"Разгъване"
 
 function site_map_buttons(){
+global $has_levels;
+if(!$has_levels) return;
 return '<p class="buttons">
 <a href="" onclick="mapContractExpandAll(2); return false;">'.translate("site_map_expand").'</a>
 <a href="" onclick="mapContractExpandAll(1); return false;">'.translate("site_map_contract").'</a>
@@ -115,16 +128,19 @@ return '<p class="buttons">
 
 //
 // Рекурсивна функция, която съставя картата
+// $i - номер на меню
+// $j - ? (не се използва май)
+// $y - флаг, дали да се генерира файл sitemap.xml
 
-function sitemap_rec($i, $j){
-global $pth, $page_passed, $map_level, $max_level, $i_root, $ind_fl, $id_pre, $page_id, $smfile, $smday, $rewrite_on;
+function sitemap_rec($i, $j, $y){
+global $pth, $page_passed, $map_level, $has_levels, $max_level, $i_root, $ind_fl, $id_pre, $page_id, $smfile, $smday, $rewrite_on;
 if(!isset($max_level)) $max_level = 100;
 
 $page_passed[] = $i;
 
 $count = 1; // Номер на поредната връзка
 
-$rz = "\n"; 
+$rz = "\n";
 if (!$i_root) $i_root = $i;
 
 // Извличат се данни за хипервръзките от меню $i
@@ -164,14 +180,15 @@ foreach($mi as $m){
     {
        $h = $p['hidden'];
        if( !$h || in_edit_mode() ){
-          if($smday !== $smfile){
+          // Добавяне ва страница във файл sitemap.xml
+          if($y && ($smday !== $smfile)){
             if( strlen($smfile) < 3 ) $smfile = '';
-             $smfile .= "<url>\n".
-                        "<loc>http://".$_SERVER['HTTP_HOST'].str_replace('&','&amp;',$lk)."</loc>\n".
-                        "<lastmod>".date("Y-m-d")."</lastmod>\n".
-                        "<changefreq>monthly</changefreq>\n".
-                        "<priority>".(1-0.2*$map_level)."</priority>\n".
-                        "</url>\n";
+            $smfile .= "<url>\n".
+                       "<loc>http://".$_SERVER['HTTP_HOST'].str_replace('&','&amp;',$lk)."</loc>\n".
+                       "<lastmod>".date("Y-m-d")."</lastmod>\n".
+                       "<changefreq>monthly</changefreq>\n".
+                       "<priority>".(1-0.2*$map_level)."</priority>\n".
+                       "</url>\n";
           }
           $rz1 .= '<a href="'.$lk.'">'.translate($m['name']).'</a>';
           if( $pid==$page_id ) $rz1 .= translate('sitemap_currentpage');
@@ -191,9 +208,10 @@ foreach($mi as $m){
       // Рекурсивно извикване за получаване карта на подменюто
       if ( !in_array($p['menu_group'],$page_passed) && ($p['ID']==$mtd['index_page']) && ($i==$mtd['parent']) ){
         $map_level++;
+        $has_levels = true;
         $n = db_table_field('COUNT(*)', 'menu_items', "`group`=".$p['menu_group'],0);
         if ($map_level<$max_level){
-           if(in_edit_mode() || !$h) $rz1 .= sitemap_rec($p['menu_group'], $count);
+           if(in_edit_mode() || !$h) $rz1 .= sitemap_rec($p['menu_group'], $count, $y);
         }
         else {
            if($n>1) $rz1 .= '...';

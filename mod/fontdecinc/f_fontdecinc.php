@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 function fontdecinc(){
 global $page_header, $body_adds;
-$page_header .= '<script><!--
+$page_header .= '<script>
 function font_inc(){
 s = document.body.style.fontSize;
 if (!s.length){
@@ -60,7 +60,7 @@ else{
 }
 document.body.style.fontSize = s;
 }
---></script>';
+</script>';
 //$body_adds = preg_replace('/onload="(.*?)"/', 'aaaa', $body_adds); die($body_adds);
 //$body_adds .= ' onload="set_font_size();"';
 return '<a href="" onclick="font_inc();return false;">A+</a> <span class="smaller"><a href="" onclick="font_dec();return false;">A-</a></span>';

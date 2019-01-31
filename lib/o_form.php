@@ -642,7 +642,7 @@ $this->l2->js = ' multiple="multiple" size="'.count($sp).'" onclick="chooserClic
 
 function html($it){
 global $page_header;
-$page_header .= '<script><!--
+$page_header .= '<script>
 function chooserChosen(t){
 var l = document.getElementById("formChoices");
 for(var i=0; i<l.length; i++){
@@ -680,7 +680,7 @@ function chooserSubmit(){
 var v = chooserMakeValue();
 v.form.submit();
 }
---></script>';
+</script>';
 $rz = '';
 $dsbl = lock_form_fields();// die("$dsbl");
 if ($it) $rz .= '<tr><th>';

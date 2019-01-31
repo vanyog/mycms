@@ -32,7 +32,7 @@ static $tec = 0;
 // è mod_picker
 if (!$tec){
 $js = '
-<script><!--
+<script>
 var tefc;
 function onTeFocus(){
 tefc = document.activeElement;
@@ -106,7 +106,7 @@ lastEv = v;
 if(metaPressed && (v.key=="Enter")) insert_tag(tgToIn,tgToIn);
 metaPressed = true;
 }
---></script>
+</script>
 '.mod_picker();
 } else $js = '';
 $tec += 1;

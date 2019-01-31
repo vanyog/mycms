@@ -35,13 +35,13 @@ $id = 1*$_GET['r'];
 $ft = db_field_types($t);//print_r($ft); die;
 $r = db_select_1('*',$t,"ID=$id");
 
-$page_content = '<script><!--
+$page_content = '<script>
 function saveAndClose(){
 var f = document.edit_form;
 f.go_to_close.value = 1;
 f.submit();
 }
---></script><p>Database: <strong>'.$database.'</strong> Table: <strong>'.$tn_prefix.$t.'</strong></p>
+</script><p>Database: <strong>'.$database.'</strong> Table: <strong>'.$tn_prefix.$t.'</strong></p>
 <form method="POST" action="save_record.php" name="edit_form">
 <input type="hidden" name="table_name" value="'.$t.'">
 <input type="hidden" name="record_id" value="'.$id.'">

@@ -28,7 +28,7 @@ if(isset($_POST['words'])) $kw = $_POST['words'];
 
 global $page_header;
 
-$page_header = '<script><!--
+$page_header .= '<script>
 function stopRKey(evt) {
   var evt = (evt) ? evt : ((event) ? event : null);
   var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
@@ -50,7 +50,7 @@ function words_enter_pressed(e){
 if (e.keyCode == 13) searchBy("https://google.bg/search?q=", "");
 return false;
 }
---></script>';
+</script>';
 
 $rz = '<p><span id="sengine">'.encode('Резултат').'</span>: <a href="" id="selink" target="_blank"></a></p>'."\n";
 
@@ -58,7 +58,7 @@ if (in_edit_mode()){ // Бутон за добавяне в Интернет връзки
 $sc = 'http';
 if (isset($_SERVER['REQUEST_SCHEME'])) $sc = $_SERVER['REQUEST_SCHEME'];
 $v = (isset($_COOKIE['lid']) ? $_COOKIE['lid'] : '');
-$rz .= '<script><!--
+$rz .= '<script>
 function sendLink(){
 var f = document.forms.send_link_form;
 var i = f.up.value;
@@ -76,7 +76,7 @@ f.title.value = l.text;
 f.action = "/index.php?lid="+i+"&pid=6";
 f.submit();
 }
---></script>
+</script>
 <p><form method="POST" name="send_link_form" action="aaa">
 <input type="hidden" name="action" value="update">
 <input type="hidden" name="link">

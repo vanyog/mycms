@@ -59,7 +59,6 @@ return db_select_1('*', 'pages', "`ID`=".$nl['link'] );
 // Следващ линк от родителското меню
 
 function nextpage_from_parent($ld, $dr, $ord){
-global $page_id;
 do {
   // Родителско меню
   $p = db_select_1('*', 'menu_tree', "`group`=".$ld['group']);
@@ -69,8 +68,22 @@ do {
   if (!$ld) return false;
   // Данни за следващия линк в родителското меню
   $nl = db_select_1('*', 'menu_items', "`group`='".$ld['group']."' AND `place`$dr".$ld['place']." ORDER BY `place` $ord");
+  // При търсене на "предишна страница", търсим последната от разклонението
+//  if($dr=='<' && $nl) return nextpage_last($nl);
 } while (!$nl); // die;
 return $nl;
+}
+
+// Последен линк в разклонението на дървото на менюто на страница
+
+function nextpage_last($ld){//die($ld['link']);
+// Група на сочената от линка страница
+$g = db_table_field('menu_group', 'pages', "`ID`=".$ld['link']);
+if($g==$ld) return $ld;
+// Последен линк в групата
+$nl = db_select_1('*', 'menu_items', "`group`=$g ORDER BY `place` DESC");
+if($nl) return $nl;
+else return $ld;
 }
 
 ?>

@@ -104,18 +104,18 @@ if ($can_create){
  // Главната страница на сайта и главната страница на раздел, в който има и други страници,
  // не могат да се трият
  if ($can_edit && ($page_data['ID']>1) && ( ($gc==1)||($mi!=$page_data['ID']) ) ){
-  $page_header .= '<script><!--
+  $page_header .= '<script>
 function confirm_page_deleting(){
 if (confirm("'.translate('usermenu_confirdeleting').'")) document.location = "'.$pt.'delete_page.php?pid='.$page_data['ID'].'";
 }
---></script>'."\n";
+</script>'."\n";
   $rz .= '<a href="" onclick="confirm_page_deleting();return false;">Page Delete</a><br>'."\n";
  }
  if (isset($page_data['hidden']) && $page_data['hidden'])
      $rz .= '<a href="'.$pt.'/toggle_visibility.php?pid='.$page_data['ID'].'">Page Public</a><br>'."\n";
  else
      $rz .= '<a href="'.$pt.'/toggle_visibility.php?pid='.$page_data['ID'].'">Page Hide</a><br>'."\n";
-  $page_header .= '<script><!--
+  $page_header .= '<script>
 function getPage(){
 var a = prompt("ID of the page to get content from");
 if (a){
@@ -130,7 +130,7 @@ if (g){
   document.location = r;
 }
 }
---></script>'."\n";
+</script>'."\n";
  $rz .= '<a href="javascript:void(0);" onclick="getPage();">Page Get</a><br>'."\n";
  $rz .= '<a href="javascript:void(0);" onclick="moveTo();">Page Move</a><br>'."\n";
 }
