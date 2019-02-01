@@ -187,7 +187,7 @@ foreach($mi as $m){
                        "<loc>http://".$_SERVER['HTTP_HOST'].str_replace('&','&amp;',$lk)."</loc>\n".
                        "<lastmod>".date("Y-m-d")."</lastmod>\n".
                        "<changefreq>monthly</changefreq>\n".
-                       "<priority>".(1-0.2*$map_level)."</priority>\n".
+                       "<priority>".(1-0.1*$map_level)."</priority>\n".
                        "</url>\n";
           }
           $rz1 .= '<a href="'.$lk.'">'.translate($m['name']).'</a>';
