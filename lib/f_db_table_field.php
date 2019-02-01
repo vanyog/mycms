@@ -28,6 +28,7 @@ include_once($idir."lib/usedatabase.php");
 
 function db_table_field($fn, $tb, $whr, $def = '', $y = false){
 global $db_link,$tn_prefix, $db_req_count;
+if($db_link===false) return $def;
 $q="SELECT $fn FROM $tn_prefix$tb WHERE $whr;";
 if ($y===true) echo $q."<br>\n";
 $r=mysqli_query($db_link,$q);

@@ -15,6 +15,7 @@
 // В случай, че умалените снимки не трябва да бъдат линкове, във файл titles.php
 // се дефинира променлива $no_links = true;
 
+include_once($idir.'lib/f_encode.php');
 include_once($idir.'lib/f_set_self_query_var.php');
 
 function gallery01($a){

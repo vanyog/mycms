@@ -21,13 +21,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Този файл инициализира променливата $db_link
 // която се използва в mysqli_ функциите
 
-if (!isset($ddir) || !file_exists($ddir."conf_database.php")) die($ddir."conf_database.php - file not found.");
+$db_link = false;
+$db_req_count = 0;
+
 if (!isset($colation)) $colation = 'cp1251';
+
+if (!isset($ddir) || !file_exists($ddir."conf_database.php")) return;
+//   die($ddir."conf_database.php - file not found.<p><pre>".print_r(debug_backtrace(),true)."</pre>");
 
 include_once($ddir."conf_database.php");
 
 $db_link = get_db_link($user, $password, $database, $colation);
-$db_req_count = 0;
 
 function get_db_link($user, $password, $database, $colation = 'cp1251'){
 $l = mysqli_connect("localhost",$user,$password,$database);

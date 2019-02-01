@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // и четене на настройки от таблица $tn_prefix.'options'
 
 if(!isset($idir)) $idir = dirname(__FILE__).'/';
+if(!isset($ddir)) $ddir = $idir;
 
 if( isset($_GET['debug']) && $_GET['debug'] ) $GLOBALS['debug_mode'] = true;
 

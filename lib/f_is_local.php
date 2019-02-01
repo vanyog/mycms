@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 include_once($idir."lib/f_query_or_cookie.php");
 include_once($idir."lib/f_stored_value.php");
+include_once($idir."lib/f_adm_links.php");
 
 // Променливи и фуркции, които дават информация за хостинга и администрирането
 
