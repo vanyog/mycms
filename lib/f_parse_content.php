@@ -30,7 +30,7 @@ include_once($idir.'lib/f_mod_path.php');
 include_once($idir.'mod/rawfile/f_rawfile.php');
 
 function parse_content($cnt){
-global $page_options, $page_data, $page_title, $body_adds, $page_header, $content_date_time,
+global $page_options, $page_data, $page_title, $page_content, $body_adds, $page_header, $content_date_time,
        $idir, $pth, $adm_pth, $apth, $mod_pth, $mod_apth,
        $can_visit, $can_manage, $site_encoding, $debug_mode, $no_style;
 
@@ -105,6 +105,9 @@ if( !empty($debug_mode) ) echo db_req_count()."<br>\n";
 return $cnt;
 
 } // Край на функцията parce_content()
+
+// Връща скрипт от таблица 'scripts'
+// При първото си изпълнение, зарежда всички скриптове и така се спестява четене от базата при следващи извиквания.
 
 function script($nm){
 static $script = array();

@@ -58,7 +58,7 @@ else
 // Край ако няма право да редактира
 if (!$can_edit) die('You have no permission to edit this text');
 
-$page_header = '<link href="'.$pth.'_style.css" rel="stylesheet" type="text/css">'."\n";
+$page_header .= '<link href="'.$pth.'_style.css" rel="stylesheet" type="text/css">'."\n";
 
 // Номер на записа от таблица content
 if(is_numeric($_GET['i'])) $i = 1*$_GET['i'];

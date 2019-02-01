@@ -56,13 +56,13 @@ if (isset($_GET['schn'])) $l = $_GET['schn'];
 $q = set_self_query_var('schn','aaa',false);
 $q = str_replace('aaa','"+n', $q);
 // Javascript за смяна на графика с избрания от падащия списък
-$page_header .= '<script type="text/javascript"><!--
+$page_header .= '<script type="text/javascript">
 function sch_name_changed(){
 var l = document.getElementsByName("sch_name");
 var n = l[0].value;
 document.location = "'.$q.';
 }
---></script>';
+</script>';
 // Падащ списък за избиране на график
 if (!$l) $l = db_table_field('sch_name', 'schedules', '1 ORDER BY `ID` DESC');
 $s = schedules_select($l);

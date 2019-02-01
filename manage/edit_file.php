@@ -58,7 +58,7 @@ if (is_dir($d)){ // Ако е директория се показва таблица с файловете в нея
 $cdel = stored_value('can_delete_files','false');
 if(is_local()) $cdel = 'true';
 
-$page_header = '<script><!--
+$page_header = '<script>
 function fileName(){
 var frm = document.forms.file_form;
 var f = frm.file;
@@ -116,7 +116,7 @@ function doMakeDir(){
     document.location = "'.$adm_pth.'create_dir.php?f="+fn;
   }
 }
---></script>';
+</script>';
 
 $ne = identic_letter($apth, $d) - strlen($apth);
 $alls = ( $ne > - 1 ) || stored_value('accsess_all_file_system');
@@ -188,13 +188,13 @@ $e = pathinfo($d,PATHINFO_EXTENSION);
 if (is_file($d) && in_array($e,$can_edit)) $fc=file($d);
 else {
   $page_content .= '
-<script><!--
+<script>
 function desableEditForm(){ 
 var f = document.forms.edit_form;
 f.submit_button.disabled = "disabled";
 f.save_as.disabled="disabled";
 }
---></script>
+</script>
 <p class="red">';
   if (!file_exists($d)) $page_content .= "File $d do not exists.";
   else $page_content .= "You can't edit file with <strong>.$e</strong> extension.";
@@ -207,7 +207,7 @@ $tx = '';
 foreach($fc as $l) $tx .= $l;
 $tx = iconv("windows-1251", $site_encoding, $tx);
 
-$page_content .= '<script><!--
+$page_content .= '<script>
 function doSaveAs(){
   var fn = prompt("Save file as");
   if (!fn) return;
@@ -225,7 +225,7 @@ function doOpen(){
   if (d) d += "/";
   document.location = "'.$adm_pth.'edit_file.php?f=" + d + st;
 }
---></script>
+</script>
 <p>File: <strong>'.$f.'</strong></p>
 <form action="save_file.php" method="POST" name="edit_form">
 <input type="hidden" name="file" value="'.$f.'">

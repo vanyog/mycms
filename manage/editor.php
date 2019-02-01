@@ -32,14 +32,16 @@ static $tec = 0;
 // è mod_picker
 if (!$tec){
 $js = '
-<script><!--
+<script>
 var tefc;
 function onTeFocus(){
 tefc = document.activeElement;
 }
 var tgToIn = "p";
 function doInsertTag(){
-tgToIn = prompt("Enter a html tag to be inserted", tgToIn);
+var nt = window.prompt("Enter a html tag to be inserted", tgToIn);
+if(nt == null) return;
+tgToIn = nt;
 insert_tag(tgToIn,tgToIn);
 }
 var lastEv;
@@ -104,7 +106,7 @@ lastEv = v;
 if(metaPressed && (v.key=="Enter")) insert_tag(tgToIn,tgToIn);
 metaPressed = true;
 }
---></script>
+</script>
 '.mod_picker();
 } else $js = '';
 $tec += 1;

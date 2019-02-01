@@ -43,7 +43,8 @@ static $string = array();
 // Ако стрингът вече е съставен се връща от кеша
 if (isset($string[$n]) && !in_edit_mode()) return $string[$n];
 
-global $language, $pth, $adm_pth, $default_language, $content_date_time, $content_create_time, $can_edit, $page_data, $debug_mode, $tn_prefix;
+global $language, $pth, $adm_pth, $default_language, $content_date_time, $content_create_time, $can_edit,
+       $page_content, $page_data, $debug_mode, $tn_prefix;
 
 //if( !empty($debug_mode) ) echo "$n ";
 

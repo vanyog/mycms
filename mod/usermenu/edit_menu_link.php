@@ -71,7 +71,7 @@ $f -> add_input( new FormInput(translate('usermenu_menutext'),'text','text',str_
 $f -> add_input( new FormInput(translate('usermenu_menulinkdb'),'link','text',$m['link']) );
 $f -> add_input( new FormInput('','','submit',translate('saveData')) );
 
-$page_header = '<link href="'.$pth.'_style.css" rel="stylesheet" type="text/css">'."\n";
+$page_header .= '<link href="'.$pth.'_style.css" rel="stylesheet" type="text/css">'."\n";
 $page_title = translate('usermenu_editmenu');
 $page_content = '<h1>'.$page_title.'</h1>
 '.$rz.'

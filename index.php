@@ -97,6 +97,7 @@ if (!$cnt){
 
  // Попълване със съдържание на елементите в шаблона
  $cnt = parse_template($page_data);
+
  // Записване в кеша
  $t = stored_value('cache_time');
  if ($t) save_cache($cnt);
@@ -118,7 +119,7 @@ $cnt = colorize($cnt);
 $exe_time = number_format(microtime(true) - $exe_time, 3);
 
 // Показване броя на MYSQL заявките, ако е предвидено да се показват
-$cnt = str_replace('<!--DB_REQ_COUNT-->',"$db_req_count $exe_time ", $cnt);
+$cnt = str_replace('DB_REQ_COUNT',"$db_req_count $exe_time ", $cnt);
 
 // Изпращане на страницата
 echo $cnt;

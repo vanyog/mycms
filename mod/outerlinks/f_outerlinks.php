@@ -66,6 +66,9 @@ if (isset($l['link']) && $l['link']>''){
    $q = "UPDATE `$tn_prefix"."outer_links` SET clicked = clicked+1 WHERE `ID`=".$l['ID'].";";
    mysqli_query($db_link,$q);
  }
+ if($l['private'].""){ // Ако е лична връзка
+   if (!show_adm_links()) die('Private link. Access denied.');
+ }
  header('Location: '.$l['link']);
  die;
 }
@@ -163,7 +166,7 @@ else $rz .="\n";
 // Показване на формата за търсене
 if ( $cc && ($what!='all') ) $rz .= search_link_form();
 
-$page_header .= "<script><!--\n";
+$page_header .= "<script>\n";
 
 $spage = stored_value('outerlinks_spage');
 
@@ -173,7 +176,7 @@ $rz .= '<form method="POST" action="'.$spage.'" id="gotsearchpage" target="_blan
 <input type="hidden" name="words" value="aaa bbb">
 </form>
 ';
-$page_header .= 'function onSearchClick(a){
+$GLOBALS['page_header'] .= 'function onSearchClick(a){
 var f = document.getElementById("gotsearchpage");
 var t = a.parentElement.innerText;
 var i = t.search(/ \- \d*/i);
@@ -193,7 +196,7 @@ f.submit();
 $page_header .= 'function duDuplicate(e){
 if(confirm("Duplicate link?")) window.open(e);
 }
---></script>
+</script>
 <style>
 .sid { cursor: pointer; }
 </style>
@@ -204,8 +207,8 @@ $qp = '';
 if (!in_edit_mode()) $qp = 'AND `private`=0';
 // Сайт за търсене
 $seng = stored_value('outerlenks_sengin', 'https://www.google.bg/search?q=');
-
-if (in_edit_mode()) $page_header .= '<script><!--
+//die("-$page_header-");
+if (in_edit_mode()) $page_header .= '<script>
 function chCaseClick(){
 var f = document.forms.link_edit_form.title;
 var s = f.selectionStart;
@@ -251,7 +254,7 @@ var n = Number(v);
 if(e.ctrlKey || e.metaKey) n -= 5; else n += 5;
 u.value = "" + n;
 }
---></script>
+</script>
 ';
 
 // Добавяне началото на формата за редактиране
@@ -426,7 +429,7 @@ function start_edit_form(){
 global $page_id;
 if (!in_edit_mode()) return '';
 else return '
-<script><!--
+<script>
 // Създаване на обект за ajax заявки
 if (window.XMLHttpRequest) ajaxO = new XMLHttpRequest();
 else ajaxO = new ActiveXObject("Microsoft.XMLHTTP");
@@ -459,7 +462,7 @@ ajaxO.send(null);
 var h = ajaxO.responseText;
 t.value = h;
 }
---></script>
+</script>
 <form method="POST" name="link_edit_form">';
 }
 

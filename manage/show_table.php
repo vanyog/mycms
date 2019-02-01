@@ -76,7 +76,7 @@ if (!count($r)) { // Ново четене без ограничения
 $c = db_table_field('COUNT(*)',$t,1);
 
 // JavaScript функции
-$page_header = '<script><!--
+$page_header = '<script>
 function doDelete(id){
 if (confirm("Delete record ID=\'"+id+"\'?")){
 document.location="delete_record.php?t='.$t.'&r="+id;
@@ -94,7 +94,7 @@ function ChangeLimit(){
 var l = document.getElementById("limit");
 document.location = document.location + "&limit=" + l.value;
 }
---></script>';
+</script>';
 
 // Сглобяване на страницата
 

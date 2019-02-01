@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Модул за автоматично номериране на формули.
+// Модул за автоматично номериране, показване и цитиране на формули.
 // Параметър $a е `ID` на формулата от таблица 'formula'
 // Ако непосредствено пред цифрите на номера стои буква 'c' вместо формулата се показва цитиране към нея.
-// Ако в таблица 'formula' няма формула със задавеното `ID`, се показва форма за въвеждане на формулата.
+// Ако в таблица 'formula' няма формула със зададеното `ID`, се показва форма за въвеждане на формулата.
 // Ако $a е `ID` на формула, показана на друга страница, се показва съобщение, какво ID да се използва за нова формула.
 
 include_once($idir.'lib/o_form.php');
@@ -30,6 +30,8 @@ include_once($idir.'lib/f_db_update_record.php');
 
 global $page_header;
 global $hidden_formulas;
+
+$page_header .= '<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>'."\n";
 
 $page_header .= '<script>
 function formulaOver(ev,i){
@@ -63,7 +65,7 @@ global $adm_pth;
 // Асоциативен масив с формулите от текущата страница
 static $fs = false;
 // Ако оща не е съставен се съставя
-if (!$fs) $fs = formula_for_page();
+if (!$fs) $fs = formula_for_page($a);
 static $c = 0; // Брой вече показани на текущата страница формули
 $n = count($fs) - $c; // Номер на поредната формула в страницата
 // Ако не съществува формула с `ID`=$a за текущата страница
@@ -83,7 +85,7 @@ $elk = '';
 if (in_edit_mode()) $elk = " <a href=\"$adm_pth/edit_record.php?t=formula&amp;r=$a\">$a*</a>";
 // Показване на формулата
 $vn = $fs[$a]['page_id'].'.'.$n; // Видим номер на формулата
-$rz = '<a name="f'.$vn.'" id="f'.$vn.'"></a>
+$rz = '<a id="f'.$vn.'"></a>
 <div class="math">
 <div class="l">('.$vn.")</div>\n";
 $rz .= formula_1div('r',$fs[$a],$elk); //'<div class="r" id="f'.$fs[$a]['ID'].'">'.$fs[$a]['markup']."\n".$elk."</div>\n</div>\n";
@@ -96,10 +98,14 @@ function formula_1div($c,$f,$elk){
 return '<div class="'.$c.'" id="f'.$f['ID'].'">'.$f['markup']."\n".$elk."</div>\n</div>\n";
 }
 
-function formula_for_page(){
+function formula_for_page($a){
 if (count($_POST)) formula_insert();
 global $page_id;
 $da = db_select_m('*', 'formula', "`page_id`=$page_id");
+if(!count($da)){
+  $id = db_table_field('page_id', 'formula', "ID=$a");
+  $da = db_select_m('*', 'formula', "`page_id`=$id");
+}
 $rz = array();
 foreach($da as $d) $rz[$d['ID']] = $d;
 return $rz;
