@@ -51,7 +51,7 @@ if (do_not_cache()) return '';
 global $language, $page_data;
 $t = stored_value('cache_time');
 // Ќе е зададено време за кеширане, или то е 0
-if (!$t && ($page_data['donotcache']!=-1)) return '';
+if (!$t && isset($page_data['donotcache']) && ($page_data['donotcache']!=-1)) return '';
 // јко е зададено време за кеширане на отделната страница в поле `donotcache` се вземе предвид това време
 if (isset($page_data['donotcache']) && ($page_data['donotcache']>1) ) $t = $page_data['donotcache'];
 // ѕриемлив за€вен адрес

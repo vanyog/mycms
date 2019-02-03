@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Показване на съдържанието на таблица от базата данни
 
+$exe_time = microtime(true);
+
 include('conf_manage.php');
 include_once($idir.'conf_paths.php'); 
 include_once($idir.'lib/f_db_select_m.php');

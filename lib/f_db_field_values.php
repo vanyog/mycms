@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include_once($idir."lib/f_db_select_m.php");
 
 function db_field_values($fn,$tn,$wh, $lm = ''){
-$d = db_select_m( "`$fn`", $tn, "$wh GROUP BY `$fn` ORDER BY `$fn` $lm" );// print_r($d);
+$d = db_select_m( "`$fn`", $tn, "$wh GROUP BY `$fn` ORDER BY `$fn` $lm");
 $rz = array();
 foreach($d as $r) $rz[] = $r[$fn];
 return $rz;

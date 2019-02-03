@@ -45,6 +45,13 @@ if (!isset($site_encoding)) $site_encoding = 'windows-1251';
 if (!isset($pth)) $pth = '../';
 
 header("Content-Type: text/html; charset='.$site_encoding.'");
+
+// Показване броя на MYSQL заявките, ако е предвидено да се показват
+if(isset($exe_time)){
+  $exe_time = number_format(microtime(true) - $exe_time, 3);
+  $page_content = str_replace('DB_REQ_COUNT',"$db_req_count $exe_time ", $page_content);
+}
+
 echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>

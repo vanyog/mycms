@@ -40,6 +40,7 @@ function translate($n, $elink=true){
 
 // Статична променлива за кеш
 static $string = array();
+
 // Ако стрингът вече е съставен се връща от кеша
 if (isset($string[$n]) && !in_edit_mode()) return $string[$n];
 
@@ -63,7 +64,8 @@ if (in_edit_mode() && $elink){
 $rz = '';
 
 // Четене на записа за надпис с име $n на език $language
-$r1 = db_select_1('c.*, f.filters', 'content` c LEFT JOIN `'.$tn_prefix.'filters` f ON c.name=f.`name', "c.name='$n' AND `language`='$language'");
+$r1 = db_select_1('c.*, f.filters',
+                  'content` c LEFT JOIN `'.$tn_prefix.'filters` f ON c.name=f.`name', "c.name='$n' AND `language`='$language'");
 //if($n=='VSU_location_resources') die(print_r($r1,true));
 if ($r1){ // Ако има такъв запис
   $content_create_time = $r1['date_time_1'];

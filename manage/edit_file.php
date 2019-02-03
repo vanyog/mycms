@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Този скрипт генерира страница за редактиране на файловете на сайта
 
+$exe_time = microtime(true);
+
 include("conf_manage.php");
 include_once($idir."conf_paths.php");
 include_once($idir."lib/f_is_local.php");
