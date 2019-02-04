@@ -18,9 +18,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 function htmlvar($a){
-global $$a;
-if(!isset($$a)) $rz = "Undeffined variable $a";
-else $rz = htmlspecialchars(stripslashes(strip_tags($$a)));
+global $site_encoding;
+if(!isset($GLOBALS[$a])) $rz = "Undeffined variable $a";
+else{
+   $rz = strip_tags($GLOBALS[$a]);
+   $rz = stripslashes($rz);
+   $rz = htmlspecialchars($rz, ENT_QUOTES, $site_encoding);
+}
 return $rz;
 }
 

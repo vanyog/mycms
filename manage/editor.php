@@ -31,6 +31,7 @@ static $tec = 0;
 // Ако още няма textarea елементи се извежда javascript-ът
 // и mod_picker
 if (!$tec){
+$tec += 1;
 $js = '
 <script>
 var tefc;
@@ -104,12 +105,19 @@ lastEv = "";
 function editor_onKey(e,v){
 lastEv = v;
 if(metaPressed && (v.key=="Enter")) insert_tag(tgToIn,tgToIn);
+if(metaPressed && (v.key.toLowerCase()=="s") ){
+  d = document.forms.edit_form;
+  if(d.submit){
+    v.preventDefault();
+    d.submit();
+  }
+}
 metaPressed = true;
+return false;
 }
 </script>
 '.mod_picker();
 } else $js = '';
-$tec += 1;
 // Връщане на резултата
 return $js.
 

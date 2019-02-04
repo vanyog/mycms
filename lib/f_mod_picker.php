@@ -82,10 +82,10 @@ var s = document.getElementById(a.id + "_count");
 s.innerHTML = a.value.length;
 metaPressed = false;
 }
-function editor_onKey(e,v){
-if(metaPressed && (v.key=="Enter")) insert_tag(tgToIn,tgToIn);
-metaPressed = true;
-}
+//function editor_onKey(e,v){
+//if(metaPressed && (v.key=="Enter")) insert_tag(tgToIn,tgToIn);
+//metaPressed = true;
+//}
 function toClip(a){
 if(tefc){
   var n = a.innerText;

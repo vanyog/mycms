@@ -33,7 +33,8 @@ if (!file_exists($md)) if (!mkdir($md, 0755, true)) die("Can't create directory:
 
 // Име на файла с модулната функция
 $ff = "$md/f_$mf.php";
-$el = $adm_pth.'edit_file.php?f='.current_pth($ff);
+$el = $adm_pth.'edit_file.php?f='.relative_to($apth,$ff);
+//$el = $adm_pth.'edit_file.php?f='.current_pth($ff);
 
 // Съдържание на файла
 $fc = '<?php

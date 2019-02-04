@@ -27,17 +27,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Ако вторият параметър $tm = false не се показва час.
 // иначе час не се показва, само ако е 00:00:00.
 
-// Третият параметър позволява/забранява добавянето на интервали пред датата.
+// Ако  третият параметър $ts = false не се вмъква интервал пред числата <10.
 
-function db2user_date_time($dts, $tm = true, $ts = true){
-$c = translate('month_names', false); //die($c);
+// Ако  четвъртият параметър $cs = false не се показват секундите<10.
+
+function db2user_date_time($dts, $tm = true, $ts = true, $sc = true){
+$c = translate('month_names', false); 
+if($c=='month_names') die("No '$c' defined in 'content' table.");
 eval($c);
 if ((substr($dts,11,8)=="00:00:00")||!$tm) $t = '';
 else {
-  $h = (1*substr($dts,11,2));
+  $h = (1*substr($dts,11,2)); // Час
   if ( ($h<10) && $ts ) $t = ' &nbsp;'; else $t = ' ';
-  $t .= $h.substr($dts,13,3);
-  if (1*substr($dts,17,2)) $t .= substr($dts,16,3);
+  $t .= $h.substr($dts,13,3);                       // Минути
+  if ( (1*substr($dts,17,2)) && $sc) $t .= substr($dts,16,3); // Секунди
 }
 $d = 1*substr($dts,8,2);
 if ( ($d<10) && $ts ) $d = '&nbsp;'.$d;
@@ -45,7 +48,7 @@ if($t) $t .= ' ';
 $rz = $t.
   $d.' '.
   $month[1*substr($dts,5,2)].' '.
-  substr($dts,0,4);
+  substr($dts,0,4);  // Година
 return $rz;
 }
 
