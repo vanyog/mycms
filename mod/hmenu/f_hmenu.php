@@ -83,7 +83,7 @@ $ci = hmenu_c($g);
 $da = db_select_m('*','menu_items',"`group`=$g ORDER BY `place` ASC");
 $rz = '';
 if (count($da)>1) foreach($da as $d){
-  $lk = 1*$d['link'];
+  if(is_numeric($lk)) $lk = 1*$d['link'];
   $ar = array();
   if(!$lk){
     if(preg_match_all('/pid=(\d+)/', $d['link'], $ar))

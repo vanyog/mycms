@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // adm_links_custom - допълнителен, зададен от администратора текст (линкове)
 // adm_links_cpanel - адрес на панел за управление на хостинга
 
-$idir = dirname(dirname(__FILE__)).'/';
+if(empty($idir)) $idir = str_replace('\\', '/', dirname(dirname(__FILE__))).'/';
 
 include_once($idir.'conf_paths.php');
 include_once($idir."lib/f_relative_to.php");

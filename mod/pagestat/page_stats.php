@@ -128,7 +128,7 @@ $tn = $pd['title'];
 $tn = db_table_field('text', 'content', "`name`='$tn' AND `language`='$language'");
 $rz = "<p>Page: <a href=\"$main_index?pid=$i\">$tn</a>, Group <a href=\"?group=".$pd['menu_group']."\">".$pd['menu_group']."</p>".'
 <p>See: <a href="page_stats.php">All pages statistics</a></p>
-'."Minimum visit count: $min, average: ".number_format(1*$ave, 1).", Maximum: $max".encode('
+'."Minimum visit count: $min, average: ".number_format(floatval($ave), 1).", Maximum: $max".encode('
 <table>
 <tr><th>Дата</th><th>Посещения</th></tr>');
 foreach($da as $d){
