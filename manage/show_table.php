@@ -187,12 +187,16 @@ return '1';
 
 function cut_lines_to($v, $c, $r){
 if ($c==0) return $v;
-$x = 0;
 $va = explode("\n",$v);
+$vc = count($va);
 foreach($va as $k=>$l){
-  $x++;
-  if (strlen($l)>$c+3) $va[$k] = substr($l,0,$c).'...';
-  if ($r && ($x>=$r)) { $va = array_slice( $va, 0, $x, true); $va[] = '...'; break; }
+  if (strlen($l)>$c+3) $va[$k] = mb_substr($l,0,$c).'...';
+  if ($r && ($k>($r-1))) {
+	  $va = array_slice( $va, 0, $r, true);
+	  if($r<$vc) $va[] = '...'; 
+	  //echo "$k $r $c "; print_r($va); echo "<br>";// die;
+	  break;
+  }
 } 
 return implode("\n",$va);
 }

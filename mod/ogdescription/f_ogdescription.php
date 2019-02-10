@@ -1,8 +1,7 @@
 <?php
-
 /*
 MyCMS - a simple Content Management System
-Copyright (C) 2013  Vanyo Georgiev <info@vanyog.com>
+Copyright (C) 2019  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,22 +17,22 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Дублиране на един запис от таблица на базата данни
+// Функция, която от съдържанието на страницата прави извадка - описание за споделяне в социални мрежи
 
-include('conf_manage.php');
-include($idir.'lib/f_db_select_1.php');
-include($idir.'lib/f_db_insert_1.php');
+function ogdescription(){
+global $page_content, $og_description;
+if($og_description) return $og_description;
+$a = strip_tags($page_content);
+$a = str_replace('&nbsp;',' ',$a);
+$a = str_replace("\n",' ',$a);
+$a = str_replace("\r",'',$a);
+$a = trim($a);
+$l = 300;
+$fl = strlen($a)-1;
+while ( ($l<$fl) && !in_array($a[$l], array(' ', ',', '.', ':', '-', '&') ) ) $l++;
+$rz = substr($a,0,$l);
+if (strlen($a)>strlen($rz)) $rz .= '...';
+return $rz;
+}
 
-$t = $_GET['t'];  // Таблица
-$id = 1*($_GET['r']); // `ID` на записа
-
-// Четене на записа
-$d = db_select_1('*', $t, "`ID`=$id");
-unset($d['ID']);
-unset($d['username']);
-db_insert_1($d, $t);
-
-$l = 'Location: show_table.php?t='.$t;
-//echo $l;
-header($l);
 ?>

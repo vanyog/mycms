@@ -34,7 +34,7 @@ if(!ob_start("ob_gzhandler")) ob_start();
 if (phpversion()>'5.0') date_default_timezone_set("Europe/Sofia");
 
 // Път до директорията на системата
-$idir = str_replace('\\','/',dirname(__FILE__)).'/'; die($idir);
+$idir = str_replace('\\','/',dirname(__FILE__)).'/';
 
 // Път до файл conf_database.php с данни за достъп до базата данни. 
 // Може да е различен от този в $idir, ако е необходимо.

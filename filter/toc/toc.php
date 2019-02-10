@@ -24,7 +24,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 global $h_id, $tof_contents;
 
+$GLOBALS['page_header'] .= '<style>
+#toc a.lev3 { margin-left:1em; }
+</style>
+';
+
 function toc($s){// die($s);
+if(strpos($s, 'TOFCONTENTS')===false) return $s;
 global $h_id, $tof_contents;
 $h_id = 0;
 $tof_contents = '';
