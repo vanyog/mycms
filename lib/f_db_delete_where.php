@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 function db_delete_where($t,$w,$y=false){
 global $tn_prefix, $db_link, $db_req_count;
 $q = "DELETE FROM `$tn_prefix"."$t` WHERE $w;";
-if ($y) { echo "$q<br>"; return; }
+if ($y) { echo "$q<br>\n"; return; }
 mysqli_query($db_link, $q);
 $db_req_count++;
 }

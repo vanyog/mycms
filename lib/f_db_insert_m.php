@@ -42,7 +42,7 @@ foreach($d as $r){
  $q = substr($q,0,strlen($q)-1)."),\n";
 }
 $q = substr($q,0,strlen($q)-2).";";
-if ($y) return $q;
+if ($y) return "$q<br>\n";
 else{
  mysqli_query($db_link,$q);
  return $c;
