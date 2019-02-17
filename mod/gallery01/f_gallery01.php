@@ -66,6 +66,11 @@ else { // Ако е изпратен номер на снимка се показва само една снимка
   $nv .= "<p>\n";
   $rz .= "$nv<p><img alt='$tt' src=\"/$a/$f\" class=\"big\"></p>\n";
   $rz .= "<p>$tt</p>\n$nv";
+  global $og_type, $og_pid, $page_id, $og_image;
+  $og_type = 'article';
+  $og_pid = "$page_id&iid=$i";
+  $og_image = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST']."/$a/$f";
+//  die($og_image);
 }
 $rz .= '</div>
 <p style="clear:both;">&nbsp;</p>';

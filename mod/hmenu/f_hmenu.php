@@ -44,7 +44,7 @@ $ci = hmenu_c($a);
 //$ia = index_array();
 $j = 1;
 foreach($il as $i){
-  $lk = 1*$i['link'];
+  $lk = 1*intval($i['link']);
   $c = '';
   if ($lk) {
     $sm .= hsubmenu($lk,/*$ia,*/$j);
@@ -83,7 +83,7 @@ $ci = hmenu_c($g);
 $da = db_select_m('*','menu_items',"`group`=$g ORDER BY `place` ASC");
 $rz = '';
 if (count($da)>1) foreach($da as $d){
-  if(is_numeric($lk)) $lk = 1*$d['link'];
+  $lk = 1*intval($d['link']);
   $ar = array();
   if(!$lk){
     if(preg_match_all('/pid=(\d+)/', $d['link'], $ar))
