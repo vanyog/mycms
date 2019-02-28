@@ -178,15 +178,15 @@ $rz .= '<form method="POST" action="'.$spage.'" id="gotsearchpage" target="_blan
 ';
 $GLOBALS['page_header'] .= 'function onSearchClick(a){
 var f = document.getElementById("gotsearchpage");
-var t = a.parentElement.innerText;
-var i = t.search(/ \- \d*/i);
+var t = a.parentElement.innerText;'.
+// Премахване броя на линковете след имената на раздели
+'var i = t.search(/ \- \d*/i);
 if(i<0) i = t.length;
 t = t.substring(0, i);
 t = t.replace(/\"/g, "&quot;");
 ';
-if(in_edit_mode()) $page_header .= 'var j = t.indexOf(" ");
-t = t.slice(j+2);
-alert(t);';
+if(in_edit_mode()) $page_header .= 't = t.replace(/( *\d+ *){1,2}/g,"");
+';
 $page_header .= 'f.words.value = t;
 f.submit();
 }

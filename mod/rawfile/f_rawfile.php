@@ -23,6 +23,7 @@ $rz = $apth.$a;
 if(empty($apth)) $rz = $_SERVER['DOCUMENT_ROOT'].'/'.$a;
 if(!file_exists($rz)) die("File not found '$rz' by RAWFILE module");
 $fc = file_get_contents($rz);
+$fc = encode($fc);
 if(!empty($rowfile_minify) && ($rowfile_minify=='YES'))
      return preg_replace( array('/\/\/.*\n/', '/ {2,}/', '/\/\*.*?\*\//', '/\n{2,}/'),
                           array("\n",         ' ',       '',              "\n"),
