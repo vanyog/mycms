@@ -66,24 +66,17 @@ $rz = sitemap_rec($ar[0], 1, $ar[0]==$mpg_id);
 $page_header .= '<script>
 function mapHideShow(e, a=0){
 var p = e.parentElement;
+var h = p.style.height;
 var ls = document.links;
 for(var i=0;i<ls.length;i++) if(ls[i].parentElement==p) break;
-var sl = window.getComputedStyle(ls[i]);
-var h = p.style.height;
-var sp = window.getComputedStyle(p);
-var v = "'.stored_value('sitemap_colapsed_height', '1.35em').'";
-var lh = sp.lineHeight.slice(0,-2);
-if(lh=="norm") lh = Number(sp.fontSize.slice(0,-2)) * 1.25;
-else lh = Number(lh);
-var v = ( lh
-          + Number(sl.paddingTop.slice(0,-2))
-          + Number(sl.paddingBottom.slice(0,-2))
-        ) + "px";
-if ( ( (h!=v)&&(a==0) ) ||(a==1)){
+var v = ls[i].offsetHeight + 2 * (ls[i].offsetTop - p.offsetTop) + "px";
+// Сгъване
+if ( ( (h!=v)&&(a==0) ) || (a==1) ){
   e.innerHTML = "&#9658;"
   p.style.height = v;
   p.style.overflow = "hidden";
 }
+// Разгъване
 if ( ( (h==v)&&(a==0) ) ||(a==2)){
   e.innerHTML = "&#9660;"
   p.style.height = "auto";
@@ -120,8 +113,8 @@ function site_map_buttons(){
 global $has_levels;
 if(!$has_levels) return;
 return '<p class="buttons">
-<a href="" onclick="mapContractExpandAll(2); return false;">'.translate("site_map_expand").'</a>
 <a href="" onclick="mapContractExpandAll(1); return false;">'.translate("site_map_contract").'</a>
+<a href="" onclick="mapContractExpandAll(2); return false;">'.translate("site_map_expand").'</a>
 </p>
 ';
 }

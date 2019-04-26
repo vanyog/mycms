@@ -97,6 +97,7 @@ if ($nom===true) return '';
 $pt = current_pth(__FILE__);
 if ($can_create){
  $rz .= '<a href="'.$pt.'new_page.php?p='.$page_data['ID']."\">Page New</a><br>\n";
+ $rz .= '<a href="'.$pt.'new_page_from_h.php?p='.$page_data['ID'].'">Page From H</a><br>'."\n";
  // Брой на страниците в раздела
  $gc = db_table_field('COUNT(*)','menu_items','`group`='.$page_data['menu_group']);
  // Индекс на главната страница на раздела

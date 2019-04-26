@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Функция, която от съдържанието на страницата прави извадка - описание за споделяне в социални мрежи
 
 function ogdescription(){
-global $page_content, $og_description;
+global $page_content, $og_description, $site_encoding;
 if($og_description) return $og_description;
 $a = strip_tags($page_content);
 $a = str_replace('&nbsp;',' ',$a);
@@ -32,7 +32,7 @@ $fl = strlen($a)-1;
 while ( ($l<$fl) && !in_array($a[$l], array(' ', ',', '.', ':', '-', '&') ) ) $l++;
 $rz = substr($a,0,$l);
 if (strlen($a)>strlen($rz)) $rz .= '...';
-return $rz;
+return htmlspecialchars($rz, ENT_QUOTES, $site_encoding);
 }
 
 ?>

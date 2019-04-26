@@ -207,7 +207,8 @@ if (!file_exists($d)) $page_content .= '<p slass="red">File not exists!</p>';
 
 $tx = '';
 foreach($fc as $l) $tx .= $l;
-$tx = iconv("windows-1251", $site_encoding, $tx);
+
+$tx = iconv("windows-1251", "$site_encoding//IGNORE", $tx);
 
 $page_content .= '<script>
 function doSaveAs(){

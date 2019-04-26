@@ -1,7 +1,7 @@
 <?php
 /* 
 MyCMS - a simple Content Management System
-Copyright (C) 2013 Vanyo Georgiev <info@vanyog.com>
+Copyright (C) 2019 Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@ include_once($idir."conf_paths.php");
 include_once($idir."lib/translation.php");
 include_once($idir."lib/f_db_insert_1.php");
 include_once($idir."lib/f_db_insert_m.php");
+include_once($idir."lib/f_db_update_record.php");
 include_once($idir."lib/o_form.php");
 
 // Номер на страницата, от която е изпратена заявка за нова страница
@@ -42,16 +43,36 @@ $page_data = db_select_1('*','pages',"`ID`=$page_id");
 $tx = usermenu(true);
 
 // Ако потребителят няма право да създава нова страница - край.
-if (!$can_create) echo die("Your have no permission to create new page here.");
+if (!$can_create) die("Your have no permission to create new page here.");
+
+// Съдържание на страницата, от която е изпратена заявката
+$cr = db_select_1('ID,text', 'content',"`name`='".$page_data['content']."' AND `language`='$language'",'');
+$pc = $cr['text'];
+//db_table_field('text','content',"`name`='".$page_data['content']."' AND `language`='$language'",'');
+if(empty($pc)) die('No page content was read.');
+
+// Намиране на първото заглавие
+$m1 = array();
+$r1 = preg_match('/<(h.).*?>(.*?)<\/\1(>)/s', $pc, $m1, PREG_OFFSET_CAPTURE);
+
+// Заглавие и текст на върху линка на страницата
+$pt = ''; if(isset($m1[2][0])) $pt = trim( str_replace("\n", " ", $m1[2][0]) );
+
+// Намиране на следващо заглавие от същия порядък и отделяне на първата озаглавена част
+$tx = '';
+$m2 = array();
+if(isset($m1[3][1])){
+   $r2 = preg_match('/<'.$m1[1][0].'.*?>/s', $pc, $m2, PREG_OFFSET_CAPTURE, $m1[3][1]);
+   if(isset($m2[0][1])) $tx = substr($pc, $m1[3][1] + 1, $m2[0][1] - $m1[3][1] - 1);
+   else $tx = substr($pc, $m1[3][1] + 1);
+}
 
 // Обработка на изпратени данни
 if (count($_POST)) process_data();
 
 // Позиция  на новата страница в менюто - по подразбиране най-отдолу.
-$pz = intval(
-        db_table_field('place', 'menu_items', '`group`='.$page_data['menu_group'].' AND `link`='.$page_data['ID']) );
-$pz1 = db_table_field('ROUND(AVG(`place`))', 'menu_items', '`group`='.$page_data['menu_group']." AND `place`>=$pz  AND `place`<=".($pz+10)." ORDER BY `place` ASC");
-if($pz1==$pz) $pz  += 10; else $pz = $pz1;
+$pz = db_table_field('MAX(`place`)', 'menu_items', '`group`='.$page_data['menu_group'])
+      + 10;
 
 // Създаване на форма за попълване на данни за нова страница 
 $pf = new HTMLForm('new_page_fotm');
@@ -64,7 +85,7 @@ $pf->add_input( $ti );
 
 $pf->add_input(new FormInput(translate('usermenu_menupos'), 'place', 'text', $pz) );
 
-$ti = new FormInput(translate('usermenu_linktext'), 'linktext', 'text');
+$ti = new FormInput(translate('usermenu_linktext'), 'linktext', 'text', $pt);
 $ti->size = '50';
 $pf->add_input( $ti );
 
@@ -72,15 +93,15 @@ $ti = new FormInput(translate('usermenu_addtomenu'), 'addtomenu', 'checkbox');
 $ti->checked = "checked";
 $pf->add_input( $ti );
 
-$ti = new FormInput(translate('usermenu_newpagetitle'), 'title', 'text');
+$ti = new FormInput(translate('usermenu_newpagetitle'), 'title', 'text', $pt);
 $ti->size = '100';
 $pf->add_input( $ti );
 
-$pf->add_input(new FormTextArea(translate('usermenu_newpagecontent'), 'content', 100, 30) );
+$pf->add_input(new FormTextArea(translate('usermenu_newpagecontent'), 'content', 100, 30, $tx) );
 
 $pf->add_input( new FormInput('','','submit',translate('usermenu_newpagesubmit')) );
 
-$page_content = '<h1>'.translate('usermenu_createnewpage').'</h1>'.$pf->html();
+$page_content = '<h1>'.translate('usermenu_newpagefrh').'</h1>'.$pf->html();
 $page_header .= '<style><!--
 th { text-align: right; vertical-align:top; }
 --></style>';
@@ -91,7 +112,21 @@ include($idir."lib/build_page.php");
 // Обработка на изпратени данни
 //
 function process_data(){
-create_new_page($_POST);
+global $pth, $pc, $m1, $m2, $cr, $page_id;
+// Създаване на новата страница
+$pi = create_new_page($_POST);
+// Изтриване на съдържанието от предишната страница
+if(isset($m1[3][1])){
+   if(isset($m2[0][1])) $tx = substr_replace($pc, '', $m1[0][1], $m2[0][1] - $m1[0][1] - 1);
+   else $tx = substr_replace($pc, '', $m1[0][1]);
+}
+$cr['date_time_2'] = 'NOW()';
+$cr['text']=$tx;
+db_update_record($cr, 'content', false);
+//die; //(print_r($cr,true));
+// Връщане към стартовата страница
+$l = 'Location: '.$pth.'index.php?pid='.$page_id;
+header($l);
 }
 
 //
@@ -133,6 +168,7 @@ $d1 = array(
   'title'=>"p$pi"."_title",
   'content'=>"p$pi"."_content",
   'template_id'=>$page_data['template_id'],
+  'hidden'=>$page_data['hidden']
 );
 // Записване в таблицата
 $pi = db_insert_1($d1,'pages');
@@ -203,8 +239,7 @@ if (trim($data['linktext']))
 // Записване в таблицата
 db_insert_m($d3,'content');
 
-$l = 'Location: '.$pth.'index.php?pid='.$pi;
-header($l); 
+return $pi;
 }
 
 ?>

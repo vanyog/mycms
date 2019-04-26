@@ -65,7 +65,8 @@ return $lk.$rz.
 '<input type="text" id="copyHelper" style="display:none;">'."\n";
 }
 
-// - - - - - - NormDoc - - - - - -
+// - - - - - - class NormDoc - - - - - -
+//        клас нормативен документ
 
 class NormDoc{
 
@@ -121,25 +122,26 @@ case encode('Преходни и заключителни разпоредби'):
 case encode('ЗАКЛЮЧИТЕЛНИ РАЗПОРЕДБИ'):
 case encode('Заключителни разпоредби'):
 case encode('ПОСТАНОВЛЕНИЕ'):
-                $this->parts[$d['ind']] = new DocPart('', $d['type'], $d['name'], $d['text'], $d['ind']);
+                $this->parts[$d['ind']] = new DocPart('',
+                                                      $d['type'], $d['name'], $d['text'], $d['ind'], $d['ID']);
                 break;
 case 'paragraf':
 case 'chlen'   :$this->parts[$d['glava']]->parts[$d['ind']]
                                         = new DocPart($this->parts[$d['glava']],
-                                                      $d['type'], $d['name'], $d['text'], $d['ind']);
+                                                      $d['type'], $d['name'], $d['text'], $d['ind'], $d['ID']);
                 break;
 case 'alineya' :$this->parts[$d['glava']]->parts[$d['cpind']]->parts[$d['ind']]
                                         = new DocPart($this->parts[$d['glava']]->parts[$d['cpind']],
-                                                      $d['type'], $d['name'], $d['text'], $d['ind']);
+                                                      $d['type'], $d['name'], $d['text'], $d['ind'], $d['ID']);
                 break;
 case 'tochka':
                 if(!isset($this->parts[$d['glava']]->parts[$d['cpind']]->parts[$d['aind']]))// die(print_r($d,true));
                      $this->parts[$d['glava']]->parts[$d['cpind']]->parts[$d['ind']]
                                         = new DocPart($this->parts[$d['glava']]->parts[$d['cpind']],
-                                                      $d['type'], $d['name'], $d['text'], $d['ind']);
+                                                      $d['type'], $d['name'], $d['text'], $d['ind'], $d['ID']);
                 else $this->parts[$d['glava']]->parts[$d['cpind']]->parts[$d['aind']]->parts[$d['ind']]
                                         = new DocPart($this->parts[$d['glava']]->parts[$d['cpind']]->parts[$d['aind']],
-                                                      $d['type'], $d['name'], $d['text'], $d['ind']);
+                                                      $d['type'], $d['name'], $d['text'], $d['ind'], $d['ID']);
                 break;
 default        :
                 break;
@@ -196,7 +198,8 @@ $mc = preg_match_all($sp, $_GET['get'], $m);
 
 }
 
-// - - - - - - DocPart - - - - - -
+// - - - - - - class DocPart - - - - - -
+//   Клас част от норметивен документ
 
 class DocPart{
 
@@ -206,17 +209,19 @@ public $name = '';
 public $txt = '';
 public $id = '';
 public $index = 0;
+private $dbid = ''; // `ID` поле от таблица 'normdoc' на базата данни
 
 public $data = array();
 
 public $parts = array();
 
-function __construct($p, $ty, $nm, $tx, $i){
+function __construct($p, $ty, $nm, $tx, $i, $di = ''){
 $this->parent = $p;
 $this->type = $ty;
 $this->name = $nm;
 $this->txt = $tx;
 $this->index = $i;
+$this->dbid = $di;
 }
 
 // Разделяне на дадена част на нейните по-малки части
@@ -298,6 +303,7 @@ foreach($this->parts as $p) $p->split_part();
 }
 
 function display(){
+global $adm_pth;
 $h1 = ''; $br = ' <br>'; $h2 = '';
 $t1 = ''; $t2 = '';
 $ttl = ' title="Click to copy reference" onclick="copyNormDocRef(this);"';
@@ -339,10 +345,12 @@ $this->txt = preg_replace('/(-{4,}|(\.\s*){4,})/', '<p>${1}</p>', $this->txt );
 $rz = '';
 $rz .= "$h1$this->name$h2\n";
 $rz .= "$t1$this->txt";
+if(in_edit_mode()) $rz .= " <a href=\"$adm_pth"."edit_record.php?t=normdoc&r=$this->dbid\">*</a> ";
 foreach($this->parts as $p){
    $rz .= $p->display();
 }
 $rz .= "$t2\n";
+//var_dump($this); die;
 return $rz;
 }
 
