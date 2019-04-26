@@ -102,7 +102,10 @@ mysqli_query($db_link,$q);
 
 function do_not_cache(){
 global $page_data, $debug_mode;
-$rz = false
+$other = false;
+$code = stored_value("page_cache_IPs");
+if($code) eval($code);
+$rz = $other
   || ($page_data['ID']==0)
   || (isset($page_data['donotcache']) && ($page_data['donotcache']==1))
   || in_edit_mode()
