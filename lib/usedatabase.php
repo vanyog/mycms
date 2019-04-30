@@ -36,6 +36,7 @@ $db_link = get_db_link($user, $password, $database, $colation);
 function get_db_link($user, $password, $database, $colation = 'cp1251'){
 $l = mysqli_connect("localhost",$user,$password,$database);
 if (!$l){
+ header("Content-Type: text/html; charset=Windows-1251");
  echo '<p>Не се получава връзка с MySQL сървъра!'; die;
 }
 mysqli_query($l,"SET NAMES '$colation';");
