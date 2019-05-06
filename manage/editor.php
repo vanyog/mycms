@@ -93,18 +93,23 @@ te.selectionEnd = e;
 }
 var tag_a1 = "a href=\"/index.php?pid=\"";
 var tag_a2 ="a";
-var tag_s1 = "<script type=\"text/javascript\"><!--\n";
-var tag_s2 = "\n--><"+"/script>";
+var tag_s1 = "<script>\n";
+var tag_s2 = "\n<"+"/script>";
 var metaPressed = false;
+var shiftPressed = false;
 function showCharCount(a){
 var s = document.getElementById(a.id + "_count");
 s.innerHTML = a.value.length;
 metaPressed = false;
+shiftPressed = false;
 lastEv = "";
 }
 function editor_onKey(e,v){
 lastEv = v;
 if(metaPressed && (v.key=="Enter")) insert_tag(tgToIn,tgToIn);
+if(metaPressed && shiftPressed && (v.key.toLowerCase()=="s")) {
+  saveAndClose();
+}
 if(metaPressed && (v.key.toLowerCase()=="s") ){
   d = document.forms.edit_form;
   if(d.submit){
@@ -112,8 +117,25 @@ if(metaPressed && (v.key.toLowerCase()=="s") ){
     d.submit();
   }
 }
-metaPressed = true;
+if(v.ctrlKey || v.metaKey) metaPressed = true;
+if(v.shiftKey) shiftPressed = true;
 return false;
+}
+function doRemoveTag(){
+var te = tefc;
+if(!te) return;
+var tx = te.value;
+var s = te.selectionStart;
+var e = te.selectionEnd;
+if(s!=e) return;
+while( (e<tx.length) && ( (tx[e]=="<")||((tx[e]!=" ")&&(tx[e]!=">")) ) ) e++;
+var tn = tx.substring(s+1,e);
+while( (e<tx.length) && (tx[e]!=">") ) e++;
+var ct = "</"+tn+">";
+var i = tx.indexOf(ct, e+1);
+var nt = tx.substring(0,s) + tx.substring(e+1, i) + tx.substring(i+ct.length);
+te.value = nt;
+te.selectionStart = s;
 }
 </script>
 '.mod_picker();
@@ -130,6 +152,7 @@ return $js.
 '.make_insert_2_button('print_r','\'print_r($\'','\'); die;\'').'
 '.make_insert_2_button('<!--$$_','\'<!--$$_\'','\'_$$-->\'').'
 '.make_insert_2_button('javascript','tag_s1','tag_s2').ckeb($tec).'
+<input type="button" value="x" onclick="doRemoveTag();">
 <span id="editor'.$tec.'_count"></span>
 <textarea id="editor'.$tec.'" cols="120" name="'.$n.'" rows="22" style="font-size:120%;" onfocus="onTeFocus();" onkeyup="showCharCount(this);" onkeydown="editor_onKey(this,event);">'.
 str_replace($ta_ctag,$ta_fctag,$tx).$ta_ctag;
