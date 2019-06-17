@@ -32,7 +32,7 @@ include_once($idir.'mod/rawfile/f_rawfile.php');
 function parse_content($cnt){
 global $page_options, $page_data, $page_title, $page_content, $body_adds, $page_header, $content_date_time,
        $idir, $pth, $adm_pth, $apth, $mod_pth, $mod_apth,
-       $can_visit, $can_manage, $site_encoding, $debug_mode, $no_style;
+       $can_visit, $can_manage, $site_encoding, $debug_mode, $no_style, $global_filters;
 
 $l = strlen($cnt);
 $str1 = '<!--$$_'; // Означение за начало на замествания елемент

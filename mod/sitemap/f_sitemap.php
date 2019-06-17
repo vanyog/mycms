@@ -96,7 +96,11 @@ for(var i=0; i<c; i++) if(sm.children[i].nodeName=="DIV"){
 $rz = '<div id="'.$id.'">'."\n".
 site_map_buttons().$rz.site_map_buttons()."
 <p class=\"clear\"></p></div>";
-if($smday !== $smfile){
+// Записване на нов sitemap.xml файл
+if(    ($smday !== $smfile) // Нов ден
+    && ($ar[0]  == $mpg_id) // Генерира се карта на цилия сайт
+  )
+{
    $smfile = '<?xml version="1.0" encoding="UTF-8"?>'."\n".
              '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n".
              $smfile.

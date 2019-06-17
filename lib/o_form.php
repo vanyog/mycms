@@ -123,8 +123,8 @@ $this->js = " $e=\"$js\"";
 public function html($it){
 $dsbl = lock_form_fields();
 $rz = '';
-if (!$it) $rz .= "$this->caption ";
-else $rz .= "<tr><th>$this->caption </th><td>";
+if (!$it) $rz .= "<label for=\"$this->id\">$this->caption</label> ";
+else $rz .= "<tr><th><label for=\"$this->id\">$this->caption</label> </th><td>";
 if( ($this->type=='file') && $this->value){
    $p = strrpos($this->value, '/');
    $vl = current_pth($this->value).substr($this->value, $p );
@@ -249,8 +249,8 @@ foreach($this->options as $k => $v){
      else if ($v===$this->selected) $sl = ' selected';
   }
   switch($this->values){
-  case 'v': $rz .= "<option value=\"$v\"$sl>$v\n"; break;
-  case 'k': $rz .= "<option value=\"$k\"$sl>$v\n"; break;
+  case 'v': $rz .= "<option value=\"$v\"$sl>$v</option>\n"; break;
+  case 'k': $rz .= "<option value=\"$k\"$sl>$v</option>\n"; break;
   }
   $i++;
 }

@@ -128,7 +128,8 @@ var tx = te.value;
 var s = te.selectionStart;
 var e = te.selectionEnd;
 if(s!=e) return;
-while( (e<tx.length) && ( (tx[e]=="<")||((tx[e]!=" ")&&(tx[e]!=">")) ) ) e++;
+if((tx[e]=="<")&&(tx[e+1]!="/")) while( (e<tx.length) && (tx[e]!=" ") && (tx[e]!=">")) e++;
+if(e==s) return;
 var tn = tx.substring(s+1,e);
 while( (e<tx.length) && (tx[e]!=">") ) e++;
 var ct = "</"+tn+">";
@@ -146,13 +147,13 @@ return $js.
 '<input type="button" value="tag" onclick="doInsertTag();">'.'
 '.make_tag_button('a','tag_a1','tag_a2').'
 '.make_insert_button('php','<?php\n// Copyright: Vanyo Georgiev info@vanyog.com\n\n?>\n').'
-'.make_insert_2_button('case','\'case \\\'\'','\'\\\': break;\'').'
-'.make_insert_2_button('include','\'include(\\\'\'','\'\\\');\'').'
-'.make_insert_2_button('include_once','\'include_once($idir.\\\'\'','\'\\\');\'').'
-'.make_insert_2_button('print_r','\'print_r($\'','\'); die;\'').'
-'.make_insert_2_button('<!--$$_','\'<!--$$_\'','\'_$$-->\'').'
-'.make_insert_2_button('javascript','tag_s1','tag_s2').ckeb($tec).'
-<input type="button" value="x" onclick="doRemoveTag();">
+'.make_insert_2_button('case','\'case \\\'\'','\'\\\': break;\'', '').'
+'.make_insert_2_button('include','\'include(\\\'\'','\'\\\');\'', '').'
+'.make_insert_2_button('include_once','\'include_once($idir.\\\'\'','\'\\\');\'', '').'
+'.make_insert_2_button('print_r','\'print_r($\'','\'); die;\'', '').'
+'.make_insert_2_button('<!--$$_','\'<!--$$_\'','\'_$$-->\'', 'Insert a module').'
+'.make_insert_2_button('javascript','tag_s1','tag_s2','Insert SCRIPT tag').ckeb($tec).'
+<input type="button" value="x" onclick="doRemoveTag();" title="Remove next tag">
 <span id="editor'.$tec.'_count"></span>
 <textarea id="editor'.$tec.'" cols="120" name="'.$n.'" rows="22" style="font-size:120%;" onfocus="onTeFocus();" onkeyup="showCharCount(this);" onkeydown="editor_onKey(this,event);">'.
 str_replace($ta_ctag,$ta_fctag,$tx).$ta_ctag;
@@ -167,8 +168,8 @@ function make_insert_button($n,$t1){
 return '<input type="button" value="'.$n.'" onclick="insert_text(\''.$t1.'\');">';
 }
 
-function make_insert_2_button($n,$t1,$t2){
-return '<input type="button" value="'.$n.'" onclick="insert_2_texts('.$t1.','.$t2.');">';
+function make_insert_2_button($n,$t1,$t2,$tt){
+return '<input type="button" value="'.$n.'" onclick="insert_2_texts('.$t1.','.$t2.');"  title="'.$tt.'">';
 }
 
 // HTML код за показване на бутон за включване на CKEditor
@@ -180,5 +181,5 @@ $ckep = $_SERVER['DOCUMENT_ROOT'].$ckpth.'ckeditor.js';
 if (file_exists($ckep)) $page_header .= '<script src="'.$ckpth."ckeditor.js\"></script>\n";
 else $page_header .= "<script src=\"//cdn.ckeditor.com/4.5.7/full/ckeditor.js\"></script>\n";
 return '
-<input type="button" onclick="CKEDITOR.replace( \'editor'.$n.'\' );" value="CKEditor">';
+<input type="button" onclick="CKEDITOR.replace( \'editor'.$n.'\' );" value="CKEditor" title="Load CKEditor">';
 }

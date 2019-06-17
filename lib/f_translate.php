@@ -35,6 +35,7 @@ include_once($idir."lib/f_parse_content.php");
 
 $content_date_time    = '';// Променлива, която съдържа датата и часа на последната редакция на върнатия текст 
 $content_create_time = ''; // Променлива, която съдържа датата и часа на първото въвеждане на върнатия текст 
+$global_filters = db_table_field('filters', 'filters', "`name` LIKE '*'");
 
 function translate($n, $elink=true){
 

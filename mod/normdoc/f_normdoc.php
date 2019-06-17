@@ -59,7 +59,7 @@ if(isset($_GET['no']) and ($_GET['no']=='1')){
   return $lk.translate($nd->name);
 }
 $rz .= $nd->display();
-if(in_edit_mode() && count($nd->parts)) $rz .= "<a href=\"$adm_pth"."edit_record.php?t=content&r=$nd->id\">*</a>";
+if(in_edit_mode() && count($nd->parts) && ($nd->id>0) ) $rz .= "<a href=\"$adm_pth"."edit_record.php?t=content&r=$nd->id\">*</a>";
 if(isset($_GET['save']) and ($_GET['save']=='1')) $nd->save_to_db();
 return $lk.$rz.
 '<input type="text" id="copyHelper" style="display:none;">'."\n";
@@ -345,7 +345,7 @@ $this->txt = preg_replace('/(-{4,}|(\.\s*){4,})/', '<p>${1}</p>', $this->txt );
 $rz = '';
 $rz .= "$h1$this->name$h2\n";
 $rz .= "$t1$this->txt";
-if(in_edit_mode()) $rz .= " <a href=\"$adm_pth"."edit_record.php?t=normdoc&r=$this->dbid\">*</a> ";
+if(in_edit_mode() && ($this->dbid>0)) $rz .= " <a href=\"$adm_pth"."edit_record.php?t=normdoc&r=$this->dbid\">*</a> ";
 foreach($this->parts as $p){
    $rz .= $p->display();
 }

@@ -161,7 +161,6 @@ for($i=0; $i<count($dl); $i++){
 }
 if (($cln % $cls)!=0) $page_content .= "</tr>";
 
-
 $page_content .= '</table>
 <p>?<input type="text" name="query"></p>
 <p><input type="button" value="Create file" onclick="doCreate();">
