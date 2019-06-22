@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Смяна на протокола и домейна
 
 // Функцията проверява дали протоколът на текущата страница е https
-// и ако не е зададена настройка 'stop_https' със стойност 0,
+// и ако не е зададена настройка 'stop_https' със стойност 'no',
 // и в текущата страница не се използва модул USERREG,
 // пренасочва към същата страница, но по http.
 
@@ -41,20 +41,20 @@ if(($www=='yes')
     && (substr($_SERVER['HTTP_HOST'],0,4)!='xn--')
 ){
   $_SERVER['HTTP_HOST'] = 'www.'.$_SERVER['HTTP_HOST'];
-  $redir = true;
+  $redir = true;// die("1");
 }
 if(($www=='no') && isset($_SERVER['HTTP_HOST']) && (substr($_SERVER['HTTP_HOST'],0,4)=='www.') ){
   $_SERVER['HTTP_HOST'] = substr($_SERVER['HTTP_HOST'],4);
-  $redir = true;
+  $redir = true; // die("2");
 }
-$stps = stored_value('stop_https', 1);
+$stps = stored_value('stop_https', "1");
 $except = array();
 eval(stored_value('do_https', '')); // Списък от номера на страници, които остават на https
-if($stps && isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']=='on') && !in_array($page_id, $except)){
+if(($stps=='1') && isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']=='on') && !in_array($page_id, $except)){
   $cnt = db_table_field('text', 'content', "`name`='$a' AND `language`='$language'");
   $pos = strpos($cnt, '$$_USERREG_');
   if($pos===false){
-    $redir = true;
+    $redir = true; die("3");
   }
 }
 $l = strlen($pth);
@@ -64,7 +64,7 @@ if( ($l>1) && ($ind_fl!=$main_index) && (substr($main_index,0,$l)!=$pth) ){
   $redir = true;
 }
 if( $redir && isset($_SERVER['HTTP_HOST']) ) {
-  $h = 'Location: http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+  $h = 'Location: http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; die($h);
   header($h);
   die();
 }

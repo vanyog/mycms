@@ -75,7 +75,7 @@ case 'logout': return userreg_outlink($ta[0]); break;
 case 'mydata': return userreg_mydata($ta[0]); break;
 case 'edit'  : if(!isset($_GET['user2']) || ($_GET['user2']=='edit')) return userreg_edit($ta[0]);   break;
 case 'name'  : return userreg_name($ta[0]);    break;
-default: if(!(1*$ta[1])&&($ta[1]!='edit')) die("Undefined parameter '".$ta[1]."' for USERREG module"); break;
+default: if(!(is_numeric($ta[1])?$ta[1]:0)&&($ta[1]!='edit')) die("Undefined parameter '".$ta[1]."' for USERREG module"); break;
 }
 if (isset($_GET['user2'])) switch ($_GET['user2']){
 case 'newreg': return userreg_newform($ta[0]); break;
@@ -282,7 +282,7 @@ $ms = translate('userreg_regmess').'http://'.$_SERVER['HTTP_HOST'].set_self_quer
 $sb = translate('userreg_regsub');
 $sb = '=?'.$site_encoding.'?B?'.base64_encode($sb).'?=';
 $hd = 'Content-type: text/plain; charset='.$site_encoding."\r\n".
-      'From: '.stored_value('site_owner_email','site@vsu.bg')."\r\n";
+      'From: '.stored_value('site_owner_email','vanyog@gmail.com')."\r\n";
 mail($e,$sb,$ms,$hd);
 return 'OK';
 }

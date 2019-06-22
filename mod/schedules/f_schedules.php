@@ -229,8 +229,9 @@ function schedules_in_event($e,$s){
 $ct = date('Y-m-d H:i:s', time());
 // Номер на събитието $e от график $s, ако текущото време не е извън сроковете му
 $id = db_table_field('ID', 'schedules', 
-      "`sch_name`='$s' AND `ev_name`='$e' AND `date_time_1`<='$ct' AND `date_time_2`>='$ct'");
-return (1*$id)!=0;
+      "`sch_name`='$s' AND `ev_name`='$e' AND `date_time_1`<='$ct' AND `date_time_2`>='$ct'", 0);
+$rz =  "$id"!="0";
+return $rz;
 }
 
 ?>

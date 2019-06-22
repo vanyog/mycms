@@ -106,8 +106,11 @@ if (count($_POST)){
 }
 else if (isset($_SERVER['HTTP_REFERER'])) $_SESSION['http_referer'] = $_SERVER['HTTP_REFERER'];
 
+$n = db_table_field('name','content','`ID`='.(is_numeric($_GET['i'])?1*$_GET['i']:0) );
+if(!$n) $n = $_GET['i'];
+
 $page_content = '<h1>'.translate('usermenu_edittext').'</h1>
-<p>Name: '.db_table_field('name','content','`ID`='.(is_numeric($_GET['i'])?1*$_GET['i']:0) )."</p>\n";
+<p>Name: '."$n</p>\n";
 
 if(!isset($_GET['code'])) $page_content .= mod_picker();
 

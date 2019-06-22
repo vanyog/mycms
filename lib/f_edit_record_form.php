@@ -33,6 +33,7 @@ include_once($idir."lib/f_db_field_types.php");
 include_once($idir."lib/f_db_table_field.php");
 include_once($idir."lib/f_db_show_columns.php");
 include_once($idir."lib/f_db_enum_values.php");
+include_once($idir."lib/f_element_correction.php");
 include_once($idir."lib/o_form.php");
 
 function edit_record_form($cp, $tn, $ck = true){// print_r($cp); die;
@@ -255,16 +256,6 @@ if (mysqli_query($db_link,$q) && $m) $rz .= '<span class="message">'.translate('
 //echo "$q<p>".print_r($cp,true)."<p>".print_r($_FILES,true); die();
 if ($rz) $rz = '<p class="message">'.$rz.'</p>';
 return $rz;
-}
-
-// Функция, която коригира --$$_ _$$-- елементите
-
-function element_correction($v1){
- $v1 = str_replace( chr(60).' !--$$_',    chr(60).'!--$$_', $v1);
- $v1 = str_replace( chr(38).'lt; !--$$_', chr(60).'!--$$_', $v1);
- $v1 = str_replace( chr(38).'lt;!--$$_',  chr(60).'!--$$_', $v1);
- $v1 = str_replace( '_$$--'.chr(38).'gt;','_$$--'.chr(62),  $v1);
- return $v1;
 }
 
 ?>
