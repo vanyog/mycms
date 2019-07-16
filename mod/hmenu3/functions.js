@@ -94,7 +94,7 @@ function hmenu3_correct_layout(){
 var last_res = 0;
 function hmenu3_resize_listener(e){
     var t = Date.now();
-    if(t-last_res > 5000){
+    if(t-last_res > 1000){
         last_res = t;
         setTimeout(function(){ location.reload(); }, 2000);
         return;

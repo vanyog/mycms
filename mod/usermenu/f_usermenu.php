@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Ако $nom=true само се проверяват правата без да се показва меню.
 // $nom = стринг - адрес на страница за излизане
 
-global $can_visit, $can_manage;
+global $can_edit, $can_create, $can_managee, $can_visit;
 
 include_once($idir."lib/f_db_select_m.php");
 include_once($idir."lib/f_mod_list.php");
@@ -34,7 +34,9 @@ if (!session_id() && isset($_COOKIE['PHPSESSID'])) session_start();
 
 function usermenu($nom = false){
 
-global $page_data, $can_edit, $can_create, $can_manage, $can_visit, $pth, $page_header;
+global $page_id, $page_data, $can_edit, $can_create, $can_manage, $can_visit, $pth, $adm_pth, $page_header;
+
+if(!isset($page_data)) $page_data = db_select_1('*', 'pages', "`ID`=$page_id");
 
 // Ако в сесията няма данни за потребител, връща празен стринг.
 if (!isset($_SESSION['user_username'])||!isset($_SESSION['user_password'])) return '';
@@ -45,7 +47,6 @@ $user_table = stored_value('user_table','users');
 // $id - номер на влязъл потребител
 $ud = db_select_1('*',$user_table, 
       "`username`='".addslashes($_SESSION['user_username'])."' AND `password`='".$_SESSION['user_password']."'");
-//print_r($_SESSION);
 
 // Ако няма потребител със запазените в сесията име и парола, връща празен стринг.
 if (!$ud) return '';
@@ -62,21 +63,20 @@ $can_manage = array();// Права за администриране на модули
 
 foreach($p as $q) switch($q['type']) {
 case 'all':
+  $rz .= "<a href=\"$adm_pth\">Admin path</a><br>\n";
   $can_edit = $q['yes_no'];
   $can_create = $q['yes_no'];
   $ml = mod_list(true);
   $can_visit = false;
   foreach($ml as $m){
-//    $n = pathinfo($m,PATHINFO_FILENAME);
     $n = pathinfo($m, PATHINFO_BASENAME);
     $yn = db_select_m('yes_no','permissions',"`user_id`=$id AND `type`='module' AND `object`='$n'");
     if (!count($yn)){ $can_manage[$n] = $q['yes_no']; }
     else { $can_manage[$n] = $yn[0]['yes_no']; }
     $can_visit = $can_visit || $can_manage[$n];
   }
-//  $can_visit = true;
   break;
-case 'menu':// print_r($page_data); die;
+case 'menu':
   if (in_that_branch($page_data['menu_group'], $q['object'])) $can_create = $q['yes_no'];
   $can_edit = $can_create;
   if ($can_create) $can_visit = true;
@@ -155,7 +155,7 @@ return '<div id="user_menu">'."\n".$rz."\n</div>";
 //
 // Проверява дали менюто на страницата е подменю на разрешеното за редактиране от потребителя меню
 //
-function in_that_branch($pi,$j){// echo "$pi $j<br>";
+function in_that_branch($pi,$j){
 if ($pi==$j) return true;
 $rz = false;
 do{

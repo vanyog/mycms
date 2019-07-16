@@ -127,7 +127,7 @@ if (!$it) $rz .= "<label for=\"$this->id\">$this->caption</label> ";
 else $rz .= "<tr><th><label for=\"$this->id\">$this->caption</label> </th><td>";
 if( ($this->type=='file') && $this->value){
    $p = strrpos($this->value, '/');
-   $vl = current_pth($this->value).substr($this->value, $p );
+   $vl = current_pth($this->value).substr($this->value, $p + 1 );
    if(!empty($GLOBALS['use_viewer'])){
      $_SESSION['can_view_file'][] = $vl;
      $vl = $GLOBALS['pth']."view.php?file=$vl";

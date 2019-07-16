@@ -233,6 +233,7 @@ $f->add_input( new FormInput('', 'type', 'hidden', $t) );
 $f->add_input( new FormInput(translate('user_email'),'email','text',$email) );
 $f->add_input( new FormInput(translate('user_password'),'password','password'));
 $f->add_input( new FormInput(translate('user_passwordconfirm'),'password2','password'));
+$f->add_input( new FormInput(translate('userreg_gdpr'),'gdpr','checkbox', 'yes', translate('userreg_gdpr2')) );
 if(!is_local()) $f->add_input( new FormReCaptcha(translate('userreg_recaptcha'), stored_value('recaptcha_pub') ) );
 $fi = new FormInput('','','button',translate('userreg_regsubmit'));
 $fi->js = ' onclick="ifNotEmpty_userreg_form();"';
@@ -245,7 +246,9 @@ return $f;
 //
 function userreg_newprocess(){
 global $site_encoding;
-// Ако паролата и по-къса от 8 символа
+// Ако няма отметка "лични данни"
+if ( !isset($_POST['gdpr']) || ($_POST['gdpr']!='yes') ) return translate('userreg_nogdpr');
+// Ако паролата e по-къса от 8 символа
 if ( !isset($_POST['password']) || (strlen($_POST['password'])<8) ) return translate('userreg_pshort');
 // Ако паролата и повторението й не съвпадат
 if ($_POST['password']!=$_POST['password2']) return translate('user_passwordinvalid');
@@ -271,6 +274,7 @@ $d = array(
   'date_time_0'=>'NOW()',
   'date_time_1'=>'NOW()',
   'email'=>addslashes($e),
+  'gdpr'=>'yes',
   'newpass'=>pass_encrypt($_POST['password']),
   'code'=>rand_string(40),
   'IP'=>$_SERVER['REMOTE_ADDR']

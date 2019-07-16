@@ -173,7 +173,7 @@ return $rz;
 
 // Показване на предстоящите през следващите $n дни събития от графика с име $s
 
-function schedules_all($s){
+function schedules_all($s){//die($s);
 // Четене на събитията
 $ce = db_select_m('*', 'schedules', "`sch_name`='$s' ORDER BY `date_time_1` ASC, `date_time_2` ASC");
 // Текущата дата и час в MySQL формат
@@ -188,19 +188,12 @@ $c = 0; // Брой показани събития
 foreach($ce as $e){
  $y = substr($e['date_time_1'], 0, 4);
  $m = substr($e['date_time_1'], 5, 2);
- if($y!=$y0){
+ if(empty($GLOBALS['schedules_noyear']) && ($y!=$y0)){
    $rz .= "<h3>$y</h3>\n";
    $y0 = $y;
  }
- if($m!=$m0){
-   $rz .= "<h4>".$month[1*$m]."</h3>\n";
-   $m0 = $m;
- }
- $st = '';
- if($ct>=$e['date_time_1'] && $ct<=$e['date_time_2']) $st = ' class="current"';
- if($ct>$e['date_time_2'])                            $st = ' class="past"';
  // Хоризонтална линия на днешната дата
- if(!$hr && ($e['date_time_1']>$ct) ){
+ if(empty($GLOBALS['schedules_noline']) && !$hr && ($e['date_time_1']>$ct) ){
    $hr = true;
    if($c){// echo("<p>$c<br>$rz");
      if(!isset($GLOBALS['schedules_tcount'])) $GLOBALS['schedules_tcount'] = 0;
@@ -208,8 +201,18 @@ foreach($ce as $e){
      $rz .= "<hr id=\"today".$GLOBALS['schedules_tcount']."\">\n";
    }
  }
+ if(empty($GLOBALS['schedules_nomonth']) && ($m!=$m0)){
+   $rz .= "<h4>".$month[1*$m]."</h3>\n";
+   $m0 = $m;
+ }
+ $st = '';
+ if($ct>=$e['date_time_1'] && $ct<=$e['date_time_2']) $st = ' class="current"';
+ if($ct>$e['date_time_2'])                            $st = ' class="past"';
  $rz .= "<p$st>".'<span class="date_time">';
- $rz .= db2user_from_to($e['date_time_1'],$e['date_time_2']);
+ if(empty($GLOBALS['schedules_nostart']))
+    $rz .= db2user_from_to($e['date_time_1'],$e['date_time_2']);
+ else
+    $rz .= db2user_date_time($e['date_time_2'], false);
  if(in_edit_mode()){
    $p = current_pth(__FILE__);
    $rz .= ' <a href="'.$p.'edit.php?id='.$e['ID'].'">*</a>';

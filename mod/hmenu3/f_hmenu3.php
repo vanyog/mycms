@@ -22,11 +22,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Параметърът $a е стойността на полето `group` в таблица 'menu_items'.
 
 // Когато в хоризонталния ред няма място за линковете на всички подменюта,
-// линковете, които не се побират се показват в падащо подменю.
+// линковете, които не се побират се показват в падащо подменю. За постигане
+// на тази функционалност преди таг </body> се вмъква:
+// <script>hmenu3_correct_layout();</script>
 
 include_once($idir.'mod/rawfile/f_rawfile.php');
 
-global $body_adds;
+global $body_adds, $page_content;
 $body_adds .= ' onresize="hmenu3_resize_listener(event)"';
 
 function hmenu3($a){
@@ -82,7 +84,7 @@ return $sm.'<div id="menu_'.$a."\">\n".$rz.'</div>';
 // Връща подменюто към линк $lk
 
 function hsubmenu($lk,/*$ia,*/ $j){
-global $ind_fl, $seo_names, $rewrite_on;
+global $ind_fl, $seo_names, $rewrite_on, $page_id, $pth;
 // Номер на менюто, на което страница $lk е главна
 $g = db_table_field('`group`','menu_tree',"`index_page`=$lk");
 $ci = hmenu_c($g);
@@ -109,9 +111,14 @@ if (count($da)>1) foreach($da as $d){
   }
   else $lk = $d['link'];
   if(!$h){
-    $pl = '';
-    if(in_edit_mode()) $pl = $d['place']." ";
-    $rz .= '<a href="'.$lk.'"'.$c.'>'.$pl.translate($d['name'], false)."</a>\n";
+    $pl = ''; $el = '';
+    if(in_edit_mode()){
+        $pl = $d['place']." ";
+        // Добавяне на * за редактиране
+        $el = '<a href="'.$pth.'mod/usermenu/edit_menu_link.php?pid='.$page_id.'&amp;id='.$d['ID'].
+           '" style="color:#000000;background-color:#ffffff;margin:0;padding:0;">*</a>';
+    }
+    $rz .= '<a href="'.$lk.'"'.$c.'>'.$pl.translate($d['name'], false)."</a>$el\n";
   }
 }
 if (in_edit_mode()) $rz .= 'id '.$g;
