@@ -92,11 +92,15 @@ function hmenu3_correct_layout(){
 }
 
 var last_res = 0;
+var last_w = 0;
 function hmenu3_resize_listener(e){
     var t = Date.now();
     if(t-last_res > 1000){
+        var mdiv = document.getElementById(hmid);
+        var w = mdiv.offsetLeft + mdiv.offsetWidth;
         last_res = t;
-        setTimeout(function(){ location.reload(); }, 2000);
+        if(w !== last_w) setTimeout(function(){ location.reload(); }, 2000);
+        last_w = w;
         return;
     }
 }
