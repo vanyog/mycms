@@ -67,16 +67,23 @@ e += t1.length + 2 + p;
 te.selectionStart = s;
 te.selectionEnd = e;  
 }
-function insert_text(t1){
+function insert_text(t1, sl=true){
 var te = tefc;
 te.focus();
 var s = te.selectionStart;
 var e = te.selectionEnd;
 var v = te.value;
-te.value = v.substring(0,s)+t1+v.substring(e,v.length);
+var n = v.substring(0,s)+t1+v.substring(e,v.length);
+te.value = n;
 e = s + t1.length;
-te.selectionStart = s;
-te.selectionEnd = e;  
+if(sl){
+  te.selectionStart = s;
+  te.selectionEnd = e;
+}
+else{
+  te.selectionStart = e;
+  te.selectionEnd = e;
+}
 }
 function insert_2_texts(t1,t2){
 var te = tefc;
@@ -106,11 +113,22 @@ lastEv = "";
 }
 function editor_onKey(e,v){
 lastEv = v;
+if(shiftPressed && (v.key=="Enter")) insert_text("<br>", false);
+var ya = "'.encode('ÿ').'";
 if(metaPressed && (v.key=="Enter")) insert_tag(tgToIn,tgToIn);
-if(metaPressed && shiftPressed && (v.key.toLowerCase()=="s")) {
+if(metaPressed && (v.key=="1")    ) insert_tag("h1","h1");
+if(metaPressed && (v.key=="2")    ) insert_tag("h2","h2");
+if(metaPressed && (v.key=="3")    ) insert_tag("h3","h3");
+if(metaPressed && shiftPressed &&
+   ( (v.key.toLowerCase()=="s") || (v.key.toLowerCase()==ya) )
+  )
+{
   saveAndClose();
 }
-if(metaPressed && (v.key.toLowerCase()=="s") ){
+if(metaPressed &&
+   ( (v.key.toLowerCase()=="s") || (v.key.toLowerCase()==ya) )
+  )
+{
   d = document.forms.edit_form;
   if(d.submit){
     v.preventDefault();
