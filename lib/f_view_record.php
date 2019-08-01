@@ -21,12 +21,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // $d - асоциативен масив с прочетените данни
 // $n - асоциативен масив с надписи за полетата. Ако липсва се показват имената на полетата.
 
-function view_record($d, $n = ''){
+// $st - CSS дефиниции за форматиране на таблицата
+
+function view_record($d, $n = '', $st = ''){
 if ($n==''){
   $n = array_keys($d);
   $n = array_combine($n,$n);
 }
-$rz = '<table class="record_table">'."\n";
+if($st) $st = " style=\"$st\"";
+$rz = '<table class="record_table"'."$st>\n";
 foreach($n as $k=>$v){
   $vl = '';
   if (isset($d[$k])) $vl = stripslashes($d[$k]);

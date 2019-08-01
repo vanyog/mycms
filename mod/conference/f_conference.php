@@ -148,7 +148,9 @@ if (!$et && !count($pd)) return $rz.'<p class="message">'.translate('conference_
 $ut = schedules_in_event($day2[0],$day2[1]) || $adm;
 // Адрес на страницата за редактиране на резюме и качване на доклад от участник
 $edp = stored_value('conference_editpaper', '/index.php?pid=1068');
+// Линк "Редактиране"
 if ($ut) $rz .= '<p><a href="'.$edp.$did.'">'.translate('conference_editpaper').'</a>';
+// Линк "Изтриване"
 if (count($pd)>0) $rz .= ' &nbsp; <a href="'.current_pth(__FILE__).'delete_paper.php?a=1'.$did.
                          '" onclick="confDelPaper(this);return false;">'.
                          translate('conference_deletepaper').'</a>';
@@ -271,6 +273,9 @@ if ($adm) {
   $ti = new FormInput(encode('Одобрен пълен текст:'), 'approved_f', 'checkbox');
   if ($d['approved_f']) $ti->checked = ' checked';
   $f->add_input($ti);
+  $ti = new FormInput(encode('Ключов доклад:'), 'keylec', 'checkbox');
+  if ($d['keylec']) $ti->checked = ' checked';
+  $f->add_input($ti);
   $ti = new FormInput(encode('Том:'), 'vol', 'text', $d['vol']);
   $f->add_input($ti);
   $ti = new FormInput(encode('Място:'), 'place', 'text', $d['place']);
@@ -278,6 +283,7 @@ if ($adm) {
 }
 // Дали сме в период на редактиране
 $et = schedules_in_event($day1[0], $day1[1]) || $adm;
+// Съставяне на формата за редактиране
 $ti = new FormSelect(translate('usermenu_language'), 'language', $languages, $d['language']);
 if (!$et) $ti->js = ' disabled="disabled"';
 $ti->values = 'k';
@@ -344,6 +350,7 @@ $d = array(
 );
 if (isset($_POST['approved_a'])) $d['approved_a']=1; else $d['approved_a']=0;
 if (isset($_POST['approved_f'])) $d['approved_f']=1; else $d['approved_f']=0;
+if (isset($_POST['keylec']))     $d['keylec']=1;     else $d['keylec']=0;
 if (isset($_POST['language'])) $d['language']=addslashes($_POST['language']);
 if (isset($_POST['form'])) $d['form']=addslashes($_POST['form']);
 if (isset($_POST['topic'])) $d['topic']=addslashes($_POST['topic']);
@@ -556,6 +563,9 @@ foreach($pd as $d){
   $d['fulltextfile2']=file_link_and_size($d['fulltextfile2']);
   // Адрес на страницата за редактиране на резюме и качване на доклад от участник
   $edp = stored_value('conference_editpaper', '/index.php?pid=1068');
+  // Атбелязване със зелена линия отгоре, ако е ключов доклад
+  $st = '';
+  if($d['keylec']) $st = 'border:solid 4px green;';
   $rz .= encode('<p>Доклад <strong>No:'.$d['ID'].'</strong> <a href="'.$edp.'&amp;proc='.$d['ID'].'">Редактиране</a></p>
   ').view_record($d, array(
   'user_id'=>translate('conference_by'),
@@ -572,7 +582,7 @@ foreach($pd as $d){
   'abstract'=>translate('conference_cabstract'),
   'fulltextfile'=>translate('conference_cfulltextfile'),
   'fulltextfile2'=>translate('conference_cfulltextfile2')
-  ));
+  ), $st);
 }
 return $rz.'<p>&nbsp;</p>
 ';
@@ -635,8 +645,10 @@ if( confirm("'.encode('Потвърждавате ли изтриване на затис за доклад с ID=').'"+
 usermenu(true);
 // Дали потребителят е от екипа на конференцията
 $team = !empty($can_manage['conference']) || $can_edit;
+// Преглед преди обявената дата
+$preview = !empty($_GET['allowtoshow']) && ($_GET['allowtoshow']=='basa-team');
 // Томове
-$vl = db_select_m('vol', 'proceedings', "`utype`='$utype' GROUP BY `vol`");// die(print_r($vl,true));
+$vl = db_select_m('vol', 'proceedings', "`utype`='$utype' GROUP BY `vol`");
 // Тематични направления $tp
 eval(translate('conference_topics'));
 $rz = '';
@@ -645,8 +657,8 @@ $rc = 0; // Брой готови доклади
 // Дата за обявяване на приетите резюмета
 $t3 = db_table_field('date_time_2', 'schedules', "`sch_name`='".$day3[1]."' AND `ev_name`='".$day3[0]."'");
 // Настоящия момент
-$td = date('Y-m-d h:m:s'); //die("<br>$td<br>$t3<br>".print_r($can_manage,false));
-if (("$td"<"$t3") && !$team )
+$td = date('Y-m-d h:m:s');
+if (("$td"<"$t3") && !$team && !$preview)
     return '<p class="message">'.translate("conference_shoeafter").db2user_date_time($t3)."</p>\n";
 // Начин на подреждане
 $order = ' ORDER BY `place` ASC';
@@ -665,7 +677,6 @@ if($vl1['vol']=='p'){
   $rz .= '<h2>'.translate('conference_posters')."</h2>\n";
 }
 else $rz .= '<h2>Volume '.$vl1['vol']."</h2>\n";
-
 // Номера на страници в том на поредния доклад
 $pn = array(0=>1, 1=>1, 2=>1, 3=>1);
 // За всяко научно направление
@@ -675,9 +686,9 @@ for($i = 0; $i<count($tp); $i++){
    $sr = '';
    // Езици, на които има доклади в дадената секция
    $ln = db_select_m('language', 'proceedings',
-         "`utype`='$utype' AND `topic`=$i AND `vol`='".$vl1['vol']."' GROUP BY `language` ORDER BY `language` DESC");// die(print_r($ln,true));
+         "`utype`='$utype' AND `topic`=$i AND `vol`='".$vl1['vol']."' GROUP BY `language` ORDER BY `language` DESC");
    $aproved = ' AND `approved_a`';
-   if ( $team ) $aproved = '';
+   if ( $team || $preview ) $aproved = '';
    // За всеки от езиците
    foreach($ln as $l){
      // Доклади от секцията на съответния език
@@ -693,7 +704,7 @@ for($i = 0; $i<count($tp); $i++){
      // За всеки доклад
      foreach($da as $d){
         $lk = ''; $cr = 6; $nm = '';
-        $st = ' id="pof'.$d['ID'].'"';
+        $st = ' id="pof'.$d['ID'].'"'; $stl = '';
         if ( $team ){
 //           if(isset($_GET['rename']) && ($_GET['rename']=='on')) $d = conference_rename_files($d);
            if ($d['form']==4){ // Форма на участие "Слушател"
@@ -717,7 +728,7 @@ for($i = 0; $i<count($tp); $i++){
               if(empty($d['keywords']))      { $lk .= translate('conference_noKeyWords'); $cr--; }
               if($lk) $lk = '<br><span class="message">'.translate('conference_Missing')."$lk</span>\n";
               else {
-                $st .= ' style="background-color: lightgreen; padding: 0.5em;"';
+                $stl .= ' style="background-color: lightgreen; padding: 0.5em;';
                 $rc++;
               }
            }
@@ -725,14 +736,19 @@ for($i = 0; $i<count($tp); $i++){
            $lk .= '<br><a href="'.$edp.'&amp;proc='.$d['ID'].'#bottom">'.encode('Редактиране').'</a> ';
            if($cr<=0)
               $lk .= $cr.' <a href="#" style="font-weight:bold;color:red;" onclick="deleteAbstract('.$d['ID'].');return false;">x</a>';
-           $lk .= '<br>'.file_link_and_size($d['fulltextfile']).
-                  '<br>'.file_link_and_size($d['fulltextfile2']);
+           if($d['fulltextfile'])  $lk .= '<br>'.file_link_and_size($d['fulltextfile']);
+           if($d['fulltextfile2']) $lk .= '<br>'.file_link_and_size($d['fulltextfile2']);
            $nm = $d['ID']."-".$d['place']." ";
            if($d['approved_a']) conference_add_auth($auth, $d['authors']);
         }
-        if( $team || !empty($d['title'])) {
+        if( $team || !empty($d['title']) || $preview ) {
+           if($d['keylec']){
+             if(!$stl) $stl .= ' style="';
+             $stl .= 'border:solid 4px green;';
+           }
+           if($stl) $st .= $stl.'"';
            $lr .= "<p$st>$nm";
-           if(!empty($d['approved_a'])){
+           if(!empty($d['approved_a']) || $preview){
              if( $team ) $lr .= $d['vol']."-";
              if($d['fulltextfile2']){
                $cn[$d['vol']]++;
@@ -743,8 +759,8 @@ for($i = 0; $i<count($tp); $i++){
                $lr .= '<a href="'.$fdir.$d['fulltextfile2'].'" title="'.translate('conference_dfull', false).'">'.$pdf.'</a> ';
            if($d['fulltextfile3'])
                $lr .= '<a href="'.$fdir.$d['fulltextfile3'].'" title="'.translate('conference_prez', false).'">'.$ppt.'</a> ';
-           $lr .= "<span>".stripslashes($d['title'])."</span><br>\n";
-           $lr .= '<em>'.$d['authors']."</em>";
+           $lr .= "<ptitle>".stripslashes($d['title'])."</ptitle><br>\n";
+           $lr .= '<author>'.$d['authors']."</author>";
            if($d['pages']){
              $lr .= " &nbsp; &nbsp; ".translate('conference_pg').$pn[$d['vol']];
              $pn[$d['vol']] += $d['pages'];
@@ -753,14 +769,14 @@ for($i = 0; $i<count($tp); $i++){
            }
            $lr .= "$lk</p>\n";
         }
-     }
+     } // Край на цикъла по доклади
      $sr .= $lr;
    }
    if( $team || !empty($c) ){
      $rz .= '<h3>'.$tp[$i];
      if ( $team ) $rz .= " - $c";
      $rz .= "</h3>\n";
-     if (("$td">"$t3") || $team ) $rz .= $sr;
+     if (("$td">="$t3") || $team || $preview ) $rz .= $sr;
      $tc += $c;
    }
 } // Край на цикъла по научни направления

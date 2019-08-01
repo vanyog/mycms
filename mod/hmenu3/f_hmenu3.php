@@ -57,23 +57,27 @@ foreach($il as $i){
   $c = '';
   if ($lk) {
     $sm .= hsubmenu($lk,/*$ia,*/$j);
-//    if (in_array($lk,$ia)) $c = ' class="current"';
     if ($lk==$ci) $c = ' class="current"';
     if($seo_names) $lk = '/'.db_table_field('seo_name', 'seo_names', "`page_id`='$lk'").'/';
     else if($rewrite_on) $lk = "/$lk/";
          else $lk = $ind_fl.'?pid='.$lk;
   }
   else $lk = $i['link'];
-  $rz .= '<a href="'.$lk.'"'.$c.' onMouseOver="show_hlayer('.$j.',this)" onmouseleave="hide_layer2('.$j.', this, event);">'.
-         translate($i['name'],false);
+  $lk = " href=\"$lk\"";
+  if($c) $lk = '';
+  $rz .= "<a$lk$c".' onMouseOver="show_hlayer('.$j.',this)" onmouseleave="hide_layer2('.$j.', this, event);">';
+  $rz .= translate($i['name'],false);
   // Добавяне на * за редактиране 
   if (in_edit_mode()){
      $rz .= '<a href="'.$pth.'mod/usermenu/edit_menu_link.php?pid='.$page_id.'&amp;id='.$i['ID'].
      '" style="color:#000000;background-color:#ffffff;margin:0;padding:0;">*</a>';
   }
-  $rz .= "</a>\n";
+//  if(!$c)
+  $rz .= "</a>";
+  $rz .= "\n";
   $j++;
 }
+// Добавяне на линк New в режим на редактиране
 if (in_edit_mode()){
   $ni = db_table_field('MAX(`ID`)','menu_items','1')+1;
   $rz .= " $a ".'<a href="'.$adm_pth.'new_record.php?t=menu_items&group='.$a.'&link='.$page_id.'&name=p'.$ni.'_link">New</a> '."\n";
@@ -111,7 +115,8 @@ if (count($da)>1) foreach($da as $d){
   }
   else $lk = $d['link'];
   if(!$h){
-    $pl = ''; $el = '';
+    $pl = ''; // Номер на мястото
+    $el = ''; // Линка за редактиране
     if(in_edit_mode()){
         $pl = $d['place']." ";
         // Добавяне на * за редактиране
