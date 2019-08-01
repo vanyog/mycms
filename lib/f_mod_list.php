@@ -26,8 +26,11 @@ function mod_list($a = true){
 global $mod_apth, $apth;
 $a1 = dir_list($mod_apth);
 if ($a) foreach($a1 as $i=>$n) $a1[$i] = $mod_apth.$n.'/';
-$a2 = dir_list($apth.'mod');
-if ($a) foreach($a2 as $i=>$n) $a2[$i] = $apth.'mod/'.$n.'/';
+if($apth.'mod/'!=$mod_apth){
+  $a2 = dir_list($apth.'mod/');
+  if ($a) foreach($a2 as $i=>$n) $a2[$i] = $apth.'mod/'.$n.'/';
+}
+else $a2 = array();
 $rz = array_merge($a1,$a2);
 return $rz;
 }
