@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // $rowfile_minify=='YES' - предизвиква премахване на празни редове
 // $rowfile_noiconv=='YES' - изключва променянето на кодовата таблица
 
+include_once(__DIR__.'/../../lib/f_encode.php');
+
 function rawfile($a = ''){
 global $apth, $rowfile_minify, $rowfile_noiconv;
 $rz = $apth.$a;
