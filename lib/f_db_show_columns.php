@@ -29,7 +29,7 @@ $q = "SHOW COLUMNS FROM `$tn_prefix$tn`$lk;";
 $r = mysqli_query($db_link,$q);
 $db_req_count++;
 $rz = array();
-while ( $a = mysqli_fetch_assoc($r) ) if ($in) $rz[] = $a[$in]; else $rz[] = $a;
+if($r) while ( $a = mysqli_fetch_assoc($r) ) if ($in) $rz[] = $a[$in]; else $rz[] = $a;
 return $rz;
 }
 

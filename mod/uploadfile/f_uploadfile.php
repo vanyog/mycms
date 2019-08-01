@@ -99,7 +99,7 @@ else {
   // Проверка дали файлът не идва от друг сървър
   $l = strlen($_SERVER['DOCUMENT_ROOT']);
   // document_root деректорията на другия сървър, зададена с настройката uploadfile_otherroot
-  $or = stored_value('uploadfile_otherroot');// echo $or;
+  $or = stored_value('uploadfile_otherroot');
   // Път до файла на този сървър
   $thfn = $fr['filename'];
   if ($or){
