@@ -63,7 +63,9 @@ if (!session_id() && isset($_COOKIE['PHPSESSID'])) session_start();
 if (isset($_SESSION['text_to_search'])) $tx = $_SESSION['text_to_search'];
 else $tx = '';
 $tx = str_replace('"','&quot;',$tx);
-$f->add_input(new FormInput('','searchtext','text',$tx));
+$ti = new FormInput(translate('sitesearch_label'),'searchtext','text',$tx);
+$ti->id = 'searchtextfield';
+$f->add_input($ti);
 $b = new FormInput('','','button', ' ');
 $p = current_pth(__FILE__);
 $b->js = 'onclick="doSiteSearch();" id="search_button"'.

@@ -59,7 +59,7 @@ if(isset($_GET['no']) and ($_GET['no']=='1')){
   return $lk.translate($nd->name);
 }
 $rz .= $nd->display();
-if(in_edit_mode() && count($nd->parts)) $rz .= "<a href=\"$adm_pth"."edit_record.php?t=content&r=$nd->id\">*</a>";
+if(in_edit_mode() && count($nd->parts) && ($nd->id>0) ) $rz .= "<a href=\"$adm_pth"."edit_record.php?t=content&r=$nd->id\">*</a>";
 if(isset($_GET['save']) and ($_GET['save']=='1')) $nd->save_to_db();
 return $lk.$rz.
 '<input type="text" id="copyHelper" style="display:none;">'."\n";
@@ -91,6 +91,7 @@ $this->html = $cd['text'];
 $this->txt = str_replace(')<', ') <', $this->html );
 $this->txt = strip_tags($this->txt);
 $this->txt = str_replace('&nbsp;', ' ', $this->txt );
+//$this->txt = str_replace(chr(167), '&sect;', $this->txt );
 $this->id = $cd['ID'];
 $this->split_parts();
 }
@@ -114,8 +115,8 @@ case '':
 case encode('Глава '):
 case encode('Раздел '):
 case encode('ДОПЪЛНИТЕЛНА РАЗПОРЕДБА'):
+case encode('Допълнителна разпоредба'):
 case encode('Допълнителни разпоредби'):
-case encode('ДОПЪЛНИТЕЛНИ РАЗПОРЕДБИ'):
 case encode('Преходни разпоредби'):
 case encode('ПРЕХОДНИ И ЗАКЛЮЧИТЕЛНИ РАЗПОРЕДБИ'):
 case encode('Преходни и заключителни разпоредби'):
@@ -154,6 +155,7 @@ function split_parts(){
 $sp = '/'.encode('Глава ').
       '|'.encode('Раздел ').
       '|'.encode('ДОПЪЛНИТЕЛНА РАЗПОРЕДБА').
+      '|'.encode('Допълнителна разпоредба').
       '|'.encode('Допълнителни разпоредби').
       '|'.encode('ДОПЪЛНИТЕЛНИ РАЗПОРЕДБИ').
       '|'.encode('Преходни разпоредби').
@@ -238,6 +240,7 @@ case encode('Раздел '):
 //                $sp = "/".encode('Чл. ')."(\d+".encode('(?:а|б|в|г|д|е|ж|з|и|к|л|м)')."{0,1})\. /"; $ty = 'chlen';
                 break;
 case encode('ДОПЪЛНИТЕЛНА РАЗПОРЕДБА'):
+case encode('Допълнителна разпоредба'):
 case encode('Допълнителни разпоредби'):
 case encode('ДОПЪЛНИТЕЛНИ РАЗПОРЕДБИ'):
 case encode('Преходни разпоредби'):
@@ -276,6 +279,7 @@ if( !($mc && in_array($this->type, array('paragraf', 'alineya')) && !is_set_corr
   case encode('Глава '):
   case encode('Раздел '):
   case encode('ДОПЪЛНИТЕЛНА РАЗПОРЕДБА'):
+  case encode('Допълнителна разпоредба'):
   case encode('Допълнителни разпоредби'):
   case encode('ДОПЪЛНИТЕЛНИ РАЗПОРЕДБИ'):
   case encode('Преходни разпоредби'):
@@ -310,6 +314,7 @@ $ttl = ' title="Click to copy reference" onclick="copyNormDocRef(this);"';
 switch ($this->type){
 case encode('Глава '):
 case encode('ДОПЪЛНИТЕЛНА РАЗПОРЕДБА'):
+case encode('Допълнителна разпоредба'):
 case encode('Допълнителни разпоредби'):
 case encode('ДОПЪЛНИТЕЛНИ РАЗПОРЕДБИ'):
 case encode('Преходни разпоредби'):
@@ -345,7 +350,7 @@ $this->txt = preg_replace('/(-{4,}|(\.\s*){4,})/', '<p>${1}</p>', $this->txt );
 $rz = '';
 $rz .= "$h1$this->name$h2\n";
 $rz .= "$t1$this->txt";
-if(in_edit_mode()) $rz .= " <a href=\"$adm_pth"."edit_record.php?t=normdoc&r=$this->dbid\">*</a> ";
+if(in_edit_mode() && ($this->dbid>0)) $rz .= " <a href=\"$adm_pth"."edit_record.php?t=normdoc&r=$this->dbid\">*</a> ";
 foreach($this->parts as $p){
    $rz .= $p->display();
 }
@@ -361,6 +366,7 @@ case '':
 case encode('Глава '):
 case encode('Раздел '):
 case encode('ДОПЪЛНИТЕЛНА РАЗПОРЕДБА'):
+case encode('Допълнителна разпоредба'):
 case encode('Допълнителни разпоредби'):
 case encode('ДОПЪЛНИТЕЛНИ РАЗПОРЕДБИ'):
 case encode('Преходни разпоредби'):

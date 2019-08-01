@@ -82,7 +82,7 @@ if (isset($na[1])){ $pid = 1*$na[1]; $n = $na[0]; }
 $rz = '';
 
 // Четене на данните за файла
-$fr = db_select_1('*','files',"`pid`=$pid AND `name`='$n'");// print_r($fr); die;
+$fr = db_select_1('*','files',"`pid`=$pid AND `name`='$n'"); //print_r($fr); //die;
 
 $ne = true; // Флаг, който ако е истина файлът не се показва
 $imgs = array('jpg','jpeg','jp2','gif','png','svg'); // Разширения на файлове - изображения
@@ -106,7 +106,7 @@ else {
     $l = strlen($or);
     // Истина, ако файлът не е бил в document_root на другия сървър
     $ne = $or != substr($fr['filename'], 0, $l);
-    if(!file_exists($thfn)) $thfn = $_SERVER['DOCUMENT_ROOT'].substr($fr['filename'],$l);
+    if(!$ne) $thfn = $_SERVER['DOCUMENT_ROOT'].substr($fr['filename'],$l);
   }
   if ($ne){
     $l = strlen($_SERVER['DOCUMENT_ROOT']);

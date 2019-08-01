@@ -19,8 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Създава нов модул с име $_GET['n']
 
-include("conf_manage.php");
-include($idir.'conf_paths.php');
+include_once("conf_manage.php");
+include_once($idir.'conf_paths.php');
+include_once($idir.'lib/f_relative_to.php');
 
 // Име на модула
 $mf = strtolower($_GET['n']);

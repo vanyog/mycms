@@ -45,9 +45,9 @@ if(file_exists($_SERVER['DOCUMENT_ROOT'].'/sitemap.xml'))
              // Номер на текущия ден от месеца
              // На същата променлива се присвоява съдържанието на файл sitemap.xml, ако трябва да се генерира
 $smfile    = stored_value("today");
-             // Номер на менюто на главната страница, което е корен на картата на цилия сайт
-$GLOBALS['mpg_id'] = stored_value('main_index_pageid',1);
-$GLOBALS['mpg_id'] = db_table_field('menu_group', 'pages', "`ID`=".$GLOBALS['mpg_id']);
+             // Номер на главното меню сайта
+$GLOBALS['mpg_id'] = stored_value('site_map_root',1);
+//$GLOBALS['mpg_id'] = db_table_field('menu_group', 'pages', "`ID`=".$GLOBALS['mpg_id']);
 
 // Главна функция на модула
 
@@ -96,7 +96,11 @@ for(var i=0; i<c; i++) if(sm.children[i].nodeName=="DIV"){
 $rz = '<div id="'.$id.'">'."\n".
 site_map_buttons().$rz.site_map_buttons()."
 <p class=\"clear\"></p></div>";
-if($smday !== $smfile){
+// Записване на нов sitemap.xml файл
+if(    ($smday !== $smfile) // Нов ден
+    && ($ar[0]  == $mpg_id) // Генерира се карта на цилия сайт
+  )
+{
    $smfile = '<?xml version="1.0" encoding="UTF-8"?>'."\n".
              '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n".
              $smfile.
@@ -172,12 +176,15 @@ foreach($mi as $m){
 //    if ($pid!=$page_id)
     {
        $h = $p['hidden'];
-       if( !$h || in_edit_mode() ){
+       if( ( !$h || in_edit_mode() ) &&
+           (substr($lk, 0, 4) != 'http')
+         )
+       {
           // Добавяне ва страница във файл sitemap.xml
           if($y && ($smday !== $smfile)){
             if( strlen($smfile) < 3 ) $smfile = '';
             $smfile .= "<url>\n".
-                       "<loc>http://".$_SERVER['HTTP_HOST'].str_replace('&','&amp;',$lk)."</loc>\n".
+                       "<loc>".$_SERVER['REQUEST_SCHEME']."://".$_SERVER['HTTP_HOST'].str_replace('&','&amp;',$lk)."</loc>\n".
                        "<lastmod>".date("Y-m-d")."</lastmod>\n".
                        "<changefreq>monthly</changefreq>\n".
                        "<priority>".(1-0.1*$map_level)."</priority>\n".

@@ -75,7 +75,7 @@ case 'logout': return userreg_outlink($ta[0]); break;
 case 'mydata': return userreg_mydata($ta[0]); break;
 case 'edit'  : if(!isset($_GET['user2']) || ($_GET['user2']=='edit')) return userreg_edit($ta[0]);   break;
 case 'name'  : return userreg_name($ta[0]);    break;
-default: if(!(1*$ta[1])&&($ta[1]!='edit')) die("Undefined parameter '".$ta[1]."' for USERREG module"); break;
+default: if(!(is_numeric($ta[1])?$ta[1]:0)&&($ta[1]!='edit')) die("Undefined parameter '".$ta[1]."' for USERREG module"); break;
 }
 if (isset($_GET['user2'])) switch ($_GET['user2']){
 case 'newreg': return userreg_newform($ta[0]); break;
@@ -233,6 +233,7 @@ $f->add_input( new FormInput('', 'type', 'hidden', $t) );
 $f->add_input( new FormInput(translate('user_email'),'email','text',$email) );
 $f->add_input( new FormInput(translate('user_password'),'password','password'));
 $f->add_input( new FormInput(translate('user_passwordconfirm'),'password2','password'));
+$f->add_input( new FormInput(translate('userreg_gdpr'),'gdpr','checkbox', 'yes', translate('userreg_gdpr2')) );
 if(!is_local()) $f->add_input( new FormReCaptcha(translate('userreg_recaptcha'), stored_value('recaptcha_pub') ) );
 $fi = new FormInput('','','button',translate('userreg_regsubmit'));
 $fi->js = ' onclick="ifNotEmpty_userreg_form();"';
@@ -245,7 +246,9 @@ return $f;
 //
 function userreg_newprocess(){
 global $site_encoding;
-// Ако паролата и по-къса от 8 символа
+// Ако няма отметка "лични данни"
+if ( !isset($_POST['gdpr']) || ($_POST['gdpr']!='yes') ) return translate('userreg_nogdpr');
+// Ако паролата e по-къса от 8 символа
 if ( !isset($_POST['password']) || (strlen($_POST['password'])<8) ) return translate('userreg_pshort');
 // Ако паролата и повторението й не съвпадат
 if ($_POST['password']!=$_POST['password2']) return translate('user_passwordinvalid');
@@ -271,6 +274,7 @@ $d = array(
   'date_time_0'=>'NOW()',
   'date_time_1'=>'NOW()',
   'email'=>addslashes($e),
+  'gdpr'=>'yes',
   'newpass'=>pass_encrypt($_POST['password']),
   'code'=>rand_string(40),
   'IP'=>$_SERVER['REMOTE_ADDR']
@@ -282,7 +286,7 @@ $ms = translate('userreg_regmess').'http://'.$_SERVER['HTTP_HOST'].set_self_quer
 $sb = translate('userreg_regsub');
 $sb = '=?'.$site_encoding.'?B?'.base64_encode($sb).'?=';
 $hd = 'Content-type: text/plain; charset='.$site_encoding."\r\n".
-      'From: '.stored_value('site_owner_email','site@vsu.bg')."\r\n";
+      'From: '.stored_value('site_owner_email','vanyog@gmail.com')."\r\n";
 mail($e,$sb,$ms,$hd);
 return 'OK';
 }

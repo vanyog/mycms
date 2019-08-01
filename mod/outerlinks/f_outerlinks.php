@@ -62,6 +62,7 @@ $l = db_select_1('*','outer_links',"`ID`=$lid");
 
 // Ако е линк се изброява кликването и се препраща към адреса на линка
 if (isset($l['link']) && $l['link']>''){
+ if(is_numeric($l['link'])) $l = db_select_1('*','outer_links',"`ID`=".$l['link']);
  if (!show_adm_links()){ // Броят се кликванията само ако посетителят не е администратор
    $q = "UPDATE `$tn_prefix"."outer_links` SET clicked = clicked+1 WHERE `ID`=".$l['ID'].";";
    mysqli_query($db_link,$q);
@@ -220,15 +221,17 @@ else
   t = t.substring(0,1) + t.substring(1).toLowerCase();
 f.value = t;
 }
-function linkradioclicked(fi){
+function linkradioclicked(id,fi){
 var f = document.forms.link_edit_form;
 var r = f.link_id.value;
 var l = document.getElementById("lk"+r);
+var t = "";
+f.ID.value = id;
 f.link.value = l.title; // Link
 f.title.value = l.innerHTML; // Title
 var p = l.parentElement;
-var t = p.innerText;
-var i = t.indexOf(" ");
+t = p.innerText;
+var i = t.indexOf(" ", 1);
 f.place.value = t.substring(0, i); // Place
 if (p.className=="private") f.private.value = 1;
 else  f.private.value = 0; // Private
@@ -239,6 +242,10 @@ if(t.substring(0,8)==" href=\"/") t = "";
 else {
   var a = t.split(" ");
   t = a.slice(fi, a.length - 10).join(" ");
+}
+if(r != id) {
+  f.link.value = r;
+  f.title.value = "";
 }
 f.comment.value = t;
 }
@@ -262,17 +269,17 @@ $rz .= start_edit_form();
 
 // Четене и показване на (под)категориите
 $ca = db_select_m('*','outer_links',"`up`=$lid AND (`link`='' OR `link` IS NULL)$qp ORDER BY `place`");
-//print_r($ca); die;
+
 $p = current_pth(__FILE__);
 $rzc = '';
 $tc = 0;
-foreach($ca as $c){// print_r($c); die;
+foreach($ca as $c){
    $cl = '';
    if ($c['private']) $cl = ' class="private"';
    $sid = ''; // ID на записа
    // Показва се само в режим на редактиране
    if(in_edit_mode()) $sid = '<span class="sid" onclick="sid_clicked(this);" title="Group ID">'.$c['ID']."</span> \n";
-   $rzc .= "<p$cl>".edit_radio($c['ID'],$c['place'],2).'<img src="'.$p.'folder.png" alt=""> '."\n".$sid.
+   $rzc .= "<p$cl>".edit_radio($c, $c['ID'], 2).'<img src="'.$p.'folder.png" alt=""> '."\n".$sid.
           '<a href="'.set_self_query_var('lid',$c['ID']).'#outer_links" id="lk'.$c['ID'].'">'.stripslashes($c['Title'])."</a>\n";
    $t1 = uoterlinks_count($c, $qp);
    $tc += $t1;
@@ -287,20 +294,30 @@ if (count($ca)) $rz .= '<p>'.count($ca).' '.translate('outerlinks_sub').", $tc "
 
 
 // Четене и показване на линковете
-$la = db_select_m('*','outer_links',"`up`=$lid AND `link`>'' $qp ORDER BY `place`");
+$la = db_select_m('*','outer_links',"`up`=$lid AND `link`>'' $qp ORDER BY `place` ASC");
 if (count($la)) $rz .= '<p>'.count($la).' '.translate('outerlinks_links')."</p>\n";
 foreach($la as $l){
-  if(is_numeric($l['link']))
-    $l = db_select_1('*', 'outer_links', '`ID`='.$l['link']);
+  $l2 = $l['ID'];
+  if(is_numeric($l['link'])/* && $l['link']*/){
+    $l1 = db_select_1('*', 'outer_links', '`ID`='.$l['link']);
+//    if($l1)
+    {
+      $l1['place'] = $l['place'];
+      $l['link'] = $l1['link'];
+      $l['Title'] = $l1['Title'];
+      $l['Comment'] = $l1['Comment'];
+    }
+  }
+  else $l1 = $l;
   $cl = '';
   if ($l['private']) $cl = ' class="private"';
-  $rz .= "<p$cl>".edit_radio($l['ID'],$l['place']).'<img src="'.$p.'go.gif" alt=""> '."\n".'<a href="';
+  $rz .= "<p$cl>".edit_radio($l1, $l2).'<img src="'.$p.'go.gif" alt=""> '."\n".'<a href="';
   if($rewrite_on)
     $rz .= "/$page_id/lid/".$l['ID']."/";
   else
     $rz .= set_self_query_var('lid',$l['ID']);
   $rz .= '" title="'.urldecode($l['link']).
-        '" target="_blank" id="lk'.$l['ID'].'">'.stripslashes($l['Title'])."</a>";
+        '" target="_blank" id="lk'.$l1['ID'].'">'.stripslashes($l['Title'])."</a>";
   $rz .= outerlinks_autocomment($l);
   if (in_edit_mode()) $rz .= ' <a href="'.$adm_pth.'duplicate_record.php?t=outer_links&r='.$l['ID'].
                             '" onclick="duDuplicate(this);return false;">2</a>';
@@ -474,6 +491,7 @@ if (!in_edit_mode()) return '';
 else return '
 <p><a href="'.$adm_pth.'places10.php?t=outer_links">10 20...</a></p>
 <input type="hidden" name="action" value="update">
+<input type="hidden" name="ID" value="0">
 <p>URL: <input type="text" name="link" size="50"></p>
 <p>Title: <input type="text" name="title" size="100" onfocus="enter_title_field();">
 <input type="button" value="Aa" onclick="chCaseClick();"></p>
@@ -490,20 +508,27 @@ Private: <input type="text" name="private" size="1"></p>
 
 // Радио бутони, които се показват в режим на редактиране
 // ------------------------------------------------------
-function edit_radio($id,$p,$f=0){
+function edit_radio($d,$l2,$f=0){
 if (!in_edit_mode()) return '';
-else return '<input type="radio" name="link_id" value="'.$id.'" onclick="linkradioclicked('.$f.');">'."\n".
-            '<span onclick="pl_clicked(this,event);" class="sid" title="Place">'.$p."</span> \n";
+else return '<input type="radio" name="link_id" value="'.$d['ID'].'" onclick="linkradioclicked('."$l2,$f".');">'."\n".
+            '<span onclick="pl_clicked(this,event);" class="sid" title="Place">'.$d['place']."</span> \n";
 }
 
-// Добавяне/променяне на данните в режим на редактиране
+// Обработка на данните, изпратени с $_POST в режим на редактиране
 // ----------------------------------------------------
 function edit_link($lid){
 if ( ! in_edit_mode() ) return;
 global $tn_prefix,$db_link;
 
 $id = 0;
-if (isset($_POST['link_id'])) $id = 1*$_POST['link_id'];
+if (isset($_POST['link_id']) && is_numeric($_POST['link_id'])) $id = $_POST['link_id'];
+else $id = 0;
+if(is_numeric($_POST['link'])){
+    $idl = db_table_field('`ID`', 'outer_links', "`ID`=".addslashes($_POST['link']));
+    if(!($idl>0)) die('ID = '.$_POST['link'].' do not exists');
+    $id = intval($_POST['ID']);
+}
+//die(print_r($_POST,true));
 
 $q0 = " `$tn_prefix"."outer_links` ";
 $q2 = '';

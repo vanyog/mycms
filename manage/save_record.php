@@ -22,6 +22,7 @@ include("conf_manage.php");
 include($idir."conf_paths.php");
 include_once($idir."lib/usedatabase.php");
 include_once($idir."lib/f_page_cache.php");
+include_once($idir."lib/f_element_correction.php");
 
 //print_r($_POST); die;
 $t = ''; $r = 0; $gtc = false;
@@ -42,12 +43,7 @@ case 'start_edit_time':
    mysqli_query($db_link, $q);
    break;
 default:
-  $v1 = str_replace( chr(60).' !--$$_',    chr(60).'!--$$_', $v);
-  $v1 = str_replace( '<!--$$_',           chr(60).'!--$$_', $v1);
-  $v1 = str_replace( '_$$-->',             '_$$--'.chr(62),  $v1);
-  $v1 = str_replace( chr(38).'lt;!--$$_',  chr(60).'!--$$_', $v1);
-  $v1 = str_replace( chr(38).'lt; !--$$_', chr(60).'!--$$_', $v1);
-  $v1 = str_replace( '_$$--'.chr(38).'gt;','_$$--'.chr(62),  $v1);
+  $v1 = element_correction($v);
   if( ($t=='content') && ($k=='text') ) $v1 = str_replace( ' />', '>', $v1);
   $q2 .= " `$k`='".addslashes($v1)."',";
 }

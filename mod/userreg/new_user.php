@@ -33,10 +33,10 @@ if(!session_id()) session_start();
 
 // Ако в сесията няма данни за влязъл потребител - съобщение, че трябва да се влезе
 if (!isset($_SESSION['user_username']) || !isset($_SESSION['user_password']) )
-   $page_content = '<p class="message">'.translate('userreg_mustlogin').'</p>';
+   $page_content = '<p class="message">'.translate('userreg_nouserlogedin').'</p>';
 else {
   // Таблица с данни за потребители
-  $user_table = stored_value('user_table',$tn_prefix.'users');
+  $user_table = stored_value('user_table', 'users');
   // Номер на влезлия потребител
   $id = db_table_field('ID', $user_table,
         "`username`='".$_SESSION['user_username']."' AND `password`='".$_SESSION['user_password']."'");

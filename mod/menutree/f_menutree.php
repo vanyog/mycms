@@ -27,7 +27,6 @@ include_once($idir.'lib/f_db_select_1.php');
 
 function menutree(){
 global $pth, $page_id, $page_data, $main_index;
-//global $p; // print_r($p);
 $rz = '';
 // Четене записа на менюто на страницата
 $pr = db_select_1('*','menu_tree',"`group`=".$page_data['menu_group']);

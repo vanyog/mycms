@@ -24,13 +24,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Ако $y = false, функцията връща номера на вмъкнатия запис.
 
 include_once($idir.'lib/usedatabase.php');
+include_once($idir.'lib/f_element_correction.php');
 
 function db_insert_1($d,$t,$y=false){
 global $tn_prefix, $db_link, $db_req_count;
 $q = "INSERT INTO `$tn_prefix$t` SET ";
 foreach($d as $n=>$v){
   if ($v=='NOW()') $q .= "`$n`=$v,";
-  else $q .= "`$n`='".addslashes($v)."',";
+  else $q .= "`$n`='".element_correction(addslashes($v))."',";
 }
 $q = substr($q,0,strlen($q)-1).";";
 if ($y) return "$q<br>\n";

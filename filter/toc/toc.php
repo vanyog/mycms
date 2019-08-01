@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 global $h_id, $tof_contents;
 
-function toc($s){// die($s);
+function toc($s){
 if(strpos($s, 'TOFCONTENTS')===false) return $s;
 global $h_id, $tof_contents;
 $h_id = 0;
@@ -34,6 +34,7 @@ if($h_id<2) $tof_contents = '';
 else $tof_contents = "<div id=\"toc\"><div>\n".
                 '<h2>'.translate('filtertoc_toc')."</h2>\n".
                 $tof_contents."</div></div>\n";
+//                die($tof_contents);
 $s = str_replace('TOFCONTENTS', $tof_contents, $s);
 return $s;
 }
@@ -42,7 +43,7 @@ return $s;
 function toc_cb($a){
   global $h_id, $tof_contents;
   $h_id++;
-//  print_r($a);
+//  print_r($a); die;
   $id = "ct$h_id";
   if(!$a[2]){
     $a[2] = 'id="ct'.$h_id.'"';

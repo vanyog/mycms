@@ -2,7 +2,7 @@ if(typeof ajaxO == "undefined"){
 if (window.XMLHttpRequest) ajaxO = new XMLHttpRequest();
 else ajaxO = new ActiveXObject("Microsoft.XMLHTTP");
 }
-var upfafc = "http://<!--$$_VARIABLE_SERVER['HTTP_HOST']_$$--><!--$$_VARIABLE_pth_$$-->mod/uploadfile/ajax-fcount.php?i=" + 
+var upfafc = location.protocol+"//<!--$$_VARIABLE_SERVER['HTTP_HOST']_$$--><!--$$_VARIABLE_pth_$$-->mod/uploadfile/ajax-fcount.php?i=" +
                       Math.floor(Math.random() * 1000);
 function uploadfile_params(){
 ajaxO.open("GET", upfafc, false);

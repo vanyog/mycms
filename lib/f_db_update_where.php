@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // функцията връща SQL заявка, без да променя записи.
 
 include_once($idir.'lib/usedatabase.php');
+include_once($idir.'lib/f_element_correction.php');
 
 function db_update_where($d,$t,$w,$y=false){
 global $tn_prefix, $db_link, $db_req_count;
@@ -31,7 +32,7 @@ $q = "UPDATE `$tn_prefix$t` SET ";
 foreach($d as $n=>$v){
   if ($n=='ID') continue;
   if ( ($v=='NOW()') || ($v=='NULL') ) $q .= "`$n`=$v,";
-  else $q .= "`$n`='".addslashes($v)."',";
+  else $q .= "`$n`='".element_correction(addslashes($v))."',";
 }
 $q = substr($q,0,strlen($q)-1)." WHERE $w;";
 if ($y) return $q;

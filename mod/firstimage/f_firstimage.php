@@ -1,7 +1,7 @@
 <?php
 /*
 MyCMS - a simple Content Management System
-Copyright (C) 2013  Vanyo Georgiev <info@vanyog.com>
+Copyright (C) 2018  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,19 +17,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-if (!isset($idir)) $idir = dirname(dirname(__FILE__)).'/';
+// Молулът връща URL-а на първата картинка, качена с модул uploadfile.
 
-include_once($idir."lib/usedatabase.php");
-
-function db_show_columns($tn, $fn = '', $in = ''){
-global $tn_prefix, $db_link, $db_req_count;
-$lk = '';
-if ($fn) $lk = " LIKE '$fn'";
-$q = "SHOW COLUMNS FROM `$tn_prefix$tn`$lk;";
-$r = mysqli_query($db_link,$q);
-$db_req_count++;
-$rz = array();
-if($r) while ( $a = mysqli_fetch_assoc($r) ) if ($in) $rz[] = $a[$in]; else $rz[] = $a;
+function firstimage($a = ''){
+global $page_data;
+$rz = $a;
+if(isset($page_data['last_img']) ){
+   $ex = pathinfo($page_data['last_img'], PATHINFO_EXTENSION);
+   if($ex=='svg') return $rz;
+   $h = 'http://';
+   if( isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']=='on') ) $h = 'https://';
+   $rz = $h.$_SERVER['HTTP_HOST'].$page_data['last_img'];
+}
 return $rz;
 }
 

@@ -30,7 +30,7 @@ if (isset($_SERVER['HTTP_REFERER']) && (strpos( $_SERVER['HTTP_REFERER'], $_SERV
    $_SESSION['http_referer'] = $_SERVER['HTTP_REFERER'];
 
 $t = $_GET['t'];
-$id = 1*$_GET['r'];
+$id = is_numeric($_GET['r']) ? 1*$_GET['r'] : 0;
 
 $ft = db_field_types($t);//print_r($ft); die;
 $r = db_select_1('*',$t,"ID=$id");
@@ -71,7 +71,7 @@ if ($r) foreach($r as $k => $v){
  $page_content .= '</tr>';
  $i++;
 }
-else die("<p>Record ID=$id do not exist.</p>
+else die("<p>Record ID = $id do not exist.</p>
 <p>Click <a href=\"new_record.php?t=$t&ID=$id\">here</a> to create.</p>
 <p><a href=\"/\">Home</a></p>");
 
