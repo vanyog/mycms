@@ -56,7 +56,7 @@ if (isset($_GET['schn'])) $l = $_GET['schn'];
 $q = set_self_query_var('schn','aaa',false);
 $q = str_replace('aaa','"+n', $q);
 // Javascript за смяна на графика с избрания от падащия списък
-$page_header .= '<script type="text/javascript">
+$page_header .= '<script>
 function sch_name_changed(){
 var l = document.getElementsByName("sch_name");
 var n = l[0].value;

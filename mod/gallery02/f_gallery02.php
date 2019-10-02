@@ -58,7 +58,7 @@ if ($id>count($fl)-1) $id = count($fl)-1;
 $rz = '';
 
 // Добавяне на JavaScript
-$jscr = '<script type="text/javascript"><!--
+$jscr = '<script><
 performance.mark("gallery02_Start");
 var g02_images = [';
 foreach($fl as $i => $f){
@@ -87,7 +87,7 @@ m.src = "'.$p.'/"+g02_images[i];
 g02_current = i;
 }
 performance.mark("gallery02_End");
---></script>';
+</script>';
 if(!isset($page_header)) $rz .= $jscr;
 else $page_header .= $jscr;
 
