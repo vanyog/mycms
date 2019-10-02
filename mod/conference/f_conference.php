@@ -396,7 +396,11 @@ else{
 if ((count($d2)==2) && $d2['fee']) db_update_where($d2, 'proceedings', "`utype`='$utype' AND `user_id`=".$d['user_id']);
 // ѕри редактиране от администратор се зарежда страницата от ко€то е отворена формата
 if (isset($can_manage['conference']) && $can_manage['conference']){
-   header('Location: '.$_SESSION['conference_returnpage'].'#pof'.$d['ID']);
+   $ap = stored_value('conference_admin','/index.php?pid=1358');
+   $rp = $_SESSION['conference_returnpage'];
+   if(strpos($rp,$ap)===false) $rp .= '#pof'.$d['ID'];
+   else $rp .= '#pof'.$d['user_id'];
+   header('Location: '.$rp);
    die;
 }
 return '<p class="message">'.$ms.translate('dataSaved').'</p>';

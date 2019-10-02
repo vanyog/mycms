@@ -34,7 +34,8 @@ $body_adds .= ' onresize="hmenu3_resize_listener(event)"';
 function hmenu3($a){
 global $ind_fl, $page_header, $pth, $adm_pth, $page_id, $seo_names, $rewrite_on;
 $p = current_pth(__FILE__);
-$page_header .= '<script>'."\n";
+$page_header .= '<script>
+var isTouch = (("ontouchstart" in window) || (navigator.msMaxTouchPoints > 0));'."\n";
 // Цветове
 $c1 = stored_value('hmenu_color1');  $page_header .= "var color1 = \"$c1\";\n";
 $c1 = stored_value('hmenu_bcolor1'); $page_header .= "var bcolor1 = \"$c1\";\n";
@@ -65,7 +66,7 @@ foreach($il as $i){
   else $lk = $i['link'];
   $lk = " href=\"$lk\"";
   if($c) $lk = '';
-  $rz .= "<a$lk$c".' onMouseOver="show_hlayer('.$j.',this)" onmouseleave="hide_layer2('.$j.', this, event);">';
+  $rz .= "<a$lk$c".' onMouseOver="show_hlayer('.$j.',this)" onmouseleave="hide_layer2('.$j.', this, event);" onclick="hmenu3_hclick('.$j.',this); return !isTouch;">';
   $rz .= translate($i['name'],false);
   // Добавяне на * за редактиране 
   if (in_edit_mode()){

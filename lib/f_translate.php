@@ -45,7 +45,7 @@ static $string = array();
 // Ако стрингът вече е съставен се връща от кеша
 if (isset($string[$n]) && !in_edit_mode()) return $string[$n];
 
-global $language, $pth, $adm_pth, $default_language, $content_date_time, $content_create_time, $can_edit,
+global $languages, $default_language, $language, $pth, $adm_pth, $content_date_time, $content_create_time, $can_edit,
        $page_content, $page_data, $debug_mode, $tn_prefix;
 
 //if( !empty($debug_mode) ) echo "$n ";
@@ -67,7 +67,7 @@ $rz = '';
 // Четене на записа за надпис с име $n на език $language
 $r1 = db_select_1('c.*, f.filters',
                   'content` c LEFT JOIN `'.$tn_prefix.'filters` f ON c.name=f.`name', "c.name='$n' AND `language`='$language'");
-//if($n=='VSU_location_resources') die(print_r($r1,true));
+
 if ($r1){ // Ако има такъв запис
   $content_create_time = $r1['date_time_1'];
   $content_date_time = $r1['date_time_2'];
@@ -85,8 +85,13 @@ else if (in_edit_mode() && $elink){
          return "<a href=\"$h\">$n</a>";
      }
      else { // На отдалечен сървър в работен режим
+         // Ако сме на езика по подразбиране и има други езици
+         if(($language == $default_language) && count($languages)) {
+             // Стринг на произволен език
+             $r2 = db_select_1('c.*, f.filters', 'content` c LEFT JOIN `'.$tn_prefix.'filters` f ON c.name=f.`name', "c.name='$n'");
+         }
          // Четене на записа на езика по подразбиране
-         $r2 = db_select_1('c.*, f.filters', '`content` c LEFT JOIN `filters` f ON c.name=f.name', "c.name='$n' AND `language`='$default_language'");
+         else $r2 = db_select_1('c.*, f.filters', 'content` c LEFT JOIN `'.$tn_prefix.'filters` f ON c.name=f.`name', "c.name='$n' AND `language`='$default_language'");
          // Ако няма запис се показва името на текста
          if ( !$r2 ){ $r2['text'] = $n; $r2['filters'] = ''; }
          else {
