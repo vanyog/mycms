@@ -137,7 +137,7 @@ else {
     $e = strtolower(pathinfo($f, PATHINFO_EXTENSION));
     if (in_array($e, $imgs)){
       $rz .= '<img src="'.$f."\"$ss alt=\"".stripslashes($fr['text']).'" id="'.$fr['name'].'">';
-      $page_data['last_img']=$f;
+      if(!isset($GLOBALS['og_image'])) $GLOBALS['og_image']=$f;
     }
     else {
        $rz .= '<a href="'.$f."\"$ss>".upload_file_addimage($add_image,$e).stripslashes($fr['text']).'</a>';

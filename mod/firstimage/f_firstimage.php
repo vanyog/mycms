@@ -20,14 +20,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Молулът връща URL-а на първата картинка, качена с модул uploadfile.
 
 function firstimage($a = ''){
-global $page_data;
 $rz = $a;
-if(isset($page_data['last_img']) ){
-   $ex = pathinfo($page_data['last_img'], PATHINFO_EXTENSION);
+if(isset($GLOBALS['og_image']) ){
+   $ex = pathinfo($GLOBALS['og_image'], PATHINFO_EXTENSION);
    if($ex=='svg') return $rz;
    $h = 'http://';
    if( isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']=='on') ) $h = 'https://';
-   $rz = $h.$_SERVER['HTTP_HOST'].$page_data['last_img'];
+   $rz = $h.$_SERVER['HTTP_HOST'].$GLOBALS['og_image'];
 }
 return $rz;
 }

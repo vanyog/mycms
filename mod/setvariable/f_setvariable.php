@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 function setvariable($a){
 if(!$a) die('function setvariable: missing parameter');
 $b = explode('|', $a);
-if(count($b)<2) die('function setvariable: incorrect parameter');
+if(count($b)<2) die('Error in module SETVARIABLE: Incorrect parameter.');
 $GLOBALS[$b[0]] = $b[1];
 return '';
 }
