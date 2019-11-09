@@ -61,7 +61,7 @@ div.h { display:none; }
 function formula($a){
 // Връщане на цитиране към формулата
 if ( strlen($a) && (strtolower($a[0])=='c') )  return formula_ref($a);
-global $adm_pth;
+global $page_id, $adm_pth;
 // Асоциативен масив с формулите от текущата страница
 static $fs = false;
 // Ако оща не е съставен се съставя
@@ -70,16 +70,18 @@ static $c = 0; // Брой вече показани на текущата страница формули
 $n = count($fs) - $c; // Номер на поредната формула в страницата
 // Ако не съществува формула с `ID`=$a за текущата страница
 if (!isset($fs[$a])){
-  // Ако съществува формула с `ID`=$a, показана на друга страница
-  if (db_table_field('ID', 'formula', "`ID`=$a"))
-     // Се показва съобщение какво стойност на $a е допустима за текущата страница
-     return translate('formula_incorrectID')." ".(db_table_field('MAX(`ID`)', 'formula', 1)+1);
+  $fd = db_select_1('*', 'formula', "`ID`=$a");
+  // Ако съществува формула с `ID`=$a
+  if ($fd)
+     // се добавя в масива формули
+     $fs[$fd['ID']] = $fd;
+//     return translate('formula_incorrectID')." ".(db_table_field('MAX(`ID`)', 'formula', 1)+1);
   else 
      // Ако не съществува формула с `ID`=$a, се показва форма за въвеждане
      return formula_edit_form();
 }
 // Запазване в БД нов номер на формулата, ако е необходимо
-if ($n!=$fs[$a]['number']) db_update_record(array('ID'=>$fs[$a]['ID'], 'number'=>$n), 'formula');
+if ( ($page_id==$fs[$a]['page_id']) && ($n!=$fs[$a]['number']) ) db_update_record(array('ID'=>$fs[$a]['ID'], 'number'=>$n), 'formula');
 // Линк * за редактиране на формулата
 $elk = '';
 if (in_edit_mode()) $elk = " <a href=\"$adm_pth/edit_record.php?t=formula&amp;r=$a\">$a*</a>";
@@ -101,7 +103,9 @@ return '<div class="'.$c.'" id="f'.$f['ID'].'">'.$f['markup']."\n".$elk."</div>\
 function formula_for_page($a){
 if (count($_POST)) formula_insert();
 global $page_id;
+// Четене на записите на формули за текущата страница
 $da = db_select_m('*', 'formula', "`page_id`=$page_id");
+// Ако няма такива записи се четат записите за страницата на формула номер $a
 if(!count($da)){
   $id = db_table_field('page_id', 'formula', "ID=$a");
   $da = db_select_m('*', 'formula', "`page_id`=$id");
