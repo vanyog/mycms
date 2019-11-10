@@ -113,7 +113,7 @@ lastEv = "";
 }
 function editor_onKey(e,v){
 lastEv = v;
-if(shiftPressed && (v.key=="Enter")) insert_text("<br>", false);
+if(shiftPressed && !metaPressed && (v.key=="Enter")) insert_text("<br>", false);
 var ya = "'.encode('ÿ').'";
 if(metaPressed && (v.key=="Enter")) insert_tag(tgToIn,tgToIn);
 if(metaPressed && (v.key=="1")    ) insert_tag("h1","h1");

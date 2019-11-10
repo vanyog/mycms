@@ -43,8 +43,8 @@ if(!w){
   w.style.position = "fixed";
   w.style.zIndex = 100;
 }
-w.style.top = ev.clientY+"px";
-w.style.left = ev.clientX+"px";
+w.style.top = ev.clientY+2+"px";
+w.style.left = ev.clientX+2+"px";
 w.style.visibility = "visible";
 var f = document.getElementById("f"+i);
 w.innerHTML = f.innerHTML;
