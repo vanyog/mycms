@@ -110,13 +110,14 @@ $this->fromdb = true;
 }
 
 function add_part($d){
-switch ($d['type']){
+try { switch ($d['type']){
 case '':
 case encode('Глава '):
 case encode('Раздел '):
 case encode('ДОПЪЛНИТЕЛНА РАЗПОРЕДБА'):
 case encode('Допълнителна разпоредба'):
 case encode('Допълнителни разпоредби'):
+case encode('ДОПЪЛНИТЕЛНИ РАЗПОРЕДБИ'):
 case encode('Преходни разпоредби'):
 case encode('ПРЕХОДНИ И ЗАКЛЮЧИТЕЛНИ РАЗПОРЕДБИ'):
 case encode('Преходни и заключителни разпоредби'):
@@ -146,7 +147,8 @@ case 'tochka':
                 break;
 default        :
                 break;
-}
+}}
+catch (Exception $e) { die("aaa"); }
 }
 
 // Разделяне на целия текст на документа на основни части:

@@ -57,7 +57,7 @@ foreach($fn as $i => $n){
 $q = substr($q,0,strlen($q)-2).";";
 //echo $q; die;
 
-mysqli_query($db_link,$q);
+mysqli_query($db_link,$q);// die($q);
 
 $i = mysqli_insert_id($db_link);
 
