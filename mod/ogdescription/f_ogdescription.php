@@ -17,11 +17,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Функция, която от съдържанието на страницата прави извадка - описание за споделяне в социални мрежи
+// Функция, която от съдържанието на страницата $page_content прави извадка - описание за споделяне в социални мрежи.
+// Съдържанието на страницата се присвоява на променлива $page_content от скрипта с име CONTENT, който се пази в таблица 'scripts'.
 
 function ogdescription(){
 global $page_content, $og_description, $site_encoding;
-if($og_description) return $og_description;
+if(!empty($og_description)) return $og_description;
 $a = strip_tags($page_content);
 $a = str_replace('&nbsp;',' ',$a);
 $a = str_replace("\n",' ',$a);

@@ -29,7 +29,7 @@ include_once($idir."lib/f_db2user_date_time.php");
 global $can_manage;
 
 function uploadfile($n){
-global $mod_pth, $page_id, $page_data;
+global $mod_pth, $page_id, $page_data, $page_header;
 
 $n = stripslashes($n);
 
@@ -50,6 +50,14 @@ $i = preg_match_all('/,img/', $n, $m);
 if ($i){
   $add_image = true;
   $n = str_replace(',img','',$n);
+}
+
+// Проверка за наличие на link опция
+$just_link = false;
+$i = preg_match_all('/,link/', $n, $m);
+if ($i){
+  $just_link = true;
+  $n = str_replace(',link','',$n);
 }
 
 // Проверка за наличие на show-t-s опция
@@ -85,7 +93,7 @@ $rz = '';
 $fr = db_select_1('*','files',"`pid`=$pid AND `name`='$n'"); //print_r($fr); //die;
 
 $ne = true; // Флаг, който ако е истина файлът не се показва
-$imgs = array('jpg','jpeg','jp2','gif','png','svg'); // Разширения на файлове - изображения
+$imgs = array('jpg','jpeg','jp2','gif','png','svg', 'webp'); // Разширения на файлове - изображения
 
 // $show_text - Дали да се показва текст
 if (isset($na[2])) $show_text = $na[2];
@@ -133,12 +141,31 @@ else {
     case '2': $rz .= translate('uploadfile_nofile'); break;
     }
   }
-  else { // Показване на картинка или хипервръзка към файла
+  else {
+    if($just_link){
+      return $f;
+    }
+    // Показване на изображение или хипервръзка към файла
     $e = strtolower(pathinfo($f, PATHINFO_EXTENSION));
+    // Изображение
     if (in_array($e, $imgs)){
-      $rz .= '<img src="'.$f."\"$ss alt=\"".stripslashes($fr['text']).'" id="'.$fr['name'].'">';
+      // За съвместимост .webp файловете, трябва да имат и .jp2 и .jpg варианти
+      if($e=='webp'){//die($_SERVER['HTTP_USER_AGENT']);
+         $fn = $f;
+         if((strpos($_SERVER['HTTP_USER_AGENT'], 'Safari')>0) &&
+            (strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')===false) ) $fn = substr($f,0,-4).'jp2';
+         if(strpos($_SERVER['HTTP_USER_AGENT'], 'Edge'  )>0) $fn = substr($f,0,-4).'jpg';
+         if(strpos($_SERVER['HTTP_USER_AGENT'], 'MSIЕ'  )>0) $fn = substr($f,0,-4).'jpg';
+         $f = $fn;
+      }
+      // Ако е инсталиран скрипта lazysizes.min.js
+      if(strpos($page_header, 'lazysizes.min.js')>0)
+         $rz .= '<img data-src="'.$f."\"$ss alt=\"".stripslashes($fr['text']).'" id="'.$fr['name'].'" class="lazyload">';
+      else
+         $rz .= '<img src="'.$f."\"$ss alt=\"".stripslashes($fr['text']).'" id="'.$fr['name'].'">';
       if(!isset($GLOBALS['og_image'])) $GLOBALS['og_image']=$f;
     }
+    // Друг файл
     else {
        $rz .= '<a href="'.$f."\"$ss>".upload_file_addimage($add_image,$e).stripslashes($fr['text']).'</a>';
        if(!$cs && isset($na[2]) && ($na[2]==3)) $rz .= translate('uploadfile_old');
