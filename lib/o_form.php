@@ -123,10 +123,9 @@ $this->js = " $e=\"$js\"";
 public function html($it){
 $dsbl = lock_form_fields();
 $rz = '';
-if($this->id){
-   if (!$it) $rz .= "<label for=\"$this->id\">$this->caption</label> ";
-   else $rz .= "<tr><th><label for=\"$this->id\">$this->caption</label> </th><td>";
-}
+if ($it) $rz = "<tr><th>";
+if($this->caption) $rz .= "<label for=\"$this->id\">$this->caption</label> ";
+if ($it) $rz .= " </th><td>";
 if( ($this->type=='file') && $this->value){
    $p = strrpos($this->value, '/');
    $vl = current_pth($this->value).substr($this->value, $p + 1 );

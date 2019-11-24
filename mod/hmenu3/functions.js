@@ -1,4 +1,4 @@
-var last_hlayer = 1;
+var last_hlayer = -1;
 var last_hitem = null;
 
 function getHTop(e){
@@ -64,9 +64,11 @@ if ( ((ev.clientY - el.offsetTop) < 0) || (!l)){
 
 function hmenu3_hclick(i,e){
     var eh = document.getElementById("HLayer"+i);
-    var h = window.getComputedStyle(eh, null).visibility;
+    var h = window.getComputedStyle(eh).visibility;
+    var t = getHTop(e) + e.offsetHeight - 2
+//    alert(eh.offsetTop + " " + t + " - " + i + " " + h);
     if(h==="visible") hide_layer(i,e);
-    if(h==="hidden") show_hlayer(i,e);
+    if(h==="hidden")  show_hlayer(i,e);
 }
 
 function hmenu3_correct_layout(){
@@ -90,11 +92,12 @@ function hmenu3_correct_layout(){
         var nlink = document.createElement("a");
         nlink.href = "#";
         nlink.innerText = ">>";
-        nlink.addEventListener("mouseleave", function(){ hide_layer2(7, this, event); } );
-        nlink.addEventListener("mouseover", function(){ show_hlayer(7,this); } );
-        nlink.addEventListener("click", function(){ hmenu3_hclick(7,this); } );
+        hl = maxi + 1;
+        nlink.addEventListener("mouseleave", function(){ hide_layer2(hl, this, event); } );
+        nlink.addEventListener("mouseover", function(){ show_hlayer(hl,this); } );
+        nlink.addEventListener("click", function(){ hmenu3_hclick(hl,this); } );
         mdiv.appendChild(nlink);
-        ndiv.id = "HLayer7";
+        ndiv.id = "HLayer" + hl;
         document.body.appendChild(ndiv);
     }
 

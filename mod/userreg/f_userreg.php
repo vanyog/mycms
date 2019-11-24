@@ -63,7 +63,7 @@ if (!$t) die('No user type specified in userreg module.');
 $ta = explode('|', $t);
 $n = "USERREG_".$ta[0];
 $altt = translate($n,false);
-if( $altt && ($altt!=$n) && !in_edit_mode() && !empty($ta[1]) ){
+if( $altt && ($altt!=$n) && !in_edit_mode() && isset($ta[1]) && ($ta[1]!='logout')){
    if(empty($userreg_altt)) {
       $userreg_altt = true;
       return $altt;
@@ -379,7 +379,7 @@ return $id;
 //
 // Връща потребителското име и линк "Изход"
 
-function userreg_outlink($t){
+function userreg_outlink($t){return '';
 if (!userreg_id($t)) return '';
 // Адрес на страницата за излизане
 $lp = stored_value("userreg_logout_$t");
