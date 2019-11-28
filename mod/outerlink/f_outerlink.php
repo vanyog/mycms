@@ -27,7 +27,10 @@ global $main_index;
 $aa = explode('|',$a);
 // Четене данните за хипервръзката
 $d = db_select_1('*', 'outer_links', "`ID`=".$aa[0] );
-if (!isset($aa[1])) $aa[1] = $d['Title'];
+if (isset($aa[1])){
+    if ($aa[1]=='href') $aa[1] = $d['link'];
+}
+else $aa[1] = $d['Title'];
 $rz = '<a href="'.$main_index.'?lid='.$aa[0].'&pid=6" target="_blank" title="'.
         urldecode($d['link']).'">'.$aa[1].'</a>';
 if(in_edit_mode()) $rz .= ' <a href="/index.php?pid=6&lid='.$d['up'].'">&gt;&gt;</a>';
