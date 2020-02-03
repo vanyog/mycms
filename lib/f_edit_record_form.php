@@ -243,15 +243,17 @@ default:
        $q .= "`$n`='".addslashes($v1)."'";
   }
 }
+//echo "<br>$q<br>".print_r($fn,true)."<br>";
 // Обновяване данните за потребителя в текущата сесия.
 if ($pu) process_user();
 // Обновяване данните в базата данни.
-if (in_array('date_time_2', $fn)) $q = "`date_time_2`=NOW(), $q";
+//if (in_array('date_time_2', $fn)) $q = "`date_time_2`=NOW(), $q";
 if ($w) $q = "UPDATE `$tn_prefix"."$tn` SET $q$w";
 else {
-  if (in_array('date_time_1', $fn)) $q = "`date_time_1`=NOW(), $q";
+//  if (in_array('date_time_1', $fn)) $q = "`date_time_1`=NOW(), $q";
   $q = "INSERT INTO `$tn_prefix"."$tn` SET $q;";
 }
+//die($q);
 if (mysqli_query($db_link,$q) && $m) $rz .= '<span class="message">'.translate('dataSaved')."</span>";
 //echo "$q<p>".print_r($cp,true)."<p>".print_r($_FILES,true); die();
 if ($rz) $rz = '<p class="message">'.$rz.'</p>';

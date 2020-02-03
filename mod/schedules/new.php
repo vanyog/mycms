@@ -35,7 +35,8 @@ $d = array(
 'date_time_2'=>"NOW()"
 );
 
-db_insert_1($d, 'schedules');
+$id = db_insert_1($d, 'schedules');
+if(!$id) die("Database error");
 
 $h = 'Location: '.$_SERVER['HTTP_REFERER'];
 header($h);

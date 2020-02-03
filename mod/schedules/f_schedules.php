@@ -48,7 +48,7 @@ if ($a){
 global $page_header, $can_manage;
 // Ако потребителят няма право да използва модула - съобщение
 if (!isset($can_manage['schedules']) || !$can_manage['schedules']) 
-   return '<p class="message">'.translate('schedule_nopermition').'</p>';
+   return '<p class="message">'.translate('schedules_nopermition').'</p>';
 // Име на текущия график
 $l = '';
 if (isset($_GET['schn'])) $l = $_GET['schn'];

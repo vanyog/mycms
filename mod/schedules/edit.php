@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Редактиране датите на събитие
 
+error_reporting(E_ALL); ini_set('display_errors',1);
+
 $idir = dirname(dirname(dirname(__FILE__))).'/';
 $ddir = $idir;
 
@@ -42,7 +44,7 @@ $n = array(
 'date_time_2'=>translate('schedules_datetime2')
 );
 
-session_start();
+if(!session_id()) session_start();
 
 $page_content = '<h1>'.translate('schedules_editevent').'</h1>
 <h2>'.translate('schedules_name').': "'.translate($d['sch_name'],false).'"</h2>

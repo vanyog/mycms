@@ -96,14 +96,17 @@ function ChangeLimit(){
 var l = document.getElementById("limit");
 document.location = document.location + "&limit=" + l.value;
 }
+function keyPressed(e){
+if(e.keyCode==13) ChangeLimit();
+}
 </script>';
 
 // Сглобяване на страницата
 
 $page_content = "<p>Database: <strong>$database</strong> Table: <strong>$tn_prefix$t</strong> $c records \n";
 
-$page_content .= '<input type="text" size="4" value="'.$l.'" id="limit"> viewed 
-<input type="button" value="Change" onclick="ChangeLimit();"></p>'."\n";
+$page_content .= '<input type="text" size="4" value="'.$l.'" id="limit" onkeyup="keyPressed(event);"> viewed
+<input type="button" value="Change" onclick="ChangeLimit(event);"></p>'."\n";
 
 $page_content .= '<p>Other tables: ';
 $tbs = db_tables();

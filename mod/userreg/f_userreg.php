@@ -379,7 +379,7 @@ return $id;
 //
 // Връща потребителското име и линк "Изход"
 
-function userreg_outlink($t){return '';
+function userreg_outlink($t){
 if (!userreg_id($t)) return '';
 // Адрес на страницата за излизане
 $lp = stored_value("userreg_logout_$t");

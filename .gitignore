@@ -1,4 +1,5 @@
 .htaccess
+.ftpquota
 error_log
 .DS_Store
 _*

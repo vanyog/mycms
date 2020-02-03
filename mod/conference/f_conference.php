@@ -142,10 +142,10 @@ $cp = array(
 $rz .= '<h2>'.translate('conference_mypaper').'</h2>
 <h3>'.translate('conference_1paper')."</h3>\n";
 // Дали e период за редактиране
-$et = schedules_in_event($day1[0],$day1[1]) || $adm;
+$et = schedules_in_event($day1[1],$day1[0]) || $adm;
 if (!$et && !count($pd)) return $rz.'<p class="message">'.translate('conference_noabs1')."</p>\n";
 // Дали е период за качване на доклади
-$ut = schedules_in_event($day2[0],$day2[1]) || $adm;
+$ut = schedules_in_event($day2[1],$day2[0]) || $adm;
 // Адрес на страницата за редактиране на резюме и качване на доклад от участник
 $edp = stored_value('conference_editpaper', '/index.php?pid=1068');
 // Линк "Редактиране"
@@ -185,7 +185,8 @@ function conference_trprec($d){
 // Форми на докладите
 eval(translate('conference_forms'));
 // Тематични направления
-eval(translate('conference_topics'));
+die(translate('conference_topics',false));
+eval(translate('conference_topics',false));
 $d['form'] = $fs[$d['form']];
 $d['topic'] = $tp[$d['topic']];
 $d['title'] = '<strong>'.$d['title'].'</strong>';
@@ -218,7 +219,7 @@ usermenu(true);
 // Дали се редактира от администратор
 $adm = isset($can_manage['conference']) && ($can_manage['conference']==1);
 // Дали сме в период за качване на пълния текст
-$ut = schedules_in_event($day2[0], $day2[1]) || $adm;
+$ut = schedules_in_event($day2[1], $day2[0]) || $adm;
 //if (!$ut) return '<p class="message">'.translate('conference_nofull')."</p>";
 if (count($_POST)) return conference_pprocess($uid);
 if (isset($_SERVER['HTTP_REFERER'])) $_SESSION['conference_returnpage'] = $_SERVER['HTTP_REFERER'];
@@ -262,7 +263,7 @@ $f->add_input( new FormInput('', 'user_id', 'hidden', $d['user_id']) );
 // Форми на докладите
 eval(translate('conference_forms'));
 // Тематични направления
-eval(translate('conference_topics'));
+eval(translate('conference_topics',false));
 // Ако се редактира от администратор - поле за платена такса и полета за одобряване
 if ($adm) {
   $ti = new FormCurrencyInput(encode('Такса:'), 'fee', 'currency', $d['fee'], $d['currency']);
@@ -282,7 +283,7 @@ if ($adm) {
   $f->add_input($ti);
 }
 // Дали сме в период на редактиране на резюмета
-$et = schedules_in_event($day1[0], $day1[1]) || $adm;
+$et = schedules_in_event($day1[1], $day1[0]) || $adm;
 // Съставяне на формата за редактиране
 $ti = new FormSelect(translate('usermenu_language'), 'language', $languages, $d['language']);
 if (!$et) $ti->js = ' disabled="disabled"';
@@ -319,7 +320,7 @@ else $body_adds .= ' onload="CKEDITOR.replace(\'abstract\');"';
 $fi->ckbutton = '';
 $f->add_input($fi);
 // Дали сме в период на качване на пълен текст
-$ft = schedules_in_event($day2[0], $day2[1]) || $adm;
+$ft = schedules_in_event($day2[1], $day2[0]) || $adm;
 $ti = new FormInput(encode('Брой строници:'), 'pages', 'text', $d['pages']);
 if (!$ft) $ti->js = ' disabled="disabled"';
 $f->add_input($ti);
@@ -550,6 +551,7 @@ $n = array(
 'telephone'=>translate('user_telephone')
 );
 $rz .= '</table>
+<button>All</button><br>
 <textarea id="textForClpibd"></textarea>';
 // Форми на докладите
 eval(translate('conference_forms'));
