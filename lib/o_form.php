@@ -46,8 +46,9 @@ if (!$this->action) $this->action = str_replace('&','&amp;',$_SERVER['REQUEST_UR
 
 public function html(){
 $js = '';
-// JavaScript функция, която проверява дали всички текстови полета във формата са попълнени.
-// За да се изпълни, на бутона на формата трябва да се присвои ->js = ' onclick="ifNotEmpty_имеНаФорма();"';
+// JavaScript функция, която проверява дали всички задължителни полета във формата са попълнени.
+// За да се изпълни, на бутона за изпращане на формата трябва да се присвои ->js = ' onclick="ifNotEmpty_имеНаФорма();"';
+// Този бутон трябва да има атрибут type="button", а не type="submit"
 $js1 = 'var noEmptyCheck = "";
 function ifNotEmpty_'.$this->name.'(){
 var f = document.forms["'.$this->name.'"];
