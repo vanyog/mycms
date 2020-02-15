@@ -105,7 +105,8 @@ if(    ($smday !== $smfile) // Нов ден
              '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n".
              $smfile.
              "</urlset>";
-   file_put_contents($_SERVER['DOCUMENT_ROOT'].'/sitemap.xml', $smfile);
+   $smfn = $_SERVER['DOCUMENT_ROOT'].'/sitemap.xml';
+   if(is_writable($smfn)) file_put_contents($smfn, $smfile);
 }
 return $rz;
 }

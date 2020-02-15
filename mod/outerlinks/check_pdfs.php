@@ -43,12 +43,12 @@ foreach($da as $d){
   $p2 = $fpth.$f2;
   echo $d['Title'];
   if(file_exists($p1)){
-    $r = relative_to($_SERVER['CONTEXT_DOCUMENT_ROOT'], $p1)."/$f1";
+    $r = relative_to($_SERVER['CONTEXT_DOCUMENT_ROOT'].'/', $p1)."/$f1";
     $_SESSION['can_view_file'][] = $r;
     echo " <a href=\"$pth"."view.php?file=$r\">$f1</a>";
   }
   else if(file_exists($p2)){
-    $r = relative_to($_SERVER['CONTEXT_DOCUMENT_ROOT'], $p2)."/$f2";
+    $r = relative_to($_SERVER['CONTEXT_DOCUMENT_ROOT'].'/', $p2)."/$f2";
     $_SESSION['can_view_file'][] = $r;
     echo " <a href=\"$pth"."view.php?file=$r\">$f2</a>";
   }

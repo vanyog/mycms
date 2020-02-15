@@ -28,7 +28,7 @@ include($idir."lib/f_db_table_field.php");
 include($idir."conf_paths.php");
 
 $tb = $_GET['t'];
-$ft = db_field_types($tb);
+$ft = db_field_types($tb);// die(print_r($ft,true));
 $fn = db_field_names($tb);
 
 $q = "INSERT INTO `$tn_prefix$tb` SET ";
@@ -50,7 +50,13 @@ foreach($fn as $i => $n){
     $v = '';
     if (isset($_GET[$n])) $v = $_GET[$n];
     if ($v) $q .= "`$n`='$v', ";
-    else { if ($ft[$i]=='int') $q .= "`$n`=0, "; else $q .= "`$n`='', "; }
+    else { switch ($ft[$i]){
+           case 1:
+           case 3: $q .= "`$n`=0, "; break;
+           case 12: $q .= "`$n`='0000-00-00 00:00:00', "; break;
+           default: $q .= "`$n`='', ";
+           }
+    }
   }
 }
 
@@ -61,7 +67,7 @@ mysqli_query($db_link,$q);// die($q);
 
 $i = mysqli_insert_id($db_link);
 
-if (!$i) die("Can't create new record");
+if (!$i) die("Can't create new record. Error in SQL statement:<br>$q");
 
 header('Location: '.$adm_pth.'edit_record.php?t='.$tb.'&r='.$i);
 

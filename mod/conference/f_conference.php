@@ -163,12 +163,15 @@ $rz .= view_record($d1, $cp).'
 
 // Ако има въведен един доклад - показване данните и за втори доклад
 if (!$et && (count($pd)<$proccount)) return $rz.'<p class="message">'.translate('conference_noabs1').'</p>';
-if ((count($pd)>0) && $di2) {
+//if ((count($pd)>0) && $di2) {
+if (count($pd)>0) {
   $rz .= '<h3>'.translate('conference_2paper').'</h3>';
-  if ($ut) $rz .= '<p><a href="'.$edp.$di2.'">'.translate('conference_editpaper')."</a>\n".
-                  ' &nbsp; <a href="'.current_pth(__FILE__).'delete_paper.php?a=1'.$di2.
-                  '" onclick="confDelPaper(this);return false;">'.
-                  translate('conference_deletepaper').'</a></p>';
+  if ($ut){
+     $rz .= '<p><a href="'.$edp.$di2.'">'.translate('conference_editpaper')."</a>\n".
+            ' &nbsp; <a href="'.current_pth(__FILE__).'delete_paper.php?a=1'.$di2.
+            '" onclick="confDelPaper(this);return false;">';
+     if($di2) $rz .= translate('conference_deletepaper').'</a></p>';
+  }
   $rz .= view_record($d2, $cp);
 }
 $rz .= '
@@ -264,6 +267,7 @@ $f->add_input( new FormInput('', 'user_id', 'hidden', $d['user_id']) );
 eval(translate('conference_forms'));
 // Тематични направления
 eval(translate('conference_topics',false));
+array_unshift($tp,translate('conference_choos',false));
 // Ако се редактира от администратор - поле за платена такса и полета за одобряване
 if ($adm) {
   $ti = new FormCurrencyInput(encode('Такса:'), 'fee', 'currency', $d['fee'], $d['currency']);
@@ -335,12 +339,25 @@ $f->add_input($fl);
 $fl = new FormInput(translate('conference_cfulltextfile3'), 'fulltextfile3', 'file', $_SERVER['DOCUMENT_ROOT'].$fdir.stripslashes($d['fulltextfile3']));
 $fl->size = 63;
 $f->add_input($fl);
-$f->add_input( new FormInput('', '', 'submit', translate('conference_csubmit') ) );
+$fi = new FormInput('', '', 'button', translate('conference_csubmit') );
+$fi->js = ' onclick="checkArticleForm();"';
+$f->add_input( $fi );
 // Съобщение, че някои полета са неактивни
 $ms = '';
 if (!$et) $ms = '<p class="message">'.translate('conference_noabs')."</p>";
 if (!$ft) $ms = '<p class="message">'.translate('conference_nofull')."</p>";
-return $ms."\n<p>$un</p>\n".$f->html().'
+return $ms."\n<p>$un</p>\n".
+// Javascript, проверяващ формата
+'<script>
+function checkArticleForm(){
+var f = document.forms.conference_peform;
+var i = f.topic.selectedIndex;
+if(!i) alert("'.translate('conference_noTopic',false).'");
+else f.submit();
+}
+</script>
+'.
+$f->html().'
 <p>&nbsp;</p>';
 }
 

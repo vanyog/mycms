@@ -257,9 +257,14 @@ u.focus();
 function pl_clicked(a,e){
 var u = document.forms.link_edit_form.place;
 var v = a.innerText;
+var i = a.parentElement.children[0].value;
+u.value = i;
+u.select();
+document.execCommand("copy");
 var n = Number(v);
 if(e.ctrlKey || e.metaKey) n -= 5; else n += 5;
 u.value = "" + n;
+u.focus();
 }
 </script>
 ';
@@ -298,26 +303,29 @@ $la = db_select_m('*','outer_links',"`up`=$lid AND `link`>'' $qp ORDER BY `place
 if (count($la)) $rz .= '<p>'.count($la).' '.translate('outerlinks_links')."</p>\n";
 foreach($la as $l){
   $l2 = $l['ID'];
+  $tb = 'target="_blank" ';
   if(is_numeric($l['link'])/* && $l['link']*/){
     $l1 = db_select_1('*', 'outer_links', '`ID`='.$l['link']);
 //    if($l1)
     {
-      $l1['place'] = $l['place'];
+//      $l1['place'] = $l['place'];
       $l['link'] = $l1['link'];
       $l['Title'] = $l1['Title'];
       $l['Comment'] = $l1['Comment'];
     }
   }
   else $l1 = $l;
+  // Премахване на target="_blank", когато линкът е към друг раздел с връзки
+  if(($l1['ID']!=$l2) && empty($l1['link'])) $tb = '';
   $cl = '';
   if ($l['private']) $cl = ' class="private"';
   $rz .= "<p$cl>".edit_radio($l1, $l2).'<img src="'.$p.'go.gif" alt=""> '."\n".'<a href="';
   if($rewrite_on)
-    $rz .= "/$page_id/lid/".$l['ID']."/";
+    $rz .= "/$page_id/lid/".$l1['ID']."/";
   else
-    $rz .= set_self_query_var('lid',$l['ID']);
+    $rz .= set_self_query_var('lid',$l1['ID']);
   $rz .= '" title="'.urldecode($l['link']).
-        '" target="_blank" id="lk'.$l1['ID'].'">'.stripslashes($l['Title'])."</a>";
+        '" '.$tb.'id="lk'.$l1['ID'].'">'.stripslashes($l['Title'])."</a>";
   $rz .= outerlinks_autocomment($l);
   if (in_edit_mode()) $rz .= ' <a href="'.$adm_pth.'duplicate_record.php?t=outer_links&r='.$l['ID'].
                             '" onclick="duDuplicate(this);return false;">2</a>';

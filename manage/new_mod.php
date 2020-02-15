@@ -30,7 +30,11 @@ $mf = strtolower($_GET['n']);
 $md = $_SERVER['DOCUMENT_ROOT'].$mod_pth.$mf; //echo "$md<br>"; die;
 
 // Създаване на директорията, ако не съществува
-if (!file_exists($md)) if (!mkdir($md, 0755, true)) die("Can't create directory: $md");
+if (!file_exists($md)){
+  $md0 = dirname($md);
+  if (!is_writable($md0)) die("Not writable $md0");
+  if (!mkdir($md, 0755, true)) die("Can't create directory: $md");
+}
 
 // Име на файла с модулната функция
 $ff = "$md/f_$mf.php";

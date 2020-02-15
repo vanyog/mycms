@@ -38,7 +38,7 @@ $e = get_between('charset=', '"', $tx);
 
 $t = get_between('<title>', '</title>', $tx);
 
-$t = iconv($e, $site_encoding, $t);
+$t = iconv($e, "$site_encoding//IGNORE", $t);
 
 echo $t;
 
