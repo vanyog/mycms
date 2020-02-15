@@ -183,9 +183,9 @@ return $rz;
 
 function conference_trprec($d){
 // Форми на докладите
-eval(translate('conference_forms'));
+eval(translate('conference_forms'),false);
 // Тематични направления
-die(translate('conference_topics',false));
+//die(translate('conference_topics',false));
 eval(translate('conference_topics',false));
 $d['form'] = $fs[$d['form']];
 $d['topic'] = $tp[$d['topic']];
@@ -616,9 +616,9 @@ $cc = db_select_m('topic,COUNT(`ID`)', 'proceedings', "`utype`='$utype' AND `abs
 // По форма
 $cf = db_select_m('form,COUNT(`ID`)', 'proceedings', "`utype`='$utype' AND `abstract`>'' GROUP BY `form`" );
 // Тематични направления $tp
-eval(translate('conference_topics'));
+eval(translate('conference_topics'),false);
 // Форми на докладите $fs
-eval(translate('conference_forms'));
+eval(translate('conference_forms'),false);
 $rz = '<p>'.translate('conference_partcount').': '.$cp.'</p>
 <p>'.translate('conference_bycountry').':</p>
 <p>';
@@ -662,7 +662,7 @@ $preview = !empty($_GET['allowtoshow']) && ($_GET['allowtoshow']=='basa-team');
 // Томове
 $vl = db_select_m('vol', 'proceedings', "`utype`='$utype' GROUP BY `vol`");
 // Тематични направления $tp
-eval(translate('conference_topics'));
+eval(translate('conference_topics'),false);
 $rz = '';
 $tc = 0; // Общ брой доклади
 $rc = 0; // Брой готови доклади
@@ -854,7 +854,7 @@ return $rz;
 function conference_abstract_book(){
 global $utype;
 // Научни направления $tp
-eval(translate('conference_topics'));
+eval(translate('conference_topics'),false);
 $rz = '';
 $order = ' ORDER BY  `keylec` DESC, `title` ASC';
 // За всяко научно направление
