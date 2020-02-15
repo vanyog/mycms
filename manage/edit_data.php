@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Страница, която показва информация за таблиците от базата данни.
 
+$exe_time = microtime(true);
+
 include("conf_manage.php");
 include($idir."conf_paths.php");
 include($idir."lib/f_db_tables.php");

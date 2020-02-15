@@ -26,7 +26,7 @@ include($idir."lib/usedatabase.php");
 $n = $_GET['n']; // »ме на записа
 $l = $_GET['l']; // ≈зик на записа
 
-$q = "INSERT INTO $tn_prefix"."content SET name='$n', language='$l', date_time_1=NOW(), date_time_2=NOW();";
+$q = "INSERT INTO `$tn_prefix"."content` SET `name`='$n', `language`='$l', `date_time_1`=NOW(), `date_time_2`=NOW();";
 
 mysqli_query($db_link,$q);
 

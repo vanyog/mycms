@@ -38,7 +38,9 @@ $mt = array(
 'jpg'=>'image/jpeg', 'jpeg'=>'image/jpeg', 'pdf'=>'application/pdf'
 );
 
-$ct = file_get_contents($fpth);
+$fpth = realpath($fpth);// die($fpth);
+
+$ct = file_get_contents(addslashes($fpth), null, null);
 if($ct===false) die("Can't read file $fpth");
 
 header('Content-type: '.(isset($mt[$e]) ? $mt[$e] : ''));

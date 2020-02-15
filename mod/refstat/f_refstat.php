@@ -24,6 +24,7 @@ function refstat(){
 
 // Ако няма HTTP_REFERER - край
 if (!isset($_SERVER['HTTP_REFERER'])) return;
+if (!isset($_SERVER['HTTP_USER_AGENT'])) $_SERVER['HTTP_USER_AGENT'] = 'Unknown';
 
 $r = $_SERVER['HTTP_REFERER'];
 if(substr($r, -1)=='/') $r = substr($r, 0, strlen($r) - 1);
