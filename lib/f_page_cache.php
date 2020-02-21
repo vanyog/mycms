@@ -31,7 +31,7 @@ include_once($idir.'lib/f_db_delete_where.php');
 // cache_time е изтекло; или не е зададено, връща празен стринг.
 // Стойност cache_time=-1 означава записът в кеша да се опреснява, само след променяне на страницата.
 
-// save_cache($cnt) записва html кова на страницата в таблица $tn_prefix.'page_cache'
+// save_cache($cnt) записва html кода на страницата в таблица $tn_prefix.'page_cache'
 // Настройката от таблица 'options' с име 'acceptable_params' съдържа имената на допустимите за сайта
 // $_GET параметри. Стрингът с параметрите започва и завършва със знак =, а имената се отделят също с =.
 
@@ -40,7 +40,9 @@ include_once($idir.'lib/f_db_delete_where.php');
 if(isset($_GET['purge'])){
   global $db_link;
   if(!$_GET['purge']) $_GET['purge'] = stored_value('main_index_pageid',1);
-  db_delete_where('page_cache',"`page_ID`=".(1*$_GET['purge']));
+  if($_GET['purge']=='all') $q = '1';
+  else $q = "`page_ID`=".(1*$_GET['purge']);
+  db_delete_where('page_cache',$q);
   $i = mysqli_affected_rows($db_link);
   die('Page cache '.$_GET['purge']." purged. $i - records deleted.");
 }
