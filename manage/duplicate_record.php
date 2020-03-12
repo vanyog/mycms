@@ -32,8 +32,9 @@ $d = db_select_1('*', $t, "`ID`=$id");
 unset($d['ID']);
 unset($d['username']);
 db_insert_1($d, $t);
+//echo db_insert_1($d, $t, true); die;
 
 $l = 'Location: show_table.php?t='.$t;
-//echo $l;
+
 header($l);
 ?>
