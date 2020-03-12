@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Параметърът $a е името на съдържанието на текущата страница
 
-function stop_https($a){
+function stop_https($a){ return '';
 global $language, $pth, $ind_fl, $main_index, $page_id;
 $redir = false;
 $www = stored_value('prefere_www');
@@ -54,7 +54,7 @@ if(($stps=='1') && isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']=='on') && !in_
   $cnt = db_table_field('text', 'content', "`name`='$a' AND `language`='$language'");
   $pos = strpos($cnt, '$$_USERREG_');
   if($pos===false){
-    $redir = true; die("3");
+    $redir = true;// die("3");
   }
 }
 $l = strlen($pth);
@@ -64,7 +64,7 @@ if( ($l>1) && ($ind_fl!=$main_index) && (substr($main_index,0,$l)!=$pth) ){
   $redir = true;
 }
 if( $redir && isset($_SERVER['HTTP_HOST']) ) {
-  $h = 'Location: http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; die($h);
+  $h = 'Location: http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];// die($h);
   header($h);
   die();
 }

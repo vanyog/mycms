@@ -18,6 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // Показва стойността на глобална PHP променлива с име $a
+// Може да се покаже и стойността на елемент от масив: $_GET, $_SERVER
+// Например, при $a = 'SERVER['REQUEST_URI']' се показва стойността на: $_SERVER['REQUEST_URI']
 
 function variable($a){
 $r = array();

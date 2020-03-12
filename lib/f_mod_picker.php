@@ -74,8 +74,8 @@ te.selectionEnd = e;
 }
 var tag_a1 = "a href=\"/index.php?pid=\"";
 var tag_a2 ="a";
-var tag_s1 = "<script type=\"text/javascript\"><!--\n";
-var tag_s2 = "\n--><"+"/script>";
+var tag_s1 = "<script>\n";
+var tag_s2 = "\n<"+"/script>";
 var metaPressed = false;
 function showCharCount(a){
 var s = document.getElementById(a.id + "_count");

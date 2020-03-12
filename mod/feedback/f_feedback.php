@@ -75,7 +75,7 @@ else {
   }
 }
 
-$rz = '<h2>'.translate('feedback_to')." $to</h2>\n";
+$rz = '<h2>'.translate('feedback_to')." <span style=\"white-space:nowrap;\">$to</h2>\n";
 
 $f = new HTMLForm('feedback_form');
 
@@ -95,7 +95,7 @@ $ti = new FormInput(translate('feedback_subject'), 'subject', 'text', $sb );
 $ti->js = ' style="width:99%"';
 $f->add_input( $ti );
 
-if(substr($t, 0, 5)=='vsu20'){
+if(substr($t, 0, 5)=='vsu21'){
   $ti = new FormInput(translate('feedback_publish'), 'publish', 'checkbox', '1', translate('feedback_publish2') );
   $f->add_input( $ti );
 }
