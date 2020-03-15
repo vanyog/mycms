@@ -142,7 +142,7 @@ if (e.keyCode==13){
 '.$clink.' DB_REQ_COUNT
 <a href="'.$pth.'lib/exit.php">x</a>&nbsp; 
 </p>';
-  if (stored_value('adm_links_over',0)!=1) $rz .= '<p>&nbsp;</p>';
+//  if (stored_value('adm_links_over',0)!=1) $rz .= '<p>&nbsp;</p>';
   return $rz;
   }
 }

@@ -130,10 +130,12 @@ if (count($_POST)){
 }
 $f = userreg_new_form($t, $email);
 $fb = userreg_facebook();
-return translate('userreg_newregtext').
+$rz = translate('userreg_newregtext').
 ' <a href="'.stored_value("userreg_login_$t").'">'.translate('userreg_login').'</a></p>
-<p class="message">'.$message.'</p>
-'.$f->html().$fb.translate('userreg_newhelp');
+';
+if($message) $rz .= '<p class="message">'.$message."</p>\n";
+$rz .= $f->html().$fb.translate('userreg_newhelp');
+return $rz;
 }
 
 function userreg_facebook(){

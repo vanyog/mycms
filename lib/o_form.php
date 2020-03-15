@@ -74,7 +74,7 @@ foreach($this->ins as $i){
 }
 if ($this->astable) $rz .= "</table>\n";
 $rz .= "</form>\n";
-if ($js) $rz = "<script type=\"text/javascript\">\n$js1</script>\n$rz";
+if ($js) $rz = "<script>\n$js1</script>\n$rz";
 return $rz;
 }
 
@@ -125,7 +125,9 @@ public function html($it){
 $dsbl = lock_form_fields();
 $rz = '';
 if ($it) $rz = "<tr><th>";
-if($this->caption) $rz .= "<label for=\"$this->id\">$this->caption</label> ";
+if($this->caption)
+  if($this->id) $rz .= "<label for=\"$this->id\">$this->caption</label> ";
+  else $rz .= $this->caption;
 if ($it) $rz .= " </th><td>";
 if( ($this->type=='file') && $this->value){
    $p = strrpos($this->value, '/');
@@ -289,7 +291,7 @@ $rz .= $this->caption;
 if ($it) $rz .= "</th>\n<td>"; else $rz .= " ";
 if(!is_local()) $rz .= '<div class="g-recaptcha" data-sitekey="'.$this->public_key.'" data-size="compact"></div>';
 else $rz .= "<div class=\"g-recaptcha\">reCapcha will be shown here if online</div>";
-if ($it) $rz .= "</td>\n<tr>\n"; else $rz .= "<br>\n";
+if ($it) $rz .= "</td>\n</tr>\n"; else $rz .= "<br>\n";
 return $rz;
 }
 

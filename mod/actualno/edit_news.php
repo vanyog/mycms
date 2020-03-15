@@ -56,12 +56,12 @@ if($_GET['type']=='News') $np = '99';
 else $np = '106';
 
 $page_header = '<link href="'.$pth.'_style.css" rel="stylesheet" type="text/css">
-<script type="text/javascript"><!--
+<script>
 function set_abstract(){
 var f = document.forms["editrecord_form"].Abstract;
 f.value = "'.str_replace("\n", '\n"+'."\n\"", addslashes(actualno_abstract($d, false, $np))).'";
 }
---></script>'."\n";
+</script>'."\n";
 
 $cp = array(
  'ID'=>$i,

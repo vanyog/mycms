@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Форма за обратна информация.
+// Форма за обратна връзка.
 // Написаното от посетител съобщение се запазва в таблица feedback и се изпраща на имейл translate("feedback_to_$page_id")
 // или на имейла на потребителя с номер $_GET['uid'].
 // Параметър $t е типът потребители.
@@ -35,7 +35,7 @@ global $page_id, $language;
 $to = feedback_to();
 
 // Ако не е зададен се показва съобщение вместо форма за попълване
-if(!$to) return "<p class=\"message\">No 'feedback_to_$page_id' setting or 'uid' parameter found by FEEDBACK module.</p>";
+if(!$to) return "<p class=\"message\">No 'feedback_to_$page_id' content or 'uid' parameter found by FEEDBACK module.</p>";
 
 // Ако е 'no' се показва съобщение, че формата не е активна
 if($to == 'no') return '<p class="message">'.translate('feedback_disabled').'</p>';
@@ -75,7 +75,7 @@ else {
   }
 }
 
-$rz = '<h2>'.translate('feedback_to')." $to</h2>\n";
+$rz = '<h2>'.translate('feedback_to')." <span style=\"white-space:nowrap;\">$to</h2>\n";
 
 $f = new HTMLForm('feedback_form');
 
@@ -95,7 +95,7 @@ $ti = new FormInput(translate('feedback_subject'), 'subject', 'text', $sb );
 $ti->js = ' style="width:99%"';
 $f->add_input( $ti );
 
-if(substr($t, 0, 5)=='vsu20'){
+if(substr($t, 0, 5)=='vsu21'){
   $ti = new FormInput(translate('feedback_publish'), 'publish', 'checkbox', '1', translate('feedback_publish2') );
   $f->add_input( $ti );
 }
@@ -146,6 +146,7 @@ if ($to){ // Изпращане на имейла
   $nm = str_replace("\n", ' ', $nm);
   $hd = "Content-type: text/plain; charset=$site_encoding\r\n".
         "From: $nm <$e>\r\n";
+//  die("$to,$sb,$ms,$hd");
   if( ! mail($to,$sb,$ms,$hd) )
         return translate('feedback_notsent');
   if(db_table_exists('feedback')) db_insert_1($d, 'feedback');

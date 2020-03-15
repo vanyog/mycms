@@ -40,7 +40,7 @@ $plogin = stored_value('userreg_login_'.$utype);
 $pedit = str_replace('&user2=login', '&user2=edit', $plogin);
 
 // Директория за качване на файлове
-$fdir = stored_value('conference_files', '/conference/2014/files/');
+$fdir = stored_value('conference_files_'.$utype, '/conference/2014/files/');
 // Име на събитие и име на график от таблица 'schedules' на срока за качване на резюмета
 $day1 = explode(',', stored_value('conference_day1event','schedule_event_2,schedule_1'));
 // Име на събитие и име на график от таблица 'schedules' на срока за качване на пълния текст на докладите
@@ -63,13 +63,18 @@ document.location = e;
 ';
 
 // Главна функция на модула
-// При различни стойности на параметъра $a показва:
+// Параметърът $a може да се състои от две части, отделени с |
+// При различни стойности на първата част на параметъра $a функцията връща:
 // '' - Лична страница на потребителя с неговите лични данни и данни за заявените доклади
 // 'admin' - Страница за администриране със списък на всички участници и техните доклади
 // 'edit' - Форма за редактиране данните за доклад
 // 'stats' - Текуща статистика
+// 'abstract_t' - Заглавия на приетите доклади с линкове към файловете с пълните им текстове и презентациите.
+//                При хостване на повече от едно издание на конференция, след знак | се посочва типът участници, с цел идентифициране на изданието.
 // 'abstracts' - Приети резюмета
 // 'participants' - Информация за състоянието на участниците
+
+// Втората част на параметъра $a, след знака | съдържа други параметри
 
 function conference($a = ''){
 
@@ -81,12 +86,15 @@ $uid = userreg_id($utype);
 // Дали потребителят е администратор
 $adm = isset($can_manage['conference']) && $can_manage['conference'];
 
-switch ($a){
+$aa = explode('|', $a);
+if(!isset($aa[1])) $aa[1] = '';
+
+switch ($aa[0]){
 case ''            : break;
 case 'admin'       : return conference_admin($uid);
 case 'edit'        : return conference_edit($uid);
 case 'stats'       : return conference_stats();
-case 'abstract_t'  : return conference_abstract_titles();
+case 'abstract_t'  : return conference_abstract_titles($aa[1]);
 case 'abstracts'   : return conference_abstract_book();
 case 'participants': return conference_participants();
 default            : return '<p class="message">'."Unknown parameter value '$a' in 'conference() function.</p>";
@@ -186,11 +194,12 @@ return $rz;
 
 function conference_trprec($d){
 // Форми на докладите
-eval(translate('conference_forms'));
+eval(translate('conference_forms',false));
 // Тематични направления
+//die(translate('conference_topics',false));
 eval(translate('conference_topics',false));
 $d['form'] = $fs[$d['form']];
-$d['topic'] = $tp[$d['topic']];
+$d['topic'] = $tp[$d['topic']-1];
 $d['title'] = '<strong>'.$d['title'].'</strong>';
 $d['fulltextfile' ] = file_link_and_size($d['fulltextfile' ]);
 $d['fulltextfile2'] = file_link_and_size($d['fulltextfile2']);
@@ -570,9 +579,9 @@ $rz .= '</table>
 <button>All</button><br>
 <textarea id="textForClpibd"></textarea>';
 // Форми на докладите
-eval(translate('conference_forms'));
+eval(translate('conference_forms',false));
 // Тематични направления
-eval(translate('conference_topics'));
+eval(translate('conference_topics',false));
 $rz .= encode('<h2>Заявени доклади - ').count($pd).'</h2>
 ';
 foreach($pd as $d){
@@ -585,7 +594,7 @@ foreach($pd as $d){
   }
   $d['fee'] = $d['fee'].' '.$d['currency'];
   $d['form'] =$fs[$d['form']];
-  $d['topic']=$tp[$d['topic']];
+  $d['topic']=$tp[$d['topic']-1];
   $d['title']='<strong>'.$d['title'].'</strong>';
   $d['fulltextfile' ]=file_link_and_size($d['fulltextfile' ]);
   $d['fulltextfile2']=file_link_and_size($d['fulltextfile2']);
@@ -632,9 +641,9 @@ $cc = db_select_m('topic,COUNT(`ID`)', 'proceedings', "`utype`='$utype' AND `abs
 // По форма
 $cf = db_select_m('form,COUNT(`ID`)', 'proceedings', "`utype`='$utype' AND `abstract`>'' GROUP BY `form`" );
 // Тематични направления $tp
-eval(translate('conference_topics'));
+eval(translate('conference_topics',false));
 // Форми на докладите $fs
-eval(translate('conference_forms'));
+eval(translate('conference_forms',false));
 $rz = '<p>'.translate('conference_partcount').': '.$cp.'</p>
 <p>'.translate('conference_bycountry').':</p>
 <p>';
@@ -660,13 +669,17 @@ return $rz;
 //
 // Показване заглавията на приетите резюмета
 
-function conference_abstract_titles(){
+function conference_abstract_titles($a = ''){
 global $utype, $adm_pth, $can_manage, $can_edit, $day3, $page_header, $fdir, $user_table;
+if($a){
+  $utype = $a;
+  $fdir = stored_value('conference_files_'.$utype, $fdir);
+}
 $pdf = '<img src="'.current_pth(__FILE__).'Download-PDF.png">';
 $ppt = '<img src="'.current_pth(__FILE__).'Download-PPT.png">';
 $page_header .= '<script>
 function deleteAbstract(id){
-if( confirm("'.encode('Потвърждавате ли изтриване на затис за доклад с ID=').'"+id+"?") )
+if( confirm("'.encode('Потвърждавате ли изтриване на запис за доклад с ID=').'"+id+"?") )
    document.location = "'.$adm_pth.'delete_record.php?t=proceedings&r="+id;
 }
 </script>';
@@ -678,7 +691,7 @@ $preview = !empty($_GET['allowtoshow']) && ($_GET['allowtoshow']=='basa-team');
 // Томове
 $vl = db_select_m('vol', 'proceedings', "`utype`='$utype' GROUP BY `vol`");
 // Тематични направления $tp
-eval(translate('conference_topics'));
+eval(translate('conference_topics',false));
 $rz = '';
 $tc = 0; // Общ брой доклади
 $rc = 0; // Брой готови доклади
@@ -785,9 +798,11 @@ for($i = 0; $i<count($tp); $i++){
              }
            }
            if($d['fulltextfile2'])
-               $lr .= '<a href="'.$fdir.$d['fulltextfile2'].'" title="'.translate('conference_dfull', false).'">'.$pdf.'</a> ';
+               $lr .= '<a href="/_pdfjs-2.2.228-dist/web/viewer.html?file='.
+                       $fdir.'/'.$d['fulltextfile2'].'" title="'.translate('conference_dfull', false).'">'.$pdf.'</a> ';
            if($d['fulltextfile3'])
-               $lr .= '<a href="'.$fdir.$d['fulltextfile3'].'" title="'.translate('conference_prez', false).'">'.$ppt.'</a> ';
+               $lr .= '<a href="/_pdfjs-2.2.228-dist/web/viewer.html?file='.
+                       $fdir.'/'.$d['fulltextfile3'].'" title="'.translate('conference_prez', false).'">'.$ppt.'</a> ';
            $lr .= "<ptitle>".stripslashes($d['title'])."</ptitle><br>\n";
            $lr .= '<author>'.conference_only_names($d['authors'])."</author>";
            if($d['pages']){
@@ -870,7 +885,7 @@ return $rz;
 function conference_abstract_book(){
 global $utype;
 // Научни направления $tp
-eval(translate('conference_topics'));
+eval(translate('conference_topics',false));
 $rz = '';
 $order = ' ORDER BY  `keylec` DESC, `title` ASC';
 // За всяко научно направление
