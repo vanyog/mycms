@@ -25,6 +25,7 @@ global $tn_prefix, $db_link, $db_req_count;
 $q = "DELETE FROM `$tn_prefix"."$t` WHERE $w;";
 if ($y) { echo "$q<br>\n"; return; }
 mysqli_query($db_link, $q);
+$i = mysql_affected_rows($db_link); die("$i");
 $db_req_count++;
 }
 

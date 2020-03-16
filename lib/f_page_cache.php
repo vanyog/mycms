@@ -129,7 +129,7 @@ function purge_page_cache($a){
 $b = parse_url($a);
 $c = array(); 
 if (isset($b['query'])) parse_str($b['query'],$c);
-if (isset($c['pid'])) db_delete_where('page_cache',"`page_ID`=".(1*$c['pid']));
+if (is_numeric($c['pid'])) db_delete_where('page_cache',"`page_ID`=".(1*$c['pid']));
 }
 
 //
