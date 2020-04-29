@@ -26,13 +26,16 @@ include_once($idir.'lib/o_form.php');
 
 // Главна функция на модула
 
-// Ако параметърът $a = '' функцията генерира страница за управление на графиците.
+// Ако параметърът $a == '' функцията генерира страница за управление на графиците.
 
 // Ако $a не е празен стринг, е разделен на части от символа |.
 
 // Първата част е името на график.
 // Втората - действие, което се извършва с този график:
 //    'current' - показване на текущите събития от графика;
+//    'next30' - показване на започващите през следващите 30 дни събития от графика;
+//    'all' - показване на всички събития от графика;
+//    име на събитие - показване само на датата на събитието
 
 function schedules($a = ''){
 if ($a){
@@ -42,7 +45,9 @@ if ($a){
   case 'current': return schedules_current($p[0]);    break;
   case 'next30' : return schedules_next30($p[0], 30); break;
   case 'all'    : return schedules_all($p[0]);        break;
-  default: return 'Invalid action name \''.$p[1].'\' for schedules module.'; break;
+  default: $r = db_select_1('*', 'schedules', "`sch_name`='".$p[0]."' AND `ev_name`='".$p[1]."'");
+     if($r) return schedules_ev($r);
+     return 'Invalid action name \''.$p[1].'\' for schedules module.'; break;
   }
 }
 global $page_header, $can_manage;
@@ -235,6 +240,10 @@ $id = db_table_field('ID', 'schedules',
       "`sch_name`='$s' AND `ev_name`='$e' AND `date_time_1`<='$ct' AND `date_time_2`>='$ct'", 0);
 $rz =  "$id"!="0";
 return $rz;
+}
+
+function schedules_ev($r){
+return db2user_date_time($r['date_time_2']);
 }
 
 ?>

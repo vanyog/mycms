@@ -38,7 +38,7 @@ $page_content = '';
 $ma = db_table_field('MAX(`ID`)', 'pages', 1);
 
 // Данни на всички страници
-$pd = db_select_m('ID,content,title','pages','1 ORDER BY `ID` ASC');
+$pd = db_select_m('ID,content,title,hidden','pages','1 ORDER BY `ID` ASC');
 
 // Показване само на списък на неизползваните номера на страници
 if (isset($_GET['u']) && ($_GET['u']=='1')){
@@ -70,6 +70,8 @@ foreach($pd as $p){
      $rz .= '<tr><td><a href="'.$pth.'index.php?pid='.$p['ID'].$lnl.'" target="_blank">'.$p['ID']."</a></td>";
      if ($ln) $tt = db_table_field('text','content',"`name`='".$p['title']."' AND `language`='$ln'");
      else $tt = db_table_field('text','content',"`name`='".$p['title']."' AND `language`='$default_language'");
+     if($p['hidden']) $tt .= '<td>hidden</td>';
+     else $tt .= '<td>&nbsp;</td>';
      $rz .= "<td>$tt</td></tr>\n";
   }
   else {

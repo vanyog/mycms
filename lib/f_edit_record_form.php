@@ -171,7 +171,7 @@ return $rz;
 // $tn - име на таблицата
 // $m  - дали да се показва съобщение при успешен запис.
 
-function process_record($cp, $tn, $m = true){
+function process_record($cp, $tn, $m = true){//die(print_r($cp,true));
 global $tn_prefix, $db_link;
 // Прочитане типовете на полетата на таблицата
 $ft = db_field_types($tn);

@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include_once($idir.'lib/usedatabase.php');
 
 function db_insert_m($d,$t,$y=false){
+if(!isset($d[0])) if ($y) return "Data array is empty<br>\n"; else return;
 global $tn_prefix, $db_link;
 $q = "INSERT INTO `$tn_prefix$t` (";
 $ka = array_keys($d[0]);
