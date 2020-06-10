@@ -33,7 +33,7 @@ if(!session_id()) session_start();
 
 // Ако в сесията няма данни за влязъл потребител - съобщение, че трябва да се влезе
 if (!isset($_SESSION['user_username']) || !isset($_SESSION['user_password']) )
-   $page_content = '<p class="message">'.translate('userreg_mustlogin').'</p>';
+   $page_content = '<p class="message">'.translate('userreg_mustlogin2').'</p>';
 else {
   // Таблица с данни за потребители
   $user_table = stored_value('user_table','users');
@@ -41,7 +41,7 @@ else {
   $ud = db_select_1('ID,type', $user_table,
         "`username`='".$_SESSION['user_username']."' AND `password`='".$_SESSION['user_password']."'");
   // Ако номерът на влезлия потребител не е валиден - съобщение, че трябва да се влезе
-  if (!$ud) $page_content = '<p class="message">'.translate('userreg_mustlogin', false).'</p>';
+  if (!$ud) $page_content = '<p class="message">'.translate('userreg_mustlogin2', false).'</p>';
   else { //die("$id");
     // Проверка дали влезлият потребител има право да влиза от името на други потребители
     $a = db_table_field('yes_no','permissions',"`user_id`=".$ud['ID']." AND `type`='all'");

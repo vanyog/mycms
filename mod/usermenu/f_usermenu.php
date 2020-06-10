@@ -64,6 +64,8 @@ $can_manage = array();// Права за администриране на модули
 foreach($p as $q) switch($q['type']) {
 case 'all':
   $rz .= "<a href=\"$adm_pth\">Admin path</a><br>\n";
+  $ap = stored_value('admin_page');
+  if($ap) $rz .= "<a href=\"$ap\">Admin page</a><br>\n";
   $can_edit = $q['yes_no'];
   $can_create = $q['yes_no'];
   $ml = mod_list(true);

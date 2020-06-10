@@ -28,6 +28,7 @@ include($idir.'lib/translation.php');
 include_once($idir.'lib/o_form.php');
 include_once($idir.'lib/f_rand_string.php');
 include_once($idir.'mod/user/f_user.php');
+include_once($idir.'lib/f_db_select_m.php');
 include_once($idir.'lib/f_db_insert_m.php');
 include_once($idir.'lib/f_view_table.php');
 include_once($idir.'lib/f_set_self_query_var.php');
@@ -44,7 +45,7 @@ else {
   $id = db_table_field('ID', $user_table,
         "`username`='".$_SESSION['user_username']."' AND `password`='".$_SESSION['user_password']."'");
   // Ако номера на влезлия потребител не е валиден - съобщение, че трябва да се влезе
-  if (!$id) $page_content = '<p class="message">'.translate('userreg_mustlogin').'</p>';
+  if (!$id) $page_content = '<p class="message">'.translate('userreg_mustlogin2').'</p>';
   else { //die($id);
     // Проверка дали влезлият потребител има право да създава нови потребители
     $p = db_table_field('yes_no','permissions',
@@ -59,13 +60,20 @@ else {
       $ms = userreg_processdel($t, $tid);
       if ($ms) $ms = '<p class="message">'.$ms.'</p>';
       // Изпратени данни
-      if(isset($_POST['emails'])) $emls = $_POST['emails']; else $emls = '';
-      // Форма за създаване на нов потребител
+      if(isset($_POST['emails'])) $emls = trim($_POST['emails']); else $emls = '';
+      // Форма за спискът имейли за изтриване
       $f = new HTMLForm('newuserreg_form');
       $f->add_input( new FormInput('', 'type','hidden', $t) );
       $f->add_input( new FormInput('', 'tid','hidden', $tid) );
       if($tid){
         $i = new FormInput(translate('userreg_bcheck'), 'todel', 'checkbox', $tid);
+        // Данни за потребителя
+        $dt = db_select_1('*', $user_table, "`ID`=$tid");
+        // Поставяне на отметка за изтриване, ако не е влизал никога
+        if( ($dt['date_time_2']=='0000-00-00 00:00:00') &&
+            ($dt['date_time_1']==$dt['date_time_1']) &&
+            empty($dt['password'])
+          ) $i->js = ' checked="checked"';
         $f->add_input($i);
       }
       $i = new FormTextArea(translate('user_emails'), 'emails', 100, 10, $emls);
@@ -75,7 +83,8 @@ else {
       $page_content = '<h1>'.translate('userreg_bdel')."</h1>\n".
                       '<p>User type: '.$t."</p>\n".
                       translate('userreg_bdeldescr').
-                      $ms.$f->html();
+                      $ms.$f->html().
+                      translate('userreg_bdelHelp')."\n";                      ;
     }
   }
 }
@@ -91,43 +100,65 @@ include($idir.'lib/build_page.php');
 
 //
 // Обработка на изпратени с $_POST данни
+// $t - тип потребител
+// $tid - номер на потребител за обработка
 
-function userreg_processdel($t, &$tid){//die(print_r($_POST,true));
+function userreg_processdel($t, &$tid){
+global $tn_prefix, $db_link;
 // Връщан резултат - съобщение относно обработката
 $rz = '';
 // Ако не са изпратени данни - празен низ
 if (!count($_POST)) return $rz;
-// Ако е поставена отметка за изтриване
+// Имейла за изтриване
 $e = db_table_field('email', 'users', "`ID`=".$_POST['tid']);
-if(isset($_POST['todel'])){
+// Ако е поставена отметка за изтриване
+if(isset($_POST['todel'])){ // При отметка да се изтрие
   if(($_POST['tid']>0) && isset($_POST['todel']) && ($_POST['todel']==$_POST['tid'])){
+    // Премахване от списъка
     $_POST['emails'] = preg_replace('/'.$e.'\n?/s', '', $_POST['emails']);
+    // Премахване от базата данни
     db_delete_from('users', $_POST['tid']);
+    // Добавяне в таблица email_wrong
+    $q = "INSERT INTO `$tn_prefix"."mail_wrong` (`email`) VALUES ('$e')";
+    mysqli_query($db_link, $q);
   }
 }
-else {
+else { // Ако няма отметка за изтриване се премахва само от списъка за да се мине към следващия имейл
   $_POST['emails'] = preg_replace('/'.$e.'\n?/s', '', $_POST['emails']);
 }
-global $user_table, $id;
+global $user_table, $id, $adm_pth;
 // Разделяне на имейлите
-$es = explode("\n", $_POST['emails']);
+$es = preg_split('/\r\n|\r|\n/', $_POST['emails']);
 if(count($es)==1) $es = explode(',', $_POST['emails']);
 $d = array();
+$rz .= "<p>".count($es)." emails</p>\n";
 foreach($es as $e){
   // Проверка дали има потребител с имейл $e
   $e1 = trim($e);
   if(!empty($e1)){
     $d = db_select_1('*', $user_table, "`type`='$t' AND `email`='$e1'");
     if(!$d){
-      $rz .= "$e1 - not exists<br>\n";
+      $rz .= "$e1 - no profile exists<br>\n";
+      $_POST['emails'] = preg_replace('/'.$e.'\n?/s', '', $_POST['emails']);
+    }
+    else if($d['nomessage']) {
+      $rz .= "$e1 - messages are desabled<br>\n";
       $_POST['emails'] = preg_replace('/'.$e.'\n?/s', '', $_POST['emails']);
     }
     else {
       $tid = $d['ID'];
+      $d['ID'] = $d['ID'].' <a href="'.$adm_pth.'edit_record.php?t='.$user_table.'&r='.$d['ID'].'" target="_blank">*</a>';
+      // Проверка дали има публикации
+      $rcds = db_select_m('*', 'proceedings', "`user_id`=$tid");
+      if(count($rcds)){
+        $rz .= encode('<p>Има '.count($rcds).' публикации !</p>')."\n";
+        foreach($rcds as $r) $rz .= '<p>'.$r['title']."</p>\n";
+      }
       return $rz.view_table(array($d));
     }
   }
 }
+return $rz;
 }
 
 ?>

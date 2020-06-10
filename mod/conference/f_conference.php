@@ -114,6 +114,7 @@ $cp = array(
 'thirdname'=>translate('user_thirdname'),
 'country'=>translate('user_country'),
 'institution'=>translate('user_institution'),
+'position'=>translate('user_position'),
 'address'=>translate('user_address'),
 'telephone'=>translate('user_telephone')
 );
@@ -203,7 +204,8 @@ eval(translate('conference_forms',false));
 // Тематични направления
 eval(translate('conference_topics_'.$utype,false));
 $d['form'] = $fs[$d['form']];
-$d['topic'] = $tp[$d['topic']];
+if(isset($tp[$d['topic']])) $d['topic']=$tp[$d['topic']];
+else $d['topic'] = "-?-";
 $d['title'] = '<strong>'.$d['title'].'</strong>';
 $d['fulltextfile' ] = file_link_and_size($d['fulltextfile' ]);
 $d['fulltextfile2'] = file_link_and_size($d['fulltextfile2']);
@@ -555,7 +557,7 @@ foreach($ud as $d){
   $u[$d['ID']]=$d['firstname'].' '.$d['secondname'].' '.$d['thirdname'];
   $rz .= '<tr>
 <td id="us'.$d['ID'].'">
-<a href="'.$ep.'&amp;uid='.$d['ID'].'">'.$d['ID'].'</a>';
+<a href="'.$ep.'&amp;uid='.$d['ID'].'" target="_blank">'.$d['ID'].'</a>';
   if(isset($can_manage['userreg']) && ($can_manage['userreg']==1))
      $rz .= "\n<a href=\"".current_pth(mod_path('userreg')).'login_as.php?uid='.$d['ID'].'">></a>';
   $rz .= '
@@ -601,7 +603,8 @@ foreach($pd as $d){
   }
   $d['fee'] = $d['fee'].' '.$d['currency'];
   $d['form'] =$fs[$d['form']];
-  $d['topic']=$tp[$d['topic']];
+  if(isset($tp[$d['topic']])) $d['topic']=$tp[$d['topic']];
+  else $d['topic'] = "-?-";
   $d['title']='<strong>'.$d['title'].'</strong>';
   $d['fulltextfile' ]=file_link_and_size($d['fulltextfile' ]);
   $d['fulltextfile2']=file_link_and_size($d['fulltextfile2']);
@@ -782,7 +785,12 @@ for($i = 0; $i<count($tp); $i++){
               }
            }
            $edp = stored_value('conference_editpaper', '/index.php?pid=1068');
-           $lk .= '<br><a href="'.$edp.'&amp;proc='.$d['ID'].'#bottom">'.encode('Редактиране').'</a> ';
+           $lk .= '<br><a href="'.$edp.'&proc='.$d['ID'].'#bottom">'.encode('Редактиране')."</a> \n";
+           $lk .= encode(' Съобщаване за: ').
+                  '<a href="/index.php?pid=52&uid='.$d['user_id'].'&tid=5&proc='.$d['ID'].'" target="_blank">'.
+                  encode('служебно редактиране')."</a>, \n".
+                  '<a href="/index.php?pid=52&uid='.$d['user_id'].'&tid=7&proc='.$d['ID'].'" target="_blank">'.
+                  encode('одобрено резюме')."</a> \n";
            if($cr<=0)
               $lk .= $cr.' <a href="#" style="font-weight:bold;color:red;" onclick="deleteAbstract('.$d['ID'].');return false;">x</a>';
            if($d['fulltextfile'])  $lk .= '<br>'.file_link_and_size($d['fulltextfile']);
@@ -890,19 +898,38 @@ return $rz;
 // Генериране на сборник резюмета
 
 function conference_abstract_book($uid, $adm){
-global $utype;
+if(isset($_GET['proc']) && is_numeric($_GET['proc'])) return conference_1abstract($uid, $adm);
+global $utype, $main_index, $page_id;
 // Научни направления $tp
 eval(translate('conference_topics_'.$utype,false));
 $rz = '';
 $order = ' ORDER BY  `keylec` DESC, `title` ASC';
 $access = ' AND `approved_a`';
-if(isset($_GET['ac']) && ($_GET['ac']=='age46wjeruwicdm')) $adm = true;
+$filter = '';
+$fp = '';
+if(isset($_GET['until'])){
+  $tm = strtotime($_GET['until']);
+  if(!is_numeric($tm)) die('Incorect until value.');
+  $filter .= " AND `date_time_1`<'".$_GET['until']."'";
+  $fp = '&until='.$_GET['until'];
+}
+if(isset($_GET['after'])){
+  $tm = strtotime($_GET['after']);
+  if(!is_numeric($tm)) die('Incorect after value.');
+  $filter .= " AND `date_time_1`>'".$_GET['after']."'";
+  $fp = '&after='.$_GET['after'];
+}
+$acb = stored_value('conference_aBookAccess');
+$aca = stored_value('conference_aRev1Access');
+if($acb && isset($_GET['ac']) && ($_GET['ac']==$acb)) $adm = true;
 if($adm){
   $revp = stored_value('conference_reviewpage');
   if(!$revp) die('"conference_reviewpage" option not set');
   $access = '';
-  $c = db_table_field('COUNT(*)', 'proceedings', "`utype`='$utype' AND `title` > ' '");
-  $rz .= "<p>Proceeding count: $c</p>\n";
+  $c = db_table_field('COUNT(*)', 'proceedings', "`utype`='$utype' AND `title` > ' ' AND `topic`>-1$filter");
+  $rz .= "<p>Proceeding count: $c";
+  $rz .= " &nbsp; Access by <a href=\"$main_index?pid=$page_id&ac=$acb$fp\">Link</a>";
+  $rz .= "</p>\n";
 }
 // За всяко научно направление
 for($i = 0; $i<count($tp); $i++){
@@ -914,7 +941,7 @@ for($i = 0; $i<count($tp); $i++){
         "`utype`='$utype'".
         " AND `title` > ' '".
         " AND `topic`='$i'".
-        $access.$order );
+        $access.$filter.$order );
   if(count($da)) $rz .= '<h2>'.$tp[$i]."</h2>\n";
   // За всеки доклад
   foreach($da as $d){
@@ -925,22 +952,29 @@ for($i = 0; $i<count($tp); $i++){
           $rz .= '<p>'.$d['authors']."</p>\n";
        else
           $rz .= $d['authors'];
-       if(!empty($d['addresses'])&&($d['addresses'][0]!='<'))
-          $rz .= '<p>'.$d['addresses']."</p>";
-       else
-          $rz .= $d['addresses'];
        $rz .= $d['abstract']."\n";
        if($d['keywords'])
           $rz .= '<p class="keywords"><span>'.translate('conference_ckeywords').'</span> '.$d['keywords']."</p>\n";
-       if($adm) $rz .= '<p><a href="'.$revp.'&rev1='.$d['ID'].'&ac=age46wjeruwicdm">'.translate('conference_rev1')."</a></p>\n";
+          if(!empty($d['addresses'])&&($d['addresses'][0]!='<'))
+             $rz .= '<p>'.stripslashes($d['addresses'])."</p>";
+          else
+             $rz .= stripslashes($d['addresses']);
+       // Линк "рецензиране на резюмето"
+       if($adm){
+         if (!$d['approved_a'])
+            $rz .= '<p><a href="'.$revp.'&rev1='.$d['ID'].'&ac='.$aca.'">'.translate('conference_rev1')."</a></p>\n";
+       }
        $rz .= "</div>\n";
   }
 }
 return "<div id=\"abstract_book\">\n$rz\n</div>\n";
 }
 
+// Показване на едно резюме анонимно, с формуляр за рецензиране
+
 function conference_rev1($uid, $adm){
-if( ! ($adm || (isset($_GET['ac']) && ($_GET['ac']=='age46wjeruwicdm') ) ) )
+$aca = stored_value('conference_aRev1Access');
+if( ! ($adm || ($aca && isset($_GET['ac']) && ($_GET['ac']==$aca) ) ) )
     return '<p class="message">'."Access denied.</p>\n";
 if(count($_POST)) return conference_rev1process();
 global $utype, $user_table;
@@ -994,4 +1028,34 @@ if( mail($to, $subject, $body, $hd, "-f $from") )
 else
   return '<p class="message">'.translate('conference_rev1notSent'). "</p>\n";
 }
+
+function conference_1abstract($uid, $adm){
+global $utype;
+// Данни за доклада
+$pd = db_select_1('*', 'proceedings', '`ID`='.$_GET['proc']);
+// Код за достъп
+$aca = stored_value('conference_aAbsAccess');
+if(!( ($uid==$pd['user_id']) || $adm ||
+      (isset($_GET['ac']) && $aca && ($aca==$_GET['ac']))
+    )) return 'Access not allowed.';
+// Тематични направления
+eval(translate('conference_topics_'.$utype,false));
+$rz = '<h2>'.$tp[$pd['topic']].'<h2>
+<h3>'.mb_strtoupper($pd['title']).'</h3>
+';
+if(!empty($pd['authors'])&&($pd['authors'][0]!='<'))
+   $rz .= '<p>'.$pd['authors']."</p>\n";
+else
+   $rz .= $pd['authors'];
+$rz .= $pd['abstract']."\n";
+$rz .= '<p class="keywords"><span>'.translate('conference_ckeywords').'</span> ';
+if($pd['keywords']) $rz .= $pd['keywords'];
+$rz .= "</p>\n";
+if(!empty($pd['addresses'])&&($pd['addresses'][0]!='<'))
+   $rz .= '<p>'.stripslashes($pd['addresses'])."</p>";
+else
+   $rz .= stripslashes($pd['addresses']);
+return $rz;
+}
+
 ?>

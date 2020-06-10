@@ -18,21 +18,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // Форма за обратна връзка.
-// Написаното от посетител съобщение се запазва в таблица feedback и се изпраща на имейл translate("feedback_to_$page_id")
-// или на имейла на потребителя с номер $_GET['uid'].
+// В таблица cntent под име feedback_to_$page_id трябва да се сахранява имейл по подразбиране,
+// до който се изпращат съобщенията от формата.
+// Ако вместо имел адрес, стойността в този запис е 'no', вместо форма се показва друг зададен текст. Така формата е отменена.
+// При наличие на $_GET['uid'] съобщението от формата се изпраща до потребител с този номер.
+// При изпращане до имейла по подразбиране, съобщението се записва в таблица 'feedback'.
+// При наличие на $_GET['tid'] формата се попълва от шаблона с този номер от таблица 'mail_template'
 // Параметър $t е типът потребители.
 // За постигане на съвместимост с най-старата версия на този скрипт, която не изискваше параметър,
 // стойността по подразбиране на този параметър е празен стринг.
 
 include_once($idir.'lib/o_form.php');
 include_once($idir.'lib/f_db_insert_1.php');
+include_once($idir.'lib/f_translate_to.php');
 
 function feedback($t = ''){
 
-global $page_id, $language;
+global $page_id, $language, $languages, $tud, $lang;
+
+// Дали се изпраща до адреса по подразбиране
+$ts = false;
+
+//  Данни на потребителя, до който се изпраща имейл
+$tud = false;
+// Предпочитания от потребителя език
+$lang = 'en';
 
 // До кого е адресирано съобщението
-$to = feedback_to();
+$to = feedback_to($ts);
 
 // Ако не е зададен се показва съобщение вместо форма за попълване
 if(!$to) return "<p class=\"message\">No 'feedback_to_$page_id' content or 'uid' parameter found by FEEDBACK module.</p>";
@@ -40,7 +53,7 @@ if(!$to) return "<p class=\"message\">No 'feedback_to_$page_id' content or 'uid'
 // Ако е 'no' се показва съобщение, че формата не е активна
 if($to == 'no') return '<p class="message">'.translate('feedback_disabled').'</p>';
 
-if (count($_POST)) return feedback_process($to);
+if (count($_POST)) return feedback_process($ts, $to);
 
 if (!session_id()) session_start();
 
@@ -49,22 +62,32 @@ $nm = ''; // Име на изпращача
 $em = ''; // Имейл на изпращача
 $sb = ''; // Относно. Може да се зададе в таблица 'content'.
 $rf = ''; // От къде се идва на текущата страница
+$tx = ''; // Текст на съобщението
 
 $sb = db_table_field('name', 'content', "`name`='feedback_subject_$page_id'");
 if ($sb) $sb = translate($sb);
 
+if(isset($_GET['tid']) && is_numeric($_GET['tid'])){
+  // Предпочитания от потребителя език
+  $lang = array_search($tud['language'], $languages);
+  $em = translate_to('emailtemplate_'.$_GET['tid'].'_from', $lang, false);
+  $sb = translate_to('emailtemplate_'.$_GET['tid'].'_subject', $lang, false);
+  $tx = feedback_fiealds();
+}
+
 if (isset($_SERVER['HTTP_REFERER'])) $rf = $_SERVER['HTTP_REFERER'];
 
 // Ако има влязъл потребител името и имейла на изпращача се попълват
-if (isset($_SESSION['user_username'])&&isset($_SESSION['user_password'])){
+if (isset($_SESSION['user_username']) && isset($_SESSION['user_password'])){
   $ud = db_select_1('*', stored_value('user_table', 'users'), 
        "`username`='".$_SESSION['user_username']."' AND `password`='".$_SESSION['user_password']."'" );
   $nm = $ud['firstname'].' '.$ud['secondname'].' '.$ud['thirdname'];
   if (strlen($nm)<3) $nm = '';
   $em = $ud['email'];
+  if( ($em=='en-info@conference.vsu.bg') && ($lang=='bg')) $em='bg-info@conference.vsu.bg';
   $recapthca = false;
 }
-else {
+else { // Ако няма влязъл потребител - събщение и recapthca
   // Страницата за влизане на типа потребители
   $lp = stored_value("userreg_login_$t");
   $recapthca = true;
@@ -100,7 +123,7 @@ if(substr($t, 0, 5)=='vsu21'){
   $f->add_input( $ti );
 }
 
-$ta = new FormTextArea(translate('feedback_text'), 'text' );
+$ta = new FormTextArea(translate('feedback_text'), 'text', 100, 10, $tx );
 $ta->size = false;
 $ta->js = ' style="width:99%; height:200px;"';
 $ta->ckbutton = '';
@@ -120,7 +143,7 @@ return $rz.$ms.$f->html();
 
 // Обработва изпратените данни от попълнена форма.
 
-function feedback_process($to = ''){
+function feedback_process($ts, $to = ''){
 $c = count($_POST);
 if( ($c<5) || ($c>6) ) return '<p class="message">'.translate('feedback_incorrectdata')."</p>\n";
 global $page_id, $site_encoding;
@@ -129,6 +152,7 @@ $d = Array(
 'date_time_1'=>'NOW()',
 'name'   => addslashes($_POST['name']),
 'email'  => addslashes($_POST['email']),
+'to_email'=>$to,
 'subject'=> addslashes($_POST['subject']),
 'text'   => addslashes($_POST['text']),
 'referer'   => addslashes($_POST['referer']),
@@ -147,25 +171,50 @@ if ($to){ // Изпращане на имейла
   $hd = "Content-type: text/plain; charset=$site_encoding\r\n".
         "From: $nm <$e>\r\n";
 //  die("$to,$sb,$ms,$hd");
-  if( ! mail($to,$sb,$ms,$hd) )
+  if( ! mail($to,$sb,$ms,$hd, "-f $e") )
         return translate('feedback_notsent');
   if(db_table_exists('feedback')) db_insert_1($d, 'feedback');
 }
 return translate('feedback_thanks');
 }
 
-function feedback_to(){
-global $page_id;
+function feedback_to(&$ts){
+global $page_id, $tud;
 // ID на потребител
 $uid = 0;
 if( isset($_GET['uid']) && is_numeric($_GET['uid']) ) $uid = $_GET['uid'];
 // Име на таблицата с данни за потребителите
 $user_table = stored_value('user_table','users');
 // Имейл на потребителя
-if($uid) return db_table_field('email', $user_table, "`ID`=$uid");
+if($uid){
+  $tud = db_select_1('*', $user_table, "`ID`=$uid");
+  return $tud['email'];
+}
 // Проверка дали има зададен имейл адрес, до който да се изпращат съобщенията от текущата страница
 $n = db_table_field('name', 'content', "`name`='feedback_to_$page_id'");
+$ts = !empty($n);
 return translate($n, false);
+}
+
+function feedback_fiealds(){
+global $tud, $lang;
+$rz = strip_tags(translate_to('emailtemplate_'.$_GET['tid'], $lang, false));
+// Места за заместване
+$ph = array();
+$i = preg_match_all('/\[(.*?)\]/', $rz, $ph);
+foreach($ph[0] as $p) switch($p) {
+case '[firstname]': $rz = str_replace($p, $tud['firstname'], $rz); break;
+case '[thirdname]': $rz = str_replace($p, $tud['thirdname'], $rz); break;
+case '[title]': $rz = str_replace($p, mb_strtoupper( db_table_field('title', 'proceedings', "`ID`=".$_GET['proc']) ), $rz); break;
+case '[apstractpreview]': $ac = stored_value('conference_aAbsAccess');
+                          $rz = str_replace($p,
+                                  'https://conference.vsu.bg/index.php?pid=67&proc='.$_GET['proc'].
+                                  '&ac='.$ac.
+                                  '&lang='.$lang, $rz);
+                          break;
+case '[mypatrpage]': $rz = str_replace($p, 'https://conference.vsu.bg/index.php?pid=5&lang='.$lang, $rz); break;
+}
+return $rz;
 }
 
 ?>

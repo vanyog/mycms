@@ -41,8 +41,9 @@ if(is_numeric($_GET['proc'])){
 }
 
 function delete_file($f){
+global $utype;
 if(empty($f)) return;
-$p = $_SERVER['DOCUMENT_ROOT'].stored_value('conference_files').$f;
+$p = $_SERVER['DOCUMENT_ROOT'].stored_value('conference_files_'.$utype).$f;
 if(file_exists($p)) unlink($p);
 }
 

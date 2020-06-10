@@ -95,7 +95,7 @@ else {
   $id = db_table_field('ID', $user_table,
         "`username`='".$_SESSION['user_username']."' AND `password`='".$_SESSION['user_password']."'");
   // Ако номера на влезлия потребител не е валиден - съобщение, че трябва да се влезе
-  if (!$id) $page_content = '<p class="message">'.translate('userreg_mustlogin').'</p>';
+  if (!$id) $page_content = '<p class="message">'.translate('userreg_mustlogin2').'</p>';
   else { //die($id);
     // Проверка дали влезлият потребител има право да създава нови потребители
     $p = db_table_field('yes_no','permissions',
