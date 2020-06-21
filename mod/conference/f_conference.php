@@ -46,7 +46,8 @@ $day1 = explode(',', stored_value('conference_day1event','schedule_event_2,sched
 // Име на събитие и име на график от таблица 'schedules' на срока за качване на пълния текст на докладите
 $day2 = explode(',', stored_value('conference_day2event','schedule_event_4,schedule_1'));
 // Име на събитие и име на график от таблица 'schedules' на срока за обявяване на приетите резюмета
-$day3 = explode(',', stored_value('conference_day3event','schedule_event_91,schedule_89'));
+$day3 = explode(',', stored_value('conference_day3event'));
+if(count($day3)<>2) die("'conference_day3event' not set");
 // Брой разрешени доклади
 $proccount = stored_value('conference_repnumber', 2);
 
@@ -899,7 +900,7 @@ return $rz;
 
 function conference_abstract_book($uid, $adm){
 if(isset($_GET['proc']) && is_numeric($_GET['proc'])) return conference_1abstract($uid, $adm);
-global $utype, $main_index, $page_id;
+global $utype, $main_index, $page_id, $day3;
 // Научни направления $tp
 eval(translate('conference_topics_'.$utype,false));
 $rz = '';
@@ -922,6 +923,10 @@ if(isset($_GET['after'])){
 $acb = stored_value('conference_aBookAccess');
 $aca = stored_value('conference_aRev1Access');
 if($acb && isset($_GET['ac']) && ($_GET['ac']==$acb)) $adm = true;
+// Дата за обявяване на приетите резюмета
+$t3 = db_table_field('date_time_2', 'schedules', "`sch_name`='".$day3[1]."' AND `ev_name`='".$day3[0]."'");
+// Настоящия момент
+$td = date('Y-m-d h:m:s');
 if($adm){
   $revp = stored_value('conference_reviewpage');
   if(!$revp) die('"conference_reviewpage" option not set');
@@ -931,6 +936,7 @@ if($adm){
   $rz .= " &nbsp; Access by <a href=\"$main_index?pid=$page_id&ac=$acb$fp\">Link</a>";
   $rz .= "</p>\n";
 }
+else if($td<$t3) return $rz;
 // За всяко научно направление
 for($i = 0; $i<count($tp); $i++){
   $inf = translate($utype.'_sec_'.$i.'_info');
