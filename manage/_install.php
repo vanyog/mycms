@@ -59,15 +59,20 @@ if (!file_exists($p)){
 
 $fc = iconv('windows-1251', $site_encoding, file_get_contents($p));
 
-$fc = str_replace('CREATE TABLE IF NOT EXISTS `',   "CREATE TABLE IF NOT EXISTS `$tn_prefix",$fc);
+$fc = str_replace('CREATE TABLE IF NOT EXISTS `', "CREATE TABLE IF NOT EXISTS `$tn_prefix", $fc);
 
-$fc = str_replace('INSERT INTO `',   "INSERT INTO `$tn_prefix",$fc);
+$fc = str_replace('CREATE TABLE `', "CREATE TABLE `$tn_prefix", $fc);
+
+$fc = str_replace('ALTER TABLE `', "ALTER TABLE `$tn_prefix", $fc);
+
+$fc = str_replace('INSERT INTO `', "INSERT INTO `$tn_prefix", $fc);
 
 $fa = explode('-- --------------------------------------------------------',$fc);
 
 foreach($fa as $q){
-  echo ("<pre>$q</pre><p>");
+  echo ("<p><pre>$q</pre></p\n>");
   mysqli_query($db_link,$q);
+  echo mysqli_error($db_link);
 }
 
 echo '<p>Success</p>
