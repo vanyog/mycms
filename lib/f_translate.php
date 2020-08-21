@@ -39,6 +39,8 @@ $global_filters = db_table_field('filters', 'filters', "`name` LIKE '*'");
 
 function translate($n, $elink=true){
 
+if(empty($n)) return '';
+
 global $languages, $default_language, $language, $pth, $adm_pth, $content_date_time, $content_create_time, $can_edit,
        $page_content, $page_data, $debug_mode, $tn_prefix;
 
@@ -67,6 +69,7 @@ $rz = '';
 // Четене на записа за надпис с име $n на език $language
 $r1 = db_select_1('c.*, f.filters',
                   'content` c LEFT JOIN `'.$tn_prefix.'filters` f ON c.name=f.`name', "c.name='$n' AND `language`='$language'");
+//if(substr($n, 0, 6)=='Vladim'){ var_dump($r1); die; }
 
 if ($r1){ // Ако има такъв запис
   $content_create_time = $r1['date_time_1'];

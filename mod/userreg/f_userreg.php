@@ -376,7 +376,7 @@ unset($_SESSION['userreg_message']);
 $can_visit = 1;
 // Отбелязване на часа и IP адреса на влизане
 if (!isset($_SESSION['session_start'])) $_SESSION['session_start'] = time();
-$tm = date('Y-m-d H:m:s', $_SESSION['session_start']);
+$tm = date('Y-m-d H:i:s', $_SESSION['session_start']);
 db_update_record( array( 'ID'=>$id, 'date_time_2'=>$tm, 'IP'=>$_SERVER['REMOTE_ADDR']), $user_table);
 return $id;
 }

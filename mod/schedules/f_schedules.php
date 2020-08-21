@@ -56,6 +56,7 @@ if (!isset($can_manage['schedules']) || !$can_manage['schedules'])
    return '<p class="message">'.translate('schedules_nopermition').'</p>';
 // Име на текущия график
 $l = '';
+if (isset($_GET['delete'])) schedules_delete($_GET['delete']);
 if (isset($_GET['schn'])) $l = $_GET['schn'];
 // Адрес за смяна с друг график
 $q = set_self_query_var('schn','aaa',false);
@@ -66,6 +67,9 @@ function sch_name_changed(){
 var l = document.getElementsByName("sch_name");
 var n = l[0].value;
 document.location = "'.$q.';
+}
+function confirm_link(e){
+if(confirm("'.translate('schedules_cDelete',false).'")) document.location = e;
 }
 </script>';
 // Падащ списък за избиране на график
@@ -134,6 +138,11 @@ for($i=0; $i<count($d); $i++){// die(print_r($d,true));
   $d[$i]['date_time_1'] = '<span class="nowrap"><a href="'.current_pth(__FILE__).'edit.php?id='.$d[$i]['ID'].'">'.
                           db2user_date_time($d[$i]['date_time_1']).'</a></span>';
   $d[$i]['date_time_2'] = '<span class="nowrap">'.db2user_date_time($d[$i]['date_time_2']).'</span>';
+  $d[$i]['ID'] = $d[$i]['ID'].
+                 '<sup><a href="'.set_self_query_var('delete', $d[$i]['ID']).'"'.
+                 ' style="font-weight:bold;color:red;"'.
+                 ' onclick="confirm_link(this);return false;"'.
+                 '>x</a></sup>';
   $c++;
 }
 return $d;
@@ -244,6 +253,14 @@ return $rz;
 
 function schedules_ev($r){
 return db2user_date_time($r['date_time_2']);
+}
+
+function schedules_delete($i){
+if(!is_numeric($i)) return;
+$d = db_select_1('*', 'schedules', "`ID`=$i");
+//db_delete_where('content', "`name`='".$d['ev_name']."'");
+//db_delete_where('schedules', "`ID`=$i");
+//die(print_r($d,true));
 }
 
 ?>

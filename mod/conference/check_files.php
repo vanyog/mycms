@@ -28,6 +28,15 @@ include_once($idir.'lib/f_stored_value.php');
 include_once($idir.'lib/f_db_select_m.php');
 include_once($idir.'lib/f_file_list.php');
 include_once($idir.'lib/f_encode.php');
+include_once($idir.'lib/f_set_self_query_var.php');
+include_once($idir.'lib/f_unset_self_query_var.php');
+include_once($idir.'mod/usermenu/f_usermenu.php');
+
+// Проверка на правата на влезлия потребител
+usermenu(true);
+
+// Ако няма право за модул conference - край
+if(empty($can_manage['conference'])) die("Not permitted for current user");
 
 // Тип на потребителя
 $ut = stored_value('conference_usertype', 'vsu2014');
@@ -36,10 +45,23 @@ $ut = stored_value('conference_usertype', 'vsu2014');
 $p = stored_value('conference_files_'.$ut, '/conference/2014/files/');
 $dir = $_SERVER['DOCUMENT_ROOT'].$p;
 
+header("Content-Type: text/html; charset=$site_encoding");
+
+// Изтриване на файл
+if(isset($_GET['delete'])){
+$fn = $dir.$_GET['delete'];
+if(file_exists($fn)){
+  unlink("$fn");
+  echo '<p>'.encode('Беше изтрит файл ').$fn."<p>\n";
+}
+else echo("File do not exists ".$fn);
+}
+
+echo '<p><a href="'.unset_self_query_var('delete').'">Reload</a></p>'."\n";
+
 // Четене имената на DOC файловете
 $af = db_select_m('fulltextfile', 'proceedings', "`utype`='$ut' AND `fulltextfile`>''");
 $ap = array();
-header("Content-Type: text/html; charset=$site_encoding");
 echo encode("<h2>Липсващи DOC файлове</h2>");
 foreach($af as $f){
   $fn = $dir.$f['fulltextfile'];
@@ -58,11 +80,22 @@ foreach($af as $f){
 
 $fl = file_list($dir);
 
-echo encode("<h2>Излишни файлове</h2>");
+echo encode("<h2>Излишни файлове</h2>").'
+<script>
+function confirm_link(e,n){
+if(confirm("'.encode("Наистина ли искате да изтриете файл ").'\"" + n + "\"?"))
+   document.location = e;
+}
+</script>
+';
 foreach($fl as $f)
  if (!in_array($f,$ap)){
     if (!is_local()) $fl = rawurlencode($f); else $fl = $f;
-    echo "<a href=\"$p$fl\">$f</a><br>\n";
+    echo "<a href=\"$p$fl\">$f</a> ".
+          '<a href="'.set_self_query_var('delete',$f).'" '.
+          'style="font-weight:bold;color:red;" '.
+          'title="'.encode('Изтриване на файла').'" '.
+          'onclick="confirm_link(this,\''.$f.'\');return false;">x</a><br>'."\n";
  }
 
 ?>

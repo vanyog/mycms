@@ -30,6 +30,7 @@ include_once($idir.'lib/f_db_insert_1.php');
 include_once($idir.'lib/f_rand_string.php');
 
 if(!session_id()) session_start();
+date_default_timezone_set("Europe/Sofia");
 
 // Ако в сесията няма данни за влязъл потребител - съобщение, че трябва да се влезе
 if (!isset($_SESSION['user_username']) || !isset($_SESSION['user_password']) )
@@ -64,6 +65,8 @@ else {
               if (!session_id()) session_start();
               $_SESSION['user_username'] = addslashes($d['username']);
               $_SESSION['user_password'] = $d['password'];
+              $dt = DateTime::createFromFormat('Y-m-d H:i:s', $d['date_time_2']);
+              $_SESSION['session_start'] = $dt->getTimestamp();
 //              header("Location: $p"); die;
               $page_content = "<p> <a href=\"$p\">$p</a></p>";
            }

@@ -133,6 +133,11 @@ if (g){
   document.location = r;
 }
 }
+function closeUMemu(){
+var m = document.getElementById("user_menu");
+if(confirm("Would you like to hide user menu? It will appear again after page reload."))
+  m.style.display = "none";
+}
 </script>'."\n";
  $rz .= '<a href="javascript:void(0);" onclick="getPage();">Page Get</a><br>'."\n";
  $rz .= '<a href="javascript:void(0);" onclick="moveTo();">Page Move</a><br>'."\n";
@@ -151,7 +156,10 @@ if ( strlen($nom) && strlen($rz) ){
   $rz .= '<span class="user">'.$_SESSION['user_username'].
          ' <a href="'.$nom.'">'.translate('user_logaut').'</a></span>'."<br>\n";
 }
-return '<div id="user_menu">'."\n".$rz."\n</div>";
+if($rz) return '<div id="user_menu">
+<a href="" class="cLink" onclick="closeUMemu();return false;">close</a><br>
+'."\n".$rz."\n</div>";
+else return '';
 }
 
 //
@@ -164,7 +172,6 @@ do{
  $pi = db_table_field('parent', 'menu_tree', "`group`=$pi");// print_r($pi);// die;
  $rz = $pi==$j;
 } while ( !($rz || ($pi==0)) );
-//echo "$rz $pi"; die;
 return $rz;
 }
 

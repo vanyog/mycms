@@ -66,6 +66,28 @@ foreach($na as $n){
 
 } // край на if (само един език) ...
 
+// JavaScript, който маркира и текста за превод, за да може бързо да се копира и постави
+// в софтуер за превеждане и после да се постави на негово бясто превода
+
+$page_content .= '<script>
+var t = document.getElementById("text");
+t.select();
+t.setSelectionRange(0, 99999);
+// JavaScript, който осигурява изпълнение на бутон Save с Ctrl+Enter
+var lastKey;
+function do_save(e){
+if((lastKey=="Meta") && (e.key=="Enter")){
+  var f = document.forms.new_tralslation;
+  f.submit();
+}
+lastKey = e.key;
+}
+</script>
+';
+
+// JavaScript, който осигурява изпълнение на бутон Save с Ctrl+Enter
+
+
 // Показване на страницата
 include_once("build_page.php");
 
@@ -84,9 +106,11 @@ global $languages, $default_language;
   $f->add_input(new FormInput('','name','hidden',$n1));
   $f->add_input(new FormSelect('Not editable','nolink',array('0','1'),$d['nolink']));
   $f->add_input(new FormInput('','language','hidden',$l));
-  $f->add_input(new FormTextArea('Text in '.$languages[$l],'text',100,15,
-                                  str_replace('&','&amp;',stripslashes($v))) );
-  $f->add_input(new FormInput('','','submit','Save'));
+  $i = new FormTextArea('Text in '.$languages[$l],'text',100,15,
+                         str_replace('&','&amp;',stripslashes($v)));
+  $i->js = ' onkeydown="do_save(event);"';
+  $f->add_input( $i );
+  $f->add_input(new FormInput('','','submit','Save (cmd+Enter)'));
   return "<p>String name: '".$d['name']."'<br>\nIn ".$languages[$default_language].
          ":</p>\n".'<textarea id="deflang" cols="100" rows="10"  disabled="disabled">'.
          str_replace('&','&amp;',stripslashes($d['text'])).
@@ -103,8 +127,10 @@ global $la, $default_language;
   // За всеки език, различен от подразбиращия се
   foreach($la as $l){
     $r = db_select_1('*','content',"`name`='$n1' AND `language`='$l'");
-    if (!$r
-        || $r['date_time_2']<db_table_field('date_time_2', 'content', "`name`='$n1' AND `language`='$default_language'")
+    if ( !empty(db_table_field('text', 'content', "`name`='$n1' AND `language`='$default_language'",''))
+         && (!$r
+             || ($r['date_time_2'] < db_table_field('date_time_2', 'content', "`name`='$n1' AND `language`='$default_language'"))
+            )
        )
        return new_translation($n1,$l);
   }

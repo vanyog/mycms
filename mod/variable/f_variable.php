@@ -29,8 +29,7 @@ if($j) switch($r[1][0]){
 case 'GET':    return $_GET[$r[2][0]];    break;
 case 'SERVER': return $_SERVER[$r[2][0]]; break;
 }
-//global $$a;
-//return stripslashes($$a);
+//if($a=='page_header') die($GLOBALS[$a]);
 return isset($GLOBALS[$a]) ? stripslashes($GLOBALS[$a]) : '';
 }
 
