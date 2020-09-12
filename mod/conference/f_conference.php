@@ -27,6 +27,7 @@ include_once($idir.'lib/f_view_record.php');
 include_once($idir.'lib/f_db_insert_1.php');
 include_once($idir.'lib/f_db_update_where.php');
 include_once($idir.'lib/f_view_table.php');
+include_once($idir.'lib/f_translate_to.php');
 include_once($idir.'mod/usermenu/f_usermenu.php');
 
 global $user_table, $utype, $fdir, $day1, $day2, $day3, $day4, $adm_pth, $page_header, $proccount, $plogin, $pedit;
@@ -312,6 +313,7 @@ eval(translate('conference_forms'));
 // Тематични направления
 eval(translate('conference_topics_'.$utype,false));
 array_unshift($tp,translate('conference_choos',false));
+//die(print_r($d,true));
 // Ако се редактира от администратор - поле за платена такса и полета за одобряване
 if ($adm) {
   $ti = new FormCurrencyInput(encode('Такса:'), 'fee', 'currency', $d['fee'], $d['currency']);
@@ -329,6 +331,11 @@ if ($adm) {
   $f->add_input($ti);
   $ti = new FormInput(encode('Място:'), 'place', 'text', $d['place']);
   $f->add_input($ti);
+}
+else {
+  $f->add_input(new FormInput('', 'approved_a', 'hidden', $d['approved_a']));
+  $f->add_input(new FormInput('', 'approved_f', 'hidden', $d['approved_f']));
+  $f->add_input(new FormInput('', 'keylec',     'hidden', $d['keylec']));
 }
 // Дали сме в период на редактиране на резюмета
 $et = schedules_in_event($day1[1], $day1[0]) || $adm;
@@ -418,7 +425,7 @@ $f->html().'
 //
 // Обработване на редактирни данни за доклад
 
-function conference_pprocess($uid){
+function conference_pprocess($uid){// die(print_r($_POST,true));
 global $language, $can_manage, $utype;
 // Данни за доклад
 $d = array(
@@ -426,9 +433,9 @@ $d = array(
 'utype'=>$utype,
 'date_time_2'=>'NOW()'
 );
-if (isset($_POST['approved_a'])) $d['approved_a']=1; else $d['approved_a']=0;
-if (isset($_POST['approved_f'])) $d['approved_f']=1; else $d['approved_f']=0;
-if (isset($_POST['keylec']))     $d['keylec']=1;     else $d['keylec']=0;
+if (!isset($_POST['approved_a'])) $d['approved_a']=0; else if($_POST['approved_a']=='on') $d['approved_a']=1;
+if (!isset($_POST['approved_f'])) $d['approved_f']=0; else if($_POST['approved_f']=='on') $d['approved_f']=1;
+if (!isset($_POST['keylec']))     $d['keylec']=0;     else if($_POST['keylec']=='on')     $d['keylec']=1;
 if (isset($_POST['language'])) $d['language']=addslashes($_POST['language']);
 if (isset($_POST['form'])) $d['form']=addslashes($_POST['form']);
 if (isset($_POST['topic'])) $d['topic']=addslashes($_POST['topic']-1);
@@ -659,6 +666,7 @@ foreach($pd as $d){
   if(isset($tp[$d['topic']])) $d['topic']=$tp[$d['topic']];
   else $d['topic'] = "-?-";
   $d['title']='<strong>'.$d['title'].'</strong>';
+  $d['abstracttextfile' ]=file_link_and_size($d['abstracttextfile' ]);
   $d['fulltextfile' ]=file_link_and_size($d['fulltextfile' ]);
   $d['fulltextfile2']=file_link_and_size($d['fulltextfile2']);
   // Адрес на страницата за редактиране на резюме и качване на доклад от участник
@@ -680,6 +688,7 @@ foreach($pd as $d){
   'keywords'=>translate('conference_ckeywords'),
   'keywords'=>translate('conference_ckeywords'),
   'abstract'=>translate('conference_cabstract'),
+  'abstracttextfile'=>translate('conference_cabstracttextfile'),
   'fulltextfile'=>translate('conference_cfulltextfile'),
   'fulltextfile2'=>translate('conference_cfulltextfile2')
   ), $st);
@@ -777,6 +786,8 @@ eval(translate('conference_topics_'.$utype,false));
 eval(translate('conference_forms',false));
 $rz = '';
 $tc = 0; // Общ брой доклади
+$docs = 0; // Брой doc файлове с пълен текст на доклад
+$pdfs = 0; // Брой pdf файлове с пълен текст на доклад
 $rc = 0; // Брой готови доклади
 // Дата за обявяване на приетите резюмета
 $t3 = db_table_field('date_time_2', 'schedules', "`sch_name`='".$day3[0]."' AND `ev_name`='".$day3[1]."'");
@@ -810,7 +821,7 @@ else if(count($vl)>1) $rz .= '<h2>'.translate('conference_volume').' '.$vl1['vol
 $pn = array(0=>1, 1=>1, 2=>1, 3=>1);
 // За всяко научно направление
 for($i = 0; $i<count($tp); $i++){
-   $c = 0; $c2 = 0; // Брой доклади в научнато направление
+   $c = 0; $c2 = 0; $doc = 0; $pdf = 0; // Брой доклади в научнато направление
    $cn = array(0=>0, 1=>0, 2=>0, 3=>0, 'p'=>0);
    $sr = '';  // html код на докладите от научното направление
    $aproved = ' AND `approved_a`';
@@ -881,10 +892,12 @@ for($i = 0; $i<count($tp); $i++){
               $lk .= $cr.' <a href="#" style="font-weight:bold;color:red;" onclick="deleteAbstract('.$d['ID'].');return false;">x</a>';
            $lk .= "<br><a href=\"$crp"."assign_reviewer.php?proc=".$d['ID'].'">'.encode('Назначаване на рецензент')."</a>\n";
            if($d['abstracttextfile'])  $lk .= '<br>Abstract 2: '.file_link_and_size($d['abstracttextfile']);
-           if($d['fulltextfile'])  $lk .= '<br>Doc: '.file_link_and_size($d['fulltextfile']);
-           if($d['fulltextfile2']) $lk .= '<br>Pdf: '.file_link_and_size($d['fulltextfile2']);
+           if($d['fulltextfile'])  { $lk .= '<br>Doc: '.file_link_and_size($d['fulltextfile']); $doc++; }
+           if($d['fulltextfile2']) { $lk .= '<br>Pdf: '.file_link_and_size($d['fulltextfile2']); $pdf++; }
            if($d['fulltextfile4']) $lk .= '<br>Anonimouse: '.file_link_and_size($d['fulltextfile4']);
-           $nm = $d['language'].', ID:'.$d['ID'].", place:".$d['place'].", form:".$d['form'].", ";
+           $nm = $d['language'].
+                 ', ID:<a href="'.$adm_pth.'/edit_record.php?t=proceedings&r='.$d['ID'].'" target="_blank">'.$d['ID'].
+                 "</a>, place:".$d['place'].", form:".$d['form'].", ";
            if($d['approved_a']) conference_add_auth($auth, $d['authors']);
         } // if ( $team )
         if( $team || !empty($d['title']) || $preview ) {
@@ -928,16 +941,18 @@ for($i = 0; $i<count($tp); $i++){
    }
    if( $team || !empty($c) ){
      $rz .= '<h3>'.$tp[$i];
-     if ( $team || $s_auth) $rz .= " - $c";
+     if ( $team || $s_auth) $rz .= " - $c $doc $pdf";
      $rz .= "</h3>\n";
      if (("$td">="$t3") || $team || $preview ) $rz .= $sr;
      $tc += $c;
+     $docs += $doc;
+     $pdfs += $pdf;
    }
 } // Край на цикъла по научни направления
 
 } // Край на цикъла по томове
 
-if ( $team ) $rz = "<p>$rc / $tc, Sort: $olink, Authors: ".count($auth)."</p>\n".$rz;
+if ( $team ) $rz = "<p>".count($auth)." authors, $tc abstracts, $docs doc, $pdfs pdf, $rc ready. Sort: $olink</p>\n".$rz;
 return '<div id="conference_abstracts">'."\n".$rz."</div>\n";
 }
 
@@ -994,12 +1009,16 @@ return $rz;
 
 function conference_abstract_book($uid, $adm){
 if(isset($_GET['proc']) && is_numeric($_GET['proc'])) return conference_1abstract($uid, $adm);
-global $utype, $main_index, $page_id, $day4;
+global $utype, $main_index, $page_id, $day4, $fdir;
 // Научни направления $tp
 eval(translate('conference_topics_'.$utype,false));
 $rz = '';
-$order = ' ORDER BY  `keylec` DESC, `title` ASC';
-$access = ' AND `approved_a`';
+// Начини за подреждане
+//$order = ' ORDER BY  `keylec` DESC, `title` ASC'; // Азбучен ред на заглавията - първи пленарните доклади
+$order = ' ORDER BY  `keylec` DESC, `authors` ASC'; // Азбучен ред на малкото име на адтора - първи пленарните доклади
+// Начини за филтриране
+// $access = ' AND `approved_a`'; // Доклади с одобрени резюмета
+$access = ' AND `fulltextfile2`>\' \''; // Доклади с пълен текст в PDF
 $filter = '';
 $fp = '';
 if(isset($_GET['until'])){
@@ -1023,9 +1042,10 @@ if(is_array($t4)) $t4 = db_table_field('date_time_2', 'schedules', "`sch_name`='
 // Настоящия момент
 $td = date('Y-m-d H:i:s');
 if($adm){
+  $editp = stored_value('conference_editpaper');
   $revp = stored_value('conference_reviewpage');
   if(!$revp) die('"conference_reviewpage" option not set');
-  $access = '';
+//  $access = '';
   $c = db_table_field('COUNT(*)', 'proceedings', "`utype`='$utype' AND `title` > ' ' AND `topic`>-1$filter");
   $rz .= "<p>Proceeding count: $c";
   $rz .= " &nbsp; Access by <a href=\"$main_index?pid=$page_id&ac=$acb$fp\">Link</a>";
@@ -1048,30 +1068,36 @@ for($i = 0; $i<count($tp); $i++){
   foreach($da as $d){
        $count++;
        $rz .= '<div class="who">'."\n";
-       $rz .= '<h3>'.($i+1)."-$count. ".mb_strtoupper(stripslashes($d['title']))."</h3>\n";
+       $rz .= '<h3 id="pof'.$d['ID'].'">'.($i+1)."-$count. ".mb_strtoupper(stripslashes($d['title']))."</h3>\n";
        if(!empty($d['authors'])&&($d['authors'][0]!='<'))
           $rz .= '<p>'.$d['authors']."</p>\n";
        else
           $rz .= $d['authors'];
        $rz .= $d['abstract']."\n";
        if($d['keywords'])
-          $rz .= '<p class="keywords"><span>'.translate('conference_ckeywords').'</span> '.
+          $rz .= '<p class="keywords"><span>'.translate_to('conference_ckeywords',$d['language']).'</span> '.
                  conference_formatKeyWorts($d['keywords'])."</p>\n";
           if(!empty($d['addresses'])&&($d['addresses'][0]!='<'))
              $rz .= '<p>'.stripslashes($d['addresses'])."</p>";
           else
              $rz .= stripslashes($d['addresses']);
        if($adm){
-         // Линк "Рецензиране на резюмето"
+         // Линк "Редактиране"
+         $rz .= '<p><a href="'.$editp.'&proc='.$d['ID'].'">'.translate('conference_editpaper')."</a></p>\n";
          if (!$d['approved_a'])
+            // Линк "Рецензиране на резюмето"
             $rz .= '<p><a href="'.$revp.'&rev1='.$d['ID'].'&ac='.$aca.'">'.translate('conference_rev1')."</a></p>\n";
-         else
-            $rz .= '<p><a href="/index.php?pid=52&uid='.$d['user_id'].'&tid=7&proc='.$d['ID'].'" target="_blank">'.
-            translate('conference_messAppr')."</a></p>\n";
+         else ;
+            // Линк "Съобщаване прието резюме"
+//            $rz .= '<p><a href="/index.php?pid=52&uid='.$d['user_id'].'&tid=7&proc='.$d['ID'].'" target="_blank">'.
+//                   translate('conference_messAppr')."</a></p>\n";
          // Линк "Рецензиране на доклада"
-         if ($d['approved_a'] && $d['fulltextfile2'])
-            $rz .= '<p><a href="'.$revp.'&rev2='.$d['ID'].'&ac='.$aca.'">'.translate('conference_rev2')."</a></p>\n";
+//         if ($d['approved_a'] && $d['fulltextfile2'])
+//            $rz .= '<p><a href="'.$revp.'&rev2='.$d['ID'].'&ac='.$aca.'">'.translate('conference_rev2')."</a></p>\n";
        }
+       if($d['fulltextfile2']) $rz .= '<p><a href="'.$fdir.$d['fulltextfile2'].
+                                      '">'.translate_to('conference_fulltext',$d['language'])."</a></p>\n";
+       if( ($d['language']=='bg') && ($d['topic']<8) ) $rz .= translate_to('conference_abstract_'.$d['ID'],'en');
        $rz .= "</div>\n";
   }
 }
@@ -1145,7 +1171,7 @@ if(isset($_POST['approved_a'])) $body .= "<p>Approve</p>\n";
 else $body .= "<p>Do not approve</p>\n";
 $hd = 'Content-type: text/html; charset='.$site_encoding."\r\n".
       "From: $from\r\n";
-if( mail($to, $subject, $body, $hd, "-f $from") )
+if( mail($to, mb_encode_mimeheader($subject,"UTF-8"), $body, $hd, "-f $from") )
   return '<p class="message">'.translate('conference_rev1sent'). "</p>\n";
 else
   return '<p class="message">'.translate('conference_rev1notSent'). "</p>\n";

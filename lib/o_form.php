@@ -147,7 +147,7 @@ if ($this->js) $rz .= " $this->js";
 if ($this->checked) $rz .= " $this->checked";
 $rz .= "$dsbl>";
 if ($this->type=='file'){
-   $rz .= '<input type="hidden" name="MAX_FILE_SIZE" value="'.$this->max_file_size.'">';
+//   $rz .= '<input type="hidden" name="MAX_FILE_SIZE" value="'.$this->max_file_size.'">';
 }
 if ($this->textAfter) $rz .= ' '.$this->textAfter;
 if ($this->help) $rz .= "\n<br>".$this->help;

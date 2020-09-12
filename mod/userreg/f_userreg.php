@@ -292,7 +292,7 @@ $fe = stored_value('site_owner_email','vanyog@gmail.com');
 $hd = 'Content-type: text/plain; charset='.$site_encoding."\r\n".
 //      'Return-Path: '.$fe."\r\n".
       'From: '.$fe."\r\n";
-mail($e, $sb, $ms, $hd,"-f $fe");
+mail($e, mb_encode_mimeheader($sb,"UTF-8"), $ms, $hd,"-f $fe");
 return 'OK';
 }
 

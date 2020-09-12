@@ -56,6 +56,7 @@ if(!$d){
   $d['user_id']=$_GET['uid'];
   $d['topic']=0;
   $d['languages']='';
+  $d['cofirmed']=0;
 }
 // Тематични направления
 eval(translate('conference_topics_'.$utype,false));
@@ -71,10 +72,14 @@ $fi = new FormSelect( translate('conference_ctopic'), 'topic', $tp, $d['topic'] 
 $fi->values='k';
 $f->add_input( $fi );
 $f->add_input( new FormInput( encode('Езици: '), 'languages', 'text', $d['languages']) );
+$fi = new FormInput( encode('Потвърден: '), 'confirmed', 'checkbox');
+if($d['confirmed']) $fi->js = ' checked';
+$f->add_input( $fi );
 $f->add_input( new FormInput( '', '', 'submit', encode('Запазване') ) ) ;
 
 $page_header = '<link href="/_style.css" rel="stylesheet" type="text/css">
-';
+<style>body { padding:1em; }
+</style>';
 
 $page_title = encode('Рецензент');
 
@@ -89,6 +94,7 @@ include_once($idir.'lib/build_page.php');
 // Обработка на изпратени данни
 
 function process(){
+if(isset($_POST['confirmed']) && ($_POST['confirmed']=='on')) $_POST['confirmed']=1; else $_POST['confirmed']=0;
 $r = db_insert_or_1($_POST, 'reviewers', "`user_id`=".$_POST['user_id']." AND `utype`='".$_POST['utype']."'", 'b');
 if( !($r===false) )
     return encode('Данните са запазени успешно');

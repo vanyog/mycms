@@ -225,15 +225,20 @@ case 'password':
     }
     else $rz .= '<span class="warning">'.translate('user_passwordinvalid')."</span><br>\n";
   break;
-default:
+default: //die(print_r($ft,true));
   if ($q) $q .= ', ';
-  if ($ft[$n]==3){ // Цяло число
+  if ($ft[$n]==1){ // Малко цяло число
+    if (isset($cp[$n]) && is_numeric($cp[$n])) $q .= "`$n`='".(1*$cp[$n])."'";
+    else $q .= "`$n`=0";
+  }
+  else if ($ft[$n]==3){ // Цяло число
     if (isset($cp[$n])) $q .= "`$n`='".(1*$cp[$n])."'";
     else $q .= "`$n`=0";
   }
   else if ($ft[$n]==4){ // Реално число
     $v1 = str_replace(',', '.', $cp[$n]);// die($v1);
-    $q .= "`$n`='".addslashes($v1)."'";
+    if($v1) $q .= "`$n`='".addslashes($v1)."'";
+    else $q .= "`$n`=0";
   }
   else {
     $v1 = element_correction($cp[$n]);

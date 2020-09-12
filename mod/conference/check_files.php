@@ -59,10 +59,21 @@ else echo("File do not exists ".$fn);
 
 echo '<p><a href="'.unset_self_query_var('delete').'">Reload</a></p>'."\n";
 
+
+$ap = array();
+
+// Четене имената на файловете за второ резюме
+$af = db_select_m('abstracttextfile', 'proceedings', "`utype`='$ut' AND `abstracttextfile`>''");
+echo encode("<h2>Липсващи файлове за второ резюме</h2>");
+foreach($af as $f){
+  $fn = $dir.$f['abstracttextfile'];
+  $ap[] = $f['abstracttextfile'];
+  if (!file_exists($fn)) echo $fn."<br>";
+}
+
 // Четене имената на DOC файловете
 $af = db_select_m('fulltextfile', 'proceedings', "`utype`='$ut' AND `fulltextfile`>''");
-$ap = array();
-echo encode("<h2>Липсващи DOC файлове</h2>");
+echo encode("<h2>Липсващи DOC файлове с пълен текст</h2>");
 foreach($af as $f){
   $fn = $dir.$f['fulltextfile'];
   $ap[] = $f['fulltextfile'];
@@ -71,10 +82,28 @@ foreach($af as $f){
 
 // Четене имената на PDF файловете
 $af = db_select_m('fulltextfile2', 'proceedings', "`utype`='$ut' AND `fulltextfile2`>''");
-echo encode("<h2>Липсващи PDF файлове</h2>");
+echo encode("<h2>Липсващи PDF файлове с пълен текст</h2>");
 foreach($af as $f){
   $fn = $dir.$f['fulltextfile2'];
   $ap[] = $f['fulltextfile2'];
+  if (!file_exists($fn)) echo $fn."<br>";
+}
+
+// Четене имената на файловете-презентации
+$af = db_select_m('fulltextfile3', 'proceedings', "`utype`='$ut' AND `fulltextfile3`>''");
+echo encode("<h2>Липсващи файлове-презентации</h2>");
+foreach($af as $f){
+  $fn = $dir.$f['fulltextfile3'];
+  $ap[] = $f['fulltextfile3'];
+  if (!file_exists($fn)) echo $fn."<br>";
+}
+
+// Четене имената на файловете с анонимен пълен текст
+$af = db_select_m('fulltextfile4', 'proceedings', "`utype`='$ut' AND `fulltextfile4`>''");
+echo encode("<h2>Липсващи файлове с анонимен пален текст</h2>");
+foreach($af as $f){
+  $fn = $dir.$f['fulltextfile4'];
+  $ap[] = $f['fulltextfile4'];
   if (!file_exists($fn)) echo $fn."<br>";
 }
 
