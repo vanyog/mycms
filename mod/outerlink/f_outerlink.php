@@ -32,7 +32,8 @@ if (isset($aa[1])){
 }
 else $aa[1] = $d['Title'];
 $rz = '<a href="'.$main_index.'?lid='.$aa[0].'&pid=6" target="_blank" title="'.
-        urldecode($d['link']).'">'.$aa[1].'</a>';
+        urldecode($d['link']).'">'.$aa[1].'</a>';die('|'.$d['link'].'|');
+if(!($d['link']>' ')) $rz .= encode(' (колекция връзки)');
 if(in_edit_mode()) $rz .= ' <a href="/index.php?pid=6&lid='.$d['up'].'">&gt;&gt;</a>';
 return $rz;
 }
