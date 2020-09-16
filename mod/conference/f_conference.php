@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include_once($idir.'lib/f_mod_path.php');
 include_once(mod_path('userreg'));
 include_once(mod_path('schedules'));
+include_once(mod_path('emailsend'));
 include_once($idir.'lib/f_view_record.php');
 include_once($idir.'lib/f_db_insert_1.php');
 include_once($idir.'lib/f_db_update_where.php');
@@ -879,15 +880,7 @@ for($i = 0; $i<count($tp); $i++){
            }
            $edp = stored_value('conference_editpaper', '/index.php?pid=1068');
            $lk .= '<br><a href="'.$edp.'&proc='.$d['ID'].'#bottom">'.encode('Редактиране')."</a> \n";
-           $lk .= encode(' Съобщаване за: ').
-                  '<a href="/index.php?pid=52&uid='.$d['user_id'].'&tid=9&proc='.$d['ID'].'" target="_blank">'.
-                  encode('регистрирано резюме')."</a>, \n".
-                  '<a href="/index.php?pid=52&uid='.$d['user_id'].'&tid=5&proc='.$d['ID'].'" target="_blank">'.
-                  encode('служебно редактиране')."</a>, \n".
-                  '<a href="/index.php?pid=52&uid='.$d['user_id'].'&tid=7&proc='.$d['ID'].'" target="_blank">'.
-                  encode('одобряване на резюме')."</a> \n".
-                  '<a href="/index.php?pid=52&uid='.$d['user_id'].'&tid=10&proc='.$d['ID'].'" target="_blank">'.
-                  encode('напомняне за пълен текст')."</a> \n";
+           $lk .= encode(' Съобщаване за: ').emailsend('select|&uid='.$d['user_id'].'&proc='.$d['ID'])."\n";
            if($cr<=0)
               $lk .= $cr.' <a href="#" style="font-weight:bold;color:red;" onclick="deleteAbstract('.$d['ID'].');return false;">x</a>';
            $lk .= "<br><a href=\"$crp"."assign_reviewer.php?proc=".$d['ID'].'">'.encode('Назначаване на рецензент')."</a>\n";
