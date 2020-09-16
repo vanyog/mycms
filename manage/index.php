@@ -32,7 +32,8 @@ setcookie($adm_name, $adm_value, time()+60*60*24*30,'/');
 setcookie('noadm', 'no', time()+60*60*24*30,'/');
 purge_page_cache($pth);
 
-$page_content = '<p><a href="'.$adm_pth.'/places10.php?t=menu_items">Menu items renum</a></p>';
+$page_content = '<p>&nbsp;</p>
+<p><a href="'.$adm_pth.'/places10.php?t=menu_items">Menu items renum</a></p>';
 
 include("build_page.php");
 ?>
