@@ -61,7 +61,7 @@ $can_edit = false;    // Право на потребителя да редактира надписите по страница
 $can_create = false;  // Право на потребителя да създава/изтрива страници в дадения раздел(подменю) на сайта
 $can_manage = array();// Права за администриране на модули
 
-foreach($p as $q) switch($q['type']) {
+foreach($p as $q) if($q['yes_no']) switch($q['type']) {
 case 'all':
   $rz .= "<a href=\"$adm_pth\">Admin path</a><br>\n";
   $ap = stored_value('admin_page');

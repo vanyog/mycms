@@ -23,13 +23,20 @@ include($idir."conf_paths.php");
 include_once($idir."lib/usedatabase.php");
 include_once($idir."lib/f_page_cache.php");
 include_once($idir."lib/f_element_correction.php");
+include_once($idir."lib/f_db_field_types.php");
+include_once($idir."lib/f_db_field_names.php");
 
-//print_r($_POST); die;
 $t = ''; $r = 0; $gtc = false;
 $q1 = "UPDATE "; $q2 = ' SET'; $q3 = ' WHERE ID='; 
 foreach($_POST as $k => $v){
 switch ($k) {
-case 'table_name': $q1 .= "`$tn_prefix$v`"; $t = $v; break;
+case 'table_name':
+     $q1 .= "`$tn_prefix$v`";
+     $t = $v;
+     $ft = db_field_types($v);
+     $fn = db_field_names($v);
+     $ft = array_combine($fn, $ft);//die(print_r($ft,true));
+     break;
 case 'record_id': $q3 .= $v; $r = $v; break;
 //case 'ID': break;
 case 'date_time_2': if($t!='schedules') $q2 .= " `$k`=NOW(),"; break;
@@ -45,13 +52,16 @@ case 'start_edit_time':
 default:
   $v1 = element_correction($v);
   if( ($t=='content') && ($k=='text') ) $v1 = str_replace( ' />', '>', $v1);
-  $q2 .= " `$k`='".addslashes($v1)."',";
+  if(($ft[$k]==3) && ($v1=='')) ;
+  else $q2 .= " `$k`='".addslashes($v1)."',";
 }
 }
 
 $q = $q1.substr($q2,0,strlen($q2)-1).$q3.';';
 
 mysqli_query($db_link,$q);
+$e = mysqli_error($db_link);
+if($e) die($e);
 
 session_start();
 

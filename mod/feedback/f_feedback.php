@@ -38,7 +38,7 @@ include_once($idir.'lib/f_translate_to.php');
 
 function feedback($t = ''){
 
-global $page_id, $language, $languages, $tud, $lang, $main_index;
+global $page_id, $language, $languages, $tud, $lang, $main_index, $uid;
 
 // Дали се изпраща до адреса по подразбиране
 $ts = false;
@@ -67,7 +67,7 @@ $em = ''; // Имейл на изпращача
 $sb = ''; // Относно. Може да се зададе в таблица 'content'.
 $rf = ''; // От къде се идва на текущата страница
 $tx = ''; // Текст на съобщението
-$edit_template = ''; // Линк за редактиране на шблон, ако се използва такъв
+$edit_links = ''; // Линк за редактиране на шблон, ако се използва такъв
 
 $sb = db_table_field('name', 'content', "`name`='feedback_subject_$page_id'");
 if ($sb) $sb = translate($sb);
@@ -80,12 +80,15 @@ if(isset($_GET['tid']) && is_numeric($_GET['tid'])){
   $sb = translate_to('emailtemplate_'.$tid.'_subject', $lang, false);
   $tx = feedback_fiealds();
   $ett = stored_value('feedback_templatepage');
-  if(in_edit_mode())
+  if(in_edit_mode()){
     if($ett)
-      $edit_template = "<p><a href=\"$main_index?pid=$ett&tid=$tid\">".
+      $edit_links = "<p><a href=\"$main_index?pid=$ett&tid=$tid\">".
                        encode('Редактиране на шалона')."<a/></p>\n";
     else
-      $edit_template = '<p class="message">No \'feedback_templatepage\' option is specified'."</p>\n";
+      $edit_links = '<p class="message">No \'feedback_templatepage\' option is specified'."</p>\n";
+    if($uid) $edit_links .= "<p><a href=\"/index.php?pid=2&user2=edit&uid=$uid\">".
+                           encode('Редактиране на потребителя')."<a/></p>\n";
+  }
 }
 
 if (isset($_SERVER['HTTP_REFERER'])) $rf = $_SERVER['HTTP_REFERER'];
@@ -112,7 +115,7 @@ else { // Ако няма влязъл потребител - събщение и recapthca
 }
 
 $rz = '<h2>'.translate('feedback_to')." <span style=\"white-space:nowrap;\">$to</h2>\n".
-      $edit_template;
+      $edit_links;
 
 $f = new HTMLForm('feedback_form');
 
@@ -193,7 +196,7 @@ return translate('feedback_thanks');
 }
 
 function feedback_to(&$ts){
-global $page_id, $tud;
+global $page_id, $tud, $uid;
 // ID на потребител
 $uid = 0;
 if( isset($_GET['uid']) && is_numeric($_GET['uid']) ) $uid = $_GET['uid'];
@@ -211,12 +214,13 @@ return translate($n, false);
 }
 
 function feedback_fiealds(){
-global $tud, $lang;
+global $tud, $lang, $uid, $idir;
 $rz = strip_tags(translate_to('emailtemplate_'.$_GET['tid'], $lang, false));
 // Места за заместване
 $ph = array();
 $i = preg_match_all('/\[(.*?)\]/', $rz, $ph);
 foreach($ph[0] as $p) switch($p) {
+case '[position]' : $rz = str_replace($p, $tud['position'], $rz); break;
 case '[firstname]': $rz = str_replace($p, $tud['firstname'], $rz); break;
 case '[thirdname]': $rz = str_replace($p, $tud['thirdname'], $rz); break;
 case '[title]': $rz = str_replace($p, mb_strtoupper( db_table_field('title', 'proceedings', "`ID`=".$_GET['proc']) ), $rz); break;
@@ -227,6 +231,9 @@ case '[apstractpreview]': $ac = stored_value('conference_aAbsAccess');
                                   '&lang='.$lang, $rz);
                           break;
 case '[mypatrpage]': $rz = str_replace($p, 'https://conference.vsu.bg/index.php?pid=5&lang='.$lang, $rz); break;
+case '[titlestoreview]': include_once($idir.'mod/conference/f_conference.php');
+                         $rz = str_replace($p, conference_userRevList($uid, true), $rz );
+                         break;
 }
 return $rz;
 }

@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 $idir = dirname(dirname(__DIR__)).'/';
 $ddir = $idir;
 
+include_once($idir.'conf_paths.php');
 include_once($idir.'mod/usermenu/f_usermenu.php');
 include_once($idir.'lib/o_form.php');
 include_once($idir.'lib/f_db_insert_or_1.php');
@@ -56,15 +57,15 @@ $da = db_select_m('b.position, b.firstname, b.secondname, b.thirdname, a.ID',
                   "utype='$utype' AND ".
                   "a.confirmed=1 AND ".
                   "topic=".$p['topic']." AND ".
-                  "languages LIKE '%".$p['language']."%'");
+                  "languages LIKE '%".$p['language']."%' ".
+                  "ORDER BY b.thirdname ASC");
 
 // Масив рецензенти, които не са съавтори на статията
 $rs = array();
 // Брой рецнзии на рецензентите
 $rc = array();
 foreach($da as $i=>$d){
-   if( (strpos($p['authors'], $d['firstname'])!==false) ||
-       (!empty($d['secondname']) && (strpos($p['authors'], $d['secondname'])!==false)) ||
+   if( (strpos($p['authors'], $d['firstname'])!==false) &&
        (strpos($p['authors'], $d['thirdname'])!==false)
    ) continue;
    else {
@@ -73,34 +74,27 @@ foreach($da as $i=>$d){
    }
 }
 // Сортиране по брой назначени рецензии
-asort($rc);
+//asort($rc);
 $r2 = array();
 foreach($rc as $i=>$v) $r2[$i] = $rs[$i];
 
-$ms = '';
 if(!count($r2)) $ms .= '<p class="message">'.translate('conference_noReviewers')."</p>\n";
-
-//die(print_r($rc,true));
 
 $page_title = encode('Назначаване на рецензент');
 
 $page_content = "<h1>$page_title</h1>\n
 <h2>".encode('На статия').":</h2>
-<p>".$p['title']."</p>";
+<p>".$p['title']."<br>";
 
-// Рецензия на статията
-$rd = db_select_1('*', 'reviewer_work', '`proc_id`='.$_GET['proc']);
-if(!$rd){
-  $rd['date_time_1']='NOW()';
-  $rd['date_time_2']='NOW()';
-  $rd['proc_id']=$_GET['proc'];
-  $rd['rev_id']=array_key_first($r2);
-}
+// Рецензeнти на статията
+$rd = db_select_m('*', 'reviewer_work', '`proc_id`='.$_GET['proc']);
+foreach($rd as $d) $page_content .= '<br><a href="'.
+                                    $adm_pth.'delete_record.php?t=reviewer_work&r='.$d['ID'].'" style="color:red;">x</a> '.$rs[$d['rev_id']]."\n";
 
 // Форма за попълване
 $f = new HTMLForm('assign_rewiewer');
-$f->add_input( new FormInput( '', 'date_time_1', 'hidden', $rd['date_time_1']) );
-$f->add_input( new FormInput( '', 'date_time_2', 'hidden', $rd['date_time_2']) );
+$f->add_input( new FormInput( '', 'date_time_1', 'hidden', 'NOW()') );
+$f->add_input( new FormInput( '', 'date_time_2', 'hidden', 'NOW()') );
 $f->add_input( new FormInput( '', 'proc_id', 'hidden', $p['ID']) );
 $fi = new FormSelect( translate('conference_reviewer'), 'rev_id', $r2 );
 $fi->values='k';
@@ -113,7 +107,7 @@ include_once($idir.'lib/build_page.php');
 // Обработка на изпратени данни
 
 function process(){
-$r = db_insert_or_1($_POST, 'reviewer_work', "`rev_id`=".$_POST['rev_id']." AND `proc_id`='".$_POST['proc_id']."'", 'b', true);
+$r = db_insert_or_1($_POST, 'reviewer_work', "`rev_id`=".$_POST['rev_id']." AND `proc_id`='".$_POST['proc_id']."'", 'b', );
 if( !($r===false) )
     return '<p class="message">'.encode('Данните са запазени успешно')."</p>\n";
 else
