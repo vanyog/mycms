@@ -1,7 +1,7 @@
 <?php
 /* 
 MyCMS - a simple Content Management System
-Copyright (C) 2019 Vanyo Georgiev <info@vanyog.com>
+Copyright (C) 2020 Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Създаване на нова страница от страница $_GET['p']
+// Коригиране на тагове <h1>, <h2>... в страница $_GET['p']
 
 if (!isset($_GET['p'])) die('Insufficient parameters.');
 
@@ -33,29 +33,24 @@ include_once($idir."lib/f_db_insert_m.php");
 include_once($idir."lib/f_db_update_record.php");
 include_once($idir."lib/o_form.php");
 
-// Номер на страницата, от която е изпратена заявка за нова страница
+// Номер на страницата, в което се коригират заглавията
 $page_id = 1*$_GET['p'];
 
-// Данни на страницата, от която е изпратена заявка за нова страница
+// Данни за страницата
 $page_data = db_select_1('*','pages',"`ID`=$page_id");
-
-// Проверяване правата на потребителя
-$tx = usermenu(true);
-
-// Ако потребителят няма право да създава нова страница - край.
-if (!$can_create) die("Your have no permission to create new page here.");
 
 // Съдържание на страницата, от която е изпратена заявката
 $cr = db_select_1('ID,text', 'content',"`name`='".$page_data['content']."' AND `language`='$language'",'');
 $pc = $cr['text'];
-//db_table_field('text','content',"`name`='".$page_data['content']."' AND `language`='$language'",'');
 if(empty($pc)) die('No page content was read.');
 
-// Намиране на първото заглавие
+// Намиране на всички заглавия
 $m1 = array();
-$r1 = preg_match('/<(h.).*?>(.*?)<\/\1(>)/s', $pc, $m1, PREG_OFFSET_CAPTURE);
+$r1 = preg_match_all('/<(h.).*?>(.*?)<\/\1(>)/s', $pc, $m1, PREG_OFFSET_CAPTURE);
 
-// Заглавие и текст върху линка на страницата
+die(print_r($m1,true));
+
+// Заглавие и текст на върху линка на страницата
 $pt = ''; if(isset($m1[2][0])) $pt = trim( str_replace("\n", " ", $m1[2][0]) );
 
 // Намиране на следващо заглавие от същия порядък и отделяне на първата озаглавена част
