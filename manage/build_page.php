@@ -23,6 +23,7 @@ if (!isset($page_header)) $page_header = '';
 $page_header .= "\n".'<link href="'.$adm_pth.'style.css" rel="stylesheet" type="text/css">';
 
 $page_content = adm_links().'
+<p>&nbsp;</p>
 '.$page_content;
 
 include($idir."lib/build_page.php");

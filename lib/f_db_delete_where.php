@@ -26,6 +26,8 @@ $q = "DELETE FROM `$tn_prefix"."$t` WHERE $w;";
 if ($y) { echo "$q<br>\n"; return; }
 mysqli_query($db_link, $q);
 $db_req_count++;
+$i = mysqli_affected_rows($db_link);
+return $i;
 }
 
 ?>

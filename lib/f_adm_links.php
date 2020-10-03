@@ -128,7 +128,7 @@ if (e.keyCode==13){
 <a href="'.$main_index.'?pid='.$npid.'">&gt;</a>
 <a href="'.$main_index.'?pid='.$lpid.'&amp;'.$edit_name.'='.urlencode($edit_value).'">'.$lpid.'</a>
 <a href="'.$rp.'">R</a> &#x25C7;
-<a href="'.$pth.'mod/all_pages.php">all</a> &#x25C7;
+<a href="'.$pth.'mod/all_pages.php?t=1">all</a> &#x25C7;
 <a href="'.$adm_pth.'edit_file.php?f='.$f.'">File system</a> &#x25C7;
 <a href="'.$adm_pth.'edit_data.php">Database</a> &#x25C7;
 <a href="'.$pth.'lib/f_page_cache.php?purge='.(1*( isset($_GET['pid']) && is_numeric($_GET['pid']) ? $_GET['pid'] : 0 )).'">Purge</a> &#x25C7;

@@ -17,14 +17,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Модул за саморегистриране на потребители
+// Модул за саморегистрирани потребители
 // Вижте файл README.txt.
 
 //
 // Главната функция на модула е userreg($t = '')
 
 // Ако в таблица 'content' има запис с име "USERREG_$t" модулът се счита изключен за типа потребители $t.
-// Тогава модулът работи само в режим на редактиране на сайта, а в нормален режим показва превада на надписа се име "USERREG_$t".
+// Тогава модулът работи само ако сайтът е режим на редактиране, а в нормален режим показва превада на надписа се име "USERREG_$t".
 
 // Параметърът $t е стринг, който може да е разделен със символ | на части.
 
@@ -75,6 +75,7 @@ case 'logout': return userreg_outlink($ta[0]); break;
 case 'mydata': return userreg_mydata($ta[0]); break;
 case 'edit'  : if(!isset($_GET['user2']) || ($_GET['user2']=='edit')) return userreg_edit($ta[0]);   break;
 case 'name'  : return userreg_name($ta[0]);    break;
+case 'send'  : return userreg_send($ta[0]);    break;
 default: if(!(is_numeric($ta[1])?$ta[1]:0)&&($ta[1]!='edit')) die("Undefined parameter '".$ta[1]."' for USERREG module"); break;
 }
 if (isset($_GET['user2'])) switch ($_GET['user2']){
@@ -498,6 +499,7 @@ if((stored_value('userreg_https')=='on') && !(isset($_SERVER['HTTPS']) && ($_SER
 }
 // Масив с надписи на съответните полета
 $cp = array(
+'language'=>translate('user_language'),
 'username'=>translate('user_username'),
 'password'=>translate('user_password'),
 'email'=>translate('user_email'),
@@ -611,6 +613,26 @@ if(!isset($userreg_locked) || ($userreg_locked!==true)){
   $pedit = str_replace('&user2=login', '&user2=edit', $plogin);
   $rz .= '<p><a href="'.$pedit.'">'.translate('conference_mypersonal').'</a></p>';
 }
+return $rz;
+}
+
+function userreg_send($t){
+global $language, $adm_pth;
+$rz = '<h2>'.translate('userreg_sendTitle')."</h2>";
+// Брой на всички шаблони
+$tc = db_table_field('COUNT(*)', 'content', "`name` LIKE 'email_template_%'");
+// Шаблони за имейли
+$ts = db_select_m('*', 'content', "`name` LIKE 'email_template_%' AND `language`='$language'");
+if(!count($ts)) $rz .= '<p class="message">'.translate('userreg_noTemplates')."</p>\n";
+$rz .= '<p><a href="'.$adm_pth.
+    'new_record.php?t=content&name=email_template_'.($tc+1).'&language='.$language.'">'.
+    translate('userreg_newTemplate')."</a></p>\n";
+$f = new HTMLForm('massmail_form');
+$e = new FormTextArea(translate('user_receivers'), 'receivers');
+$e->ckbutton = '';
+$f->add_input( $e );
+$f->add_input( new FormInput('','','submit',translate('userreg_send')) );
+$rz .= $f->html();
 return $rz;
 }
 

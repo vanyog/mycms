@@ -103,6 +103,7 @@ default            : return '<p class="message">'."Unknown parameter value '$a' 
 // Лични данни на потребителя
 $d = db_select_1('*', $user_table, "`ID`=$uid");
 $cp = array(
+'language'=>translate('user_language'),
 'username'=>translate('user_username'),
 'email'=>translate('user_email'),
 'firstname'=>translate('user_firstname'),

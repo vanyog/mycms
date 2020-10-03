@@ -64,7 +64,7 @@ if( ($l>1) && ($ind_fl!=$main_index) && (substr($main_index,0,$l)!=$pth) ){
   $redir = true;
 }
 if( $redir && isset($_SERVER['HTTP_HOST']) ) {
-  $h = 'Location: http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];// die($h);
+  $h = 'Location: http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; //die($h);
   header($h);
   die();
 }
