@@ -40,6 +40,8 @@ $q = substr($q,0,strlen($q)-1)." WHERE `ID`=".$d['ID'].";";
 if ($y) return $q;
 else{
  mysqli_query($db_link,$q);
+ $e = mysqli_error($db_link);
+ if($e) die($e);
  $db_req_count++;
  return $d['ID'];
 }

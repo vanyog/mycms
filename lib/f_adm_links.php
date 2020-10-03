@@ -120,6 +120,10 @@ if (e.keyCode==13){
   }
 }
 }
+function closeAdminLinks(){
+var e = document.getElementById("adm_links");
+e.style.display = "none";
+}
 </script>
 <p id="adm_links">&nbsp; <a href="'.$adm_pth.'">'.$_SERVER['REMOTE_ADDR'].'</a>
 <a href="'.$main_index.'">Home</a> &#x25C7; '.$enmch.'
@@ -140,7 +144,7 @@ if (e.keyCode==13){
 <a hr  ="'.$adm_pth.'dump_data.php">Dump</a-->
 '.$w3c.$mob.$spt.' &#x25C7;
 '.$clink.' DB_REQ_COUNT
-<a href="'.$pth.'lib/exit.php">x</a>&nbsp; 
+<a href="#" onclick="closeAdminLinks();return false;">x</a>&nbsp;
 </p>';
 //  if (stored_value('adm_links_over',0)!=1) $rz .= '<p>&nbsp;</p>';
   return $rz;

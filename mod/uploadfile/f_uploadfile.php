@@ -166,6 +166,12 @@ else {
       if(!isset($GLOBALS['og_image'])) $GLOBALS['og_image']=$f;
     }
     // Друг файл
+    else if($e=='mp4'){
+       $rz .= "<video onloadeddata=\"this.play();\"$ss playsinline muted loop>\n".
+              '<source src="'.$f.'" type="video/mp4">'."\n".
+              'Your browser does not support the video tag.'."\n".
+              '</video>';
+    }
     else {
        $rz .= '<a href="'.$f."\"$ss>".upload_file_addimage($add_image,$e).stripslashes($fr['text']).'</a>';
        if(!$cs && isset($na[2]) && ($na[2]==3)) $rz .= translate('uploadfile_old');

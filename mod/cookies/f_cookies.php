@@ -54,11 +54,22 @@ document.cookie = "cookies_accept=Yes;expires="+d.toGMTString();
 </script>';
 return '<script>
 if (document.cookie && (document.cookie.indexOf("cookies_accept=Yes")<0)){
-document.write("<div id=\"cookies_message\">");
-'.to_javascipt_write(translate('cookies_message')).'
-document.write("</div>");
+var cm = document.createElement("div");
+cm.id = "cookies_message";
+cm.innerHTML = '.for_javascript(translate('cookies_message')).';
+document.body.appendChild(cm);
 }
 </script>';
+}
+
+function for_javascript($a){
+$aa = explode("\n",$a);
+$rz = '';
+foreach($aa as $i=>$l){
+  $rz .= '"'.addslashes(trim($l)).'"';
+  if( $i < (count($aa)-1) ) $rz .= " + \n";
+}
+return $rz;
 }
 
 function to_javascipt_write($a){

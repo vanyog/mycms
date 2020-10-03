@@ -31,8 +31,12 @@ if (isset($aa[1])){
     if ($aa[1]=='href') $aa[1] = $d['link'];
 }
 else $aa[1] = $d['Title'];
-$rz = '<a href="'.$main_index.'?lid='.$aa[0].'&pid=6" target="_blank" title="'.
-        urldecode($d['link']).'">'.$aa[1].'</a>';
+if(!$d['private'] || in_edit_mode())
+  $rz = '<a href="'.$main_index.'?lid='.$aa[0].'&pid=6" target="_blank" title="'.
+         urldecode($d['link']).'">'.$aa[1].'</a>';
+else
+  $rz = '<span>'.$aa[1].'</span>';
+if(!($d['link']>' ')) $rz .= encode('<sup>(колекция връзки)</sup>');
 if(in_edit_mode()) $rz .= ' <a href="/index.php?pid=6&lid='.$d['up'].'">&gt;&gt;</a>';
 return $rz;
 }

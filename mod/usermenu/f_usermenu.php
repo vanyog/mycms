@@ -61,9 +61,11 @@ $can_edit = false;    // Право на потребителя да редактира надписите по страница
 $can_create = false;  // Право на потребителя да създава/изтрива страници в дадения раздел(подменю) на сайта
 $can_manage = array();// Права за администриране на модули
 
-foreach($p as $q) switch($q['type']) {
+foreach($p as $q) if($q['yes_no']) switch($q['type']) {
 case 'all':
   $rz .= "<a href=\"$adm_pth\">Admin path</a><br>\n";
+  $ap = stored_value('admin_page');
+  if($ap) $rz .= "<a href=\"$ap\">Admin page</a><br>\n";
   $can_edit = $q['yes_no'];
   $can_create = $q['yes_no'];
   $ml = mod_list(true);
@@ -98,6 +100,7 @@ $pt = current_pth(__FILE__);
 if ($can_create){
  $rz .= '<a href="'.$pt.'new_page.php?p='.$page_data['ID']."\">Page New</a><br>\n";
  $rz .= '<a href="'.$pt.'new_page_from_h.php?p='.$page_data['ID'].'">Page From H</a><br>'."\n";
+ $rz .= '<a href="'.$pt.'correct_h_tags.php?p='.$page_data['ID'].'">Page Crrect H</a><br>'."\n";
  // Брой на страниците в раздела
  $gc = db_table_field('COUNT(*)','menu_items','`group`='.$page_data['menu_group']);
  // Индекс на главната страница на раздела
@@ -131,6 +134,11 @@ if (g){
   document.location = r;
 }
 }
+function closeUMemu(){
+var m = document.getElementById("user_menu");
+if(confirm("Would you like to hide user menu? It will appear again after page reload."))
+  m.style.display = "none";
+}
 </script>'."\n";
  $rz .= '<a href="javascript:void(0);" onclick="getPage();">Page Get</a><br>'."\n";
  $rz .= '<a href="javascript:void(0);" onclick="moveTo();">Page Move</a><br>'."\n";
@@ -149,7 +157,10 @@ if ( strlen($nom) && strlen($rz) ){
   $rz .= '<span class="user">'.$_SESSION['user_username'].
          ' <a href="'.$nom.'">'.translate('user_logaut').'</a></span>'."<br>\n";
 }
-return '<div id="user_menu">'."\n".$rz."\n</div>";
+if($rz) return '<div id="user_menu">
+<a href="" class="cLink" onclick="closeUMemu();return false;">close</a><br>
+'."\n".$rz."\n</div>";
+else return '';
 }
 
 //
@@ -162,7 +173,6 @@ do{
  $pi = db_table_field('parent', 'menu_tree', "`group`=$pi");// print_r($pi);// die;
  $rz = $pi==$j;
 } while ( !($rz || ($pi==0)) );
-//echo "$rz $pi"; die;
 return $rz;
 }
 

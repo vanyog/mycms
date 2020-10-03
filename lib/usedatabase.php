@@ -71,7 +71,7 @@ $lcount = $db_req_count;
 static $ex_time = 0;
 if($ex_time==0) $ex_time = $exe_time;
 $ext = microtime(true);
-$rz .= " ".number_format(($ext - $ex_time)*100, 3);
+$rz .= " ".number_format(($ext - $ex_time)*1000, 3)."/".number_format(($ext - $exe_time)*1000, 3);
 $ex_time = $ext;
 return $rz;
 }

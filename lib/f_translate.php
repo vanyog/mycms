@@ -39,14 +39,16 @@ $global_filters = db_table_field('filters', 'filters', "`name` LIKE '*'");
 
 function translate($n, $elink=true){
 
+if(empty($n)) return '';
+
+global $languages, $default_language, $language, $pth, $adm_pth, $content_date_time, $content_create_time, $can_edit,
+       $page_content, $page_data, $debug_mode, $tn_prefix;
+
 // Статична променлива за кеш
 static $string = array();
 
 // Ако стрингът вече е съставен се връща от кеша
-if (isset($string[$n]) && !in_edit_mode()) return $string[$n];
-
-global $languages, $default_language, $language, $pth, $adm_pth, $content_date_time, $content_create_time, $can_edit,
-       $page_content, $page_data, $debug_mode, $tn_prefix;
+if (isset($string[$n][$language]) && !in_edit_mode()) return $string[$n][$language];
 
 //if( !empty($debug_mode) ) echo "$n ";
 
@@ -67,6 +69,7 @@ $rz = '';
 // Четене на записа за надпис с име $n на език $language
 $r1 = db_select_1('c.*, f.filters',
                   'content` c LEFT JOIN `'.$tn_prefix.'filters` f ON c.name=f.`name', "c.name='$n' AND `language`='$language'");
+//if(substr($n, 0, 6)=='Vladim'){ var_dump($r1); die; }
 
 if ($r1){ // Ако има такъв запис
   $content_create_time = $r1['date_time_1'];
@@ -103,7 +106,7 @@ else if (in_edit_mode() && $elink){
          $rz = apply_filters($r2['filters'], parse_content($t));
      }
 // Запазване в кеш
-$string[$n] = $rz;
+$string[$n][$language] = $rz;
 
 // Връщане на резултата
 return $rz;

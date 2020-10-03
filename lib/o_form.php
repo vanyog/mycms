@@ -68,8 +68,11 @@ if (r) f.submit(); else alert("'.translate_if('fillin_all', 'All fields mut be f
 $rz = "<form enctype=\"multipart/form-data\" name=\"$this->name\" id=\"$this->name\" method=\"$this->method\" action=\"$this->action\">\n";
 if ($this->astable) $rz .= "<table>\n";
 $rz .= $this->text;
+$has_files = false;
 foreach($this->ins as $i){
+  if($has_files) $i->max_file_size = '';
   $rz .= $i->html($this->astable);
+  if(isset($i->type) && ($i->type=='file')) $has_files = true;
   if (!(strpos($i->js, 'ifNotEmpty_'.$this->name.'()')===false)) $js .= $js1;
 }
 if ($this->astable) $rz .= "</table>\n";
@@ -101,7 +104,7 @@ public $checked = '';
 public $size = '';
 public $id = '';
 public $js = '';
-public $max_file_size = '50000000';
+public $max_file_size = 500*1024*1024;
 public $textAfter = '';
 public $help = '';
 
@@ -138,6 +141,9 @@ if( ($this->type=='file') && $this->value){
    }
    $rz .= "<a href=\"$vl\" target=\"_blank\">$vl</a><br>\n";
 }
+if (($this->type=='file') && $this->max_file_size) {
+   $rz .= '<input type="hidden" name="MAX_FILE_SIZE" value="'.$this->max_file_size.'">'."\n";
+}
 $rz .= "<input type=\"$this->type\" ";
 if ($this->name) $rz .= "name=\"$this->name\"";
 if (strlen($this->value)) $rz .= " value=\"$this->value\"";
@@ -146,9 +152,6 @@ if ($this->id) $rz .= " id=\"$this->id\"";
 if ($this->js) $rz .= " $this->js";
 if ($this->checked) $rz .= " $this->checked";
 $rz .= "$dsbl>";
-if ($this->type=='file'){
-   $rz .= '<input type="hidden" name="MAX_FILE_SIZE" value="'.$this->max_file_size.'">';
-}
 if ($this->textAfter) $rz .= ' '.$this->textAfter;
 if ($this->help) $rz .= "\n<br>".$this->help;
 if (!$it) $rz .= "\n";
@@ -541,7 +544,7 @@ $countries = array(
 'SH' => 'St. Helena',
 'SI' => 'Slovenia',
 'SJ' => 'Svalbard &amp; Jan Mayen Islands',
-'SK' => 'Slovakia',
+'SK' => 'Slovak Republic',
 'SL' => 'Sierra Leone',
 'SM' => 'San Marino',
 'SN' => 'Senegal',

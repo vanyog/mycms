@@ -50,7 +50,7 @@ $fn = $fd.'/tables.sql';
 if (file_exists($fn) && !is_writable($fn)){
   header("Content-Type: text/html; charset=windows-1251");
   echo "<p>File $fn is not writeble. Write to it manually.</p>
-  <textarea cols=\"130\" rows=\"18\">$q</textarea>";
+  <textarea cols=\"130\" rows=\"18\">".iconv($site_encoding, $file_encoding, $q)."</textarea>";
 }
 else {
   if (file_exists($fn)) {

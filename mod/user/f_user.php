@@ -110,7 +110,7 @@ else{
 
   // Отбелязване на часа и IP адреса на влизане
   if (!isset($_SESSION['session_start'])) $_SESSION['session_start'] = time();
-  $tm = date('Y-m-d H:m:s', $_SESSION['session_start']);
+  $tm = date('Y-m-d H:i:s', $_SESSION['session_start']);
   $q = "UPDATE `$tn_prefix"."$user_table` SET `date_time_2`='$tm', `IP`='".$_SERVER['REMOTE_ADDR'].
        "' WHERE `ID`=".$rz['ID'].";";
   mysqli_query($db_link, $q);

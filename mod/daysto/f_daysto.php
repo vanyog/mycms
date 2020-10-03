@@ -30,10 +30,10 @@ function daysto($a){
 $b = explode('|', $a);
 $s = explode(':', $b[0]);
 if($s[0]=='schedule') $b[0] = db_table_field('date_time_2', 'schedules', "`ID`=".$s[1]);
-$dt = strtotime($b[0]) - time();
+$dt = strtotime($b[0]);
 $rz = '<span id="daysto">aaa</span>
 <script>
-var daysto = '.$dt.';
+var daysto = '.$dt.' - Math.round(new Date/1000);
 var daysto_span = document.getElementById("daysto");
 timeCountdown();
 function timeCountdown(){

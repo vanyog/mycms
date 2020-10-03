@@ -26,13 +26,16 @@ include_once($idir.'lib/o_form.php');
 
 // Главна функция на модула
 
-// Ако параметърът $a = '' функцията генерира страница за управление на графиците.
+// Ако параметърът $a == '' функцията генерира страница за управление на графиците.
 
 // Ако $a не е празен стринг, е разделен на части от символа |.
 
 // Първата част е името на график.
 // Втората - действие, което се извършва с този график:
 //    'current' - показване на текущите събития от графика;
+//    'next30' - показване на започващите през следващите 30 дни събития от графика;
+//    'all' - показване на всички събития от графика;
+//    име на събитие - показване само на датата на събитието
 
 function schedules($a = ''){
 if ($a){
@@ -42,7 +45,9 @@ if ($a){
   case 'current': return schedules_current($p[0]);    break;
   case 'next30' : return schedules_next30($p[0], 30); break;
   case 'all'    : return schedules_all($p[0]);        break;
-  default: return 'Invalid action name \''.$p[1].'\' for schedules module.'; break;
+  default: $r = db_select_1('*', 'schedules', "`sch_name`='".$p[0]."' AND `ev_name`='".$p[1]."'");
+     if($r) return schedules_ev($r);
+     return 'Invalid action name \''.$p[1].'\' for schedules module.'; break;
   }
 }
 global $page_header, $can_manage;
@@ -51,6 +56,7 @@ if (!isset($can_manage['schedules']) || !$can_manage['schedules'])
    return '<p class="message">'.translate('schedules_nopermition').'</p>';
 // Име на текущия график
 $l = '';
+if (isset($_GET['delete'])) schedules_delete($_GET['delete']);
 if (isset($_GET['schn'])) $l = $_GET['schn'];
 // Адрес за смяна с друг график
 $q = set_self_query_var('schn','aaa',false);
@@ -61,6 +67,9 @@ function sch_name_changed(){
 var l = document.getElementsByName("sch_name");
 var n = l[0].value;
 document.location = "'.$q.';
+}
+function confirm_link(e){
+if(confirm("'.translate('schedules_cDelete',false).'")) document.location = e;
 }
 </script>';
 // Падащ списък за избиране на график
@@ -129,6 +138,11 @@ for($i=0; $i<count($d); $i++){// die(print_r($d,true));
   $d[$i]['date_time_1'] = '<span class="nowrap"><a href="'.current_pth(__FILE__).'edit.php?id='.$d[$i]['ID'].'">'.
                           db2user_date_time($d[$i]['date_time_1']).'</a></span>';
   $d[$i]['date_time_2'] = '<span class="nowrap">'.db2user_date_time($d[$i]['date_time_2']).'</span>';
+  $d[$i]['ID'] = $d[$i]['ID'].
+                 '<sup><a href="'.set_self_query_var('delete', $d[$i]['ID']).'"'.
+                 ' style="font-weight:bold;color:red;"'.
+                 ' onclick="confirm_link(this);return false;"'.
+                 '>x</a></sup>';
   $c++;
 }
 return $d;
@@ -235,6 +249,18 @@ $id = db_table_field('ID', 'schedules',
       "`sch_name`='$s' AND `ev_name`='$e' AND `date_time_1`<='$ct' AND `date_time_2`>='$ct'", 0);
 $rz =  "$id"!="0";
 return $rz;
+}
+
+function schedules_ev($r){
+return db2user_date_time($r['date_time_2']);
+}
+
+function schedules_delete($i){
+if(!is_numeric($i)) return;
+$d = db_select_1('*', 'schedules', "`ID`=$i");
+//db_delete_where('content', "`name`='".$d['ev_name']."'");
+//db_delete_where('schedules', "`ID`=$i");
+//die(print_r($d,true));
 }
 
 ?>

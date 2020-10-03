@@ -40,7 +40,7 @@ include_once($idir."lib/f_page_cache.php");
 include_once($idir."/lib/f_mod_picker.php");
 
 // Номер на страницата, на която е текста
-$page_id = 1*$_GET['pid'];
+if(is_numeric($_GET['pid'])) $page_id = 1*$_GET['pid']; else $page_id = 0;
 
 // Данни за страницата
 $page_data = db_select_1('*', 'pages', "`ID`=$page_id");

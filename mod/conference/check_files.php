@@ -1,5 +1,21 @@
 <?php
-// Copyright: Vanyo Georgiev info@vanyog.com
+/*
+MyCMS - a simple Content Management System
+Copyright (C) 2013  Vanyo Georgiev <info@vanyog.com>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 // Проверява дали файловете, качени в директорията на конференцията съответстват на базата данни
 
@@ -12,19 +28,55 @@ include_once($idir.'lib/f_stored_value.php');
 include_once($idir.'lib/f_db_select_m.php');
 include_once($idir.'lib/f_file_list.php');
 include_once($idir.'lib/f_encode.php');
+include_once($idir.'lib/f_set_self_query_var.php');
+include_once($idir.'lib/f_unset_self_query_var.php');
+include_once($idir.'mod/usermenu/f_usermenu.php');
+
+// Проверка на правата на влезлия потребител
+usermenu(true);
+
+// Ако няма право за модул conference - край
+if(empty($can_manage['conference'])) die("Not permitted for current user");
 
 // Тип на потребителя
 $ut = stored_value('conference_usertype', 'vsu2014');
 
 // Директория с качени файлове за конференцията
-$p = stored_value('conference_files', '/conference/2014/files/');
+$p = stored_value('conference_files_'.$ut, '/conference/2014/files/');
 $dir = $_SERVER['DOCUMENT_ROOT'].$p;
+
+header("Content-Type: text/html; charset=$site_encoding");
+
+$delete_done = false;
+
+// Изтриване на файл
+if(isset($_GET['delete'])){
+$fn = $dir.$_GET['delete'];
+if(file_exists($fn)){
+  unlink("$fn");
+  echo '<p>'.encode('Беше изтрит файл ').$fn."<p>\n";
+  $delete_done = true;
+}
+else echo encode('Файлът не съществува ').$fn;
+}
+
+echo '<p><a href="'.unset_self_query_var('delete').'">Reload</a></p>'."\n";
+
+
+$ap = array();
+
+// Четене имената на файловете за второ резюме
+$af = db_select_m('abstracttextfile', 'proceedings', "`utype`='$ut' AND `abstracttextfile`>''");
+echo encode("<h2>Липсващи файлове за второ резюме</h2>");
+foreach($af as $f){
+  $fn = $dir.$f['abstracttextfile'];
+  $ap[] = $f['abstracttextfile'];
+  if (!file_exists($fn)) echo $fn."<br>";
+}
 
 // Четене имената на DOC файловете
 $af = db_select_m('fulltextfile', 'proceedings', "`utype`='$ut' AND `fulltextfile`>''");
-$ap = array();
-header("Content-Type: text/html; charset=$site_encoding");
-echo encode("<h2>Липсващи DOC файлове</h2>");
+echo encode("<h2>Липсващи DOC файлове с пълен текст</h2>");
 foreach($af as $f){
   $fn = $dir.$f['fulltextfile'];
   $ap[] = $f['fulltextfile'];
@@ -33,20 +85,54 @@ foreach($af as $f){
 
 // Четене имената на PDF файловете
 $af = db_select_m('fulltextfile2', 'proceedings', "`utype`='$ut' AND `fulltextfile2`>''");
-echo encode("<h2>Липсващи PDF файлове</h2>");
+echo encode("<h2>Липсващи PDF файлове с пълен текст</h2>");
 foreach($af as $f){
   $fn = $dir.$f['fulltextfile2'];
   $ap[] = $f['fulltextfile2'];
   if (!file_exists($fn)) echo $fn."<br>";
 }
 
+// Четене имената на файловете-презентации
+$af = db_select_m('fulltextfile3', 'proceedings', "`utype`='$ut' AND `fulltextfile3`>''");
+echo encode("<h2>Липсващи файлове-презентации</h2>");
+foreach($af as $f){
+  $fn = $dir.$f['fulltextfile3'];
+  $ap[] = $f['fulltextfile3'];
+  if (!file_exists($fn)) echo $fn."<br>";
+}
+
+// Четене имената на файловете с анонимен пълен текст
+$af = db_select_m('fulltextfile4', 'proceedings', "`utype`='$ut' AND `fulltextfile4`>''");
+echo encode("<h2>Липсващи файлове с анонимен пален текст</h2>");
+foreach($af as $f){
+  $fn = $dir.$f['fulltextfile4'];
+  $ap[] = $f['fulltextfile4'];
+  if (!file_exists($fn)) echo $fn."<br>";
+}
+
 $fl = file_list($dir);
 
-echo encode("<h2>Излишни файлове</h2>");
+echo encode("<h2>Излишни файлове</h2>").'
+<script>
+function confirm_link(e,n){
+';
+if(!$delete_done)
+  echo 'if(confirm("'.encode("Наистина ли искате да изтриете файл ").'\"" + n + "\"?"))';
+else
+  echo '{';
+echo '
+   document.location = e;
+}
+</script>
+';
 foreach($fl as $f)
  if (!in_array($f,$ap)){
     if (!is_local()) $fl = rawurlencode($f); else $fl = $f;
-    echo "<a href=\"$p$fl\">$f</a><br>\n";
+    echo '<a href="'.set_self_query_var('delete',$f).'" '.
+         'style="font-weight:bold;color:red;" '.
+         'title="'.encode('Изтриване на файла').'" '.
+         'onclick="confirm_link(this,\''.$f.'\');return false;">x</a> '.
+         " <a href=\"$p$fl\">$f</a> <br>\n";
  }
 
 ?>

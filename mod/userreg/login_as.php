@@ -30,10 +30,11 @@ include_once($idir.'lib/f_db_insert_1.php');
 include_once($idir.'lib/f_rand_string.php');
 
 if(!session_id()) session_start();
+date_default_timezone_set("Europe/Sofia");
 
 // Ако в сесията няма данни за влязъл потребител - съобщение, че трябва да се влезе
 if (!isset($_SESSION['user_username']) || !isset($_SESSION['user_password']) )
-   $page_content = '<p class="message">'.translate('userreg_mustlogin').'</p>';
+   $page_content = '<p class="message">'.translate('userreg_mustlogin2').'</p>';
 else {
   // Таблица с данни за потребители
   $user_table = stored_value('user_table','users');
@@ -41,7 +42,7 @@ else {
   $ud = db_select_1('ID,type', $user_table,
         "`username`='".$_SESSION['user_username']."' AND `password`='".$_SESSION['user_password']."'");
   // Ако номерът на влезлия потребител не е валиден - съобщение, че трябва да се влезе
-  if (!$ud) $page_content = '<p class="message">'.translate('userreg_mustlogin', false).'</p>';
+  if (!$ud) $page_content = '<p class="message">'.translate('userreg_mustlogin2', false).'</p>';
   else { //die("$id");
     // Проверка дали влезлият потребител има право да влиза от името на други потребители
     $a = db_table_field('yes_no','permissions',"`user_id`=".$ud['ID']." AND `type`='all'");
@@ -64,6 +65,8 @@ else {
               if (!session_id()) session_start();
               $_SESSION['user_username'] = addslashes($d['username']);
               $_SESSION['user_password'] = $d['password'];
+              $dt = DateTime::createFromFormat('Y-m-d H:i:s', $d['date_time_2']);
+              $_SESSION['session_start'] = $dt->getTimestamp();
 //              header("Location: $p"); die;
               $page_content = "<p> <a href=\"$p\">$p</a></p>";
            }

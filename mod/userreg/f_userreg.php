@@ -288,9 +288,11 @@ $r = db_insert_or_1($d, stored_value('user_table','users'), "`email`='".$d['emai
 $ms = translate('userreg_regmess').'http://'.$_SERVER['HTTP_HOST'].set_self_query_var('code',$d['code'],false);
 $sb = translate('userreg_regsub');
 $sb = '=?'.$site_encoding.'?B?'.base64_encode($sb).'?=';
+$fe = stored_value('site_owner_email','vanyog@gmail.com');
 $hd = 'Content-type: text/plain; charset='.$site_encoding."\r\n".
-      'From: '.stored_value('site_owner_email','vanyog@gmail.com')."\r\n";
-mail($e,$sb,$ms,$hd);
+//      'Return-Path: '.$fe."\r\n".
+      'From: '.$fe."\r\n";
+mail($e, mb_encode_mimeheader($sb,"UTF-8"), $ms, $hd,"-f $fe");
 return 'OK';
 }
 
@@ -374,7 +376,7 @@ unset($_SESSION['userreg_message']);
 $can_visit = 1;
 // Отбелязване на часа и IP адреса на влизане
 if (!isset($_SESSION['session_start'])) $_SESSION['session_start'] = time();
-$tm = date('Y-m-d H:m:s', $_SESSION['session_start']);
+$tm = date('Y-m-d H:i:s', $_SESSION['session_start']);
 db_update_record( array( 'ID'=>$id, 'date_time_2'=>$tm, 'IP'=>$_SERVER['REMOTE_ADDR']), $user_table);
 return $id;
 }
@@ -508,6 +510,7 @@ $cp = array(
 'thirdname'=>translate('user_thirdname'),
 'country'=>translate('user_country'),
 'institution'=>translate('user_institution'),
+'position'=>translate('user_position'),
 'address'=>translate('user_address'),
 'telephone'=>translate('user_telephone')
 );
@@ -546,7 +549,7 @@ return $rz.edit_record_form($cp, $user_table, false).$h;
 //
 // Запазване данните на потребителя след редактиране
 
-function userreg_editprocess($user_table, $t){//print_r($_POST); die;
+function userreg_editprocess($user_table, $t){
 $rz = '';
 if ( !$_POST['password'] || ($_POST['password']!=$_POST['password2']) ){
   if ($_POST['password2']) $rz .= '<p class="message">'.translate('user_passwordinvalid').'</p>';
@@ -601,6 +604,7 @@ $cp = array(
 'thirdname'=>translate('user_thirdname'),
 'country'=>translate('user_country'),
 'institution'=>translate('user_institution'),
+'position'=>translate('user_position'),
 'address'=>translate('user_address'),
 'telephone'=>translate('user_telephone')
 );

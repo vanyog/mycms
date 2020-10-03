@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Изтрива всички записи от таблица $t, които отговарят на условието $w.
 // Ако $y = true, само се показва SQL заявката без да се трие нищо.
+// Функцията връща броя на изтритите редове
 
 function db_delete_where($t,$w,$y=false){
 global $tn_prefix, $db_link, $db_req_count;
