@@ -47,14 +47,17 @@ $dir = $_SERVER['DOCUMENT_ROOT'].$p;
 
 header("Content-Type: text/html; charset=$site_encoding");
 
+$delete_done = false;
+
 // Изтриване на файл
 if(isset($_GET['delete'])){
 $fn = $dir.$_GET['delete'];
 if(file_exists($fn)){
   unlink("$fn");
   echo '<p>'.encode('Беше изтрит файл ').$fn."<p>\n";
+  $delete_done = true;
 }
-else echo("File do not exists ".$fn);
+else echo encode('Файлът не съществува ').$fn;
 }
 
 echo '<p><a href="'.unset_self_query_var('delete').'">Reload</a></p>'."\n";
@@ -112,7 +115,12 @@ $fl = file_list($dir);
 echo encode("<h2>Излишни файлове</h2>").'
 <script>
 function confirm_link(e,n){
-if(confirm("'.encode("Наистина ли искате да изтриете файл ").'\"" + n + "\"?"))
+';
+if(!$delete_done)
+  echo 'if(confirm("'.encode("Наистина ли искате да изтриете файл ").'\"" + n + "\"?"))';
+else
+  echo '{';
+echo '
    document.location = e;
 }
 </script>
@@ -120,11 +128,11 @@ if(confirm("'.encode("Наистина ли искате да изтриете файл ").'\"" + n + "\"?"))
 foreach($fl as $f)
  if (!in_array($f,$ap)){
     if (!is_local()) $fl = rawurlencode($f); else $fl = $f;
-    echo "<a href=\"$p$fl\">$f</a> ".
-          '<a href="'.set_self_query_var('delete',$f).'" '.
-          'style="font-weight:bold;color:red;" '.
-          'title="'.encode('Изтриване на файла').'" '.
-          'onclick="confirm_link(this,\''.$f.'\');return false;">x</a><br>'."\n";
+    echo '<a href="'.set_self_query_var('delete',$f).'" '.
+         'style="font-weight:bold;color:red;" '.
+         'title="'.encode('Изтриване на файла').'" '.
+         'onclick="confirm_link(this,\''.$f.'\');return false;">x</a> '.
+         " <a href=\"$p$fl\">$f</a> <br>\n";
  }
 
 ?>
