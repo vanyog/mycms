@@ -57,15 +57,16 @@ else { // Ако е изпратен номер на снимка се показва само една снимка
   $mp = substr($mp,$k,strlen($mp)-$k).'/';
   $mp = str_replace('\\','/',$mp);
   // Бутони за навигация
-  $nv = "<p id=\"big\">\n";
+  $rz .= "<p id=\"big\">\n";
+  $nv = '';
   if ($i>1) $nv .= '<a href="'.set_self_query_var('iid',$i-1).'#big"><img alt="prev" src="'.$mp.
                    'arrow_prev.gif"></a>'."\n";
   $nv .= '<a href="'.set_self_query_var('iid',0).'#big"><img alt="up" src="'.$mp.'arrow_up.gif"></a>'."\n";
   if ($i<count($fl)) $nv .= '<a href="'.set_self_query_var('iid',$i+1).'#big"><img alt="next" src="'.$mp.
                             'arrow_next.gif"></a>'."\n";
-  $nv .= "<p>\n";
+  $nv .= "</p>\n";
   $rz .= "$nv<p><img alt='$tt' src=\"/$a/$f\" class=\"big\"></p>\n";
-  $rz .= "<p>$tt</p>\n$nv";
+  $rz .= "<p>$tt</p>\n<p>$nv";
   global $og_type, $og_pid, $page_id, $og_image;
   $og_type = 'article';
   $og_pid = "$page_id&iid=$i";

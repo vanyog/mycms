@@ -22,7 +22,7 @@ include("ta_ctag.php");
 include_once($idir.'lib/f_mod_list.php');
 include_once($idir.'lib/f_mod_picker.php');
 
-function editor($n,$tx){
+function editor($n,$tx){//die($n);
 global $ta_ctag, $ta_fctag, $page_header;
 $tx = str_replace('&','&amp;',$tx);
 $tx = str_replace(chr(60).'!--$$_',chr(60).' !--$$_',$tx);
@@ -31,7 +31,6 @@ static $tec = 0;
 // Ако още няма textarea елементи се извежда javascript-ът
 // и mod_picker
 if (!$tec){
-$tec += 1;
 $js = '
 <script>
 var tefc;
@@ -159,6 +158,7 @@ te.selectionStart = s;
 </script>
 '.mod_picker();
 } else $js = '';
+$tec += 1;
 // Връщане на резултата
 return $js.
 

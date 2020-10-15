@@ -84,7 +84,10 @@ if (!isset($page_id)) $page_id = 1*$_GET['pid'];
 $pid = $page_id;
 
 // Ако е изпратен и номер на страница - коригиране на $n и $pid
-if (isset($na[1])){ $pid = 1*$na[1]; $n = $na[0]; }
+if (isset($na[1])){
+  $pid = intval($na[1]);
+  $n = $na[0];
+}
 
 // Връщан резултат
 $rz = '';
