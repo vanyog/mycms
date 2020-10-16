@@ -104,7 +104,7 @@ public $checked = '';
 public $size = '';
 public $id = '';
 public $js = '';
-public $max_file_size = 500*1024*1024;
+public $max_file_size = 524288000;
 public $textAfter = '';
 public $help = '';
 
