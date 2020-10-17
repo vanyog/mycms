@@ -417,7 +417,8 @@ $f->add_input($fi);
 // Дали сме в период на качване на пълен текст
 $ft = schedules_in_event($day2[1], $day2[0]) || $adm;
 $ti = new FormInput(translate('conference_pages'), 'pages', 'text', $d['pages']);
-if (!$adm) $ti->js = ' disabled="disabled"';
+$ti->js = ' onfocus="this.select();"';
+if (!$adm) $ti->js .= ' disabled="disabled"';
 $f->add_input($ti);
 $fl = new FormInput(translate('conference_cabstracttextfile'), 'abstracttextfile', 'file', $_SERVER['DOCUMENT_ROOT'].$fdir.stripslashes($d['abstracttextfile']));
 if (!$ft) $fl->js = ' disabled="disabled"';
@@ -813,6 +814,7 @@ if($a){
 $crp = current_pth(__FILE__);
 $pdfi = '<img src="'.$crp.'Download-PDF.png">';
 $ppti = '<img src="'.$crp.'Download-PPT.png">';
+$mp4i = '<img src="'.$crp.'Open-MP4.png">';
 $page_header .= '<script>
 function deleteAbstract(id){
 if( confirm("'.encode('Потвърждавате ли изтриване на запис за доклад с ID=').'"+id+"?") )
@@ -971,22 +973,28 @@ for($i = 0; $i<count($tp); $i++){
                        $fdir.'/'.$d['fulltextfile2'].'" title="'.translate('conference_dfull', false).'">'.$pdfi.'</a> ';
            // PDF с презентация
            if($d['fulltextfile3'])
-              if($ex3=='pdf')
+              switch ($ex3){
+              case 'pdf':
                  $lr .= '<a href="/_pdfjs-2.2.228-dist/web/viewer.html?file='.
                         $fdir.'/'.$d['fulltextfile3'].'" title="'.translate('conference_prez', false).'">'.$ppti.'</a> ';
-              else
+                 break;
+              case 'mp4':
+                 $lr .= '<a href="'."$fdir/".$d['fulltextfile3'].'" title="'.translate('conference_prez', false).'">'.$mp4i.'</a> ';
+                 break;
+              default:
                  $lr .= '<a href="'."$fdir/".$d['fulltextfile3'].'" title="'.translate('conference_prez', false).'">'.$ppti.'</a> ';
+              }
        }
-           if($s_auth) { $c2++; $lr .= ($i+1)."-".$c2.". "; }
+           if($s_auth) { if($d['publish']=='yes') $c2++; $lr .= ($i+1)."-".$c2.". "; }
            $lr .= "<ptitle>".mb_strtoupper(stripslashes($d['title']))."</ptitle><br>\n";
            if( $team || ($utype<'vsu2020') || $s_auth)
                $lr .= '<author>'.conference_only_names($d['authors'])."</author>";
            if($d['pages']){
-//             $lr .= " &nbsp; &nbsp; ".translate('conference_pg').$pn[$d['vol']];
+             $lr .= " &nbsp; &nbsp; ".translate('conference_pg').$pn[$d['vol']];
              $pn[$d['vol']] += $d['pages'];
-//             if($d['pages']>1) $lr .= "-".($pn[$d['vol']]-1);
-//             if ( $team ) $lr .= ' ('.$d['pages'].')';
+             if($d['pages']>1) $lr .= "-".($pn[$d['vol']]-1);
            }
+           if ( $team && $d['fulltextfile2'] && ($d['publish']=='yes')) $lr .= ' ('.$d['pages'].')';
            if( ($team || (isset($_GET['text']) && ($_GET['text']=='anonimous')) )
                && $d['fulltextfile4']
               ) $lk .= '<br>Anonimouse: '.file_link_and_size($d['fulltextfile4']);
@@ -1148,7 +1156,7 @@ for($i = 0; $i<count($tp); $i++){
   if(count($da)) $rz .= '<h2>'.$tp[$i]."</h2>\n";
   // За всеки доклад
   foreach($da as $d){
-       $count++;
+       if($d['publish']=='yes') $count++;
        $rz .= '<div class="who">'."\n";
        $rz .= '<h3 id="pof'.$d['ID'].'">'.($i+1)."-$count. ".mb_strtoupper(stripslashes($d['title']))."</h3>\n";
        if(!empty($d['authors'])&&($d['authors'][0]!='<'))
