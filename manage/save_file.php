@@ -33,7 +33,9 @@ $fc = str_replace($ta_fctag,$ta_ctag,$fc);
 $fc = str_replace(chr(60).' !--$$_',chr(60).'!--$$_',$fc);
 $fc = str_replace('<!--$$_',chr(60).'!--$$_',$fc);
 $fc = str_replace('_$$-->','_$$--'.chr(62),$fc);
-$fc = iconv($site_encoding, "windows-1251", $fc);
+$enc = "windows-1251";
+if(isset($_GET['enc']) && in_array($_GET['enc'], array('utf8')) ) $enc = $_GET['enc'];
+$fc = iconv($site_encoding, "$enc//IGNORE", $fc);
 if($fc===false) die();
 //echo $afn; die;
 

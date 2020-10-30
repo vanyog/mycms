@@ -118,6 +118,7 @@ if(metaPressed && (v.key=="Enter")) insert_tag(tgToIn,tgToIn);
 if(metaPressed && (v.key=="1")    ) insert_tag("h1","h1");
 if(metaPressed && (v.key=="2")    ) insert_tag("h2","h2");
 if(metaPressed && (v.key=="3")    ) insert_tag("h3","h3");
+if(metaPressed && (v.key=="4")    ) insert_tag("h4","h4");
 if(metaPressed && shiftPressed &&
    ( (v.key.toLowerCase()=="s") || (v.key.toLowerCase()==ya) )
   )

@@ -181,10 +181,11 @@ else { // Ако е файл се показва форма за редактиране на съдържанието му
 if(substr($f,-1)=='/') $f = substr($f,0,-1);
 //die("--$f--");
 
-include("editor.php");
+include_once("editor.php");
+include_once($idir.'lib/f_set_self_query_var.php');
 
 $fc = array();
-$can_edit = array('css', 'js', 'htaccess', 'html', 'php', 'sql', 'svg', 'txt', 'xml', '');
+$can_edit = array('css', 'inc', 'js', 'htaccess', 'html', 'htm', 'php', 'sql', 'svg', 'txt', 'xml', '');
 $e = pathinfo($d,PATHINFO_EXTENSION);
 if (is_file($d) && in_array($e,$can_edit)) $fc=file($d);
 else {
@@ -207,7 +208,10 @@ if (!file_exists($d)) $page_content .= '<p slass="red">File not exists!</p>';
 $tx = '';
 foreach($fc as $l) $tx .= $l;
 
-$tx = iconv("windows-1251", "$site_encoding//IGNORE", $tx);
+$enc = "windows-1251";
+if(isset($_GET['enc']) && in_array($_GET['enc'], array('utf8')) ) $enc = $_GET['enc'];
+$tx = iconv($enc, "$site_encoding//IGNORE", $tx);
+$encp = "?enc=$enc";
 
 $page_content .= '<script>
 function doSaveAs(){
@@ -228,8 +232,8 @@ function doOpen(){
   document.location = "'.$adm_pth.'edit_file.php?f=" + d + st;
 }
 </script>
-<p>File: <strong>'.$f.'</strong></p>
-<form action="save_file.php" method="POST" name="edit_form">
+<p>File: <strong>'.$f.'</strong> &nbsp; <a href="'.set_self_query_var('enc','utf8').'">utf8</a></p>
+<form action="save_file.php'.$encp.'" method="POST" name="edit_form">
 <input type="hidden" name="file" value="'.$f.'">
 <input type="hidden" name="start_edit_time" value="'.time().'">
 '.editor('editor1',$tx).'
