@@ -194,7 +194,7 @@ foreach($mi as $m){
           $rz1 .= '<a href="'.$lk.'">'.translate($m['name']).'</a>';
           if( $pid==$page_id ) $rz1 .= translate('sitemap_currentpage');
           if( in_edit_mode() ) {
-             $rz1 .= " ".$m['place'];
+             $rz1 .= " place:".$m['place'].' group:'.$m['group'];
              if ($h) $rz .= ' hidden ';
           }
           $rz1 .= "<br>\n";

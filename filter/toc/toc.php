@@ -25,35 +25,46 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 global $h_id, $tof_contents;
 
 function toc($s){
+// Ако в $s няма подстринг 'TOFCONTENTS', се връща $s без промени
 if(strpos($s, 'TOFCONTENTS')===false) return $s;
 global $h_id, $tof_contents;
-$h_id = 0;
-$tof_contents = '';
+$h_id = 0; // Пореден номер на заглавие, който се използва в id атрибута, вмъкван в заглавието
+$tof_contents = ''; // Html кода на съставянето съдържание
+// Претърсване за налични заглавия.
+// Всяко намерено заглавие се обработва с функцията toc_cb()
 $s = preg_replace_callback('/<h(\d+)\s*(id=".+?")*>(.*?)<\/h\1>/s', 'toc_cb', $s);
+// Ако е намерено само 1 или нито едно заглавие,
+// съдържанието е празно
 if($h_id<2) $tof_contents = '';
+// При повече намерени заглавия се съставя <div> блок
 else $tof_contents = "<div id=\"toc\"><div>\n".
-                '<h2>'.translate('filtertoc_toc')."</h2>\n".
-                $tof_contents."</div></div>\n";
-//                die($tof_contents);
+                     '<h2>'.translate('filtertoc_toc')."</h2>\n".
+                     $tof_contents."</div></div>\n";
+// Заместване на подстринг 'TOFCONTENTS' със съставеното съдържание
 $s = str_replace('TOFCONTENTS', $tof_contents, $s);
 return $s;
 }
 
+// Обработка на поредното намерено заглавие
 
 function toc_cb($a){
   global $h_id, $tof_contents;
   $h_id++;
 //  print_r($a); die;
-  $id = "ct$h_id";
-  if(!$a[2]){
+  $id = "ct$h_id"; // html атрибут id
+  if(!$a[2]){ // Ако заглавието няма други html атрибути, му са добавя атрибут id
     $a[2] = 'id="ct'.$h_id.'"';
   }
   else {
+    // Търсене за наличен id атрибут
     $m = array();
     preg_match_all('/id="(.*)"/', $a[2], $m);
+    // Ако заглавието има id атрибут, се използва той
     if(isset($m[1][0])) $id = $m[1][0];
   }
+  // Линк към заглавието, който се добавя в съдържанието
   $tof_contents .= '<a href="#'.$id.'" class="lev'.$a[1].'">'.strip_tags($a[3])."</a>\n";
+  // Връщане на промененото заглавие в текста, което замества съществащото
   return '<h'.$a[1].' '.$a[2].'>'.$a[3].'</h'.$a[1].'>';
 }
 
