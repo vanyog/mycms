@@ -1,8 +1,7 @@
 <?php
-
 /*
 MyCMS - a simple Content Management System
-Copyright (C) 2013  Vanyo Georgiev <info@vanyog.com>
+Copyright (C) 2020  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,18 +17,20 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Дублиране на един запис от таблица на базата данни
+function db_places10($t){
+global $tn_prefix, $db_link;
+// Р—Р°РґР°РІР°РЅРµ РЅР° СЃС‚РѕР№РЅРѕСЃС‚Рё РїСЂРµР· 1
+$i = 1;
+$r = db_select_m('ID', $t, '1 ORDER BY `place` ASC');
+foreach($r as $r1){
+  $q = "UPDATE `$tn_prefix$t` SET `place`=$i WHERE ID=".$r1['ID'].";";
+  mysqli_query($db_link,$q);
+  $i++;
+}
 
-include('conf_manage.php');
-include($idir.'lib/f_db_duplicate_record.php');
-
-$t = $_GET['t'];  // Таблица
-$id = 1*($_GET['r']); // `ID` на записа
-
-db_duplicate_record($t,$id);
-
-$l = 'Location: show_table.php?t='.$t;
-
-header($l);
+// РЈРјРЅРѕР¶Р°РІР°РЅРµ РЅР° СЃС‚РѕР№РЅРѕСЃС‚РёС‚Рµ РїРѕ 10
+$q = "UPDATE `$tn_prefix$t` SET `place` = `place` * 10;";
+$q = mysqli_query($db_link,$q);
+}
 
 ?>

@@ -1,8 +1,7 @@
 <?php
-
 /*
 MyCMS - a simple Content Management System
-Copyright (C) 2013  Vanyo Georgiev <info@vanyog.com>
+Copyright (C) 2020  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,18 +17,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Дублиране на един запис от таблица на базата данни
+include($idir.'lib/f_db_select_1.php');
+include($idir.'lib/f_db_insert_1.php');
 
-include('conf_manage.php');
-include($idir.'lib/f_db_duplicate_record.php');
+function db_duplicate_record($t,$id){
+// Р§РµС‚РµРЅРµ РЅР° Р·Р°РїРёСЃР°
+$d = db_select_1('*', $t, "`ID`=$id");
+unset($d['ID']);
+unset($d['username']);
+db_insert_1($d, $t);
+}
 
-$t = $_GET['t'];  // Таблица
-$id = 1*($_GET['r']); // `ID` на записа
-
-db_duplicate_record($t,$id);
-
-$l = 'Location: show_table.php?t='.$t;
-
-header($l);
 
 ?>

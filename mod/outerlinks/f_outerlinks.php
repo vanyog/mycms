@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include_once($idir.'lib/f_set_self_query_var.php');
 include_once($idir.'lib/f_unset_self_query_var.php');
 include_once($idir.'lib/f_db_table_field.php');
+include_once($idir.'lib/f_db_places10.php');
 include_once($idir.'lib/f_encode.php');
 
 function outerlinks(){
@@ -497,7 +498,6 @@ function end_edit_form($i){
 global $adm_pth;
 if (!in_edit_mode()) return '';
 else return '
-<p><a href="'.$adm_pth.'places10.php?t=outer_links">10 20...</a></p>
 <input type="hidden" name="action" value="update">
 <input type="hidden" name="ID" value="0">
 <p>URL: <input type="text" name="link" size="50"></p>
@@ -564,8 +564,10 @@ else {
   if (!$q2) return '';
   $q = $q1.substr($q2,0,strlen($q2)-2)." ".$q3;
 }
-//if($_POST['action']=='delete') die("$q2<br>".print_r($_POST,true));
-if ( ($q2!="`up`=$lid, ") && (($_POST['action']=='delete') || $_POST['link'] || $_POST['title']) ) mysqli_query($db_link,$q);
+if ( ($q2!="`up`=$lid, ") && (($_POST['action']=='delete') || $_POST['link'] || $_POST['title']) ){
+  mysqli_query($db_link,$q);
+  db_places10('outer_links');
+}
 }
 
 //

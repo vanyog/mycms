@@ -30,22 +30,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include("conf_manage.php"); 
 include_once($idir."conf_paths.php");
 include_once($idir."lib/f_db_select_m.php");
+include_once($idir."lib/f_db_places10.php");
 
 $t = $_GET['t']; // Име на таблицата
 
-// Задаване на стойности през 1
-$i = 1;
-$r = db_select_m('ID', $t, '1 ORDER BY `place` ASC');
-foreach($r as $r1){
-  $q = "UPDATE `$tn_prefix$t` SET `place`=$i WHERE ID=".$r1['ID'].";";
-  mysqli_query($db_link,$q);
-  $i++;
-}
-
-// Умножаване на стойностите по 10
-$q = "UPDATE `$tn_prefix$t` SET `place` = `place` * 10;";
-$q = mysqli_query($db_link,$q);
+db_places10($t);
 
 // Връщане на страницата, извикала скрипта
 header('Location: '.$_SERVER['HTTP_REFERER']);
+
 ?>

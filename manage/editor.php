@@ -155,6 +155,7 @@ var i = tx.indexOf(ct, e+1);
 var nt = tx.substring(0,s) + tx.substring(e+1, i) + tx.substring(i+ct.length);
 te.value = nt;
 te.selectionStart = s;
+te.selectionEnd = s;
 }
 </script>
 '.mod_picker();
