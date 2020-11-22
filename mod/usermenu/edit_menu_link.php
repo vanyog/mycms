@@ -74,6 +74,7 @@ $f -> add_input( new FormInput('','','submit',translate('saveData')) );
 $page_header .= '<link href="'.$pth.'_style.css" rel="stylesheet" type="text/css">'."\n";
 $page_title = translate('usermenu_editmenu');
 $page_content = '<h1>'.$page_title.'</h1>
+<p>'.$m['name'].'</p>
 '.$rz.'
 '.$f->html().'
 <p><a href="'.$_SESSION['http_referer'].'">'.translate('usermenu_back').'</a></p>';

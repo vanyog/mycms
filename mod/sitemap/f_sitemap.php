@@ -147,6 +147,9 @@ $mi = db_select_m('*', 'menu_items', "`group`=$i ORDER BY `place`");
 // Прочита се номера на главната страница на менюто
 $index = db_table_field('index_page','menu_tree',"`group`=$i");
 
+// Дали да се показват и външни връзки в картата. По подразбиране не се показват.
+$ext = stored_value('sitemap_external')=='on';
+
 // Цикъл за обработка на всяка хипервръзка от менюто $i
 foreach($mi as $m){
   $rz .= '<div id="map'.$m['ID']."\">\n";
@@ -177,12 +180,9 @@ foreach($mi as $m){
 //    if ($pid!=$page_id)
     {
        $h = $p['hidden'];
-       if( ( !$h || in_edit_mode() ) &&
-           (substr($lk, 0, 4) != 'http')
-         )
-       {
-          // Добавяне ва страница във файл sitemap.xml
-          if($y && ($smday !== $smfile)){
+       if( !$h || in_edit_mode() ){
+          // Добавяне на страницата във файл sitemap.xml
+          if($y && ($smday !== $smfile) && (substr($lk, 0, 4) != 'http')){
             if( strlen($smfile) < 3 ) $smfile = '';
             $smfile .= "<url>\n".
                        "<loc>".$_SERVER['REQUEST_SCHEME']."://".$_SERVER['HTTP_HOST'].str_replace('&','&amp;',$lk)."</loc>\n".
@@ -191,13 +191,16 @@ foreach($mi as $m){
                        "<priority>".(1-0.1*$map_level)."</priority>\n".
                        "</url>\n";
           }
-          $rz1 .= '<a href="'.$lk.'">'.translate($m['name']).'</a>';
-          if( $pid==$page_id ) $rz1 .= translate('sitemap_currentpage');
-          if( in_edit_mode() ) {
-             $rz1 .= " place:".$m['place'].' group:'.$m['group'];
-             if ($h) $rz .= ' hidden ';
+          // Добавяне в html кода за показване
+          if( (substr($lk, 0, 4) != 'http') || $ext ){
+            $rz1 .= '<a href="'.$lk.'">'.translate($m['name']).'</a>';
+            if( $pid==$page_id ) $rz1 .= translate('sitemap_currentpage');
+            if( in_edit_mode() ) {
+               $rz1 .= " place:".$m['place'].' group:'.$m['group'];
+               if ($h) $rz .= ' hidden ';
+            }
+            $rz1 .= "<br>\n";
           }
-          $rz1 .= "<br>\n";
        }
     }
     $count++;

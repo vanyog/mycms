@@ -49,11 +49,11 @@ $page_header .= '<script>
 function cookies_accept(){
 var d = new Date();
 d = new Date(d.valueOf()+30*24*3600*1000);
-document.cookie = "cookies_accept=Yes;expires="+d.toGMTString();
+document.cookie = "cookies_accept=yes;expires="+d.toGMTString();
 }
 </script>';
 return '<script>
-if (document.cookie && (document.cookie.indexOf("cookies_accept=Yes")<0)){
+if (document.cookie && (document.cookie.indexOf("cookies_accept=yes")<0)){
 var cm = document.createElement("div");
 cm.id = "cookies_message";
 cm.innerHTML = '.for_javascript(translate('cookies_message')).';
