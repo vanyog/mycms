@@ -26,9 +26,10 @@ include($idir.'lib/f_db_duplicate_record.php');
 $t = $_GET['t'];  // Таблица
 $id = 1*($_GET['r']); // `ID` на записа
 
-db_duplicate_record($t,$id);
+$i = db_duplicate_record($t,$id);
 
-$l = 'Location: show_table.php?t='.$t;
+if($i) $l = "Location: edit_record.php?t=$t&r=$i";
+else $l = 'Location: show_table.php?t='.$t;
 
 header($l);
 

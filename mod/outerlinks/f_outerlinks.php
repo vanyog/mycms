@@ -196,7 +196,7 @@ f.submit();
 }
 
 $page_header .= 'function duDuplicate(e){
-if(confirm("Duplicate link?")) window.open(e);
+if(confirm("Duplicate link?")) document.location = e; //window.open(e);
 }
 </script>
 <style>

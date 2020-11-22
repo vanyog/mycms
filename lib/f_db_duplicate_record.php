@@ -25,7 +25,7 @@ function db_duplicate_record($t,$id){
 $d = db_select_1('*', $t, "`ID`=$id");
 unset($d['ID']);
 unset($d['username']);
-db_insert_1($d, $t);
+return db_insert_1($d, $t);
 }
 
 
