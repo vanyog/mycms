@@ -26,6 +26,9 @@ function editor($n,$tx){//die($n);
 global $ta_ctag, $ta_fctag, $page_header;
 $tx = str_replace('&','&amp;',$tx);
 $tx = str_replace(chr(60).'!--$$_',chr(60).' !--$$_',$tx);
+if(!empty($tx)) $row_count = substr_count("\n", $tx) + 2;
+else $row_count = 2;
+if($row_count>20) $row_count = 20;
 // Брой на textarea елементите
 static $tec = 0;
 // Ако още няма textarea елементи се извежда javascript-ът
@@ -175,7 +178,7 @@ return $js.
 '.make_insert_2_button('javascript','tag_s1','tag_s2','Insert SCRIPT tag').ckeb($tec).'
 <input type="button" value="x" onclick="doRemoveTag();" title="Remove next tag">
 <span id="editor'.$tec.'_count"></span>
-<textarea id="editor'.$tec.'" cols="120" name="'.$n.'" rows="22" style="font-size:120%;" onfocus="onTeFocus();" onkeyup="showCharCount(this);" onkeydown="editor_onKey(this,event);">'.
+<textarea id="editor'.$tec.'" cols="120" name="'.$n.'" rows="'.$row_count.'" style="font-size:120%;" onfocus="onTeFocus();" onkeyup="showCharCount(this);" onkeydown="editor_onKey(this,event);">'.
 str_replace($ta_ctag,$ta_fctag,$tx).$ta_ctag;
 
 }
