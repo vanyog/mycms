@@ -71,7 +71,7 @@ if(isset($m1[3][1])){
 if (count($_POST)) process_data();
 
 // Позиция  на новата страница в менюто - по подразбиране най-отдолу.
-$pz = db_table_field('MAX(`place`)', 'menu_items', '`group`='.$page_data['menu_group'])
+$pz = INTVAL(db_table_field('MAX(`place`)', 'menu_items', '`group`='.$page_data['menu_group']))
       + 10;
 
 // Създаване на форма за попълване на данни за нова страница 
