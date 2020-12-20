@@ -21,12 +21,12 @@ include_once($idir.'lib/f_db_table_field.php');
 include_once($idir.'lib/f_db_select_1.php');
 include_once($idir.'lib/f_db_select_m.php');
 
-// Функцията stored_value($n,$def=false) чете полето `value` от таблица $tn_prifix.'options'
+// Функцията stored_value($n,$def=false, $y = false) чете полето `value` от таблица $tn_prifix.'options'
 // Ако не съществува такъв запис, връща стойността $def.
 
-function stored_value($n, $def = false){
+function stored_value($n, $def = false, $y = false){
 global $option_value, $db_req_count; // Глобална променлива, която служи за кеш.
-if (!isset($option_value[$n])) $option_value[$n] = db_table_field('value', 'options',"`name`='$n'", $def);
+if (!isset($option_value[$n])) $option_value[$n] = db_table_field('value', 'options',"`name`='$n'", $def, $y);
 if(empty($option_value[$n]) && $def) $option_value[$n] = $def;
 return $option_value[$n];
 }
