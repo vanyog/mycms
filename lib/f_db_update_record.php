@@ -41,7 +41,7 @@ if ($y) return $q;
 else{
  mysqli_query($db_link,$q);
  $e = mysqli_error($db_link);
- if($e) die($e);
+ if($e) die("function db_update_record error: $e");
  $db_req_count++;
  return $d['ID'];
 }

@@ -267,12 +267,16 @@ return $d;
 
 //
 // Хипервръзка и големина на файла
+// $fn - име на файл от поле fulltextfileX на таблица proceedings
+// $f_d -  път до директорията с файлове на конференцията. Ако е празен стринг,
+// се използва пътят до файловете на текущата конференция $fdir
 
-function file_link_and_size($fn){
+function file_link_and_size($fn, $f_d = ''){
 global $fdir;
+if(empty($f_d)) $f_d = $fdir;
 if (!$fn) return '';
 // Абсолютен път към файла
-$af = $_SERVER['DOCUMENT_ROOT'].$fdir.$fn;
+$af = $_SERVER['DOCUMENT_ROOT'].$f_d.$fn;
 // Големина на файла
 if (file_exists($af)){
   $sz = filesize($af);
@@ -286,14 +290,15 @@ $gh = '';
 $fe = strtolower(pathinfo($fn, PATHINFO_EXTENSION));
 if(in_edit_mode() && in_array($fe,array('doc','docx')) && !is_local())
   $gh = 'https://docs.google.com/gview?url='.$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'];
-return "<a href=\"$gh$fdir$fl\">$fn</a> - $sz bytes $dt";
+return "<a href=\"$gh$f_d$fl\">$fn</a> - $sz bytes $dt";
 }
 
 //
 // Форма за редактиране на данните за доклад
+// $uid - номер на доклада в таблица 'proceedings'
 
 function conference_edit($uid){
-global $body_adds, $utype, $can_manage, $day1, $day2, $debug_mode, $fdir, $user_table;
+global $body_adds, $utype, $can_manage, $day1, $day2, $debug_mode, $user_table;
 usermenu(true);
 //if(!empty($debug_mode)) print_r($GLOBALS);
 // Дали се редактира от администратор
@@ -308,6 +313,7 @@ global $languages, $language;
 // Начални стойности на полетата
 $d = array(
  'user_id'=>$uid,
+ 'utype'=>$utype,
  'form'=>0,
  'topic'=>0,
  'fee'=>0,
@@ -331,11 +337,13 @@ $d = array(
  'pages'=>0,
  'place'=>0
 );
-// Ако има номер на запис, четене от таблица 'proceedings'.
+// Ако има номер на запис - четене от таблица 'proceedings'.
 if (isset($_GET['proc'])){
   $d = db_select_1('*', 'proceedings', "`ID`=".(1*$_GET['proc']) );
   $d['topic']++;
 }
+// Директория с файловете на докладите
+$fdir = stored_value('conference_files_'.$d['utype']);
 if ( !( ($d['user_id']==$uid) || $adm ) )
    return '<p class="message">'.translate('conference_cnnotedit').'</p>';
 // Име на участника
@@ -847,7 +855,7 @@ if (("$td"<"$t3") && !$team && !$preview)
 //$order = ' ORDER BY `place` ASC';
 //$order = ' ORDER BY  `keylec` DESC, `title` ASC';
 //$order = ' ORDER BY  `form` ASC, `authors` ASC';
-$order = ' ORDER BY `authors` ASC';
+$order = ' ORDER BY '.stored_value('conference_'.$utype.'_order', '`authors` ASC');
 //$order = ' ORDER BY `title` ASC';
 $olink = ' <a href="'.set_self_query_var('order','date').'">By title</a>';
 if(isset($_GET['order']) && ($_GET['order']=='date') ){
@@ -862,6 +870,16 @@ $s_auth = true;
 // Флаг за показване на авторите и номерата на докладите
 $s_revs = false;
 $s_revs = isset($_GET['reviewes']) && ($_GET['reviewes']='Yes');
+// Номера на страници в том на поредния доклад.
+// Номер на страницата на първия доклад е настройка за всеки том.
+$pn = array(
+0=>stored_value("conference_$utype"."_pageStart0",1),
+1=>stored_value("conference_$utype"."_pageStart1",1),
+2=>stored_value("conference_$utype"."_pageStart2",1),
+3=>stored_value("conference_$utype"."_pageStart3",1)
+);
+// Брой страници, които се оставят за заглавие на скция
+$spages = stored_value("conference_$utype"."_pageSection",'0');
 // За всеки том
 foreach($vl as $vl1) {
 if($vl1['vol']=='p'){
@@ -870,8 +888,6 @@ if($vl1['vol']=='p'){
   $rz .= '<h2>'.translate('conference_posters')."</h2>\n";
 }
 else if(count($vl)>1) $rz .= '<h2>'.translate('conference_volume').' '.$vl1['vol']."</h2>\n";
-// Номера на страници в том на поредния доклад
-$pn = array(0=>1, 1=>1, 2=>1, 3=>1);
 // За всяко научно направление
 for($i = 0; $i<count($tp); $i++){
    $zip_command = 'zip arh_'.($i+1).'.zip ';
@@ -891,6 +907,10 @@ for($i = 0; $i<count($tp); $i++){
           " AND `topic`='$i'".
           " AND `vol`='".$vl1['vol']."'".
           $filter.$order, false );
+     if($vl1['vol']!='p'){
+         if(count($da)) $pn[$vl1['vol']] += $spages;
+         if(!($pn[$vl1['vol']] % 2)) $pn[$vl1['vol']]++;
+     }
      $lr = ''; // html код на докладите на език $l от научното направление
      $c += count($da);
      // Текуща форма
@@ -940,11 +960,11 @@ for($i = 0; $i<count($tp); $i++){
            if($cr<=0)
               $lk .= $cr.' <a href="#" style="font-weight:bold;color:red;" onclick="deleteAbstract('.$d['ID'].');return false;">x</a>';
            if($d['fulltextfile4']) $lk .= conference_rev2data($d);
-           if($d['abstracttextfile'])  $lk .= '<br>Abstract 2: '.file_link_and_size($d['abstracttextfile']);
-           if($d['fulltextfile'])  { $lk .= '<br>Doc: '.file_link_and_size($d['fulltextfile']);
+           if($d['abstracttextfile'])  $lk .= '<br>Abstract 2: '.file_link_and_size($d['abstracttextfile'], $fdir);
+           if($d['fulltextfile'])  { $lk .= '<br>Doc: '.file_link_and_size($d['fulltextfile'], $fdir);
               $zip_command .= $d['fulltextfile'].' '; $doc++; }
-           if($d['fulltextfile2']) { $lk .= '<br>Pdf: '.file_link_and_size($d['fulltextfile2']); $pdf++; }
-           if($d['fulltextfile3']) { $lk .= '<br>Presentation: '.file_link_and_size($d['fulltextfile3']); }
+           if($d['fulltextfile2']) { $lk .= '<br>Pdf: '.file_link_and_size($d['fulltextfile2'], $fdir); $pdf++; }
+           if($d['fulltextfile3']) { $lk .= '<br>Presentation: '.file_link_and_size($d['fulltextfile3'], $fdir); }
            $nm = $d['language'].
                  ', ID:<a href="'.$adm_pth.'/edit_record.php?t=proceedings&r='.$d['ID'].'" target="_blank">'.$d['ID'].
                  "</a>, place:".$d['place'].", form:".$d['form'].", ";
@@ -956,7 +976,7 @@ for($i = 0; $i<count($tp); $i++){
              $stl .= 'border-right:solid 4px green;';
            }
            if($stl) $st .= $stl.'"';
-           $lr .= "<p$st>$nm";
+           $lr .= "<p$st>$nm";// if($nm) die($nm);
            if(!empty($d['approved_a']) || $preview){
              if( $team ) $lr .= "vol:".$d['vol'].", <br>";
              if($d['fulltextfile2']){
@@ -964,19 +984,20 @@ for($i = 0; $i<count($tp); $i++){
 //               $lr .= ($i+1)."-".$cn[$d['vol']].". ";
              }
            }
-       if( ($utype!='vsu2020') ||
-           ( isset($_GET['allowtoshow']) && ($_GET['allowtoshow']=='fulltext') )
-       ){
+//       if( ($utype!='vsu2020') ||
+//           ( isset($_GET['allowtoshow']) && ($_GET['allowtoshow']=='fulltext') )
+//       )
+       {
            // PDF с пълния текст
            if($d['fulltextfile2'])
                $lr .= '<a href="/_pdfjs-2.2.228-dist/web/viewer.html?file='.
-                       $fdir.'/'.$d['fulltextfile2'].'" title="'.translate('conference_dfull', false).'">'.$pdfi.'</a> ';
+                       $fdir.$d['fulltextfile2'].'" title="'.translate('conference_dfull', false).'">'.$pdfi.'</a> ';
            // PDF с презентация
            if($d['fulltextfile3'])
               switch ($ex3){
               case 'pdf':
                  $lr .= '<a href="/_pdfjs-2.2.228-dist/web/viewer.html?file='.
-                        $fdir.'/'.$d['fulltextfile3'].'" title="'.translate('conference_prez', false).'">'.$ppti.'</a> ';
+                        $fdir.$d['fulltextfile3'].'" title="'.translate('conference_prez', false).'">'.$ppti.'</a> ';
                  break;
               case 'mp4':
                  $lr .= '<a href="'."$fdir/".$d['fulltextfile3'].'" title="'.translate('conference_prez', false).'">'.$mp4i.'</a> ';
@@ -985,7 +1006,14 @@ for($i = 0; $i<count($tp); $i++){
                  $lr .= '<a href="'."$fdir/".$d['fulltextfile3'].'" title="'.translate('conference_prez', false).'">'.$ppti.'</a> ';
               }
        }
-           if($s_auth) { if($d['publish']=='yes') $c2++; $lr .= ($i+1)."-".$c2.". "; }
+           if($s_auth) {
+             if( ($d['fulltextfile2']>'') && $d['approved_f'] ){
+                $c2++;
+                $lr .= ($i+1);
+                $lr.= "-".$c2.". ";
+             }
+//             else $lr .= ". ";
+           }
            $lr .= "<ptitle>".mb_strtoupper(stripslashes($d['title']))."</ptitle><br>\n";
            if( $team || ($utype<'vsu2020') || $s_auth)
                $lr .= '<author>'.conference_only_names($d['authors'])."</author>";
@@ -993,11 +1021,12 @@ for($i = 0; $i<count($tp); $i++){
              $lr .= " &nbsp; &nbsp; ".translate('conference_pg').$pn[$d['vol']];
              $pn[$d['vol']] += $d['pages'];
              if($d['pages']>1) $lr .= "-".($pn[$d['vol']]-1);
+             if(!($pn[$d['vol']] % 2)) $pn[$d['vol']]++;
            }
            if ( $team && $d['fulltextfile2'] && ($d['publish']=='yes')) $lr .= ' ('.$d['pages'].')';
            if( ($team || (isset($_GET['text']) && ($_GET['text']=='anonimous')) )
                && $d['fulltextfile4']
-              ) $lk .= '<br>Anonimouse: '.file_link_and_size($d['fulltextfile4']);
+              ) $lk .= '<br>Anonimouse: '.file_link_and_size($d['fulltextfile4'], $fdir);
            if( isset($_GET['allowtoshow']) && ($_GET['allowtoshow']=='rev2data') ) $lk .= conference_rev2data($d);
            $lr .= "$lk</p>\n";
         }
