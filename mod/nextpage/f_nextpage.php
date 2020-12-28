@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Линк към следващата, според картата на сайта страница.
 // Ако параметърат $dr == 'back' връща линк към предишната страница.
-// Ако има настройка 'nextpage_contentID' към адресите на страниците се добавя #стойнотНаНастройката.
+// Ако има настройка 'nextpage_contentID'=1 към адресите на страниците се добавя #стойнотНаНастройката.
 
 function nextpage($dr = ''){
 global $page_data, $page_id, $main_index;
@@ -52,8 +52,15 @@ $nl = db_select_1('*', 'menu_items', "`group`='$gr' AND `place`$dr".$ld['place']
 // Ако няма такъв се търси следващ линк в родителските менюта
 if (!$nl) $nl = nextpage_from_parent($ld, $dr, $ord);
 if (!$nl) return '';
+// Извличане номера на страницата от поле `link`
+$id = $nl['link'];
+if(!is_numeric($nl['link'])){
+  $a = array();
+  $i = preg_match('/pid=(\d+)/', $nl['link'], $a);
+  if($i) $id = $a[1];
+}
 // Данни за следващата страница
-return db_select_1('*', 'pages', "`ID`=".$nl['link'] );
+return db_select_1('*', 'pages', "`ID`=$id" );
 }
 
 // Следващ линк от родителското меню

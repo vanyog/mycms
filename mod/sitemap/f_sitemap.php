@@ -35,7 +35,7 @@ $page_passed = array(); // Номера на менюта, които вече са обработени,
                         // използва са за да не се получи зацикляне
 $map_level = 0;                 // Ниво на рекурсията
 $GLOBALS['has_levels'] = false; // Става истина ако има нива на рекурсия. Използва се за да не се показват,
-                                // ако не е необходимо, бутони "Разгъване всички" - "Сгъване всички"
+                                // бутони "Разгъване всички" - "Сгъване всички", ако не е необходимо.
 $i_root    = 0;  // Номер на входното меню
 $id_pre    = ''; // Представка, с която започват id атрибутите на <div> елементите
 
@@ -53,11 +53,17 @@ $GLOBALS['mpg_id'] = stored_value('site_map_root',1);
 
 function sitemap($a = ''){
 global $page_passed, $map_level, $i_root, $id_pre, $page_header, $smfile, $smday, $mpg_id;
+$ar = explode('|',$a);
+if(!$ar[0]) $ar[0] = stored_value('main_index_pageid',1);
+$cache_name = 'sitemap_'.$ar[0].'_cache';
+if(in_edit_mode()) $cache_name = $cache_name.'_edit';
+if( !(isset($_GET['clear']) && ($_GET['clear']=='on')) ){
+    $rz = stored_value($cache_name);
+    if($rz) return $rz;
+}
 $page_passed = array();
 $map_level = 0;
 $i_root    = 0;
-$ar = explode('|',$a);
-if(!$ar[0]) $ar[0] = stored_value('main_index_pageid',1);
 $id_pre = 'map'.$ar[0];
 $id = 'site_map';
 if (isset($ar[1])) $id = $ar[1];
@@ -93,7 +99,9 @@ for(var i=0; i<c; i++) if(sm.children[i].nodeName=="DIV"){
 }
 }
 </script>';
-$rz = '<div id="'.$id.'">'."\n".
+$clear_link = '';
+if(in_edit_mode()) $clear_link = '<a href="'.set_self_query_var('clear','on').'">Clear cache</a>';
+$rz = '<div id="'.$id.'">'."\n".$clear_link.
 site_map_buttons().$rz.site_map_buttons()."
 <p class=\"clear\"></p></div>";
 // Записване на нов sitemap.xml файл
@@ -108,6 +116,7 @@ if(    ($smday !== $smfile) // Нов ден
    $smfn = $_SERVER['DOCUMENT_ROOT'].'/sitemap.xml';
    if(is_writable($smfn)) file_put_contents($smfn, $smfile);
 }
+store_value($cache_name, $rz);
 return $rz;
 }
 

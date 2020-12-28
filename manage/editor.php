@@ -26,7 +26,7 @@ function editor($n,$tx){//die($n);
 global $ta_ctag, $ta_fctag, $page_header;
 $tx = str_replace('&','&amp;',$tx);
 $tx = str_replace(chr(60).'!--$$_',chr(60).' !--$$_',$tx);
-if(!empty($tx)) $row_count = substr_count("\n", $tx) + 2;
+if(!empty($tx)) $row_count = substr_count($tx, "\n") + 2;
 else $row_count = 2;
 if($row_count>20) $row_count = 20;
 // Брой на textarea елементите

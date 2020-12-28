@@ -32,13 +32,15 @@ return $option_value[$n];
 }
 
 // Функцията store_value($n,$v) записва стойността $v в запис с `name`=$n на таблица $tn_prifix.'options'
+// При подаден трети параметър $y = true, SQL заявката се извежда.
 
-function store_value($n,$v){
+function store_value($n,$v,$y = false){
 global $tn_prefix, $db_link;
 // четене на зеписа с име $n за проверка дали има такъв
 $r = db_select_1('*','options',"`name`='$n'");
 if ($r) { $q = 'UPDATE'; $w = " WHERE `name`='$n';";} else { $q = 'INSERT INTO'; $w = ", `name`='$n';"; }
 $q .= " `$tn_prefix"."options` SET `value`='$v'$w";
+if($y) echo "$q<br>\n";
 mysqli_query($db_link,$q);
 }
 
