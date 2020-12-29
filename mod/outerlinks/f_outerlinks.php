@@ -364,7 +364,7 @@ do {
   else{
      if (!$page_title) $page_title = translate($page_data['title'],false);
      $page_title .= ' - '.$l['Title'];
-     $rz = '<span><a href="'.$lk.'#outer_links">'.$l['Title'].'</a></span>'.$rz;
+     $rz = '<span><a href="'.$lk.'">'.$l['Title'].'</a></span>'.$rz;
      $cm = '';
      if (isset($l['Comment'])) $cm = $l['Comment'];
   }
@@ -500,7 +500,7 @@ if (!in_edit_mode()) return '';
 else return '
 <input type="hidden" name="action" value="update">
 <input type="hidden" name="ID" value="0">
-<p>URL: <input type="text" name="link" size="50"></p>
+<p class="fef">URL: <input type="text" name="link" size="50"></p>
 <p>Title: <input type="text" name="title" size="100" onfocus="enter_title_field();">
 <input type="button" value="Aa" onclick="chCaseClick();"></p>
 <p>Comment: <textarea name="comment" cols="83" rows="4" style="vertical-align:top"></textarea></p>
