@@ -24,7 +24,7 @@ if(!isset($_GET['url'])) die('');
 if(file_exists($_GET['url'])) die('');
 
 $er = error_reporting(1);
-$tx = file_get_contents($_GET['url'], FILE_BINARY, NULL, 0, 2048);
+$tx = file_get_contents($_GET['url'], FILE_BINARY, NULL, 0, 4096);
 error_reporting($er);
 if($tx===false) die("Error reading ".$_GET['url']);
 
