@@ -488,6 +488,12 @@ ajaxO.send(null);
 var h = ajaxO.responseText;
 t.value = h;
 }
+function onPrivateFocus(e){
+var a = e.value;
+if(a=="0") a = "1";
+else if(a=="1") a = "0";
+e.value = a;
+}
 </script>
 <form method="POST" name="link_edit_form">';
 }
@@ -506,7 +512,7 @@ else return '
 <p>Comment: <textarea name="comment" cols="83" rows="4" style="vertical-align:top"></textarea></p>
 <p>Place: <input type="text" name="place" size="5">
 Group: <input type="text" name="up" size="5" value="'.$i.'" onfocus="this.select();">
-Private: <input type="text" name="private" size="1"></p>
+Private: <input type="text" name="private" size="1" onfocus="onPrivateFocus(this)"></p>
 <input type="submit" value="Add/Update">
 <input type="button" value="Delete" onclick="doDelete_link();">
 <input type="reset">
