@@ -43,10 +43,10 @@ $t = iconv($e, "$site_encoding//IGNORE", $t);
 echo $t;
 
 function get_between($b1, $b2, $tx){
-$p1 = strpos($tx, $b1, 1);
+$p1 = stripos($tx, $b1, 1);
 if($p1===false) return '';
 $p1 += strlen($b1);
-$p2 = strpos(substr($tx, $p1), $b2, 1);
+$p2 = stripos(substr($tx, $p1), $b2, 1);
 if($p2===false) return '';
 return substr( $tx, $p1, $p2);
 }
