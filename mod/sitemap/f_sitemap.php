@@ -45,14 +45,15 @@ if(file_exists($_SERVER['DOCUMENT_ROOT'].'/sitemap.xml'))
              // Номер на текущия ден от месеца
              // На същата променлива се присвоява съдържанието на файл sitemap.xml, ако трябва да се генерира
 $smfile    = stored_value("today");
-             // Номер на главното меню сайта
+             // Номер на главното меню на сайта
 $GLOBALS['mpg_id'] = stored_value('site_map_root',1);
 //$GLOBALS['mpg_id'] = db_table_field('menu_group', 'pages', "`ID`=".$GLOBALS['mpg_id']);
 
 // Главна функция на модула
 
 function sitemap($a = ''){
-global $page_passed, $map_level, $i_root, $id_pre, $page_header, $smfile, $smday, $mpg_id;
+global $page_passed, $map_level, $i_root, $id_pre, $page_header, $smfile, $smday, $mpg_id,
+       $db_link, $tn_prefix;
 $ar = explode('|',$a);
 if(!$ar[0]) $ar[0] = stored_value('main_index_pageid',1);
 $cache_name = 'sitemap_'.$ar[0].'_cache';
@@ -116,6 +117,9 @@ if(    ($smday !== $smfile) // Нов ден
    $smfn = $_SERVER['DOCUMENT_ROOT'].'/sitemap.xml';
    if(is_writable($smfn)) file_put_contents($smfn, $smfile);
 }
+$q = "UPDATE `$tn_prefix"."options` SET `value`='' WHERE `name` REGEXP 'sitemap_\\\d+_cache.*'";
+//die($q);
+mysqli_query($db_link, $q);
 store_value($cache_name, $rz);
 return $rz;
 }

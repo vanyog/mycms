@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Съставя адрес към текущо изпалнявания php скрипт $_SERVER['PHP_SELF']
+// Съставя адрес към текущо изпалнявания php скрипт $_SERVER['SCRIPT_NAME']
 // с параметри, от които се премахва параметър с име $n.
 // Ако съставеният адрес ще се използва за пренасочване, а не като htef атрибут,
 // трябва да се подаде и трети параметър $a = false, за да не се замества & с &amp;.
@@ -28,7 +28,7 @@ if (isset($r[$n])) unset($r[$n]);
 $rz = http_build_query($r);
 if ($a) $rz = str_replace('&','&amp;',$rz);
 if ($rz) $rz = '?'.$rz;
-return $_SERVER['PHP_SELF'].$rz;
+return $_SERVER['SCRIPT_NAME'].$rz;
 }
 
 ?>

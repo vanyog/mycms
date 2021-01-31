@@ -153,7 +153,7 @@ $page_content .= '<table border="1" cellspacing="0"><tr>
 
 // Първи ред с имената на полетата
 foreach($k as $ky) $page_content .= '<th><a href="'.
-  $_SERVER['PHP_SELF'].'?'.set_query_var('sortby',$soo[$so].$ky)."\">$ky</a></th>\n"; 
+  $_SERVER['SCRIPT_NAME'].'?'.set_query_var('sortby',$soo[$so].$ky)."\">$ky</a></th>\n";
 
 
 foreach($r as $rc){

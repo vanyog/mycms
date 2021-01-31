@@ -31,11 +31,11 @@ if (in_edit_mode()) {
     $id = db_table_field('ID', 'content', "`name`='".$page_data['content']."' AND `language`='$language'", 0);
     if($id) $el = ' <a href="'.$adm_pth."edit_record.php?t=content&r=$id\">*</a>";
   }
-  return '<a href="'.$_SERVER['PHP_SELF'].'?'.set_query_var($edit_name,'0').'" title="Switch to normal mode">'.
+  return '<a href="'.$_SERVER['SCRIPT_NAME'].'?'.set_query_var($edit_name,'0').'" title="Switch to normal mode">'.
          $p[$y].'Norm</a>'.$el;
 }
 else
-  return '<a href="'.$_SERVER['PHP_SELF'].'?'.set_query_var($edit_name,$edit_value).'" title="Switch to edit mode">'.$p[$y].'Edit</a>';
+  return '<a href="'.$_SERVER['SCRIPT_NAME'].'?'.set_query_var($edit_name,$edit_value).'" title="Switch to edit mode">'.$p[$y].'Edit</a>';
 }
 
 ?>

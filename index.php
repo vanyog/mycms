@@ -57,7 +57,7 @@ include_once($idir.'lib/f_db_table_status.php');
 header("Content-Type: text/html; charset=$site_encoding");
 
 // Адрес на индексния файл
-$ind_fl = $_SERVER['PHP_SELF'];
+$ind_fl = $_SERVER['SCRIPT_NAME'];
 
 $body_adds   = ''; // Добавки към body тага
 

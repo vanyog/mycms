@@ -125,7 +125,7 @@ $edit_value = stored_value('edit_value','on');
 // Връща истина, ако се изпълнява скрипт от директорията за администриране
 function in_admin_path(){
 global $adm_pth;
-return ( substr($_SERVER['PHP_SELF'],0,strlen($adm_pth))==$adm_pth );
+return ( substr($_SERVER['SCRIPT_NAME'],0,strlen($adm_pth))==$adm_pth );
 }
 
 // Връща текущата директория

@@ -440,7 +440,7 @@ $rz1$rz2".search_link_form();
 // ----------------------------
 function search_link_form(){
 global $page_id;
-return '<form method="POST" action="'.$_SERVER['PHP_SELF'].'?pid='.$page_id.'#outer_links">
+return '<form method="POST" action="'.$_SERVER['SCRIPT_NAME'].'?pid='.$page_id.'#outer_links">
 <p class="search">'.translate('outerlinks_searchin').' 
 <input type="radio" name="search_by" value="keyword" checked> '.translate('outerlinks_intitles').' 
 <input type="radio" name="search_by" value="url"> '.translate('outerlinks_inurls').' 

@@ -26,7 +26,7 @@ include_once("editor.php");
 
 session_start();
 // Ако рефериращата страница е различна от този скрипт, се запомня в променлива на сесията
-if (isset($_SERVER['HTTP_REFERER']) && (strpos( $_SERVER['HTTP_REFERER'], $_SERVER['PHP_SELF'] ) === false )) 
+if (isset($_SERVER['HTTP_REFERER']) && (strpos( $_SERVER['HTTP_REFERER'], $_SERVER['SCRIPT_NAME'] ) === false ))
    $_SESSION['http_referer'] = $_SERVER['HTTP_REFERER'];
 
 $t = $_GET['t'];
