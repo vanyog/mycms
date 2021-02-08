@@ -90,7 +90,7 @@ if (!$sc){ // Ако няма такъв скрипт се търси модул с това име
 }
 else {
   if( !empty($debug_mode) ) echo "Script ".$tg[0]."(".( isset($tg[1]) ? $tg[1] : '' ).") ";
-  if (eval(stripslashes($sc['script']))===false){ // Изпълнява се модула
+  if (eval(stripslashes($sc['script']))===false){ // Изпълнява се скрипта
      store_value("eval_error_uri", $_SERVER['REQUEST_URI']);
   }
 }

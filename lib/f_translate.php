@@ -35,6 +35,7 @@ include_once($idir."lib/f_parse_content.php");
 
 $content_date_time    = '';// Променлива, която съдържа датата и часа на последната редакция на върнатия текст 
 $content_create_time = ''; // Променлива, която съдържа датата и часа на първото въвеждане на върнатия текст 
+// Глобални филтри, скриптът CONTENT от таблица scripts ги прилагат върху съдържанието на всяка страница.
 $global_filters = db_table_field('filters', 'filters', "`name` LIKE '*'");
 
 function translate($n, $elink=true){
@@ -69,7 +70,7 @@ $rz = '';
 // Четене на записа за надпис с име $n на език $language
 $r1 = db_select_1('c.*, f.filters',
                   'content` c LEFT JOIN `'.$tn_prefix.'filters` f ON c.name=f.`name', "c.name='$n' AND `language`='$language'");
-//if(substr($n, 0, 6)=='Vladim'){ var_dump($r1); die; }
+//if(substr($n, 0, 6)=='Vladim') { var_dump($r1); die; }
 
 if ($r1){ // Ако има такъв запис
   $content_create_time = $r1['date_time_1'];
@@ -102,7 +103,7 @@ else if (in_edit_mode() && $elink){
            $content_date_time = $r2['date_time_2'];
          }
          $t = stripslashes($r2['text']);
-         // Заместват се със съдържание евентуални <!--$$_XXX_$$--> елементи
+         // Заместват се със съдържание евентуални <!--$$_XXX_$$--> елементи и се прилагат филтри
          $rz = apply_filters($r2['filters'], parse_content($t));
      }
 // Запазване в кеш
@@ -113,11 +114,13 @@ return $rz;
 
 } // Край на функцията translate($n)
 
-// Функцията apply_filters($n, $t) прилага върху текста $t, определените за текста с име $n филтри
+// Функцията apply_filters($fs, $t) прилага филтрите, чиито имена се съдържат в стрига $fs, отделени едно от друго със запетая,
+// върху текста $t.
 
 function apply_filters($fs, $t){
-global $idir, $adm_pth;
 $rz = $t; // Връщан резултат
+if(empty($fs)) return $rz;
+global $idir, $adm_pth;
 // Масив от имена на филтри
 $fla = array();
 if ($fs) $fla = explode(',', $fs);
