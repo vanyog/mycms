@@ -20,7 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Проверка дали са свалени линковете към pdf файлове в зададена директория
 
 // Директория, която се проверява за изтеглени файлове
-$fpth = "/Volumes/TOSHIBA USB 3.0/sci.vanyog.com-pdf/";
+//$fpth = "/Volumes/TOSHIBA USB 3.0/sci.vanyog.com-pdf/";
+$fpth = "/users/vanyog/Sites/sci.vanyog.com-pdf/";
 
 if(!file_exists($fpth)) die("<b>Path</b> $fpth <b>do not exists.</b>");
 
@@ -45,12 +46,14 @@ foreach($da as $d){
   if(file_exists($p1)){
     $r = relative_to($_SERVER['CONTEXT_DOCUMENT_ROOT'].'/', $p1)."/$f1";
     $_SESSION['can_view_file'][] = $r;
+//    echo " <a href=\"file:///$r\">$f1</a>";
     echo " <a href=\"$pth"."view.php?file=$r\">$f1</a>";
   }
   else if(file_exists($p2)){
     $r = relative_to($_SERVER['CONTEXT_DOCUMENT_ROOT'].'/', $p2)."/$f2";
     $_SESSION['can_view_file'][] = $r;
-    echo " <a href=\"$pth"."view.php?file=$r\">$f2</a>";
+    echo " <a href=\"$r\">$f2</a>";
+//    echo " <a href=\"$pth"."view.php?file=$r\">$f2</a>";
   }
   else {//  die("<p>$p1<br>$p2");
     echo ' <a href="'.$d['link'].'" style="color:red;">download</a> '.$f2;

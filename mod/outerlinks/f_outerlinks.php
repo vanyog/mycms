@@ -71,6 +71,7 @@ if (isset($l['link']) && $l['link']>''){
  if($l['private'].""){ // Ако е лична връзка
    if (!show_adm_links()) die('Private link. Access denied.');
  }
+ if(isset($_GET['just']) && ($_GET['just']=='data')) die("aaa");// die(json_encode($l));
  header('Location: '.$l['link']);
  die;
 }
