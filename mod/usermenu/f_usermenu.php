@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Ако $nom=true само се проверяват правата без да се показва меню.
 // $nom = стринг - адрес на страница за излизане
 
-global $can_edit, $can_create, $can_managee, $can_visit;
+global $can_edit, $can_create, $can_managee, $can_visit, $page_header;
 
 include_once($idir."lib/f_db_select_m.php");
 include_once($idir."lib/f_mod_list.php");

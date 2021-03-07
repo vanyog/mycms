@@ -117,9 +117,10 @@ if(    ($smday !== $smfile) // Нов ден
    $smfn = $_SERVER['DOCUMENT_ROOT'].'/sitemap.xml';
    if(is_writable($smfn)) file_put_contents($smfn, $smfile);
 }
-$q = "UPDATE `$tn_prefix"."options` SET `value`='' WHERE `name` REGEXP 'sitemap_\\\d+_cache.*'";
-//die($q);
-mysqli_query($db_link, $q);
+if( isset($_GET['clear']) && ($_GET['clear']=='on') ){
+   $q = "UPDATE `$tn_prefix"."options` SET `value`='' WHERE `name` REGEXP 'sitemap_\\\d+_cache.*'";
+   mysqli_query($db_link, $q);
+}
 store_value($cache_name, $rz);
 return $rz;
 }
