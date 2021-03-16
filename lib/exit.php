@@ -22,8 +22,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 $idir = dirname(dirname(__FILE__)).'/';
 $ddir = $idir;
-include($idir."lib/f_is_local.php");
-include($idir."lib/f_page_cache.php");
+include_once($idir."lib/f_is_local.php");
+include_once($idir."lib/f_page_cache.php");
 
 if (is_local()){ 
   setcookie('noadm','yes',time()+30*24*3600, '/');

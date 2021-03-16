@@ -21,7 +21,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 // независимо дали на сайта е предвиден този език и какъв е текущия език.
 // Третият параметър $y определя дали в режим на редактиране да се показва линк за редактиране.
 
-include_once("f_translate.php");
+//include_once("f_translate.php");
 
 function translate_to($n, $l, $y = true){
 global $language;

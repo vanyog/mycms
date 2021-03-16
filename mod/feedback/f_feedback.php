@@ -110,7 +110,8 @@ else { // Ако няма влязъл потребител - събщение и recapthca
   if($lp){
      // Ако е разрешен https
      if(stored_value('userreg_https')=='on') $lp = 'https://'.$_SERVER['HTTP_HOST'].$lp;
-     $ms = translate('feedback_tologin').'<a href="'.$lp.'"><strong>'.translate('userreg_login').'</strong></a>.';
+     if(!stored_value('userreg_nologin'))
+       $ms = translate('feedback_tologin').'<a href="'.$lp.'"><strong>'.translate('userreg_login').'</strong></a>.';
   }
 }
 

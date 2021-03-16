@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-include($idir.'lib/f_db_select_1.php');
-include($idir.'lib/f_db_insert_1.php');
+include_once($idir.'lib/f_db_select_1.php');
+include_once($idir.'lib/f_db_insert_1.php');
 
 function db_duplicate_record($t,$id){
 // Четене на записа
