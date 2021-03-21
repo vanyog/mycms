@@ -354,6 +354,7 @@ if($adm) $un = '<a href="'.stored_value('conference_admin','/index.php?pid=1358'
 //die(print_r($ud,true));
 $f = new HTMLForm('conference_peform',true,false);
 $f->add_input( new FormInput('', 'user_id', 'hidden', $d['user_id']) ); 
+$f->add_input( new FormInput('', 'utype',   'hidden', $d['utype']));
 // Форми на докладите
 eval(translate('conference_forms'));
 // Тематични направления
@@ -474,12 +475,12 @@ $f->html().'
 //
 // Обработване на редактирни данни за доклад
 
-function conference_pprocess($uid){// die(print_r($_POST,true));
+function conference_pprocess($uid){
 global $language, $can_manage, $utype;
 // Данни за доклад
 $d = array(
 'user_id'=>(1*$_POST['user_id']),
-'utype'=>$utype,
+'utype'=>addslashes($_POST['utype']),
 'date_time_2'=>'NOW()',
 'publish'=>isset($_POST['publish'])?addslashes($_POST['publish']):'no'
 );
@@ -530,7 +531,7 @@ if ($r[1]) $d['fulltextfile3'] = $r[1];
 // се актуализират данните на доклада с този номер
 if (isset($_GET['proc'])){
   $d['ID'] = 1*$_GET['proc'];
-  echo db_update_record($d, 'proceedings', false);
+  db_update_record($d, 'proceedings', false);
 }
 // Иначе се вмъкват данни за нов доклад
 else{

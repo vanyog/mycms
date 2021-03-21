@@ -17,6 +17,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+$page_header .= '<style>
+form th {vertical-align:top; padding-top:20px; }
+</style>
+';
+
 //----- HTMLForm ------------
 
 class HTMLForm {
