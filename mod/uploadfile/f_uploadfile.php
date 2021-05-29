@@ -93,7 +93,7 @@ if (isset($na[1])){
 $rz = '';
 
 // Четене на данните за файла
-$fr = db_select_1('*','files',"`pid`=$pid AND `name`='$n'"); //print_r($fr); //die;
+$fr = db_select_1('*','files',"`pid`=$pid AND `name`='$n'"); //print_r($fr); die;
 
 $ne = true; // Флаг, който ако е истина файлът не се показва
 $imgs = array('jpg','jpeg','jp2','gif','png','svg', 'webp'); // Разширения на файлове - изображения
@@ -102,8 +102,10 @@ $imgs = array('jpg','jpeg','jp2','gif','png','svg', 'webp'); // Разширения на фа
 if (isset($na[2])) $show_text = $na[2];
 else $show_text = (stored_value('uploadfile_nofilenotext','false')!='true');
 
+$inEditMode = in_edit_mode();
+
 if (!$fr){ // Ако няма данни за файл - надпис "Няма качен файл" или нищо
-  if ($show_text||in_edit_mode()) $rz .= translate('uploadfile_nofile');
+  if ($show_text || $inEditMode) $rz .= translate('uploadfile_nofile');
   $fid = 0;
 }
 else {
@@ -135,9 +137,9 @@ else {
   $cs = ( (!$t1 || ($t1<0) || ($t3>$t1)) && (!$t2 || ($t2<0) || ($t3<$t2)) );
 //  echo "$t1<br>".date("Y-m-d H:i:s", $t3)."<br>$t2<br><br>";
   // Ако няма файл или е извън DOCUMENT_ROOT, или не е във време за показване
-  if ( (!$fr['filename'] || $ne || !($cs || (isset($na[2])&&($na[2]==3)) ) ) && !in_edit_mode() ){
+  if ( (!$fr['filename'] || $ne || !($cs || (isset($na[2])&&($na[2]==3)) ) ) && !$inEditMode ){
     // Показване на текста на връзката, "няма качен файл" или нищо
-    if (in_edit_mode()) $rz .= stripslashes($fr['text']);
+    if ($inEditMode) $rz .= stripslashes($fr['text']);
     else switch ($show_text){
     case '0': $rz .= ''; break;
     case '1': $rz .= stripslashes($fr['text']); break;
@@ -170,7 +172,7 @@ else {
     }
     // Друг файл
     else if($e=='mp4'){
-       $rz .= "<video onloadeddata=\"this.play();\"$ss playsinline muted loop>\n".
+       $rz .= "<video onloadeddata=\"this.play();\" onloadedmetadata=\"this.muted = true\"$ss playsinline muted loop>\n".
               '<source src="'.$f.'" type="video/mp4">'."\n".
               'Your browser does not support the video tag.'."\n".
               '</video>';
@@ -194,7 +196,7 @@ else {
 }
 
 // В режим на редактиране се показват знаци + - за качване-изтриване на файла
-if (in_edit_mode() || can_upload()){
+if (can_upload()){
   $cp = current_pth(__FILE__);
   $rz .= ' <a href="'.$cp."upload.php?pid=$pid&amp;fid=$fid&amp;fn=$n"."\" title=\"Update\">+</a>\n";
   if ( isset($fr['filename']) && $fr['filename'] && !$ne )
@@ -222,7 +224,7 @@ function upload_file_addimage($add_image,$e){
 // Проверяване дали потребителят има право да качва, сменя и изтрива файлове
 function can_upload(){
 global $can_manage, $can_edit;
-if ($can_edit) return in_edit_mode();
+if ($can_edit || show_adm_links()) return in_edit_mode();
 else {
   return isset($can_manage['uploadfile']) && ($can_manage['uploadfile']==1);
 }

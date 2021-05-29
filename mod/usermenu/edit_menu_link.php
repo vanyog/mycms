@@ -88,7 +88,7 @@ $d['date_time_2'] = 'NOW()';
 $d['language'] = $language;
 $i = db_table_field('name', 'menu_items', "`ID`=".(1*$_POST['ID']) );
 $d['name'] = $i;
-db_insert_or_1($d, 'content', "`name`='$i' AND `language`='$language'");
+db_insert_or_1($d, 'content', "`name`='$i' AND `language`='$language'", 'b', false);
 unset($_POST['text']);
 db_update_record($_POST, 'menu_items');
 if(!session_id()) session_start();

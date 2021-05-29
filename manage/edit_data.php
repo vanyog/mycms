@@ -23,6 +23,7 @@ $exe_time = microtime(true);
 
 include("conf_manage.php");
 include($idir."conf_paths.php");
+include_once($idir.'lib/translation.php');
 include($idir."lib/f_db_tables.php");
 include($idir."lib/f_db_field_names.php");
 
@@ -36,9 +37,11 @@ $pl = strlen($tn_prefix);
 
 foreach($tl as $t) if (substr($t,0,$pl)==$tn_prefix){
 $t0 = substr($t,strlen($tn_prefix));
-$page_content .= '<tr><th align="left"><a href="'.$adm_pth.'show_table.php?t='.$t0.'">'.$t0."</a></strong></th>\n<td>     ";
+$page_content .= '<tr><th style="text-align:left;white-space:nowrap;vertical-align:top;">
+<a href="'.$adm_pth.'show_table.php?t='.$t0.'">'.
+$t0."</a> <span>c</span></strong></th>\n<td>     ";
 $fn = db_field_names($t0);
-foreach($fn as $n) $page_content .= "   $n";
+foreach($fn as $n) $page_content .= "   <span>$n</span>";
 $page_content .= "</td></tr>\n";
 }
  
@@ -47,12 +50,35 @@ $page_content .= '</table><br>
 <table>
 <tr>
 <td valign="top" align="right">
-SQL:<br><br>
-<input type="submit" value="mysql_query">
+SQL:<br>
+<input type="submit" value="mysql_query"><br>
+<input type="reset"><br>
+<input type="button" value="Copy" onclick="copyText();">
 </td>
 <td><textarea name="sql" cols="60" rows="4"></textarea></td></tr>
 </table>
-</form>';
+</form>
+<script>
+var spns = document.getElementsByTagName("span");
+for(var i=0; i<spns.length; i++){
+  spns[i].style.cursor = "pointer";
+  spns[i].title = "Click to copy";
+  spns[i].addEventListener("click", onSpanClick);
+}
+function onSpanClick(e){
+var t = e.currentTarget.innerText + "\t";
+if(t=="c\t"){ t = e.currentTarget.previousElementSibling.innerText + "." }
+var te = document.getElementsByTagName("textarea")[0];
+te.value = te.value + t;
+}
+function copyText(){
+var te = document.getElementsByTagName("textarea")[0];
+te.focus;
+te.select();
+te.setSelectionRange(0, 99999);
+document.execCommand("copy");
+}
+</script>';
 
 include_once("build_page.php");
 ?>

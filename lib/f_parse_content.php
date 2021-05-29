@@ -30,7 +30,8 @@ include_once($idir.'lib/f_mod_path.php');
 include_once($idir.'mod/rawfile/f_rawfile.php');
 
 function parse_content($cnt){
-global $page_options, $page_data, $page_title, $page_content, $body_adds, $page_header, $content_date_time,
+global $page_options, $page_data, $page_title, $page_content, $body_adds, $page_header, $added_styles,
+       $content_date_time,
        $idir, $pth, $adm_pth, $apth, $mod_pth, $mod_apth,
        $can_visit, $can_manage, $site_encoding, $debug_mode, $no_style, $global_filters;
 
@@ -71,7 +72,7 @@ if (!$sc){ // Ако няма такъв скрипт се търси модул с това име
     $sf = dirname($fn).'/_style.css';
     if(file_exists($sf) && !function_exists($f) && strpos($no_style, ",$f,")===false ){
       $sfn = substr($sf,strlen($apth));
-      $page_header .= "<style>\n".rawfile($sfn)."</style>\n";
+      $added_styles .= rawfile($sfn)."\n";
     }
     // Зареждане на модула и изпълняване на главната му функция
     $c = "include_once('$fn');\n";

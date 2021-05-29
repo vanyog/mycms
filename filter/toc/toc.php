@@ -24,10 +24,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 global $h_id, $tof_contents;
 
+include_once($idir.'lib/f_add_style.php');
+
 function toc($s){
 // Ако в $s няма подстринг 'TOFCONTENTS', се връща $s без промени
 if(strpos($s, 'TOFCONTENTS')===false) return $s;
 global $h_id, $tof_contents;
+add_style('filter_toc');
 $h_id = 0; // Пореден номер на заглавие, който се използва в id атрибута, вмъкван в заглавието
 $tof_contents = ''; // Html кода на съставянето съдържание
 // Претърсване за налични заглавия.
@@ -37,9 +40,17 @@ $s = preg_replace_callback('/<h(\d+)\s*(id=".+?")*>(.*?)<\/h\1>/s', 'toc_cb', $s
 // съдържанието е празно
 if($h_id<2) $tof_contents = '';
 // При повече намерени заглавия се съставя <div> блок
-else $tof_contents = "<div id=\"toc\"><div>\n".
+else {
+     $tof_contents = "<div id=\"toc\"><div>\n".
                      '<h2>'.translate('filtertoc_toc')."</h2>\n".
                      $tof_contents."</div></div>\n";
+     // Добавяне на бутон за връщане в съдържанието
+     if(!empty($GLOBALS['filter_toc_link'])){
+        $is = current_pth(__FILE__).'toc-button.svg';
+        $tof_contents .= '<a href="#toc"><img alt="Go to TOC" src="'.$is.
+                         '" id="toc-image"></a>'."\n";
+     }
+}
 // Заместване на подстринг 'TOFCONTENTS' със съставеното съдържание
 $s = str_replace('TOFCONTENTS', $tof_contents, $s);
 return $s;

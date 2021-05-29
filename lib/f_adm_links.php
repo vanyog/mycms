@@ -125,7 +125,8 @@ var e = document.getElementById("adm_links");
 e.style.display = "none";
 }
 </script>
-<p id="adm_links">&nbsp; <a href="'.$adm_pth.'">'.$_SERVER['REMOTE_ADDR'].'</a>
+<p id="adm_links">&nbsp; '.translate('admin_style').'
+<a href="'.$adm_pth.'">'.$_SERVER['REMOTE_ADDR'].'</a>
 <a href="'.$main_index.'">Home</a> &#x25C7; '.$enmch.'
 <a href="'.$main_index.'?pid='.$ppid.'">&lt;</a>
 <input type="text" size="4" id="gtpNumber" onkeypress="gotoPageNumber(event);">

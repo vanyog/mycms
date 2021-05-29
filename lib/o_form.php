@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+include_once($idir.'lib/f_add_style.php');
+
 //----- HTMLForm ------------
 
 class HTMLForm {
@@ -46,6 +48,7 @@ if (!$this->action) $this->action = str_replace('&','&amp;',$_SERVER['REQUEST_UR
 
 public function html(){
 $js = '';
+add_style('o_form');
 // JavaScript функция, която проверява дали всички задължителни полета във формата са попълнени.
 // За да се изпълни, на бутона за изпращане на формата трябва да се присвои ->js = ' onclick="ifNotEmpty_имеНаФорма();"';
 // Този бутон трябва да има атрибут type="button", а не type="submit"
@@ -269,6 +272,41 @@ return $rz;
 
 
 }
+
+//----- FormRadioButtons ------------
+// Гпупа от радио-бутони
+// Надписите след всеки бутон се задават чрез стойностите от масив $op,
+// който може да е обикновен или асоциативен. Ако масивът е асоциативен
+// ключовете му се изпалзват за стойности, връщани при избиране бутон.
+
+class FormRadioButtons{
+
+public $caption = '';
+public $name = '';
+public $options = array();
+public $selected = -1;
+public $js = '';
+
+function __construct($c, $n, $op, $s = -1){
+$this->caption = $c;
+$this->name = $n;
+$this->options = $op;
+$this->selected = $s;
+}
+
+public function html($it){
+$rz = '';
+if ($it) $rz .= "<tr><th>";
+$rz .= "$this->caption ";
+if ($it) $rz .= "</th><td>\n";
+foreach($this->options as $k=>$o){
+  $rz .= '<input type="radio" name="'.$this->name."\" value=\"$k\"> $o<br>\n";
+}
+return $rz;
+}
+
+}
+
 
 //----- FormReCaptcha ------------
 

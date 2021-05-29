@@ -28,6 +28,7 @@ global $can_edit, $can_create, $can_managee, $can_visit, $page_header;
 include_once($idir."lib/f_db_select_m.php");
 include_once($idir."lib/f_mod_list.php");
 include_once($idir."lib/f_edit_normal_links.php");
+include_once($idir."lib/f_add_style.php");
 include_once($idir."mod/user/f_user.php");
 
 if (!session_id() && isset($_COOKIE['PHPSESSID'])) session_start();
@@ -134,15 +135,17 @@ if (g){
   document.location = r;
 }
 }
+</script>'."\n";
+ $rz .= '<a href="javascript:void(0);" onclick="getPage();">Page Get</a><br>'."\n";
+ $rz .= '<a href="javascript:void(0);" onclick="moveTo();">Page Move</a><br>'."\n";
+}
+$page_header .= '<script>
 function closeUMemu(){
 var m = document.getElementById("user_menu");
 if(confirm("Would you like to hide user menu? It will appear again after page reload."))
   m.style.display = "none";
 }
 </script>'."\n";
- $rz .= '<a href="javascript:void(0);" onclick="getPage();">Page Get</a><br>'."\n";
- $rz .= '<a href="javascript:void(0);" onclick="moveTo();">Page Move</a><br>'."\n";
-}
 if ($can_edit) $rz .= edit_normal_link()."<br>\n";
 foreach($can_manage as $m=>$yn) if( $yn ) {
   $fn = dirname(mod_path($m)).'/f_menu_items.php';
@@ -157,9 +160,13 @@ if ( strlen($nom) && strlen($rz) ){
   $rz .= '<span class="user">'.$_SESSION['user_username'].
          ' <a href="'.$nom.'">'.translate('user_logaut').'</a></span>'."<br>\n";
 }
-if($rz) return '<div id="user_menu">
+if($rz){
+  add_style('usermenu');
+  return '<div id="user_menu">
 <a href="" class="cLink" onclick="closeUMemu();return false;">close</a><br>
-'."\n".$rz."\n</div>";
+'."\n".$rz."\n</div>
+";
+}
 else return '';
 }
 

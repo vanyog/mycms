@@ -55,6 +55,8 @@ include_once($idir.'lib/f_page_cache.php');
 include_once($idir.'lib/f_db_table_status.php');
 
 header("Content-Type: text/html; charset=$site_encoding");
+// Кеширане от браузъра за един час
+header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + (60 * 60)));
 
 // Адрес на индексния файл
 $ind_fl = $_SERVER['SCRIPT_NAME'];

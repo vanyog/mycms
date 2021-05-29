@@ -24,6 +24,7 @@ $exe_time = microtime(true);
 
 include("conf_manage.php");
 include_once($idir."conf_paths.php");
+include_once($idir.'lib/translation.php');
 include_once($idir."lib/f_is_local.php");
 include_once($idir."lib/f_relative_to.php");
 include_once($idir."lib/f_strip_last_name.php");
