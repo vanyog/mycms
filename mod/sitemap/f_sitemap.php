@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 include_once($idir.'lib/f_db_table_field.php');
 
-global $smfile, $smday;
+global $smfile, $smday, $page_header;
 
 $page_passed = array(); // Номера на менюта, които вече са обработени,
                         // използва са за да не се получи зацикляне
@@ -56,20 +56,8 @@ global $page_passed, $map_level, $i_root, $id_pre, $page_header, $smfile, $smday
        $db_link, $tn_prefix;
 $ar = explode('|',$a);
 if(!$ar[0]) $ar[0] = stored_value('main_index_pageid',1);
-$cache_name = 'sitemap_'.$ar[0].'_cache';
-if(in_edit_mode()) $cache_name = $cache_name.'_edit';
-if( !(isset($_GET['clear']) && ($_GET['clear']=='on')) ){
-    $rz = stored_value($cache_name);
-    if($rz) return $rz;
-}
-$page_passed = array();
-$map_level = 0;
-$i_root    = 0;
-$id_pre = 'map'.$ar[0];
 $id = 'site_map';
 if (isset($ar[1])) $id = $ar[1];
-$rz = sitemap_rec($ar[0], 1, $ar[0]==$mpg_id);
-//if($map_level)
 $page_header .= '<script>
 function mapHideShow(e, a=0){
 var p = e.parentElement;
@@ -94,12 +82,23 @@ function mapContractExpandAll(a){
 var sm = document.getElementById("'.$id.'");
 var c = sm.children.length;
 for(var i=0; i<c; i++) if(sm.children[i].nodeName=="DIV"){
-  if(sm.children[i].children[0].nodeName=="SPAN"){
+  if(sm.children[i].children[0] && (sm.children[i].children[0].nodeName=="SPAN")){
     mapHideShow(sm.children[i].children[0], a);
   }
 }
 }
 </script>';
+$cache_name = 'sitemap_'.$ar[0].'_cache';
+if(in_edit_mode()) $cache_name = $cache_name.'_edit';
+if( !( isset($_GET['clear']) && ($_GET['clear']=='on') ) ){
+    $rz = stored_value($cache_name);
+    if($rz) return $rz;
+}
+$page_passed = array();
+$map_level = 0;
+$i_root    = 0;
+$id_pre = 'map'.$ar[0];
+$rz = sitemap_rec($ar[0], 1, $ar[0]==$mpg_id);
 $clear_link = '';
 if(in_edit_mode()) $clear_link = '<a href="'.set_self_query_var('clear','on').'">Clear cache</a>';
 $rz = '<div id="'.$id.'">'."\n".$clear_link.
