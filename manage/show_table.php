@@ -23,7 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 $exe_time = microtime(true);
 
 include('conf_manage.php');
-include_once($idir.'conf_paths.php'); 
+include_once($idir.'conf_paths.php');
+include_once($idir.'lib/translation.php');
 include_once($idir.'lib/f_db_select_m.php');
 include_once($idir.'lib/f_db_tables.php');
 include_once($idir.'lib/f_db_table_field.php');

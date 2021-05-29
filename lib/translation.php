@@ -67,18 +67,18 @@ $how = stored_value('flag_setting','flag');
 if ($a) $how = $a;
 if (!$dont_translate) foreach($ls as $l) if ($l!=$language){
   $h = set_self_query_var('lang',$l);
-  $r .= '<a href="'.$h.'" id="lang_flag">'."\n";
+  $r .= '<a href="'.$h.'" id="lang_flag">';
   switch ($how){
-  case 'text': $r .= $languages[$l]."\n"; break;
-  case 'flag&text': $r .= '<img src="'.$pth.'images/flag-'.$l.'.svg" alt="'.$l.'">'."<br>$languages[$l]\n";
+  case 'text': $r .= $languages[$l]; break;
+  case 'flag&text': $r .= '<img src="'.$pth.'images/flag-'.$l.'.svg" alt="'.$l.'">'."<br>$languages[$l]";
                     break;
-  case 'flag text': $r .= '<img src="'.$pth.'images/flag-'.$l.'.svg" alt="'.$l.'">'." $languages[$l]\n";
+  case 'flag text': $r .= '<img src="'.$pth.'images/flag-'.$l.'.svg" alt="'.$l.'">'." $languages[$l]";
                     break;
-  default: $r .= '<img src="'.$pth.'images/flag-'.$l.'.svg" alt="'.$l.'">'."\n"; break;
+  default: $r .= '<img src="'.$pth.'images/flag-'.$l.'.svg" alt="'.$l.'">'; break;
   }
   $r .= "</a>\n";
 }
-return encode("\n<!--Флагчета за смяна на езика-->\n").$r.encode("<!--Край на флагчетата-->\n");
+return encode("\n<!--Флагчета за смяна на езика-->\n").$r.encode("\n<!--Край на флагчетата-->\n");
 }
 
 ?>

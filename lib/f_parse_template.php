@@ -62,12 +62,23 @@ while ($t['parent']){
 $rz = parse_content($cnt);
 $rz = preg_replace('/<!--(.*)-->/Uis', '', $rz);
 $rz = preg_replace('/^\n+|^[\t\s]*\n+/m', '', $rz);
+// Премахване на потребителското меню, ако няма влязъл потребител
+$rz = removeusermenu($rz);
 return $rz;
 }
 
 function show_visits($p){
 if (show_adm_links()) return '   Visited: '.$p['tcount'].', Today: '.$p['dcount'];
 else return '';
+}
+
+function removeusermenu($s){
+if(isset($_COOKIE['PHPSESSID']) && !session_id()) session_start();
+if( ! (isset($_SESSION['user_username']) || isset($_SESSION['user_password']) ) )
+{
+$s = preg_replace('/<div id="user_menu">?.*<\/div>/Uis', '', $s);
+}
+return $s;
 }
 
 ?>

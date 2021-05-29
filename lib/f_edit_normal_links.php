@@ -32,7 +32,7 @@ if (in_edit_mode()) {
     if($id) $el = ' <a href="'.$adm_pth."edit_record.php?t=content&r=$id\">*</a>";
   }
   return '<a href="'.$_SERVER['SCRIPT_NAME'].'?'.set_query_var($edit_name,'0').'" title="Switch to normal mode">'.
-         $p[$y].'Norm</a>'.$el;
+         $p[$y].'Normal</a>'.$el;
 }
 else
   return '<a href="'.$_SERVER['SCRIPT_NAME'].'?'.set_query_var($edit_name,$edit_value).'" title="Switch to edit mode">'.$p[$y].'Edit</a>';

@@ -50,6 +50,7 @@ include_once($idir.'lib/f_db_insert_or_1.php');
 include_once($idir.'lib/f_db_update_record.php');
 include_once($idir.'lib/f_view_record.php');
 include_once($idir.'lib/f_edit_record_form.php');
+include_once($idir.'lib/f_message.php');
 include_once($idir.'mod/user/f_user.php');
 
 global $user_table, $userreg_altt;
@@ -71,6 +72,7 @@ if( $altt && ($altt!=$n) && !in_edit_mode() && isset($ta[1]) && ($ta[1]!='logout
    else return '';
 }
 if (isset($ta[1])) switch($ta[1]){
+case 'login' : return userreg_inlink($ta[0]); break;
 case 'logout': return userreg_outlink($ta[0]); break;
 case 'mydata': return userreg_mydata($ta[0]); break;
 case 'edit'  : if(!isset($_GET['user2']) || ($_GET['user2']=='edit')) return userreg_edit($ta[0]);   break;
@@ -126,7 +128,7 @@ $email = '';
 if (count($_POST)){
  //print_r($_POST); die;
  $message = userreg_newprocess();
- if ($message=='OK') return '<p class="message">'.translate('userreg_emailsent').'</p>';
+ if ($message=='OK') return message(translate('userreg_emailsent'));
  $email = $_POST['email'];
 }
 $f = userreg_new_form($t, $email);
@@ -134,7 +136,7 @@ $fb = userreg_facebook();
 $rz = translate('userreg_newregtext').
 ' <a href="'.stored_value("userreg_login_$t").'">'.translate('userreg_login').'</a></p>
 ';
-if($message) $rz .= '<p class="message">'.$message."</p>\n";
+if($message) $rz .= message($message);
 $rz .= $f->html().$fb.translate('userreg_newhelp');
 return $rz;
 }
@@ -287,7 +289,6 @@ $r = db_insert_or_1($d, stored_value('user_table','users'), "`email`='".$d['emai
 // Текст на имейла
 $ms = translate('userreg_regmess').'http://'.$_SERVER['HTTP_HOST'].set_self_query_var('code',$d['code'],false);
 $sb = translate('userreg_regsub');
-$sb = '=?'.$site_encoding.'?B?'.base64_encode($sb).'?=';
 $fe = stored_value('site_owner_email','vanyog@gmail.com');
 $hd = 'Content-type: text/plain; charset='.$site_encoding."\r\n".
 //      'Return-Path: '.$fe."\r\n".
@@ -320,7 +321,7 @@ unset($d['thirdname']);
 unset($d['telephone']);
 unset($d['IP']);
 db_update_record($d,$user_table);
-return '<p class="message">'.translate('userreg_emcofirmed').' <a href="'.stored_value("userreg_login_$t").'">'.translate('userreg_login').'</a></p>';
+return message(translate('userreg_emcofirmed').' <a href="'.stored_value("userreg_login_$t").'">'.translate('userreg_login').'</a>');
 }
 
 //
@@ -382,6 +383,20 @@ return $id;
 }
 
 //
+// Когато няма влязъл потребител показва линк "Вход"
+// когато има - потребителско име и линк "Изход"
+
+function userreg_inlink($t){
+$id = userreg_id($t);
+if($id) return userreg_outlink($t);
+else {
+   // Адрес на страницата за влизане
+   $lp = stored_value("userreg_login_$t");
+   return '<p class="user"><a href="'.$lp.'">'.translate('userreg_login').'</a></p>';
+}
+}
+
+//
 // Връща потребителското име и линк "Изход"
 
 function userreg_outlink($t){
@@ -389,8 +404,12 @@ if (!userreg_id($t)) return '';
 // Адрес на страницата за излизане
 $lp = stored_value("userreg_logout_$t");
 if (!$lp) die("'userreg_logout_$t' option is not set.");
+// Адрес на "домашната" страница на потребители от тип $t
 $_SESSION['user2_returnpage'] = $_SERVER['REQUEST_URI'];
-return '<p class="user">'.$_SESSION['user_username'].' <a href="'.$lp.'">'.translate('user_logaut').'</a></p>';
+$hp = stored_value("userreg_home_$t");
+$rz = $_SESSION['user_username'];
+if($hp) $rz = "<a href=\"$hp\" style=\"text-transform:none;\">$rz</a>";
+return '<p class="user">'.$rz.' <a href="'.$lp.'">'.translate('user_logaut').'</a></p>';
 }
 
 //
@@ -417,9 +436,8 @@ $lp = stored_value("userreg_logout_$t");
 // Номер на влезлия потребител
 $id = userreg_id($t);
 // Ако вече има влязъл потребител - надпис "Вие сте влезли като: име "Изход"
-if ($id)
-    return '<p class="message">'.translate('userreg_yourin').$_SESSION['user_username'].
-           ' <a href="'.$lp.'">'.translate('user_logaut').'</a></span>';
+if ($id) return message(translate('userreg_yourin').$_SESSION['user_username'].
+           ' <a href="'.$lp.'">'.translate('user_logaut').'</a></span>');
 // Задаване на страницата, към която да стане връщане
 if (isset($_SERVER['HTTP_REFERER']) && !isset($_SESSION['user2_returnpage'])) 
    $_SESSION['user2_returnpage'] = $_SERVER['HTTP_REFERER'];
@@ -433,7 +451,7 @@ if (!$rp) die("'userreg_newreg_$t' option is not set.");
 $altt = '';
 if(in_edit_mode()) $altt = translate("USERREG_$t");
 $lk = '<a href="'.$rp.'">'.translate('userreg_newreg')."</a>";
-if(!empty($_SESSION['userreg_message'])) $altt .= '<p class="message">'.$_SESSION['userreg_message']." $lk</p>\n";
+if(!empty($_SESSION['userreg_message'])) $altt .= message($_SESSION['userreg_message']." $lk")."\n";
 unset($_SESSION['userreg_message']);
 return $altt.translate('userreg_logintext').$lk."</p>\n".$guf->html();
 }
@@ -470,6 +488,7 @@ userreg_check($t);
 if (!session_id()) session_start();
 unset($_SESSION['user_username']);
 unset($_SESSION['user_password']);
+unset($_SESSION['user_password_raw']);
 $rz = '<p>'.translate('userreg_logoutcontent').
        ' <a href="'.stored_value("userreg_login_$t").'">'.translate('userreg_login').'</a></p>
 ';
@@ -492,7 +511,7 @@ global $user_table, $idir;
 $r = userreg_id($t);
 if (!$r){
    $lp = stored_value("userreg_login_$t");
-   return '<p class="message">'.translate('userreg_mustlogin').' <a href="'.$lp.'">Log in</a></p>';
+   return message(translate('userreg_mustlogin').' <a href="'.$lp.'">Log in</a>');
 }
 // Превключване към https, ако се изисква
 if((stored_value('userreg_https')=='on') && !(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']=='on')) ){
@@ -531,13 +550,13 @@ if ( $id2 && ($id1!=$id2) ){
    // Проверка дали потребител $id2 е от същия тип
    $ty = db_table_field('type', $user_table, "`ID`=$id2");
    // Съобщение: Не може да се редактират данни на потребител от друг тип
-   if ($ty!=$t) return '<p class="message">'.translate('userreg_othertype').'</p>';
+   if ($ty!=$t) return message(translate('userreg_othertype'));
    $cp['ID'] = $id2;
    // Съобщение за внимание, че се редактират данни на друг потребител
-   $rz .= '<p class="message">'.translate('userreg_editother').'</p>';
+   $rz .= message(translate('userreg_editother'));
  }
  // Съобщение: Няма право да редактира.
- else return '<p class="message">'.translate('userreg_cnnotedit').'</p>';
+ else return message(translate('userreg_cnnotedit'));
 }
 else $cp['ID'] = $id1;
 if (count($_POST)){ $rz .= userreg_editprocess($user_table, $t); }
@@ -552,7 +571,7 @@ return $rz.edit_record_form($cp, $user_table, false).$h;
 function userreg_editprocess($user_table, $t){
 $rz = '';
 if ( !$_POST['password'] || ($_POST['password']!=$_POST['password2']) ){
-  if ($_POST['password2']) $rz .= '<p class="message">'.translate('user_passwordinvalid').'</p>';
+  if ($_POST['password2']) $rz .= message(translate('user_passwordinvalid'));
   unset($_POST['password']);
 }
 unset($_POST['password2']);
@@ -571,19 +590,19 @@ if (isset($_POST['password'])){
 $un = trim($_POST['username']);
 if (!$un) {
   unset($_POST['username']);
-  $rz .= '<p class="message">'.translate('userreg_emptyun').'</p>';
+  $rz .= message(translate('userreg_emptyun'));
 }
 else {
   $id = db_table_field('ID', $user_table, 
         "`username`='".addslashes($_POST['username'])."' AND `ID`<>$id2", 0);
   if ($id){
     unset($_POST['username']);
-    $rz .= '<p class="message">'.translate('userreg_sameun').'</p>';
+    $rz .= message(translate('userreg_sameun'));
   }
 }
 $i = db_update_record($_POST, $user_table);
 if ($i){
-  $rz .= '<p class="message">'.translate('dataSaved').'</p>';
+  $rz .= message(translate('dataSaved'));
   if (isset($_POST['username']) && ($id1==$id2)) $_SESSION['user_username'] = $_POST['username'];
 }
 return $rz;
@@ -627,7 +646,7 @@ $rz = '<h2>'.translate('userreg_sendTitle')."</h2>";
 $tc = db_table_field('COUNT(*)', 'content', "`name` LIKE 'email_template_%'");
 // Шаблони за имейли
 $ts = db_select_m('*', 'content', "`name` LIKE 'email_template_%' AND `language`='$language'");
-if(!count($ts)) $rz .= '<p class="message">'.translate('userreg_noTemplates')."</p>\n";
+if(!count($ts)) $rz .= message(translate('userreg_noTemplates'));
 $rz .= '<p><a href="'.$adm_pth.
     'new_record.php?t=content&name=email_template_'.($tc+1).'&language='.$language.'">'.
     translate('userreg_newTemplate')."</a></p>\n";

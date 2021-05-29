@@ -23,6 +23,7 @@ $exe_time = microtime(true);
 
 include("conf_manage.php");
 include($idir."conf_paths.php");
+include_once($idir.'lib/translation.php');
 include($idir."lib/f_db_tables.php");
 include($idir."lib/f_db_field_names.php");
 
@@ -36,7 +37,8 @@ $pl = strlen($tn_prefix);
 
 foreach($tl as $t) if (substr($t,0,$pl)==$tn_prefix){
 $t0 = substr($t,strlen($tn_prefix));
-$page_content .= '<tr><th align="left"><a href="'.$adm_pth.'show_table.php?t='.$t0.'">'.
+$page_content .= '<tr><th style="text-align:left;white-space:nowrap;vertical-align:top;">
+<a href="'.$adm_pth.'show_table.php?t='.$t0.'">'.
 $t0."</a> <span>c</span></strong></th>\n<td>     ";
 $fn = db_field_names($t0);
 foreach($fn as $n) $page_content .= "   <span>$n</span>";

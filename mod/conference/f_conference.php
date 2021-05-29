@@ -35,6 +35,8 @@ include_once($idir.'mod/uploadfile/f_uploadfile.php');
 
 global $user_table, $utype, $fdir, $day1, $day2, $day3, $day4, $adm_pth, $page_header, $proccount, $plogin, $pedit;
 
+$editing = in_edit_mode();
+
 // Таблица с данни за потребителите
 $user_table = stored_value('user_table', 'users');
 // Тип на потребителите
@@ -85,6 +87,7 @@ document.location = e;
 // 'review'   - Попълване на рецензия за доклад с номер $_GET['rev2']
 // 'procrevs' - Рецензии на доклад с номер $_GET['proc']
 // 'participants' - Имейли на потребителите в обратан ред на последната актуализация
+// 'topics' - НТML код - списък на тематибните направления и краткото им оисание
 
 // Втората част на параметъра $a, след знака | съдържа други параметри
 
@@ -112,8 +115,9 @@ case 'stats'       : return conference_stats();
 case 'abstract_t'  : return conference_abstract_titles($aa[1]);
 case 'abstracts'   : return conference_abstract_book($uid, $adm);
 case 'participants': return conference_participants();
-case 'review'      : return '<p class="message">'."Missing report ID.</p>\n";
+case 'review'      : add_style('p.message'); return '<p class="message">'."Missing report ID.</p>\n";
 case 'procrevs'    : return conference_procRevs();
+case 'topics'      : return conference_topics();
 default            : return '<p class="message">'."Unknown parameter value '$a' in 'conference() function.</p>\n";
 }
 
@@ -133,6 +137,7 @@ $cp = array(
 'telephone'=>translate('user_telephone')
 );
 
+add_style('conferenceProfile');
 $rz = '';
 // Данни за докладите на потребителя
 $pd = db_select_m('*', 'proceedings', "`user_id`=$uid AND `utype`='$utype'");
@@ -144,9 +149,12 @@ $rz .= conference_userRevList($uid);
 
 $rz .= '<h2>'.translate('conference_mydata').'</h2>
 '.view_record($d, $cp);
+// Линк "Редактиране на профила"
 $rz .= '<p><a href="'.$pedit.'">'.translate('conference_mypersonal')."</a>";
-if(!count($pd)) $rz .= ' &nbsp; <a href="'.$pth.'mod/userreg/delete_me.php" onclick="confDelUser(this);return false;">'.
-                        translate('conference_deleteuser');
+// Линк "Изтриване на профила"
+if(!count($pd)) $rz .= ' &nbsp; <a href="'.$pth.
+                'mod/userreg/delete_me.php" onclick="confDelUser(this);return false;" class="danger">'.
+                translate('conference_deleteuser');
 $rz .= "</a></p>\n";
 
 $d1 = ''; $did = ''; $d2 = ''; $di2 = '';
@@ -185,7 +193,7 @@ $edp = stored_value('conference_editpaper', '/index.php?pid=1068');
 $rz .= '<p><a href="'.$edp.$did.'">'.translate('conference_editpaper').'</a>';
 // Линк "Изтриване"
 if (count($pd)>0) $rz .= ' &nbsp; <a href="'.current_pth(__FILE__).'delete_paper.php?a=1'.$did.
-                         '" onclick="confDelPaper(this);return false;">'.
+                         '" onclick="confDelPaper(this);return false;" class="danger">'.
                          translate('conference_deletepaper').'</a>';
 $rz .= "</p>\n";
 $rz .= conference_viewRev2rezult($d1).
@@ -272,7 +280,7 @@ return $d;
 // се използва пътят до файловете на текущата конференция $fdir
 
 function file_link_and_size($fn, $f_d = ''){
-global $fdir;
+global $fdir,$editing;
 if(empty($f_d)) $f_d = $fdir;
 if (!$fn) return '';
 // Абсолютен път към файла
@@ -288,7 +296,7 @@ if (!is_local()) $fl = rawurlencode($fn);
 else $fl = $fn;
 $gh = '';
 $fe = strtolower(pathinfo($fn, PATHINFO_EXTENSION));
-if(in_edit_mode() && in_array($fe,array('doc','docx')) && !is_local())
+if($editing && in_array($fe,array('doc','docx')) && !is_local())
   $gh = 'https://docs.google.com/gview?url='.$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'];
 return "<a href=\"$gh$f_d$fl\">$fn</a> - $sz bytes $dt";
 }
@@ -816,7 +824,14 @@ return $rz;
 
 function conference_abstract_titles($a = ''){
 global $utype, $adm_pth, $can_manage, $can_edit, $day3, $page_header, $fdir, $user_table;
+usermenu(true);
+// Дали потребителят е от екипа на конференцията
+$team = !empty($can_manage['conference']) || $can_edit;
+// Преглед преди обявената дата
+$preview = !empty($_GET['allowtoshow']) && ($_GET['allowtoshow']=='basa-team');
+$current = ($utype == $a);
 if($a){
+//  $preview = ($utype != $a);
   $utype = $a;
   $fdir = stored_value('conference_files_'.$utype, $fdir);
 }
@@ -830,11 +845,6 @@ if( confirm("'.encode('Потвърждавате ли изтриване на запис за доклад с ID=').'"+
    document.location = "'.$adm_pth.'delete_record.php?t=proceedings&r="+id;
 }
 </script>';
-usermenu(true);
-// Дали потребителят е от екипа на конференцията
-$team = !empty($can_manage['conference']) || $can_edit;
-// Преглед преди обявената дата
-$preview = !empty($_GET['allowtoshow']) && ($_GET['allowtoshow']=='basa-team');
 // Томове
 $vl = db_select_m('vol', 'proceedings', "`utype`='$utype' GROUP BY `vol`");
 // Тематични направления $tp
@@ -850,7 +860,7 @@ $rc = 0; // Брой готови доклади
 $t3 = db_table_field('date_time_2', 'schedules', "`sch_name`='".$day3[0]."' AND `ev_name`='".$day3[1]."'");
 // Настоящия момент
 $td = date('Y-m-d H:i:s');
-if (("$td"<"$t3") && !$team && !$preview)
+if ($current && ("$td"<"$t3") && !($team || $preview))
     return '<p class="message">'.translate("conference_shoeafter").db2user_date_time($t3)."</p>\n";
 // Начин на подреждане
 //$order = ' ORDER BY `place` ASC';
@@ -898,7 +908,7 @@ for($i = 0; $i<count($tp); $i++){
 //   $filter = ' AND `approved_a`';
 //   $filter = " AND `fulltextfile2`>' '";
    $filter = " AND ( ((`utype`<'vsu2020') AND `approved_a`) OR `publish`='yes')";
-   if ( $team || $preview ) $filter = '';
+//   if ( $team || $preview ) $filter = '';
    // За всеки от езиците
 //   foreach($ln as $l)
    {
@@ -1039,7 +1049,7 @@ for($i = 0; $i<count($tp); $i++){
      if ( $team ) $rz .= " - $c abstracts, $doc doc, $pdf pdf files";
      $rz .= "</h3>\n";
 //     if ( $team ) $rz .= "<p>$zip_command </p>\n";
-     if (("$td">="$t3") || $team || $preview ) $rz .= $sr;
+     if (!$current || ("$td">="$t3") || $team || $preview ) $rz .= $sr;
      $tc += $c;
      $docs += $doc;
      $pdfs += $pdf;
@@ -1423,7 +1433,7 @@ if(db_update_record($_POST, 'reviewer_work')) return '<p class="message">'.trans
 // Показване списък на рецензентите
 
 function conference_revList(){
-global $utype, $pedit, $adm_pth;
+global $utype, $pedit, $adm_pth, $editing;
 // Тематични направления
 eval(translate('conference_topics_'.$utype,false));
 
@@ -1454,13 +1464,13 @@ if(confirm("Confirm that you want to delete reviewer")) document.location = e;
 foreach($tp as $i=>$t){
   // Данни на рецензентите по научно направление с номер $i
   $q = '';
-  if(in_edit_mode()) $q = 'a.ID as rid, ';
+  if($editing) $q = 'a.ID as rid, ';
   $dt = db_select_m($q.'b.ID, b.position, b.firstname, b.secondname, b.thirdname, a.languages, a.confirmed',
       '`reviewers` AS a RIGHT JOIN `users` AS b ON a.user_id=b.ID',
       "a.utype='$utype' AND a.topic=$i ORDER BY b.thirdname ASC");
 
     foreach($dt as $j=>$d){
-       if(in_edit_mode()){
+       if($editing){
           $dt[$j]['rid']= '<a href="'.$adm_pth.'delete_record.php?t=reviewers&r='.$d['rid'].
                        '" style="color:red;" title="Delete reviewer" onclick="confirmRevDel(this);return false;">'.$d['rid'].'</a> ';
           $dt[$j]['ID'] = '<a href="'.$pedit.'&uid='.$d['ID'].'" target="_blank" title="Edit user\'s record">*</a> '.
@@ -1506,7 +1516,7 @@ function conference_revCounts($tp,$rt,$tb,$rb,$te,$re){
 // Показване на рецензиите на доклад
 
 function conference_procRevs(){
-global $utype, $adm_pth;
+global $utype, $adm_pth, $editing;
 if(empty($_GET['proc']) || !is_numeric($_GET['proc'])) return '<p class="message">Missing or incorrect "proc" parameter.</p>'."\n";
 $rws = db_select_m('*', 'reviewer_work', "`proc_id`=".$_GET['proc'],false);
 $rz = '';
@@ -1552,7 +1562,7 @@ foreach($rws as $i => $rw){ //die(print_r($rw, true));
   if($rw['date_time_2']>$rw['date_time_1']) $rz .= $rw['date_time_2'];
   $rz .= "</p>\n";
   $rz .= "<p>&nbsp;</p>\n<p>".encode('Рецензент: ').$rw['rev_id']." ..................................</p>\n";
-  if(in_edit_mode()) $rz .= '<a href="'.$adm_pth.'edit_record.php?t=reviewer_work&r='.$rw['ID'].'" target="_blank">*</a> ';
+  if($editing) $rz .= '<a href="'.$adm_pth.'edit_record.php?t=reviewer_work&r='.$rw['ID'].'" target="_blank">*</a> ';
 }
 return $rz;
 }
@@ -1561,7 +1571,7 @@ return $rz;
 
 function conference_viewRev2rezult($d){
 if(!isset($d['ID'])) return ''; //'<h3>'.translate('conference_rev2noRevs')."</h3>\n";
-global $adm_pth;
+global $adm_pth, $editing;
 // Данни от рецензиите
 $rw = db_select_m('*', 'reviewer_work', '`proc_id`='.$d['ID'].' AND `decision` IS NOT NULL');
 $rz = '';
@@ -1582,7 +1592,21 @@ foreach($rw as $i=>$w){
 /*    if($w['comment1'])
      $rz .= '<h4>'.strip_tags(translate('conference_comment3'))."</h4>\n".
             '<p>'.$w['comment3']."</p>\n";*/
-  if(in_edit_mode()) $rz .= '<a href="'.$adm_pth.'edit_record.php?t=reviewer_work&r='.$w['ID']."\">*</a>\n";
+  if($editing) $rz .= '<a href="'.$adm_pth.'edit_record.php?t=reviewer_work&r='.$w['ID']."\">*</a>\n";
+}
+return $rz;
+}
+
+function conference_topics(){
+global $utype, $language, $adm_pth;
+eval(translate('conference_topics_'.$utype, false));
+$rz = "<h2>".translate('conference_topics_heading_'.$utype)."</h2>\n";
+foreach($tp as $i=>$t){
+$rz .= '<p>'.$t."</p>\n";
+}
+if(in_edit_mode()){
+  $id = db_table_field('ID', 'content', "`name`='conference_topics_$utype' AND `language`='$language'");
+  $rz .= '<a href="'.$adm_pth.'edit_record.php?t=content&r='.$id.'">*</a>';
 }
 return $rz;
 }

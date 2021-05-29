@@ -6,10 +6,12 @@ _*
 browserconfig.xml
 conf_database.php
 favicons
+favicon.ico
 googleac*
 manage/ckeditor
 mod/bgdic
 mod/uploadfile/conf_uploadfile.php
+net
 robots.txt
 site.webmanifest
 sitemap.xml

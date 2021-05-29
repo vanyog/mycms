@@ -28,6 +28,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Ако вторият параметър $elink = false, в режим на редактиране в края на надписа не се показва линк за редактиране,
 // иначе този ленк не се показва ако полето от записа на надписа nolink е 1.
 
+// Ако третият параметър е $debu = true; се показват SQL заявките
+
 include_once($idir."conf_paths.php");
 include_once($idir."lib/f_is_local.php");
 include_once($idir."lib/f_db_select_1.php");
@@ -38,7 +40,7 @@ $content_create_time = ''; // Променлива, която съдържа датата и часа на първото
 // Глобални филтри, скриптът CONTENT от таблица scripts ги прилагат върху съдържанието на всяка страница.
 $global_filters = db_table_field('filters', 'filters', "`name` LIKE '*'");
 
-function translate($n, $elink=true){
+function translate($n, $elink=true, $debug=false){// print_r(debug_backtrace()); die;
 
 if(empty($n)) return '';
 
@@ -48,8 +50,10 @@ global $languages, $default_language, $language, $pth, $adm_pth, $content_date_t
 // Статична променлива за кеш
 static $string = array();
 
+$editMode = in_edit_mode() && (show_adm_links() || $can_edit);
+
 // Ако стрингът вече е съставен се връща от кеша
-if (isset($string[$n][$language]) && !in_edit_mode()) return $string[$n][$language];
+if (isset($string[$n][$language]) && !$editMode) return $string[$n][$language];
 
 //if( !empty($debug_mode) ) echo "$n ";
 
@@ -57,8 +61,8 @@ $content_date_time = '';
 $content_create_time = '';
 
 $el = ''; // Линк за редактиране. Показва се ако сайтът е в режим на редактиране.
-if (in_edit_mode() && $elink){
-  $id = db_select_1('ID','content',"name='$n' AND language='$language'");
+if ($editMode && $elink){
+  $id = db_select_1('ID','content',"`name`='$n' AND `language`='$language'",$debug);
   if ($can_edit) $h = $pth.'mod/usermenu/edit_text.php?i='.$id['ID'].'&amp;pid='.$page_data['ID'];
   else $h = $adm_pth.'edit_record.php?t=content&amp;r='.$id['ID'];
   $el = '<a href="'.$h.'" style="color:#000000;background-color:#ffffff;margin:0;padding:0;">*</a>';
@@ -69,7 +73,8 @@ $rz = '';
 
 // Четене на записа за надпис с име $n на език $language
 $r1 = db_select_1('c.*, f.filters',
-                  'content` c LEFT JOIN `'.$tn_prefix.'filters` f ON c.name=f.`name', "c.name='$n' AND `language`='$language'");
+                  'content` c LEFT JOIN `'.$tn_prefix.'filters` f ON c.name=f.`name', "c.name='$n' AND `language`='$language'",
+                  $debug);
 //if(substr($n, 0, 6)=='Vladim') { var_dump($r1); die; }
 
 if ($r1){ // Ако има такъв запис
@@ -79,9 +84,9 @@ if ($r1){ // Ако има такъв запис
   $rz = apply_filters($r1['filters'], parse_content($t));
   if ((!isset($r1['nolink']) || !$r1['nolink']) && $elink) $rz .= $el;
 }
-else if (in_edit_mode() && $elink){
+else if ($editMode && $elink){
          // На локелен сървър или в режим на редактиране се показва името на стринга като линк,
-         // който отваря форма за въвеждане на липсващия надпис
+         // който отваря форма за въвеждане на липсващия надпис.
          if ($can_edit) $h = $pth.'mod/usermenu/edit_text.php?i='.$n.
              '&amp;lang='.$language.
              '&amp;pid='.$page_data['ID'];
@@ -92,10 +97,10 @@ else if (in_edit_mode() && $elink){
          // Ако сме на езика по подразбиране и има други езици
          if(($language == $default_language) && count($languages)) {
              // Стринг на произволен език
-             $r2 = db_select_1('c.*, f.filters', 'content` c LEFT JOIN `'.$tn_prefix.'filters` f ON c.name=f.`name', "c.name='$n'");
+             $r2 = db_select_1('c.*, f.filters', 'content` c LEFT JOIN `'.$tn_prefix.'filters` f ON c.name=f.`name', "c.name='$n'",$debug);
          }
          // Четене на записа на езика по подразбиране
-         else $r2 = db_select_1('c.*, f.filters', 'content` c LEFT JOIN `'.$tn_prefix.'filters` f ON c.name=f.`name', "c.name='$n' AND `language`='$default_language'");
+         else $r2 = db_select_1('c.*, f.filters', 'content` c LEFT JOIN `'.$tn_prefix.'filters` f ON c.name=f.`name', "c.name='$n' AND `language`='$default_language'",$debug);
          // Ако няма запис се показва името на текста
          if ( !$r2 ){ $r2['text'] = $n; $r2['filters'] = ''; }
          else {
