@@ -23,12 +23,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 function pagestat(){
 global $page_data, $can_edit;
-if ( !(show_adm_links() || $can_edit) ) return '';
+if ( !( stored_value("pagestat_public") || show_adm_links() || $can_edit ) ) return '';
 $pth = current_pth(__FILE__);
-return 'Total '.$page_data['tcount'].
-      ' Today '.$page_data['dcount'].
-      ' See <a href="'.$pth.'page_stats.php?pid='.$page_data['ID'].'">page</a>'.
+$rz = translate('pagestat_total').$page_data['tcount'].
+      translate('pagestat_today').$page_data['dcount'];
+if ( !( show_adm_links() || $can_edit ) ) return $rz;
+$rz .= ' See <a href="'.$pth.'page_stats.php?pid='.$page_data['ID'].'">page</a>'.
       ',    <a href="'.$pth.'page_stats.php?group='.$page_data['menu_group'].'">group</a>'.
-      ' or  <a href="'.$pth.'content_stats.php">content</a> stats';}
+      ' or  <a href="'.$pth.'content_stats.php">content</a> stats';      
+return $rz;
+}
 
 ?>

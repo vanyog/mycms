@@ -9,6 +9,7 @@ favicons
 favicon.ico
 googleac*
 manage/ckeditor
+manifest.json
 mod/bgdic
 mod/uploadfile/conf_uploadfile.php
 net
