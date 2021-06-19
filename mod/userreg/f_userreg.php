@@ -290,8 +290,9 @@ $r = db_insert_or_1($d, stored_value('user_table','users'), "`email`='".$d['emai
 $ms = translate('userreg_regmess').'http://'.$_SERVER['HTTP_HOST'].set_self_query_var('code',$d['code'],false);
 $sb = translate('userreg_regsub');
 $fe = stored_value('site_owner_email','vanyog@gmail.com');
+
 $hd = 'Content-type: text/plain; charset='.$site_encoding."\r\n".
-//      'Return-Path: '.$fe."\r\n".
+      'Message-ID: <'.sha1(microtime(true)).'@'.$GLOBALS['web_host'].">\r\n".
       'From: '.$fe."\r\n";
 mail($e, mb_encode_mimeheader($sb,"UTF-8"), $ms, $hd,"-f $fe");
 return 'OK';

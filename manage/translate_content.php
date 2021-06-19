@@ -83,6 +83,10 @@ if((lastKey=="Meta") && (e.key=="Enter")){
 }
 lastKey = e.key;
 }
+if(typeof ajaxO == "undefined"){
+if (window.XMLHttpRequest) ajaxO = new XMLHttpRequest();
+else ajaxO = new ActiveXObject("Microsoft.XMLHTTP");
+}
 function translateByGoogle(){
 var haveKey = ';
 $gak = stored_value('GoogleTranslateAPIkey','');
@@ -91,7 +95,27 @@ else $page_content .= 'true';
 $page_content .= ';
 if(!haveKey) { alert("\'GoogleTranslateAPIkey\' not specified."); return; }
 var f = document.forms.new_tralslation;
-alert(f.action);
+var te = f.text;
+var tx = te.value.substring(te.selectionStart,te.selectionEnd);
+if(!tx) { alert("Select some text and try again."); return; }
+tx = encodeURI(tx);
+var fa = f.action;
+var na = fa.replace("translate_content.php","translate_byGoogle.php") + 
+         "?a=" + Math.floor(Math.random() * 1000) +
+         "&lang=" + "'.$GLOBALS['currentLanguage'].'" + 
+         "&text=" + tx;
+ajaxO.onreadystatechange = onAjaxResponse;
+ajaxO.open("GET", na, true);
+ajaxO.send();
+}
+function onAjaxResponse(){
+if (ajaxO.readyState == 4 && ajaxO.status == 200){
+var f = document.forms.new_tralslation;
+var te = f.text;
+te.value = te.value.substring(0,te.selectionStart) + 
+           ajaxO.responseText + 
+           te.value.substr(te.selectionEnd+1);
+}
 }
 </script>
 ';
@@ -150,6 +174,7 @@ function untraslated_string($n1){
 global $la, $default_language;
   // «а всеки език, различен от подразбиращи€ се
   foreach($la as $l){
+    $GLOBALS['currentLanguage'] = $l;
     $r = db_select_1('*','content',"`name`='$n1' AND `language`='$l'");
     if ( !empty(db_table_field('text', 'content', "`name`='$n1' AND `language`='$default_language'",''))
          && (!$r

@@ -93,6 +93,10 @@ if (!$cnt){
 
   // Заглавие на страницата
   $page_title = translate($page_data['title']);
+  
+  // Сегмент на главното съдържание
+  $page_hash = stored_value('menu_'.$page_data['menu_group'].'_hash', '');
+  if(isset($page_hash[0])&&($page_hash[0]!='#')) $page_hash = '#'.$page_hash;
 
   // Масив с опции
   $page_options = '';

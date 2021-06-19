@@ -93,7 +93,8 @@ document.location = e;
 
 function conference($a = ''){
 
-global $user_table, $can_manage, $utype, $day1, $day2, $proccount, $pth, $plogin, $pedit;
+global $user_table, $can_manage, $utype, $day1, $day2, $proccount, $pth, $plogin, $pedit,
+       $page_hash;
 
 // Номер на влезлия потребител
 $uid = userreg_id($utype);
@@ -159,7 +160,9 @@ $rz .= "</a></p>\n";
 
 $d1 = ''; $did = ''; $d2 = ''; $di2 = '';
 if (count($pd))   { $d1 = conference_trprec($pd[0]); $did = '&amp;proc='.$d1['ID']; }
-if (count($pd)>1) { $d2 = conference_trprec($pd[1]); $di2 = '&amp;proc='.$d2['ID']; }
+if (count($pd)>1) { $d2 = conference_trprec($pd[1]); $di2 = '&amp;proc='.$d2['ID'].$page_hash; }
+$did .= $page_hash;
+$di2 .= $page_hash;
 $cp = array(
 'fee'=>translate('conference_fee'),
 'date_time_1'=>translate('conference_cdate1'),
@@ -823,12 +826,16 @@ return $rz;
 // Показване заглавията на приетите резюмета
 
 function conference_abstract_titles($a = ''){
-global $utype, $adm_pth, $can_manage, $can_edit, $day3, $page_header, $fdir, $user_table;
+global $utype, $adm_pth, $can_manage, $can_edit, $day3, $page_header, $page_hash, 
+       $fdir, $user_table;
 usermenu(true);
 // Дали потребителят е от екипа на конференцията
 $team = !empty($can_manage['conference']) || $can_edit;
+// Разрешение за преглед чрез таен параметър
+$allowtoshow = !empty($_GET['allowtoshow']) && 
+               ($_GET['allowtoshow']==stored_value('conference_secret_'.$utype,'basa-team'));
 // Преглед преди обявената дата
-$preview = !empty($_GET['allowtoshow']) && ($_GET['allowtoshow']=='basa-team');
+$preview = $allowtoshow;
 $current = ($utype == $a);
 if($a){
 //  $preview = ($utype != $a);
@@ -868,15 +875,15 @@ if ($current && ("$td"<"$t3") && !($team || $preview))
 //$order = ' ORDER BY  `form` ASC, `authors` ASC';
 $order = ' ORDER BY '.stored_value('conference_'.$utype.'_order', '`authors` ASC');
 //$order = ' ORDER BY `title` ASC';
-$olink = ' <a href="'.set_self_query_var('order','date').'">By title</a>';
+$olink = ' <a href="'.set_self_query_var('order','date').$page_hash.'">By title</a>';
 if(isset($_GET['order']) && ($_GET['order']=='date') ){
   $order = " ORDER BY `date_time_2` DESC";
-  $olink = ' <a href="'.unset_self_query_var('order').'">By date</a>';
+  $olink = ' <a href="'.unset_self_query_var('order').$page_hash.'">By date</a>';
 }
 // Имена на автори, които се колекционират с цел статистика
 $auth = array();
 // Флаг за показване на авторите и номерата на докладите
-$s_auth = true;
+$s_auth = !$current;
 //$s_auth = isset($_GET['authors']) && ($_GET['authors']='Yes');
 // Флаг за показване на авторите и номерата на докладите
 $s_revs = false;
@@ -889,7 +896,7 @@ $pn = array(
 2=>stored_value("conference_$utype"."_pageStart2",1),
 3=>stored_value("conference_$utype"."_pageStart3",1)
 );
-// Брой страници, които се оставят за заглавие на скция
+// Брой страници, които се оставят за заглавие на секция
 $spages = stored_value("conference_$utype"."_pageSection",'0');
 // За всеки том
 foreach($vl as $vl1) {
@@ -908,7 +915,7 @@ for($i = 0; $i<count($tp); $i++){
 //   $filter = ' AND `approved_a`';
 //   $filter = " AND `fulltextfile2`>' '";
    $filter = " AND ( ((`utype`<'vsu2020') AND `approved_a`) OR `publish`='yes')";
-//   if ( $team || $preview ) $filter = '';
+   if ( $team || $preview ) $filter = '';
    // За всеки от езиците
 //   foreach($ln as $l)
    {
@@ -939,7 +946,7 @@ for($i = 0; $i<count($tp); $i++){
         $stl = ''; // Стил за предизвикване на оцветяване
         $ex3 = strtolower( pathinfo( $d['fulltextfile3'], PATHINFO_EXTENSION ) );
         if ( $team ){
-           if(isset($_GET['rename']) && ($_GET['rename']=='on')) $d = conference_rename_files($d);
+//           if(isset($_GET['rename']) && ($_GET['rename']=='on')) $d = conference_rename_files($d);
            if ($d['form']==4){ // Форма на участие "Слушател"
               // Име на участника
               $ud = db_select_1('*', $user_table, "`ID`=".$d['user_id']);
@@ -966,7 +973,7 @@ for($i = 0; $i<count($tp); $i++){
               }
            }
            $edp = stored_value('conference_editpaper', '/index.php?pid=1068');
-           $lk .= '<br><a href="'.$edp.'&proc='.$d['ID'].'#bottom" target="_blank">'.encode('Редактиране')."</a> \n";
+           $lk .= '<br><a href="'.$edp.'&proc='.$d['ID'].$page_hash.'" target="_blank">'.encode('Редактиране')."</a> \n";
            $lk .= encode(' Съобщаване за: ').emailsend('select|&uid='.$d['user_id'].'&proc='.$d['ID'])."\n";
            if($cr<=0)
               $lk .= $cr.' <a href="#" style="font-weight:bold;color:red;" onclick="deleteAbstract('.$d['ID'].');return false;">x</a>';
@@ -987,7 +994,7 @@ for($i = 0; $i<count($tp); $i++){
              $stl .= 'border-right:solid 4px green;';
            }
            if($stl) $st .= $stl.'"';
-           $lr .= "<p$st>$nm";// if($nm) die($nm);
+           $lr .= "<div$st>$nm";// if($nm) die($nm);
            if(!empty($d['approved_a']) || $preview){
              if( $team ) $lr .= "vol:".$d['vol'].", <br>";
              if($d['fulltextfile2']){
@@ -1000,11 +1007,11 @@ for($i = 0; $i<count($tp); $i++){
 //       )
        {
            // PDF с пълния текст
-           if($d['fulltextfile2'])
+           if($d['fulltextfile2'] && !$allowtoshow)
                $lr .= '<a href="/_pdfjs-2.2.228-dist/web/viewer.html?file='.
                        $fdir.$d['fulltextfile2'].'" title="'.translate('conference_dfull', false).'">'.$pdfi.'</a> ';
            // PDF с презентация
-           if($d['fulltextfile3'])
+           if($d['fulltextfile3'] && !$allowtoshow)
               switch ($ex3){
               case 'pdf':
                  $lr .= '<a href="/_pdfjs-2.2.228-dist/web/viewer.html?file='.
@@ -1025,7 +1032,9 @@ for($i = 0; $i<count($tp); $i++){
              }
 //             else $lr .= ". ";
            }
-           $lr .= "<ptitle>".mb_strtoupper(stripslashes($d['title']))."</ptitle><br>\n";
+           if($d['title']) $lr .= "<ptitle>".mb_strtoupper(stripslashes($d['title']))."</ptitle><br>\n";
+           else $c--;
+           if($allowtoshow) $lr .= '<pabstract>'.$d['abstract']."</pabstract>\n";
            if( $team || ($utype<'vsu2020') || $s_auth)
                $lr .= '<author>'.conference_only_names($d['authors'])."</author>";
            if($d['pages']){
@@ -1039,14 +1048,14 @@ for($i = 0; $i<count($tp); $i++){
                && $d['fulltextfile4']
               ) $lk .= '<br>Anonimouse: '.file_link_and_size($d['fulltextfile4'], $fdir);
            if( isset($_GET['allowtoshow']) && ($_GET['allowtoshow']=='rev2data') ) $lk .= conference_rev2data($d);
-           $lr .= "$lk</p>\n";
+           $lr .= "$lk</div>\n";
         }
      } // Край на цикъла по доклади
      $sr .= $lr;
    }
    if( $team || !empty($c) ){
      $rz .= '<h3>'.$tp[$i];
-     if ( $team ) $rz .= " - $c abstracts, $doc doc, $pdf pdf files";
+     if ( $team || $allowtoshow) $rz .= " - $c abstracts, $doc doc, $pdf pdf files";
      $rz .= "</h3>\n";
 //     if ( $team ) $rz .= "<p>$zip_command </p>\n";
      if (!$current || ("$td">="$t3") || $team || $preview ) $rz .= $sr;
@@ -1058,7 +1067,7 @@ for($i = 0; $i<count($tp); $i++){
 
 } // Край на цикъла по томове
 
-if ( $team ) $rz = "<p>".count($auth)." authors, $tc abstracts, $docs doc, $pdfs pdf, $rc ready. Sort: $olink</p>\n".$rz;
+if ( $team || $allowtoshow ) $rz = "<p>".count($auth)." authors, $tc abstracts, $docs doc, $pdfs pdf, $rc ready. Sort: $olink</p>\n".$rz;
 return '<div id="conference_abstracts">'."\n".$rz."</div>\n";
 
 } // Край на function conference_abstract_titles()
@@ -1600,14 +1609,16 @@ return $rz;
 function conference_topics(){
 global $utype, $language, $adm_pth;
 eval(translate('conference_topics_'.$utype, false));
-$rz = "<h2>".translate('conference_topics_heading_'.$utype)."</h2>\n";
+$rz = "<div id=\"ctopics\"><h2>".translate('conference_topics_heading_'.$utype)."</h2>\n";
 foreach($tp as $i=>$t){
-$rz .= '<p>'.$t."</p>\n";
+$t1 = str_replace('. ', '.</span> ', $t);
+$rz .= '<p><span>'.$t1."</p>\n";
 }
 if(in_edit_mode()){
   $id = db_table_field('ID', 'content', "`name`='conference_topics_$utype' AND `language`='$language'");
   $rz .= '<a href="'.$adm_pth.'edit_record.php?t=content&r='.$id.'">*</a>';
 }
+$rz .= "\n</div>\n";
 return $rz;
 }
 
