@@ -17,32 +17,36 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Ако страницата е в скрит раздел, се извършва пренасочване към главната страница на външния рездел, който не е скрит.
+// Ако страницата е в скрит раздел, се извършва пренасочване 
+// към главната страница на по-външен рездел, който не е скрит.
+
+// Пренасочване на се извършва при:
+// - в режим на редактиране
+// - наличие на глобална променлива $redirifhidden_cancel с непразна стойност
+// - наличие на параметър $_GET['noredir'] със стойност равна на стойността на 
+//   настройка с име 'redirifhidden_cancel' от таблица 'options'
 
 function redirifhidden(){
 global $page_data, $main_index, $redirifhidden_cancel;
-if(!empty($redirifhidden_cancel)) return;
+if(!empty($redirifhidden_cancel)) return '';
 if(in_edit_mode()) return '';
-$rz = '';
+if(isset($_GET['noredir'])){
+  $v = stored_value('redirifhidden_cancel', false);
+  if($v && ($_GET['noredir']==$v)) return '';
+}
 $pid = stored_value('main_index_pageid',1);
 $pd = $page_data;
-//$rz .= "<p>".print_r($pd,true);
 $redir = $pd['hidden'];
-//if(!$redir) return '';
 $gd = db_select_1('*', 'menu_tree', "`group`=".$pd['menu_group']);
-//$rz .= "<p>".print_r($gd,true);
 if($gd['index_page']!=$pd) $pd = db_select_1('*', 'pages', "`ID`=".$gd['index_page']);
-//$rz .= "<p>".print_r($pd,true);
 while ($gd['parent']) {
   if($redir && !$pd['hidden']){ $pid = $pd['ID']; break; }
   $redir = $pd['hidden'];
   $gd = db_select_1('*', 'menu_tree', "`group`=".$gd['parent']);
-  //$rz .= "<p>".print_r($gd,true);
   $pd = db_select_1('*', 'pages', "`ID`=".$gd['index_page']);
-  //$rz .= "<p>".print_r($pd,true);
 };
 if($redir) header("Location: $main_index?pid=$pid");
-return $rz;
+return '';
 }
 
 ?>

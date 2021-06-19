@@ -1,7 +1,7 @@
 <?php
 /*
 MyCMS - a simple Content Management System
-Copyright (C) 2013  Vanyo Georgiev <info@vanyog.com>
+Copyright (C) 2021  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -39,7 +39,39 @@ if(Number.isInteger(1*t)){
 }
 else f.submit();
 }
+
+if(typeof ajaxO == "undefined"){
+if (window.XMLHttpRequest) ajaxO = new XMLHttpRequest();
+else ajaxO = new ActiveXObject("Microsoft.XMLHTTP");
+}
+var sDiv = null;
+function searchStringChanged(e){
+if(!sDiv){
+sDiv = document.createElement("div");
+sDiv.setAttribute("id", "sResDiv")
+document.body.appendChild(sDiv);
+var s = sDiv.style;
+s.position = "absolute";
+s.top = "43px";
+s.left = "36%";
+}
+var v = e.value;
+if(!v) return;
+var a = "'.current_pth(__FILE__).'ajax_search.php?a=" + Math.floor(Math.random() * 1000) +
+        "&text=" + encodeURI(v);
+ajaxO.onreadystatechange = onSearchAjaxResponse;
+ajaxO.open("GET", a, true);
+ajaxO.send();
+}
+function onSearchAjaxResponse(){
+if (ajaxO.readyState == 4 && ajaxO.status == 200){
+  sDiv.innerHTML = ajaxO.responseText;
+}
+}
 </script>
+<style>
+#sResDiv span { color:red; }
+</style>
 ';
 
 // 
@@ -63,7 +95,8 @@ if (!session_id() && isset($_COOKIE['PHPSESSID'])) session_start();
 if (isset($_SESSION['text_to_search'])) $tx = $_SESSION['text_to_search'];
 else $tx = '';
 $tx = str_replace('"','&quot;',$tx);
-$ti = new FormInput(translate('sitesearch_label'),'searchtext','text',$tx);
+$ti = new FormInput(translate('sitesearch_label'),'searchtext','text', $tx);
+$ti->js = ' onkeyup="searchStringChanged(this)"';
 $ti->id = 'searchtextfield';
 $f->add_input($ti);
 $b = new FormInput('','','button', ' ');
