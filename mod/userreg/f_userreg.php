@@ -116,6 +116,7 @@ return $rz;
 // Връща html код - форма за саморегистриране/смяна на паролата на потребител
 
 function userreg_newform($t){
+global $page_hash;
 if (isset($_GET['code'])) return confirm_userreg($t);
 userreg_check($t);
 // Превключване към https, ако се изисква
@@ -134,7 +135,7 @@ if (count($_POST)){
 $f = userreg_new_form($t, $email);
 $fb = userreg_facebook();
 $rz = translate('userreg_newregtext').
-' <a href="'.stored_value("userreg_login_$t").'">'.translate('userreg_login').'</a></p>
+' <a href="'.stored_value("userreg_login_$t").$page_hash.'">'.translate('userreg_login').'</a></p>
 ';
 if($message) $rz .= message($message);
 $rz .= $f->html().$fb.translate('userreg_newhelp');
@@ -250,7 +251,7 @@ return $f;
 // Обработване на данни от форма за саморегистриране на потребител
 //
 function userreg_newprocess(){
-global $site_encoding;
+global $site_encoding, $idir, $web_host, $page_hash;
 // Ако няма отметка "лични данни"
 if ( !isset($_POST['gdpr']) || ($_POST['gdpr']!='yes') ) return translate('userreg_nogdpr');
 // Ако паролата e по-къса от 8 символа
@@ -279,22 +280,25 @@ $d = array(
   'date_time_0'=>'NOW()',
   'date_time_1'=>'NOW()',
   'email'=>addslashes($e),
-  'gdpr'=>'yes',
+  'gdpr'=>'1',
   'newpass'=>pass_encrypt($_POST['password']),
   'code'=>rand_string(40),
   'IP'=>$_SERVER['REMOTE_ADDR']
 );
 // Вмъкване или актуализиране на записа
 $r = db_insert_or_1($d, stored_value('user_table','users'), "`email`='".$d['email']."'",'b');
-// Текст на имейла
-$ms = translate('userreg_regmess').'http://'.$_SERVER['HTTP_HOST'].set_self_query_var('code',$d['code'],false);
+// Изпращане на имейл
+$lk = $_SERVER['REQUEST_SCHEME'].'://'.
+      $_SERVER['HTTP_HOST'].set_self_query_var('code',$d['code'],false).
+      $page_hash;
+$ms = translate('userreg_regmess')."<a href=\"$lk\">$lk</a>";
 $sb = translate('userreg_regsub');
 $fe = stored_value('site_owner_email','vanyog@gmail.com');
-
 $hd = 'Content-type: text/plain; charset='.$site_encoding."\r\n".
       'Message-ID: <'.sha1(microtime(true)).'@'.$GLOBALS['web_host'].">\r\n".
       'From: '.$fe."\r\n";
-mail($e, mb_encode_mimeheader($sb,"UTF-8"), $ms, $hd,"-f $fe");
+//mail($e, mb_encode_mimeheader($sb,"UTF-8"), $ms, $hd,"-f $fe");
+include('byPHPMailer.php');
 return 'OK';
 }
 
@@ -388,11 +392,12 @@ return $id;
 // когато има - потребителско име и линк "Изход"
 
 function userreg_inlink($t){
+global $page_hash;
 $id = userreg_id($t);
 if($id) return userreg_outlink($t);
 else {
    // Адрес на страницата за влизане
-   $lp = stored_value("userreg_login_$t");
+   $lp = stored_value("userreg_login_$t").$page_hash;
    return '<p class="user"><a href="'.$lp.'">'.translate('userreg_login').'</a></p>';
 }
 }
@@ -401,13 +406,14 @@ else {
 // Връща потребителското име и линк "Изход"
 
 function userreg_outlink($t){
+global $page_hash;
 if (!userreg_id($t)) return '';
 // Адрес на страницата за излизане
 $lp = stored_value("userreg_logout_$t");
 if (!$lp) die("'userreg_logout_$t' option is not set.");
 // Адрес на "домашната" страница на потребители от тип $t
 $_SESSION['user2_returnpage'] = $_SERVER['REQUEST_URI'];
-$hp = stored_value("userreg_home_$t");
+$hp = stored_value("userreg_home_$t").$page_hash;
 $rz = $_SESSION['user_username'];
 if($hp) $rz = "<a href=\"$hp\" style=\"text-transform:none;\">$rz</a>";
 return '<p class="user">'.$rz.' <a href="'.$lp.'">'.translate('user_logaut').'</a></p>';
@@ -430,6 +436,7 @@ return $rz;
 // Форма за влизане на потребител
 
 function userreg_login($t){
+global $page_hash;
 if (count($_POST)) return userreg_loginprocess($t);
 userreg_check($t);
 // Адрес на страницата за излизане
@@ -447,7 +454,7 @@ $guf = new HTMLForm('userreg_login');
 $guf->add_input( new FORMInput(translate('user_username'),'username','text') );
 $guf->add_input( new FORMInput(translate('user_password'),'password','password') );
 $guf->add_input( new FORMInput('','','submit', translate('user_login_button')) );
-$rp = stored_value("userreg_newreg_$t");
+$rp = stored_value("userreg_newreg_$t").$page_hash;
 if (!$rp) die("'userreg_newreg_$t' option is not set.");
 $altt = '';
 if(in_edit_mode()) $altt = translate("USERREG_$t");
@@ -539,7 +546,7 @@ $id2 = 0;
 if (isset($_GET['uid'])) $id2 = 1*$_GET['uid'];
 // Четене номера на влезлия потребител
 $id1 = db_table_field('ID', $user_table, "`username`='".$_SESSION['user_username'].
-       "' AND `password`='".$_SESSION['user_password']."' AND `type`='$t'", 0);
+       "' AND `password`='".$_SESSION['user_password']."' AND `type`='$t'", 0, false);
 global $can_manage;
 $rz = ''; // Връщан резултат
 if ( $id2 && ($id1!=$id2) ){

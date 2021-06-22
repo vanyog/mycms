@@ -38,7 +38,7 @@ include_once($idir.'lib/f_translate_to.php');
 
 function feedback($t = ''){
 
-global $page_id, $language, $languages, $tud, $lang, $main_index, $uid;
+global $page_id, $language, $languages, $tud, $lang, $main_index, $uid, $page_hash, $body_adds;
 
 // Дали се изпраща до адреса по подразбиране
 $ts = false;
@@ -82,12 +82,15 @@ if(isset($_GET['tid']) && is_numeric($_GET['tid'])){
   $ett = stored_value('feedback_templatepage');
   if(in_edit_mode()){
     if($ett)
-      $edit_links = "<p><a href=\"$main_index?pid=$ett&tid=$tid\">".
+      $edit_links = "<p><a href=\"$main_index?pid=$ett&tid=$tid$page_hash\" target=\"_blank\">".
                        encode('Редактиране на шалона')."<a/></p>\n";
     else
       $edit_links = '<p class="message">No \'feedback_templatepage\' option is specified'."</p>\n";
-    if($uid) $edit_links .= "<p><a href=\"/index.php?pid=2&user2=edit&uid=$uid\">".
-                           encode('Редактиране на потребителя')."<a/></p>\n";
+    if($uid) {
+      $lk = stored_value('conference_editpage', '/index.php?pid=2');
+      $edit_links .= "<p><a href=\"$lk&user2=edit&uid=$uid$page_hash\" target=\"_blank\">".
+                      encode('Редактиране на потребителя')."<a/></p>\n";
+    }
   }
 }
 
@@ -144,6 +147,7 @@ if(substr($t, 0, 5)=='vsu21'){
 $ta = new FormTextArea(translate('feedback_text'), 'text', 100, 10, $tx );
 $ta->size = false;
 $ta->js = ' style="width:99%; height:200px;"';
+$body_adds .= ' onload="CKEDITOR.replace(\'text\');"';
 $ta->ckbutton = '';
 $f->add_input( $ta );
 
@@ -164,7 +168,7 @@ return $rz.$ms.$f->html();
 function feedback_process($ts, $to = ''){
 $c = count($_POST);
 if( ($c<5) || ($c>6) ) return '<p class="message">'.translate('feedback_incorrectdata')."</p>\n";
-global $page_id, $site_encoding;
+global $page_id, $site_encoding, $web_host, $idir;
 $d = Array(
 'page_id'=>$page_id,
 'date_time_1'=>'NOW()',
@@ -177,6 +181,7 @@ $d = Array(
 'IP'=>$_SERVER['REMOTE_ADDR']
 );
 if (isset($_POST['publish'])) $d['publish'] = 1*$_POST['publish'];
+$rz = '';
 if ($to){ // Изпращане на имейла
   $ea = explode(' ',$_POST['email']); $e = $ea[0];
   $ea = explode("\n",$e); $e = $ea[0];
@@ -189,11 +194,12 @@ if ($to){ // Изпращане на имейла
   $hd = "Content-type: text/plain; charset=$site_encoding\r\n".
         "From: $nm <$e>\r\n";
 //  die("$to,$sb,$ms,$hd");
-  if( ! mail($to, mb_encode_mimeheader($sb, 'UTF-8'), $ms, $hd, "-f $e") )
-        return translate('feedback_notsent');
+//  if( ! mail($to, mb_encode_mimeheader($sb, 'UTF-8'), $ms, $hd, "-f $e") ) return translate('feedback_notsent');
+  include('byPHPMailer.php'); if($rz) return $rz;
   if(db_table_exists('feedback')) db_insert_1($d, 'feedback');
 }
-return translate('feedback_thanks');
+$rz = translate('feedback_thanks');
+return $rz;
 }
 
 function feedback_to(&$ts){
@@ -215,8 +221,8 @@ return translate($n, false);
 }
 
 function feedback_fiealds(){
-global $tud, $lang, $uid, $idir;
-$rz = strip_tags(translate_to('emailtemplate_'.$_GET['tid'], $lang, false));
+global $tud, $lang, $uid, $idir, $page_hash;
+$rz = translate_to('emailtemplate_'.$_GET['tid'], $lang, false);
 // Места за заместване
 $ph = array();
 $i = preg_match_all('/\[(.*?)\]/', $rz, $ph);
@@ -226,12 +232,16 @@ case '[firstname]': $rz = str_replace($p, $tud['firstname'], $rz); break;
 case '[thirdname]': $rz = str_replace($p, $tud['thirdname'], $rz); break;
 case '[title]': $rz = str_replace($p, mb_strtoupper( db_table_field('title', 'proceedings', "`ID`=".$_GET['proc']) ), $rz); break;
 case '[apstractpreview]': $ac = stored_value('conference_aAbsAccess');
-                          $rz = str_replace($p,
-                                  'https://conference.vsu.bg/index.php?pid=67&proc='.$_GET['proc'].
-                                  '&ac='.$ac.
-                                  '&lang='.$lang, $rz);
+                          $lk = 'https://conference.vsu.bg/index.php?pid=67&proc='.$_GET['proc'].
+                                '&ac='.$ac.
+                                '&lang='.$lang.$page_hash;
+                          $lk = "<a href=\"$lk\">$lk</a>";
+                          $rz = str_replace($p, $lk, $rz);
                           break;
-case '[mypatrpage]': $rz = str_replace($p, 'https://conference.vsu.bg/index.php?pid=5&lang='.$lang, $rz); break;
+case '[mypatrpage]': $lk = 'https://conference.vsu.bg/index.php?pid=57&lang='.$lang.$page_hash;
+                     $lk = "<a href=\"$lk\">$lk</a>";
+                     $rz = str_replace($p, $lk, $rz);
+                     break;
 case '[titlestoreview]': include_once($idir.'mod/conference/f_conference.php');
                          $rz = str_replace($p, conference_userRevList($uid, true), $rz );
                          break;

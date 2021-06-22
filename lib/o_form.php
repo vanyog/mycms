@@ -44,8 +44,9 @@ else $this->text = $tx;
 }
 
 function add_input($in){
+global $page_hash;
 $this->ins[] = $in;
-if (!$this->action) $this->action = str_replace('&','&amp;',$_SERVER['REQUEST_URI']);
+if (!$this->action) $this->action = str_replace('&','&amp;',$_SERVER['REQUEST_URI']).$page_hash;
 }
 
 public function html(){
