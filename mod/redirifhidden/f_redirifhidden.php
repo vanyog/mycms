@@ -20,18 +20,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Ако страницата е в скрит раздел, се извършва пренасочване 
 // към главната страница на по-външен рездел, който не е скрит.
 
-// Пренасочване на се извършва при:
+// Пренасочване на се извършва:
 // - в режим на редактиране
-// - наличие на глобална променлива $redirifhidden_cancel с непразна стойност
-// - наличие на параметър $_GET['noredir'] със стойност равна на стойността на 
+// - при наличие на глобална променлива $redirifhidden_cancel с непразна стойност
+// - при наличие на параметър $_GET['noredir'] със стойност равна на стойността на 
 //   настройка с име 'redirifhidden_cancel' от таблица 'options'
 
 function redirifhidden(){
-global $page_data, $main_index, $redirifhidden_cancel;
+global $redirifhidden_cancel, $adm_pth, $page_data, $main_index;
 if(!empty($redirifhidden_cancel)) return '';
-if(in_edit_mode()) return '';
+$v = stored_value('redirifhidden_cancel', false);
+if(in_edit_mode()){
+  if(empty($v)) return "<a href=\"$adm_pth".
+                       "new_record.php?t=options&name=redirifhidden_cancel\">".
+                       "Create value for 'redirifhidden_cancel' option</a>\n";
+  $a = set_self_query_var('noredir',$v);
+  return "<a href=\"$a\">$v</a>\n";
+}
 if(isset($_GET['noredir'])){
-  $v = stored_value('redirifhidden_cancel', false);
   if($v && ($_GET['noredir']==$v)) return '';
 }
 $pid = stored_value('main_index_pageid',1);
