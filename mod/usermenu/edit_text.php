@@ -85,6 +85,7 @@ if (count($_POST)){
   $d['content_id'] = $i;
   if(isset($_GET['pid'])) $d['page_id'] = $_GET['pid'];
   db_insert_1($d,'who_made_change');
+  $_POST['date_time_2'] = 'NOW()';
   // Запазване на редактираните данни
   if ($i) process_record($_POST, 'content');
   else {

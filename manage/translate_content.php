@@ -114,7 +114,7 @@ var f = document.forms.new_tralslation;
 var te = f.text;
 te.value = te.value.substring(0,te.selectionStart) + 
            ajaxO.responseText + 
-           te.value.substr(te.selectionEnd+1);
+           te.value.substr(te.selectionEnd-1);
 }
 }
 </script>

@@ -23,7 +23,7 @@ if (isset($can_manage['conference']) && $can_manage['conference']){
   $utype = stored_value('conference_usertype', 'vsu2014');  // Данни за доклад
   $d = array( 'user_id'=>$uid, 'utype'=>$utype, 'date_time_1'=>'NOW()' );
   // Запазване на данните
-  db_insert_1($d,'proceedings');
+  db_insert_1($d,'proceedings', false);
 }
 
 // Адрес на който да се върне
