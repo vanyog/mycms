@@ -71,7 +71,7 @@ if (isset($l['link']) && $l['link']>''){
  if($l['private'].""){ // Ако е лична връзка
    if (!show_adm_links()) die('Private link. Access denied.');
  }
- if(isset($_GET['just']) && ($_GET['just']=='data')) die("aaa");// die(json_encode($l));
+ if(isset($_GET['just']) && ($_GET['just']=='data')) die(json_encode($l));
  header('Location: '.$l['link']);
  die;
 }
@@ -310,7 +310,7 @@ foreach($la as $l){
     $l1 = db_select_1('*', 'outer_links', '`ID`='.$l['link']);
 //    if($l1)
     {
-//      $l1['place'] = $l['place'];
+      $l1['place'] = $l['place'];
       $l['link'] = $l1['link'];
       $l['Title'] = $l1['Title'];
       $l['Comment'] = $l1['Comment'];
@@ -585,7 +585,7 @@ $rz = '';
 // Добавка за пропускане на private линковете
 $qp = '';
 if (!in_edit_mode()) $qp = 'AND `private`=0';
-$dt = db_select_m('*', 'outer_links', "`up`=$up AND (`link`>'')$qp ORDER BY `place`");
+$dt = db_select_m('*', 'outer_links', "`up`=$up AND (`link`>'')$qp ORDER BY `place` ASC");
 foreach($dt as $d){
   $pr = '';
   if($d['private']) $pr = ' class="private"';
@@ -595,7 +595,7 @@ foreach($dt as $d){
   if ($d['Comment']) $rz .= outerlinks_autocomment($d);
   $rz .= "</p>\n";
 }
-$da = db_select_m('*', 'outer_links', "`up`=$up AND (`link`='' OR `link` IS NULL)$qp ORDER BY `place`");
+$da = db_select_m('*', 'outer_links', "`up`=$up AND (`link`='' OR `link` IS NULL)$qp ORDER BY `place` ASC");
 foreach($da as $d){
   $pr = '';
   if($d['private']) $pr = ' class="private"';
@@ -616,7 +616,7 @@ $p = current_pth(__FILE__);
 // За пропускане на private линковете
 $qp = '';
 if (!in_edit_mode()) $qp = 'AND `private`=0';
-$da = db_select_m('*', 'outer_links', "`up`=$up AND (`link`='' OR `link` IS NULL)$qp ORDER BY `place`");
+$da = db_select_m('*', 'outer_links', "`up`=$up AND (`link`='' OR `link` IS NULL)$qp ORDER BY `place` ASC");
 foreach($da as $d){
   $n = '';
   if(in_edit_mode()) $n = $d['ID'].' ';
@@ -698,8 +698,8 @@ if (!(strpos($d['link'], 'en.wikipedia.org')===false)) return ' - '.translate('o
 // Брой връзки в категория и нейните подкатегории
 
 function uoterlinks_count($c, $qp){
-$c1 = db_table_field('COUNT(*)','outer_links', "`up`=".$c['ID']." AND `link`>' ' $qp ORDER BY `place`");
-$dt = db_select_m('ID',         'outer_links', "`up`=".$c['ID']." AND (`link`='' OR `link` IS NULL)$qp ORDER BY `place`");
+$c1 = db_table_field('COUNT(*)','outer_links', "`up`=".$c['ID']." AND `link`>' ' $qp ORDER BY `place` ASC");
+$dt = db_select_m('ID',         'outer_links', "`up`=".$c['ID']." AND (`link`='' OR `link` IS NULL)$qp ORDER BY `place` ASC");
 if(count($dt)) foreach($dt as $d) $c1 += uoterlinks_count($d, $qp);
 return $c1;
 }

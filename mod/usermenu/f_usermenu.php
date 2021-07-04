@@ -120,7 +120,8 @@ if (confirm("'.translate('usermenu_confirdeleting').'")) document.location = "'.
      $rz .= '<a href="'.$pt.'/toggle_visibility.php?pid='.$page_data['ID'].'">Page Public</a><br>'."\n";
  else
      $rz .= '<a href="'.$pt.'/toggle_visibility.php?pid='.$page_data['ID'].'">Page Hide</a><br>'."\n";
-  $page_header .= '<script>
+ $new_group = db_table_field('MAX(`menu_group`)', 'pages', '1') + 1;
+ $page_header .= '<script>
 function getPage(){
 var a = prompt("ID of the page to get content from");
 if (a){
@@ -129,7 +130,7 @@ if (a){
 }
 }
 function moveTo(){
-var g = prompt("ID of the page group to move the page to");
+var g = prompt("ID of the page group to move the page to", '.$new_group.');
 if (g){
   var r = "'.$pt.'move_page.php?p='.$page_data['ID'].'"+"&g="+g;
   document.location = r;

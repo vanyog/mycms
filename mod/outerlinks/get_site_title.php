@@ -34,7 +34,7 @@ include_once($idir.'conf_paths.php');
 
 header("Content-Type: text/html; charset=$site_encoding");
 
-$e = get_between('charset=', '"', $tx);
+$e = get_between('charset="', '"', $tx);
 
 $t = get_between('<title>', '</title>', $tx);
 

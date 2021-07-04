@@ -114,7 +114,7 @@ foreach($md as $d){
   }
   else $rf = $d['link'];
   $cr = ''; $pl = '';
-  if($i==$d['link']) $cr = ' class="current"';
+  if(($i==$d['link'])||(strpos($d['link'],"pid=$i")!==false)) $cr = ' class="current"';
   $el = '';
   // Добавяне на * за редактиране
   if (in_edit_mode()){

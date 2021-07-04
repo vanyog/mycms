@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Ако параметърат $dr == 'back' връща линк към предишната страница.
 // Ако има настройка 'nextpage_contentID'=1 към адресите на страниците се добавя #стойнотНаНастройката.
 
+include_once($idir.'lib/f_db_select_join_1.php');
+
 function nextpage($dr = ''){
 global $page_data, $page_id, $main_index;
 $id = $page_id;
@@ -42,16 +44,25 @@ return $t;
 // Данните на следващата страница
 
 function nextpage_data($gr, $page_id, $dr){
+global $tn_prefix;
 // Данни за линка към текущата страница в менюто й.
 $ld = db_select_1('*', 'menu_items', "`group`='$gr' AND `link`='$page_id'  OR `link` LIKE '%pid=$page_id%'");
 if (!$ld) return '';
 if($dr=='<') $ord = 'DESC'; else $ord = 'ASC';
+// Да се търсят само нескрити страници
+$h = "`hidden`=0 AND ";
+// Но не и в режим на редактиране
+$h = '';
 // Данни за следващия линк в менюто
-$nl = db_select_1('*', 'menu_items', "`group`='$gr' AND `place`$dr".$ld['place'].
-      " ORDER BY `place` $ord");
+$nl = db_select_select_join_1('a.*,b.hidden', 
+        'menu_items', 'pages',  'a.link=b.ID', 
+        "$h `group`='$gr' AND `place`$dr".$ld['place']." ORDER BY `place` $ord", false);
 // Ако няма такъв се търси следващ линк в родителските менюта
 if (!$nl) $nl = nextpage_from_parent($ld, $dr, $ord);
 if (!$nl) return '';
+// Номер на групата на намерената страница
+$gn = db_table_field('menu_group', 'pages', '`ID`='.$nl['link']);
+//if (($dr=='<')&&($gr!=$gn)) $nl = nextpage_last_child($nl);
 // Извличане номера на страницата от поле `link`
 $id = $nl['link'];
 if(!is_numeric($nl['link'])){
@@ -65,7 +76,7 @@ return db_select_1('*', 'pages', "`ID`=$id" );
 
 // Следващ линк от родителското меню
 
-function nextpage_from_parent($ld, $dr, $ord){
+function nextpage_from_parent($ld, $dr, $ord){//die(print_r($ld,true));
 do {
   // Родителско меню
   $p = db_select_1('*', 'menu_tree', "`group`=".$ld['group']);
@@ -75,22 +86,17 @@ do {
   if (!$ld) return false;
   // Данни за следващия линк в родителското меню
   $nl = db_select_1('*', 'menu_items', "`group`='".$ld['group']."' AND `place`$dr".$ld['place']." ORDER BY `place` $ord");
-  // При търсене на "предишна страница", търсим последната от разклонението
-//  if($dr=='<' && $nl) return nextpage_last($nl);
 } while (!$nl); // die;
 return $nl;
 }
 
-// Последен линк в разклонението на дървото на менюто на страница
-
-function nextpage_last($ld){//die($ld['link']);
-// Група на сочената от линка страница
-$g = db_table_field('menu_group', 'pages', "`ID`=".$ld['link']);
-if($g==$ld) return $ld;
-// Последен линк в групата
-$nl = db_select_1('*', 'menu_items', "`group`=$g ORDER BY `place` DESC");
-if($nl) return $nl;
-else return $ld;
+function nextpage_last_child($nl){
+$tr = db_select_1('*', 'menu_tree', "`index_page`='".$nl['link']."'", false);
+if($tr){
+  $nl = db_select_1('*', 'menu_items', "`group`='".$tr['group']."' ORDER BY `place` DESC");
+  if($nl) $nl = nextpage_last_child($nl);
+} 
+return $nl;
 }
 
 ?>
