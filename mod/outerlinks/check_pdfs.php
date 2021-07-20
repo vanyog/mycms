@@ -37,14 +37,18 @@ $da = db_select_m('*', 'outer_links', "`link` LIKE '%.pdf'");
 session_start();
 unset($_SESSION['can_view_file']);
 
+echo '<p><a href="/">Home</a></p>'."\n";
+
 foreach($da as $d){
   $f1 = basename($d['link']);
   $f2 = basename(urldecode($d['link']));
   $p1 = $fpth.$f1;
   $p2 = $fpth.$f2;
-  echo $d['Title'];
+  $st = '';
+  if($d['private']) $st = ' style="color:rgba(0, 0, 0, 0.5);"';
+  echo "<span$st>".$d['Title'];
   if(file_exists($p1)){
-    $r = relative_to($_SERVER['CONTEXT_DOCUMENT_ROOT'].'/', $p1)."/$f1";
+    $r = relative_to($_SERVER['CONTEXT_DOCUMENT_ROOT'].'/', $p1)."$f1";
     $_SESSION['can_view_file'][] = $r;
 //    echo " <a href=\"file:///$r\">$f1</a>";
     echo " <a href=\"$pth"."view.php?file=$r\">$f1</a>";
@@ -58,7 +62,7 @@ foreach($da as $d){
   else {//  die("<p>$p1<br>$p2");
     echo ' <a href="'.$d['link'].'" style="color:red;">download</a> '.$f2;
   }
-  echo ' <a href="/index.php?pid=6&lid='.$d['up'].'"> '.">> </a><br>\n";
+  echo ' <a href="/index.php?pid=6&lid='.$d['up'].'"> '.">> </a></span><br>\n";
 }
 
 ?>

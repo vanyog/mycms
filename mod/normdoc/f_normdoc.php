@@ -56,11 +56,13 @@ else{
 $lk = '<p><a href="'.set_self_query_var('no', '1').'">'.encode('Необработен текст')."</a></p>\n";
 if(isset($_GET['no']) and ($_GET['no']=='1')){
   $lk = '<p><a href="'.unset_self_query_var('no', '1').'">'.encode('Обработен текст')."</a></p>\n";
-  return $lk.translate($nd->name);
+  return $lk.'<pre>'.translate($nd->name).'</pre>';
 }
 $rz .= $nd->display();
-if(in_edit_mode() && count($nd->parts) && ($nd->id>0) ) $rz .= "<a href=\"$adm_pth"."edit_record.php?t=content&r=$nd->id\">*</a>";
-if(isset($_GET['save']) and ($_GET['save']=='1')) $nd->save_to_db();
+if (in_edit_mode() && count($nd->parts) && ($nd->id>0) ) 
+   $rz .= "<a href=\"$adm_pth"."edit_record.php?t=content&r=$nd->id\">*</a>";
+if (isset($_GET['save']) and ($_GET['save']=='1')) 
+   $nd->save_to_db();
 return $lk.$rz.
 '<input type="text" id="copyHelper" style="display:none;">'."\n";
 }
@@ -70,7 +72,7 @@ return $lk.$rz.
 
 class NormDoc{
 
-public $name;      // Име на норм. документ. Съвпада с името под което, в таблица 'content' се съгранява HTML кода му.
+public $name;      // Име на норм. документ. Съвпада с името под което, в таблица 'content' се съхранява HTML кода му.
 public $html = ''; // HTML код от таблица 'content', съдържащ нормативен документ.
 public $id = 0;    // Номер, който съвпада с номера на записа от таблица 'content'
 public $txt = '';  // Пълен текст, изчистен от html тагове
@@ -124,26 +126,31 @@ case encode('Преходни и заключителни разпоредби'):
 case encode('ЗАКЛЮЧИТЕЛНИ РАЗПОРЕДБИ'):
 case encode('Заключителни разпоредби'):
 case encode('ПОСТАНОВЛЕНИЕ'):
-                $this->parts[$d['ind']] = new DocPart('',
-                                                      $d['type'], $d['name'], $d['text'], $d['ind'], $d['ID']);
+                $this->parts[$d['ind']] = new DocPart('', 
+                                                      $d['type'], $d['name'], $d['text'], 
+                                                      $d['ind'], $d['ID']);
                 break;
 case 'paragraf':
 case 'chlen'   :$this->parts[$d['glava']]->parts[$d['ind']]
                                         = new DocPart($this->parts[$d['glava']],
-                                                      $d['type'], $d['name'], $d['text'], $d['ind'], $d['ID']);
+                                                      $d['type'], $d['name'], $d['text'], 
+                                                      $d['ind'], $d['ID']);
                 break;
 case 'alineya' :$this->parts[$d['glava']]->parts[$d['cpind']]->parts[$d['ind']]
                                         = new DocPart($this->parts[$d['glava']]->parts[$d['cpind']],
-                                                      $d['type'], $d['name'], $d['text'], $d['ind'], $d['ID']);
+                                                      $d['type'], $d['name'], $d['text'], 
+                                                      $d['ind'], $d['ID']);
                 break;
 case 'tochka':
-                if(!isset($this->parts[$d['glava']]->parts[$d['cpind']]->parts[$d['aind']]))// die(print_r($d,true));
+                if(!isset($this->parts[$d['glava']]->parts[$d['cpind']]->parts[$d['aind']]))
                      $this->parts[$d['glava']]->parts[$d['cpind']]->parts[$d['ind']]
                                         = new DocPart($this->parts[$d['glava']]->parts[$d['cpind']],
-                                                      $d['type'], $d['name'], $d['text'], $d['ind'], $d['ID']);
+                                                      $d['type'], $d['name'], $d['text'], 
+                                                      $d['ind'], $d['ID']);
                 else $this->parts[$d['glava']]->parts[$d['cpind']]->parts[$d['aind']]->parts[$d['ind']]
                                         = new DocPart($this->parts[$d['glava']]->parts[$d['cpind']]->parts[$d['aind']],
-                                                      $d['type'], $d['name'], $d['text'], $d['ind'], $d['ID']);
+                                                      $d['type'], $d['name'], $d['text'], 
+                                                      $d['ind'], $d['ID']);
                 break;
 default        :
                 break;
@@ -197,7 +204,6 @@ function get(){
 $sp = '/(s|c|p|a|t)(\d+)/';
 $m = array();
 $mc = preg_match_all($sp, $_GET['get'], $m);
-//print_r($m); die;
 }
 
 }
@@ -232,15 +238,15 @@ $this->dbid = $di;
 
 function split_part(){
 $sp = ''; $ty = '';
-$sp = "/".encode('Чл. ')."(\d+".encode('(?:а|б|в|г|д|е|ж|з|и|к|л|м)')."{0,1})\. /";
+$sp = "/".encode('Чл. ').
+      "(\d+".encode('(?:а|б|в|г|д|е|ж|з|и|к|л|м)')."{0,1})\.".
+      "(?:SUP>(\d)\.)* /";
 $ty = 'chlen';
 switch ($this->type){
 case '': // Ако главната част не съдържа членове, не се прави нищо
         if(!preg_match($sp, $this->txt)) return;
 case encode('Глава '):
-case encode('Раздел '):
-//                $sp = "/".encode('Чл. ')."(\d+".encode('(?:а|б|в|г|д|е|ж|з|и|к|л|м)')."{0,1})\. /"; $ty = 'chlen';
-                break;
+case encode('Раздел '): break;
 case encode('ДОПЪЛНИТЕЛНА РАЗПОРЕДБА'):
 case encode('Допълнителна разпоредба'):
 case encode('Допълнителни разпоредби'):
@@ -261,6 +267,7 @@ default:        $sp = "/=========/";        $ty = ''; break;
 }
 $mt = array();
 $mc = preg_match_all($sp, $this->txt, $mt );
+//if(($ty=='chlen') && strpos($this->txt,'SUP')){ echo "$sp\n"; var_dump($mt); die; }
 // Ако в параграф нe са намерини точки, то се търсят алинеи
 if( ($this->type=='paragraf') and !$mc ){
   $sp = "/\((\d+)\) /";
@@ -273,7 +280,7 @@ if( ($this->type=='chlen') and !$mc ){
   $ty = 'tochka';
   $mc = preg_match_all($sp, $this->txt, $mt );
 }
-$ar = preg_split(    $sp, $this->txt );
+$ar = preg_split( $sp, $this->txt );
 // В случай на параграф или алинея, ако точките не следват последователно, не се прави разделяне
 if( !($mc && in_array($this->type, array('paragraf', 'alineya')) && !is_set_correct($mt[1])) )
  foreach($ar as $ci=>$c){
@@ -301,8 +308,10 @@ if( !($mc && in_array($this->type, array('paragraf', 'alineya')) && !is_set_corr
        break;
   default: $this->txt = trim($c);
   }
-  else {
-    $this->parts[] = new DocPart($this, $ty, trim($mt[1][$ci-1]), $c, count($this->parts));
+  else { 
+    $tx = trim($mt[1][$ci-1]);
+    if(($ty=='chlen') && $mt[2][$ci-1]) $tx .= '<sup>'.$mt[2][$ci-1].'</sup>';
+    $this->parts[] = new DocPart($this, $ty, $tx, $c, count($this->parts));
   }
 }
 foreach($this->parts as $p) $p->split_part();
@@ -310,6 +319,7 @@ foreach($this->parts as $p) $p->split_part();
 
 function display(){
 global $adm_pth;
+static $hlev = 2;
 $h1 = ''; $br = ' <br>'; $h2 = '';
 $t1 = ''; $t2 = '';
 $ttl = ' title="Click to copy reference" onclick="copyNormDocRef(this);"';
@@ -327,10 +337,12 @@ case encode('Заключителни разпоредби'):
 case encode('ПОСТАНОВЛЕНИЕ'):
                 $this->id = 's'.$this->index;
                 $h1 = '<h2 id="'.$this->id.'" style="cursor:pointer;"'.$ttl.'>'; $h2 = '</h2>';
+                $hlev = 2;
                 break;
-case encode('Раздел '):
+case encode('Раздел ')://var_dump($this); die;
                 $this->id = 's'.$this->index;
                 $h1 = '<h3 id="'.$this->id.'" style="cursor:pointer;"'.$ttl.'>'; $h2 = '</h3>';
+                $hlev = 3;
                 break;
 case 'chlen':   $this->id = 'c'.$this->name;
                 $h1 = '<div><strong id="'.$this->id.'"'.$ttl.' style="color:blue;cursor:pointer;">'.encode('Чл. ');
@@ -348,18 +360,24 @@ case 'tochka':  if(is_object($this->parent)) $this->id = $this->parent->id.'t'.$
                 $h1 = ' <br><span id="'.$this->id.'"'.$ttl.' style="cursor:pointer;">'; $h2 = '.</span>'; $t1 = ' '; $t2 = '';
                 break;
 }
+if($this->type=='tochka') {
+   $this->txt = preg_replace('/((?:'.encode('а|б|в').')\))/', '<br>${1}', $this->txt);
+}
 $this->txt = preg_replace('/(-{4,}|(\.\s*){4,})/', '<p>${1}</p>', $this->txt );
-$rz = '';
-$rz .= "$h1$this->name$h2\n";
+// Отделяне на заглавие на следваща част, ако има такова
+$h4 = contains_subtitle($this->name, $hlev);
+$h3 = contains_subtitle($this->txt, $hlev);
+$rz = "$h1$this->name$h2\n$h4\n";
 $rz .= "$t1$this->txt";
 if(in_edit_mode() && ($this->dbid>0)) $rz .= " <a href=\"$adm_pth"."edit_record.php?t=normdoc&r=$this->dbid\">*</a> ";
 foreach($this->parts as $p){
    $rz .= $p->display();
 }
-$rz .= "$t2\n";
-//var_dump($this); die;
+$rz .= "$t2$h3\n";
 return $rz;
 }
+
+// Запазване на частите на документа в таблица 'normdoc'
 
 function save_to_db($id){
 global $language;
@@ -377,8 +395,9 @@ case encode('Преходни и заключителни разпоредби'):
 case encode('ЗАКЛЮЧИТЕЛНИ РАЗПОРЕДБИ'):
 case encode('Заключителни разпоредби'):
 case encode('ПОСТАНОВЛЕНИЕ'):
-                $this->data = array('doc_id'=>$id, 'type'=>$this->type, 'ind'=>$this->index, 'glava'=>$this->index,
-                                    'cpind'=>0, 'aind'=>0, 'tind'=>0, 'name'=>$this->name, 'text'=>$this->txt);
+                $this->data = array('doc_id'=>$id, 'type'=>$this->type, 'ind'=>$this->index, 
+                                    'glava'=>$this->index, 'cpind'=>0, 'aind'=>0, 'tind'=>0, 
+                                    'name'=>$this->name, 'text'=>$this->txt);
                 break;
 case 'chlen':
 case 'paragraf':$this->data = $this->parent->data;
@@ -396,7 +415,6 @@ $this->data['ind']  = $this->index;
 $this->data['name'] = $this->name;
 $this->data['text']  = $this->txt;
 $where = array_to_where($this->data, array('text', 'name'));
-//if($this->type==encode('Преходни и заключителни разпоредби') && $this->index==23) die($where);
 db_insert_or_1($this->data, 'normdoc', $where, 'b');
 foreach($this->parts as $p) $p->save_to_db($id);
 }
@@ -404,6 +422,17 @@ foreach($this->parts as $p) $p->save_to_db($id);
 } // - class DocPart -
 
 // - - - - - - functions - - - - - -
+
+function contains_subtitle(&$txt, $hlev){
+$m = array();
+$i = preg_match_all('/\r*\n\r*\n(.*?)(\(.*\))*$/', $txt, $m);
+//if(isset($m[1][0]) && $m[1][0] && $m[2][0]) echo("$i<br>".print_r($m,true)."<p>");
+$h3 = '';
+if($i && $m[1][0]) $h3 .= "<h".($hlev+1).">".$m[1][0]."</h".($hlev+1).">\n";
+if($i && !empty($m[2][0])) $h3 .= "<p>".$m[2][0]."</p>\n";
+if(!empty($h3)) $txt = str_replace($m[0][0], '', $txt);
+return $h3;
+}
 
 function array_to_where($a, $f){
 $rz = '';
@@ -413,6 +442,8 @@ foreach($a as $k=>$v) if ( !in_array($k, $f) ) {
 }
 return $rz;
 }
+
+// Функцията връща true ако $a е масив от последователни числа 1,2,...
 
 function is_set_correct($a){
 if(!is_array($a) || !count($a)) return false;

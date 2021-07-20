@@ -25,17 +25,20 @@ include_once($idir."lib/f_set_query_var.php");
 function edit_normal_link($y = true){
 global $edit_name, $edit_value, $page_data, $language, $adm_pth;
 $p = array(false=>'', true=>'Page ');
+$el = '';
+if(!empty($GLOBALS['page_id']))
+{
+  $id = db_table_field('ID', 'content', 
+                "`name`='".$page_data['content']."' AND `language`='$language'", 0);
+  if($id) $el = ' <a href="'.$adm_pth."edit_record.php?t=content&r=$id\">*</a>";
+}
 if (in_edit_mode()) {
-  $el = '';
-  if(!empty($GLOBALS['page_id'])){
-    $id = db_table_field('ID', 'content', "`name`='".$page_data['content']."' AND `language`='$language'", 0);
-    if($id) $el = ' <a href="'.$adm_pth."edit_record.php?t=content&r=$id\">*</a>";
-  }
-  return '<a href="'.$_SERVER['SCRIPT_NAME'].'?'.set_query_var($edit_name,'0').'" title="Switch to normal mode">'.
-         $p[$y].'Normal</a>'.$el;
+  return '<a href="'.$_SERVER['SCRIPT_NAME'].'?'.set_query_var($edit_name,'0').
+         '" title="Switch to normal mode">'.$p[$y].'Normal</a>'.$el;
 }
 else
-  return '<a href="'.$_SERVER['SCRIPT_NAME'].'?'.set_query_var($edit_name,$edit_value).'" title="Switch to edit mode">'.$p[$y].'Edit</a>';
+  return '<a href="'.$_SERVER['SCRIPT_NAME'].'?'.set_query_var($edit_name,$edit_value).
+         '" title="Switch to edit mode">'.$p[$y].'Edit</a>'.$el;
 }
 
 ?>
