@@ -42,13 +42,14 @@ function show_sub(a){// alert("show A");
 hide_sub();
 var d = document.getElementById("sub_"+a);
 var l = document.getElementById("sm_"+a);
+var t = l.offsetTop+l.offsetHeight;
 d.style.display = "inline-block";
 d.style.left = l.offsetLeft+"px";
-d.style.top = (l.offsetTop+l.offsetHeight)+"px";
+d.style.top = t+"px";
 visible_sub = a;
 donot_hide = a;
+alert(screen.height);
 return false;
-//alert("show B");
 }
 </script>';
 

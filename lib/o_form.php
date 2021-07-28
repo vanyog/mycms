@@ -66,7 +66,10 @@ var l = f.length;
 var r = 1;
 for(i=0;i<l-1;i++){
   var e = f.elements[i];
-  if ((e.type=="text")||(e.type=="textarea")) r = r*e.value.length;
+//  if ((e.type=="text")||(e.type=="textarea")) r = r*e.value.length;
+//  Изключвам от проверка textarea елементите защото възниква грешка при активиран CHEDITOR
+//  в бъдеще трябва да се оправи
+  if (e.type=="text") r = r*e.value.length;
 }
 if (r) f.submit(); else alert("'.translate_if('fillin_all', 'All fields mut be filled in.').'");
 }
@@ -680,7 +683,7 @@ $this->value = $v;
 $c = array();
 if ($v){
   $a = explode(',', $v);
-  for($i=1; $i<count($a)-1; $i++) $c[$sp[$a[$i]]] = $a[$i];
+  for($i=1; $i<count($a)-1; $i++) $c[$sp[trim($a[$i])]] = trim($a[$i]);
 }
 $this->l1 =  new FormSelect('', '', $c);
 $this->l1->js = ' multiple="multiple" size="'.count($sp).'" id="formChoices"';

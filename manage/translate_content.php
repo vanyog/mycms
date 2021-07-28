@@ -114,8 +114,14 @@ var f = document.forms.new_tralslation;
 var te = f.text;
 te.value = te.value.substring(0,te.selectionStart) + 
            ajaxO.responseText + 
-           te.value.substr(te.selectionEnd-1);
+           te.value.substr(te.selectionEnd);
 }
+}
+function copyAgain(){
+if(!confirm("Do you really want to copy the default text over the translation?")) return;
+var t = document.getElementById("deflang").value;
+var v = document.forms.new_tralslation.text;
+v.value = t;
 }
 </script>
 ';
@@ -162,7 +168,8 @@ global $languages, $default_language;
   return "<p>String name: '".$d['name']."'<br>\nIn ".$languages[$default_language].
          ":</p>\n".'<textarea id="deflang" cols="100" rows="10"  disabled="disabled">'.
          str_replace('&','&amp;',stripslashes($d['text'])).
-         "</textarea>\n".$f->html();
+         "</textarea>\n".
+         '<input type="button" value="Copy" onclick="copyAgain()">'.$f->html();
 }
 
 //

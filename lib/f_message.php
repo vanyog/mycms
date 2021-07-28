@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Функцията връща '<p class="message">'.$tx.'</p>',
-// но преди това зарежда запазеният в таблица 'options' под име 'css_p.message' стил за съобгение
+// Функцията връща '<p class="message">'.$tx.'</p>', но преди това 
+// зарежда запазеният в таблица 'options' под име 'css_p.message' стил за съобщение
 
 function message($tx){
 add_style('p.message');

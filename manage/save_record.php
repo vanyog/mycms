@@ -49,6 +49,7 @@ case 'start_edit_time':
 //   die($q);
    mysqli_query($db_link, $q);
    break;
+case 'username': if(($t=='users')&&($v=='')) break;
 default:
   $v1 = element_correction($v);
   if( ($t=='content') && ($k=='text') ) $v1 = str_replace( ' />', '>', $v1);

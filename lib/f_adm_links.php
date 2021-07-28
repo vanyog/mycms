@@ -37,6 +37,7 @@ include_once($idir.'lib/f_db_select_1.php');
 include_once($idir.'lib/f_db_table_exists.php');
 include_once($idir.'lib/f_parse_content.php');
 include_once($idir."lib/f_edit_normal_links.php");
+include_once($idir."lib/translation.php");
 
 function adm_links(){
 global $idir, $pth, $apth, $adm_pth, $edit_name, $edit_value, $web_host, $local_host, $main_index,

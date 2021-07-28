@@ -8,6 +8,7 @@ use PHPMailer\PHPMailer\Exception;
 require $idir.'_PHPMailer/src/Exception.php';
 require $idir.'_PHPMailer/src/PHPMailer.php';
 require $idir.'_PHPMailer/src/SMTP.php';
+require $idir.'lib/f_message.php';
 
 //Instantiation and passing `true` enables exceptions
 $mail = new PHPMailer(true);
@@ -47,5 +48,5 @@ try {
 
     $mail->send();
 } catch (Exception $e) {
-    $rz = translate('feedback_notsent');
+    $rz = message(translate('feedback_notsent'));
 }

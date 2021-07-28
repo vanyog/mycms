@@ -60,13 +60,13 @@ else return $default_language;
 // Връща html код за показване на знаменца, за други езици
 
 function flags($a = ''){
-global $language, $languages, $dont_translate, $pth;
+global $language, $languages, $dont_translate, $pth, $page_hash;
 $ls = array_keys($languages);
 $r = "";
 $how = stored_value('flag_setting','flag');
 if ($a) $how = $a;
 if (!$dont_translate) foreach($ls as $l) if ($l!=$language){
-  $h = set_self_query_var('lang',$l);
+  $h = set_self_query_var('lang',$l).$page_hash;
   $r .= '<a href="'.$h.'" id="lang_flag">';
   switch ($how){
   case 'text': $r .= $languages[$l]; break;

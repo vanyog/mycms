@@ -48,7 +48,7 @@ if(!session_id()) session_start();
 
 $page_content = '<h1>'.translate('schedules_editevent').'</h1>
 <h2>'.translate('schedules_name').': "'.translate($d['sch_name'],false).'"</h2>
-<h3>'.translate('schedules_event_name').': "'.translate($d['ev_name'],false).'"</h3>
+<h3>'.translate('schedules_event_name').': "'.translate($d['ev_name'],false).'" ('.$d['ev_name'].')</h3>
 '.edit_record_form($n, 'schedules').'
 <p><a href="'.$_SESSION['http_referer'].'">'.translate('schedules_cancel').'</a></p>';
 

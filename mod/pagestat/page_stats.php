@@ -44,6 +44,10 @@ $d2 = db_table_field('MAX(`date`)', 'visit_history', '1');
 
 $w = '1';
 if ($d) $w = "`date`>'".date('Y-m-d', strtotime($d2)-$d*60*60*24)."'";
+if (isset($_GET['pid'])){
+  $pid = 1*$_GET['pid'];
+  $w .= " AND `page_id`=$pid";
+}
 
 $d1 = db_table_field('MIN(`date`)', 'visit_history', $w);
 
@@ -53,7 +57,7 @@ $page_title = encode('Статистика за посещението на страниците');
 $page_content = encode("<p>От: $d1 до: $d2</p>\n");
 
 if (isset($_GET['pid'])){
-  $pid = 1*$_GET['pid'];
+//  $pid = 1*$_GET['pid'];
   $page_content .= one_page($pid, $w);
 }
 else if (isset($_GET['date'])){

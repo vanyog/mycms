@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include_once($idir.'lib/o_form.php');
 include_once($idir.'lib/f_db_insert_1.php');
 include_once($idir.'lib/f_translate_to.php');
+include_once($idir.'lib/f_message.php');
 
 // Параметър $t е типът потребители.
 // За постигане на съвместимост с най-старата версия на този скрипт, която не изискваше параметър,
@@ -83,7 +84,7 @@ if(isset($_GET['tid']) && is_numeric($_GET['tid'])){
   if(in_edit_mode()){
     if($ett)
       $edit_links = "<p><a href=\"$main_index?pid=$ett&tid=$tid$page_hash\" target=\"_blank\">".
-                       encode('Редактиране на шалона')."<a/></p>\n";
+                       encode('Редактиране на шаблона')."<a/></p>\n";
     else
       $edit_links = '<p class="message">No \'feedback_templatepage\' option is specified'."</p>\n";
     if($uid) {
@@ -198,7 +199,7 @@ if ($to){ // Изпращане на имейла
   include('byPHPMailer.php'); if($rz) return $rz;
   if(db_table_exists('feedback')) db_insert_1($d, 'feedback');
 }
-$rz = translate('feedback_thanks');
+$rz = message(translate('feedback_thanks'));
 return $rz;
 }
 
@@ -232,7 +233,7 @@ case '[firstname]': $rz = str_replace($p, $tud['firstname'], $rz); break;
 case '[thirdname]': $rz = str_replace($p, $tud['thirdname'], $rz); break;
 case '[title]': $rz = str_replace($p, mb_strtoupper( db_table_field('title', 'proceedings', "`ID`=".$_GET['proc']) ), $rz); break;
 case '[apstractpreview]': $ac = stored_value('conference_aAbsAccess');
-                          $lk = 'https://conference.vsu.bg/index.php?pid=67&proc='.$_GET['proc'].
+                          $lk = 'https://conference.vsu.bg/index.php?pid=92&proc='.$_GET['proc'].
                                 '&ac='.$ac.
                                 '&lang='.$lang.$page_hash;
                           $lk = "<a href=\"$lk\">$lk</a>";

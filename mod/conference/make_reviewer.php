@@ -23,6 +23,7 @@ $idir = dirname(dirname(__DIR__)).'/';
 $ddir = $idir;
 
 include_once($idir.'mod/usermenu/f_usermenu.php');
+include_once($idir.'lib/f_message.php');
 include_once($idir.'lib/o_form.php');
 include_once($idir.'lib/f_db_insert_or_1.php');
 
@@ -48,32 +49,37 @@ if(!$u) die('User do not exist');
 if($u['type']!=$utype) die('Incorrect user type');
 
 // Данни от таблица reviewers
-$d = db_select_1('*', 'reviewers', "`user_id`=".$u['ID']);
-if(!$d){
-  $d['date_time_1']='NOW()';
-  $d['date_time_2']='NOW()';
-  $d['utype']=$utype;
-  $d['user_id']=$_GET['uid'];
-  $d['topic']=0;
-  $d['languages']='';
-  $d['cofirmed']=0;
+$d = db_select_m('*', 'reviewers',
+                 "`user_id`=".$u['ID']." AND `utype`='$utype' ORDER BY `topic` ASC");// die(print_r($d, true));
+if(!count($d)){
+  $d1['date_time_1']='NOW()';
+  $d1['date_time_2']='NOW()';
+  $d1['utype']=$utype;
+  $d1['user_id']=$_GET['uid'];
+  $d1['topic']=0;
+  $d1['languages']='';
+  $d1['confirmed']=0;
 }
+else $d1 = end($d);
+
+
+
 // Тематични направления
-eval(translate('conference_topics_'.$utype,false));
+eval(translate('conference_topics_'.$utype, false));
 
 
 // Форма за попълване
 $f = new HTMLForm('make_rewiewer');
-$f->add_input( new FormInput( '', 'date_time_1', 'hidden', $d['date_time_1']) );
-$f->add_input( new FormInput( '', 'date_time_2', 'hidden', $d['date_time_2']) );
+$f->add_input( new FormInput( '', 'date_time_1', 'hidden', $d1['date_time_1']) );
+$f->add_input( new FormInput( '', 'date_time_2', 'hidden', $d1['date_time_2']) );
 $f->add_input( new FormInput( '', 'utype', 'hidden', $utype) );
-$f->add_input( new FormInput( '', 'user_id', 'hidden', $d['user_id']) );
-$fi = new FormSelect( translate('conference_ctopic'), 'topic', $tp, $d['topic'] );
+$f->add_input( new FormInput( '', 'user_id', 'hidden', $d1['user_id']) );
+$fi = new FormSelect( translate('conference_ctopic'), 'topic', $tp, $d1['topic'] );
 $fi->values='k';
 $f->add_input( $fi );
-$f->add_input( new FormInput( encode('Езици: '), 'languages', 'text', $d['languages']) );
-$fi = new FormInput( encode('Потвърден: '), 'confirmed', 'checkbox');
-if($d['confirmed']) $fi->js = ' checked';
+$f->add_input( new FormInput( translate('conference_languages'), 'languages', 'text', $d1['languages']) );
+$fi = new FormInput( translate('conference_Rconfirmed'), 'confirmed', 'checkbox');
+if($d1['confirmed']) $fi->js = ' checked';
 $f->add_input( $fi );
 $f->add_input( new FormInput( '', '', 'submit', encode('Запазване') ) ) ;
 
@@ -81,12 +87,17 @@ $page_header = '<link href="/_style.css" rel="stylesheet" type="text/css">
 <style>body { padding:1em; }
 </style>';
 
-$page_title = encode('Рецензент');
+$page_title = translate('conference_makeReviewer');
 
 $page_content = "<h1>$page_title</h1>
 <p>".$u['position'].' '.$u['firstname'].' '.$u['secondname'].' '.$u['thirdname'].' '."</p>\n".
-"<p>".$u['institution']."</p>\n";
-if($ms) $page_content .= "<p class=\"message\">$ms</p>\n";
+"<p>".translate('user_institution')." ".$u['institution']."</p>\n";
+if(count($d)){
+  $page_content .= '<p>';
+  foreach($d as $r) $page_content .= 'ID:'.$r['ID'].' &nbsp; '.($tp[$r['topic']])."<br>\n";
+  $page_content .= '</p>';
+}
+if($ms) $page_content .= message($ms);
 $page_content .= $f->html();
 
 include_once($idir.'lib/build_page.php');
@@ -95,7 +106,10 @@ include_once($idir.'lib/build_page.php');
 
 function process(){
 if(isset($_POST['confirmed']) && ($_POST['confirmed']=='on')) $_POST['confirmed']=1; else $_POST['confirmed']=0;
-$r = db_insert_or_1($_POST, 'reviewers', "`user_id`=".$_POST['user_id']." AND `utype`='".$_POST['utype']."'", 'b');
+$r = db_insert_or_1($_POST, 'reviewers', 
+                    "`user_id`=".$_POST['user_id'].
+                    " AND `utype`='".$_POST['utype']."'".
+                    " AND `topic`='".$_POST['topic']."'", 'b', false);
 if( !($r===false) )
     return encode('Данните са запазени успешно');
 else

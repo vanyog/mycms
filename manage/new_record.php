@@ -28,8 +28,8 @@ include($idir."lib/f_db_table_field.php");
 include($idir."conf_paths.php");
 
 $tb = $_GET['t'];
-$ft = db_field_types($tb);// die(print_r($ft,true));
-$fn = db_field_names($tb);
+$ft = db_field_types($tb); //echo($language);
+$fn = db_field_names($tb); //die(print_r($fn,true));
 
 $q = "INSERT INTO `$tn_prefix$tb` SET ";
 foreach($fn as $i => $n){
@@ -41,11 +41,18 @@ foreach($fn as $i => $n){
      else $q .= "`$n`='".addslashes($_GET['date_time_1'])."', ";
      break;
   case 'hidden': break;
+  case 'language':
+     if($tb=='users'){
+     if (!isset($_GET['language'])) $q .= "`$n`='English', ";
+     else $q .= "`$n`='".addslashes($_GET['language'])."', ";
+     break;
+     }
   case 'place': $pl = db_table_field('MAX(`place`)',$tb,'1')+10;
      $q .= "`$n`='$pl', "; break;
   case 'template_id':
      if (isset($_GET['template_id'])) $q .= "`template_id`=".(1*$_GET['template_id']).', ';
      else $q .= "`template_id`=1, "; break;
+  case 'username': if($tb=='users') break;
   default:
     $v = '';
     if (isset($_GET[$n])) $v = $_GET[$n];
