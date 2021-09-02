@@ -23,13 +23,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 function page($a){//die($a);
 $aa = explode('|', $a);
-global $main_index;
+global $main_index, $page_hash;
 $rz = '';
 if(isset($aa[1]))
     $rz .= '<a href="'.$main_index.'?pid='.$aa[0].'">'.$aa[1].'</a>';
 else {
     $pd = db_select_1('*', 'pages', 'ID='.$aa[0]);
-    $rz .= '<a href="'.$main_index."?pid=$aa[0]\">".translate($pd['title']).'</a>';
+    $rz .= '<a href="'.$main_index."?pid=$aa[0]$page_hash\">".translate($pd['title']).'</a>';
 }
 return $rz;
 }

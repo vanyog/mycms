@@ -28,6 +28,8 @@ $web_host = stored_value('host_web','mysite.com'); // Домейн на сайта.
 $local_host = stored_value('host_local','localhost'); // Локален домейн на сайта, който не е достъпен през Интернет.
                       // Използва се, когато се създава пробно локално копие на сайта.
 
+
+
 // Адрес на phpMyAdmin за отдалечения сървър
 $phpmyadmin_site = stored_value('phpmyadmin_web','http://mysite.com/phpmyadmin');
 

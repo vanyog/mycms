@@ -230,7 +230,9 @@ $i = preg_match_all('/\[(.*?)\]/', $rz, $ph);
 foreach($ph[0] as $p) switch($p) {
 case '[position]' : $rz = str_replace($p, $tud['position'], $rz); break;
 case '[firstname]': $rz = str_replace($p, $tud['firstname'], $rz); break;
-case '[thirdname]': $rz = str_replace($p, $tud['thirdname'], $rz); break;
+case '[thirdname]': if($tud['thirdname']) $rz = str_replace($p, $tud['thirdname'], $rz); 
+                    else $rz = str_replace($p, $tud['email'], $rz);
+                    break;
 case '[title]': $rz = str_replace($p, mb_strtoupper( db_table_field('title', 'proceedings', "`ID`=".$_GET['proc']) ), $rz); break;
 case '[apstractpreview]': $ac = stored_value('conference_aAbsAccess');
                           $lk = 'https://conference.vsu.bg/index.php?pid=92&proc='.$_GET['proc'].

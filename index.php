@@ -54,6 +54,12 @@ include_once($idir.'lib/translation.php');
 include_once($idir.'lib/f_page_cache.php');
 include_once($idir.'lib/f_db_table_status.php');
 
+// Пренасочване, когато сайт с друг домейн се хоства в поддиректория на същия сървър.
+// Адресът, към който се пренасочва, трябва да е въведен в таблица options, в 
+// полето `value` на запис с поле `name` - домейна на сайта.
+$redir = stored_value($_SERVER['HTTP_HOST']);
+if($redir) header("Location: ".$_SERVER['REQUEST_SCHEME']."://$redir");
+
 header("Content-Type: text/html; charset=$site_encoding");
 // Кеширане от браузъра за един час
 header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + (60 * 60)));

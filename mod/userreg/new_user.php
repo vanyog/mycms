@@ -92,7 +92,7 @@ $d = array(
   'password'=>pass_encrypt($_POST['password']),
   'IP'=>$_SERVER['REMOTE_ADDR']
 );
-return db_insert_1($d,$user_table);
+die( db_insert_1($d,$user_table, true) );
 }
 
 ?>
