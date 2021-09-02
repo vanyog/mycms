@@ -122,6 +122,8 @@ if(metaPressed && (v.key=="1")    ) insert_tag("h1","h1");
 if(metaPressed && (v.key=="2")    ) insert_tag("h2","h2");
 if(metaPressed && (v.key=="3")    ) insert_tag("h3","h3");
 if(metaPressed && (v.key=="4")    ) insert_tag("h4","h4");
+if(metaPressed && (v.key=="5")    ) insert_tag("h5","h5");
+if(metaPressed && (v.key=="6")    ) insert_tag("h6","h6");
 if(metaPressed && shiftPressed &&
    ( (v.key.toLowerCase()=="s") || (v.key.toLowerCase()==ya) )
   )

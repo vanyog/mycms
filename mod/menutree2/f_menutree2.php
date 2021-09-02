@@ -43,12 +43,13 @@ hide_sub();
 var d = document.getElementById("sub_"+a);
 var l = document.getElementById("sm_"+a);
 var t = l.offsetTop+l.offsetHeight;
+d.style.maxHeight = (window.innerHeight - t - 75)+"px";
+d.style.overflow = "scroll";
 d.style.display = "inline-block";
 d.style.left = l.offsetLeft+"px";
 d.style.top = t+"px";
 visible_sub = a;
 donot_hide = a;
-alert(screen.height);
 return false;
 }
 </script>';

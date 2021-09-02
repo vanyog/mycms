@@ -364,7 +364,7 @@ do {
   if ($lk) $rz = '<a href="'.$lk.'#outer_links">'.$l['Title']."</a>".$rz;
   else{
      if (!$page_title) $page_title = translate($page_data['title'],false);
-     $page_title .= ' - '.$l['Title'];
+     $page_title = $l['Title'].' - '.$page_title;
      $rz = '<span><a href="'.$lk.'">'.$l['Title'].'</a></span>'.$rz;
      $cm = '';
      if (isset($l['Comment'])) $cm = $l['Comment'];

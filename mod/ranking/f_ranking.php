@@ -15,7 +15,7 @@ $rank_addtowhile1 = '';
 $rank_addtowhile2 = '';
 
 function ranking(){
-$limit = 3; // Ѕрой страници от всеки тип, които се добав€т
+$limit = stored_value('ranking_limit', "3"); // Ѕрой страници от всеки тип, които се добав€т
 
 $z1 = "\n".'<tr><td class="n">'.translate('ranking_new').'</td>
 <td>'.new_page_links($limit)."</td></tr>\n";
@@ -62,7 +62,10 @@ return $rz;
 }
 
 function page_link($p){
-return '<a href="index.php?pid='.$p['ID'].'">'.strip_tags(translate($p['title']), "").'</a>'."<br>\n";
+$a = '';
+if($p['ID']==$GLOBALS['page_id']) $a = translate('sitemap_currentpage');
+return '<a href="index.php?pid='.$p['ID'].'">'.
+       strip_tags(translate($p['title']), "").'</a>'.$a."<br>\n";
 }
 
 // Ќай-скоро обновените страници

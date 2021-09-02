@@ -24,8 +24,11 @@ $ddir = $idir;
 
 include_once($idir.'lib/translation.php');
 
+// Четене на всички данни от таблица 'files'
 $da = db_select_m('*', 'files', '1');
 $in = $main_index.'?pid=';
+
+$ar = stored_value('uploadfile_otherroot');
 
 foreach($da as $d){
   // Ако файлът няма име, най-вероятно е изтрит
@@ -48,8 +51,18 @@ foreach($da as $d){
  //     if ($y) die(strlen($ct)." $ct $language");
     }
     if (!$y) 
-        echo $d['name'].' on page '.$lk." not used. ".$d['filename']."<br>";
+        echo $d['name'].' on page '.$lk." not used. ".chage_root($d['filename'])."<br>";
   }
+}
+
+function chage_root($n){
+global $ar;
+if($ar){
+   $ln = substr($n,strlen($ar));
+   $n = $_SERVER['DOCUMENT_ROOT'].$ln;
+   if(file_exists($n)) $n = "<a href=\"$ln\">$n</a>";
+}
+return $n;
 }
 
 ?>

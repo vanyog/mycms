@@ -47,14 +47,20 @@ else ajaxO = new ActiveXObject("Microsoft.XMLHTTP");
 var sDiv = null;
 function searchStringChanged(e){
 if(!sDiv){
-sDiv = document.createElement("div");
-sDiv.setAttribute("id", "sResDiv")
-document.body.appendChild(sDiv);
-var s = sDiv.style;
-s.position = "absolute";
-s.top = "43px";
-s.left = "36%";
+  sDiv = document.createElement("div");
+  sDiv.setAttribute("id", "sResDiv")
+  document.body.appendChild(sDiv);
+  sDiv.addEventListener("click", sDivHide);
+  var s = sDiv.style;
+  var l = document.getElementById("searchtextfield").offsetLeft;
+  if(l < window.innerWidth * 0.4) l = l + "px";
+  else l = "10%";
+  s.position = "absolute";
+  s.top = "43px";
+  s.left = l;
+  s.zIndex = "1";
 }
+sDiv.style.display = "block";
 var v = e.value;
 if(!v) return;
 var a = "'.current_pth(__FILE__).'ajax_search.php?a=" + Math.floor(Math.random() * 1000) +
@@ -62,6 +68,9 @@ var a = "'.current_pth(__FILE__).'ajax_search.php?a=" + Math.floor(Math.random()
 ajaxO.onreadystatechange = onSearchAjaxResponse;
 ajaxO.open("GET", a, true);
 ajaxO.send();
+}
+function sDivHide(){
+sDiv.style.display = "none";
 }
 function onSearchAjaxResponse(){
 if (ajaxO.readyState == 4 && ajaxO.status == 200){

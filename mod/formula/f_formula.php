@@ -31,8 +31,6 @@ include_once($idir.'lib/f_db_update_record.php');
 global $page_header;
 global $hidden_formulas;
 
-$page_header .= '<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>'."\n";
-
 $page_header .= '<script>
 function formulaOver(ev,i){
 var w = document.getElementById("fViewer");
@@ -97,7 +95,7 @@ return $rz;
 }
 
 function formula_1div($c,$f,$elk){
-return '<div class="'.$c.'" id="f'.$f['ID'].'">'.$f['markup']."\n".$elk."</div>\n</div>\n";
+return '<div class="'.$c.'" id="f'.$f['ID'].'">'.$f['markup']."\n".$elk."</div>\n";
 }
 
 function formula_for_page($a){

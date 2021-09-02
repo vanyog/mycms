@@ -25,9 +25,11 @@ $ddir = $idir;
 include_once($idir.'lib/translation.php');
 
 // Записи от таблица content, в които има места за качване на файлове
-$da = db_select_m('*', 'content', '`text` LIKE \'%!--$$_UPLOADFILE_%\'');
+$da = db_select_m('*', 'content', '`text` LIKE \'%!--$$_UPLOADFILE_%\'', false);
 
-// Забележка: Това не изчерпва всички възможни места за качване на файлове. Някои може да са създадени от шаблони от таблица templates, а други - от модули! Настоящият скрипт трябва да се допълни с проверяване и на тези места.
+// Забележка: Това не изчерпва всички възможни места за качване на файлове. 
+// Някои може да са създадени от шаблони от таблица templates, а други - от модули! 
+// Настоящият скрипт трябва да се допълни с проверяване и на тези места.
 
 // Масив с намерените страници:
 $pgs = array();
@@ -61,11 +63,13 @@ function check_file($pid, $d){
 global $pgs;
   $m = array();
   $i = preg_match_all('/--\$\$_UPLOADFILE_(.*?)[,_]/si', $d['text'], $m);
+  
   if($i) foreach($m[1] as $n) {
     $na = explode(',', $n);
     if(isset($na[1]) && is_numeric($na[1])) $pid = $na[1];
-    // Четене на запис от страница
-    $f = db_select_1('*', 'files', "`pid`=$pid AND `name`='".$na[0]."'");
+    // Четене на запис от таблица 'files'
+    $f = db_select_1('*', 'files', "`pid`=$pid AND `name`='".$na[0]."'", true);
+     if($n=="A379"){ var_dump($f); die; }
     if(!$f && ($f['pid']==$pid)) $pgs[$pid] = $n;
   }
 }
