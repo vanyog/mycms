@@ -30,7 +30,9 @@ function redirifhidden(){
 global $redirifhidden_cancel, $adm_pth, $page_data, $main_index;
 if(!empty($redirifhidden_cancel)) return '';
 $v = stored_value('redirifhidden_cancel', false);
-if(in_edit_mode()){
+$pd = $page_data;
+$redir = $pd['hidden'];
+if(in_edit_mode() && $pd['hidden']){
   if(empty($v)) return "<a href=\"$adm_pth".
                        "new_record.php?t=options&name=redirifhidden_cancel\">".
                        "Create value for 'redirifhidden_cancel' option</a>\n";
@@ -41,8 +43,6 @@ if(isset($_GET['noredir'])){
   if($v && ($_GET['noredir']==$v)) return '';
 }
 $pid = stored_value('main_index_pageid',1);
-$pd = $page_data;
-$redir = $pd['hidden'];
 $gd = db_select_1('*', 'menu_tree', "`group`=".$pd['menu_group']);
 if($gd['index_page']!=$pd) $pd = db_select_1('*', 'pages', "`ID`=".$gd['index_page']);
 while ($gd['parent']) {

@@ -41,7 +41,9 @@ if(substr($r, -1)=='/') $r = substr($r, 0, strlen($r) - 1);
 $u = parse_url($r);
 
 // Ако препртката е от същия сайт - край
-if (in_array($u['host'],array($_SERVER['HTTP_HOST'],stored_value('host_local') ))) return;
+if (empty($u['host']) || 
+    in_array($u['host'],array($_SERVER['HTTP_HOST'],stored_value('host_local') )) 
+   ) return;
 
 $r = addslashes($r);
 
