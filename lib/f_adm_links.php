@@ -49,10 +49,10 @@ else {
   if (isset($lpid['ID'])) $lpid = $lpid['ID']; else $lpid = 1;
 
   // Ќомера на предишна и следваща страница
-  $ppid = db_table_field('ID', "pages", "`ID`<".$page_data['ID']." ORDER BY `ID` DESC LIMIT 1");
-  if (!$ppid) $ppid = 1;
-  $npid = db_table_field('ID', "pages", "`ID`>".$page_data['ID']." ORDER BY `ID` ASC LIMIT 1");
-  if (!$npid) $npid = $lpid;
+  $ppid = 1;
+  if(isset($page_data['ID'])) $ppid = db_table_field('ID', "pages", "`ID`<".$page_data['ID']." ORDER BY `ID` DESC LIMIT 1");
+  $npid = $lpid;
+  if(isset($page_data['ID'])) $npid = db_table_field('ID', "pages", "`ID`>".$page_data['ID']." ORDER BY `ID` ASC LIMIT 1");
 
   $mphp = $phpmyadmin_site;
   $go = 'http://'.$local_host.$_SERVER['REQUEST_URI'];
@@ -101,8 +101,10 @@ $rp = random_page();
   $rz = '<script>
 function doNewPage(){
 if (confirm("Do you want to create new page?"))
-na = "'.$adm_pth.'new_record.php?t=pages&menu_group='.$page_data['menu_group'].
-'&title=p'.($lpid+1).'_title&content=p'.($lpid+1).'_content&template_id='.$page_data['template_id'].'";
+na = "'.$adm_pth.'new_record.php?t=pages&menu_group='.
+(isset($page_data['menu_group']) ? $page_data['menu_group'] : 0).
+'&title=p'.($lpid+1).'_title&content=p'.($lpid+1).'_content&template_id='.
+(isset($page_data['template_id']) ? $page_data['template_id']: 1).'";
 document.location=na;
 }
 function hide(){
