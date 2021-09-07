@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Ако страницата е в скрит раздел, се извършва пренасочване 
 // към главната страница на по-външен рездел, който не е скрит.
 
-// Пренасочване на се извършва:
+// Пренасочване на се извършва и страницата се показва:
 // - в режим на редактиране
 // - при наличие на глобална променлива $redirifhidden_cancel с непразна стойност
 // - при наличие на параметър $_GET['noredir'] със стойност равна на стойността на 
@@ -40,7 +40,10 @@ if(in_edit_mode() && $pd['hidden']){
   return "<a href=\"$a\">$v</a>\n";
 }
 if(isset($_GET['noredir'])){
-  if($v && ($_GET['noredir']==$v)) return '';
+  if($v && ($_GET['noredir']==$v)){
+    $redirifhidden_cancel = $v;
+    return '';
+  }
 }
 $pid = stored_value('main_index_pageid',1);
 $gd = db_select_1('*', 'menu_tree', "`group`=".$pd['menu_group']);

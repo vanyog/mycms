@@ -20,16 +20,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Функцията sitemap($i) генерира html код за показване карта на сайта
 // и ежедневно генерира файл sitemap.xml, който се записва в DOCUMENT_ROOT.
 
-// Параметърът $i е номера на менюто на страницата, от която се разклонява картата,
+// Параметърът $i е номерът на менюто на страницата, от която се разклонява картата,
 // но може да съдържа и втори, отделен с | параметър,
 // който се задава като id атрибут на <div> тага, в който се представя картата.
 // Когато втори параметър не е зададен се използва id="site_map".
 
 // Ако е дефинирана глобална променлива $max_level, се показват само връзките до това ниво на вложеност.
 
+// 
+
 include_once($idir.'lib/f_db_table_field.php');
 
-global $smfile, $smday, $page_header;
+global $smfile, $smday, $page_header, $redirifhidden_cancel;
 
 $page_passed = array(); // Номера на менюта, които вече са обработени,
                         // използва са за да не се получи зацикляне
@@ -53,7 +55,7 @@ $GLOBALS['mpg_id'] = stored_value('site_map_root',1);
 
 function sitemap($a = ''){
 global $page_passed, $map_level, $i_root, $id_pre, $page_header, $smfile, $smday, $mpg_id,
-       $db_link, $tn_prefix;
+       $db_link, $tn_prefix, $redirifhidden_cancel;
 $ar = explode('|',$a);
 if(!$ar[0]) $ar[0] = stored_value('main_index_pageid',1);
 $id = 'site_map';
@@ -92,7 +94,7 @@ $cache_name = 'sitemap_'.$ar[0].'_cache';
 if(in_edit_mode()) $cache_name = $cache_name.'_edit';
 if( !( isset($_GET['clear']) && ($_GET['clear']=='on') ) ){
     $rz = stored_value($cache_name);
-    if($rz) return $rz;
+    if($rz && empty($redirifhidden_cancel)) return $rz;
 }
 $page_passed = array();
 $map_level = 0;
@@ -104,9 +106,10 @@ if(in_edit_mode()) $clear_link = '<a href="'.set_self_query_var('clear','on').'"
 $rz = '<div id="'.$id.'">'."\n".$clear_link.
 site_map_buttons().$rz.site_map_buttons()."
 <p class=\"clear\"></p></div>";
-// Записване на нов sitemap.xml файл
+// Записване на нов sitemap.xml файл при условия:
 if(    ($smday !== $smfile) // Нов ден
-    && ($ar[0]  == $mpg_id) // Генерира се карта на цилия сайт
+    && ($ar[0]  == $mpg_id) // Генерира се карта на целия сайт
+    && empty($redirifhidden_cancel) // Не е разрешено преглеждане на скрити страници с $_GET['noredir]
   )
 {
    $smfile = '<?xml version="1.0" encoding="UTF-8"?>'."\n".
@@ -120,7 +123,7 @@ if( isset($_GET['clear']) && ($_GET['clear']=='on') ){
    $q = "UPDATE `$tn_prefix"."options` SET `value`='' WHERE `name` REGEXP 'sitemap_\\\d+_cache.*'";
    mysqli_query($db_link, $q);
 }
-store_value($cache_name, $rz);
+if(empty($redirifhidden_cancel)) store_value($cache_name, $rz);
 return $rz;
 }
 
@@ -144,7 +147,9 @@ return '<p class="buttons">
 // $y - флаг, дали да се генерира файл sitemap.xml
 
 function sitemap_rec($i, $j, $y){
-global $pth, $page_passed, $map_level, $has_levels, $max_level, $i_root, $ind_fl, $id_pre, $page_id, $smfile, $smday, $rewrite_on;
+global $pth, $page_passed, $map_level, $has_levels, $max_level, $i_root, $ind_fl, 
+       $id_pre, $page_id, $smfile, $smday, $rewrite_on, $redirifhidden_cancel;
+
 if(!isset($max_level)) $max_level = 100;
 
 $page_passed[] = $i;
@@ -193,19 +198,22 @@ foreach($mi as $m){
 //    if ($pid!=$page_id)
     {
        $h = $p['hidden'];
-       if( !$h || in_edit_mode() ){
+       if( !$h || in_edit_mode() || !empty($redirifhidden_cancel)){
           // Добавяне на страницата във файл sitemap.xml
           if($y && ($smday !== $smfile) && (substr($lk, 0, 4) != 'http')){
             if( strlen($smfile) < 3 ) $smfile = '';
             $smfile .= "<url>\n".
-                       "<loc>".$_SERVER['REQUEST_SCHEME']."://".$_SERVER['HTTP_HOST'].str_replace('&','&amp;',$lk)."</loc>\n".
+                       "<loc>".$_SERVER['REQUEST_SCHEME'].
+                         "://".$_SERVER['HTTP_HOST'].
+                         str_replace('&','&amp;',$lk)."</loc>\n".
                        "<lastmod>".date("Y-m-d")."</lastmod>\n".
                        "<changefreq>monthly</changefreq>\n".
                        "<priority>".(1-0.1*$map_level)."</priority>\n".
                        "</url>\n";
           }
           // Добавяне в html кода за показване
-          if( (substr($lk, 0, 4) != 'http') || $ext ){
+          if( (substr($lk, 0, 4) != 'http') || $ext ){ 
+            if(!empty($redirifhidden_cancel)) $lk .= '&noredir='.$redirifhidden_cancel;
             $rz1 .= '<a href="'.$lk.'">'.translate($m['name']).'</a>';
             if( $pid==$page_id ) $rz1 .= translate('sitemap_currentpage');
             if( in_edit_mode() ) {
@@ -223,7 +231,10 @@ foreach($mi as $m){
     if ($p['menu_group']!=$i){ // Ако е страница от друго меню
       $mtd = db_select_1('parent,index_page', 'menu_tree', '`group`='.$p['menu_group']);
       // Рекурсивно извикване за получаване карта на подменюто
-      if ( !in_array($p['menu_group'],$page_passed) && ($p['ID']==$mtd['index_page']) && ($i==$mtd['parent']) ){
+      if ( !in_array($p['menu_group'],$page_passed) && 
+           ($p['ID']==$mtd['index_page']) && 
+           ($i==$mtd['parent'])
+         ){
         $map_level++;
         $has_levels = true;
         $n = db_table_field('COUNT(*)', 'menu_items', "`group`=".$p['menu_group'],0);
