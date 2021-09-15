@@ -31,7 +31,7 @@ return outer_links();
 // ----------------------------------------------
 function outer_links(){
 
-global $tn_prefix, $db_link, $site_encoding, $page_header, $adm_pth, $rewrite_on, $page_id;
+global $tn_prefix, $db_link, $site_encoding, $page_header, $pth, $adm_pth, $rewrite_on, $page_id;
 
 if (!$site_encoding) $site_encoding = 'windows-1251';
 
@@ -113,6 +113,10 @@ if ( in_array($what, array('all','new','click')) )
    $rz .= "<a href=\"".unset_self_query_var('lid')."#outer_links\">".translate('outerlinks_cat')."</a>";
 else
    $rz .= "<a href=\"".set_self_query_var('lid', 'all')."#outer_links\">".translate('outerlinks_all')."</a>";
+   
+// Хипервръзка "pdfs", която се показва на локален сървър и отваря скрипта check_pdfs.php
+if (is_local())
+   $rz .= ' &nbsp <a href="'.$pth.'mod/outerlinks/check_pdfs.php">pdfs</p>';
 
 }
 

@@ -60,7 +60,7 @@ foreach($da as $d){
 //    echo " <a href=\"$pth"."view.php?file=$r\">$f2</a>";
   }
   else {//  die("<p>$p1<br>$p2");
-    echo ' <a href="'.$d['link'].'" style="color:red;">download</a> '.$f2;
+    echo ' <a href="'.$d['link'].'" style="color:red;" target="_blank">download</a> '.$f2;
   }
   echo ' <a href="/index.php?pid=6&lid='.$d['up'].'"> '.">> </a></span><br>\n";
 }

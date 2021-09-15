@@ -28,20 +28,20 @@ date_default_timezone_set("Europe/Sofia");
 $idir = dirname(dirname(dirname(__FILE__))).'/';
 $ddir = $idir;
 
-include($idir.'conf_paths.php');
-include($idir.'lib/f_encode.php');
-include($idir.'lib/f_chart.php');
-include($idir.'lib/f_db_table_status.php');
+include_once($idir.'conf_paths.php');
+include_once($idir.'lib/f_encode.php');
+include_once($idir.'lib/f_chart.php');
+include_once($idir.'lib/f_db_table_status.php');
 
 $page_content = encode('<h1>Статистика на обема на съдържанието на сайта</h1>');
 
 // Четене на данните от таблица content_history
-$da = db_select_m('*', 'content_history', "1 GROUP BY `size`");
+$da = db_select_m('MAX(date),size', 'content_history', "1 GROUP BY `size`",false);
 
 // Съставяне на масив дата - брой
 $dt = array();
 foreach($da as $d){
-  $dt[$d['date']] = $d['size'];
+  $dt[$d['MAX(date)']] = $d['size'];
 }
 
 // Добавяне и на днешния ден
