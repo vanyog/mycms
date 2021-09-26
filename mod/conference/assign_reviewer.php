@@ -24,6 +24,7 @@ $ddir = $idir;
 
 include_once($idir.'conf_paths.php');
 include_once($idir.'mod/usermenu/f_usermenu.php');
+include_once($idir.'lib/f_message.php');
 include_once($idir.'lib/o_form.php');
 include_once($idir.'lib/f_db_insert_or_1.php');
 
@@ -78,13 +79,14 @@ foreach($da as $i=>$d){
 $r2 = array();
 foreach($rc as $i=>$v) $r2[$i] = $rs[$i];
 
-if(!count($r2)) $ms .= '<p class="message">'.translate('conference_noReviewers')."</p>\n";
+if(!count($r2)) $ms .= message(translate('conference_noReviewers'));
 
 $page_title = encode('Назначаване на рецензент');
 
 $page_content = "<h1>$page_title</h1>\n
 <h2>".encode('На статия').":</h2>
-<p>".$p['title']."<br>";
+<p>".$p['title']."</p>
+<p>".encode('от секция: ').($p['topic']+1)."</p>\n";
 
 // Рецензeнти на статията
 $rd = db_select_m('*', 'reviewer_work', '`proc_id`='.$_GET['proc']);
@@ -109,9 +111,9 @@ include_once($idir.'lib/build_page.php');
 function process(){
 $r = db_insert_or_1($_POST, 'reviewer_work', "`rev_id`=".$_POST['rev_id']." AND `proc_id`='".$_POST['proc_id']."'", 'b', );
 if( !($r===false) )
-    return '<p class="message">'.encode('Данните са запазени успешно')."</p>\n";
+    return message(encode('Данните са запазени успешно'));
 else
-    return '<p class="message">'.encode('Възникна грешка. Съобщете на администратора на сайта.')."</p>\n";
+    return message(encode('Възникна грешка. Съобщете на администратора на сайта.'));
 }
 
 ?>

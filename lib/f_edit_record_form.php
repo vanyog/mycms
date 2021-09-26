@@ -77,8 +77,10 @@ foreach($cp as $n => $v){
        $opt[$n] = $fa[1];
     }
     // Анализиране типа на полетата
+    $tp = array();
     preg_match('/([a-z]*)\((.*)\)/', $ft[$n], $tp);
     if (count($tp)<2) $tp[1] = $ft[$n];
+//    if(!isset($tp[2])) {var_dump($tp); die("---".print_r($ft,true));}
     switch ($tp[1]){
     case 'varchar': case 'datetime':
       $t = 'text';
@@ -99,7 +101,7 @@ foreach($cp as $n => $v){
         $n = 'password2';
         $v = translate('user_passwordconfirm');
       }
-      else { $vl = htmlspecialchars(stripslashes($d[$n]), ENT_COMPAT, 'cp1251'); }
+      else { $vl = htmlspecialchars(stripslashes(isset($d[$n])?$d[$n]:''), ENT_COMPAT, 'cp1251'); }
       // Ако полето е за попълване на дата и час, се попълва с текущите дата и час
       if (($tp[1]=='datetime')&& !$vl) $vl = date("Y-m-d H:i:s");
       if(!empty($opt[$n])){
@@ -128,7 +130,7 @@ foreach($cp as $n => $v){
       $fi =  new FORMInput($v, $n, 'text', $vl);
       $hf->add_input($fi);
       break;
-    case 'tinyint': switch($tp[2]){
+    case 'tinyint': switch(isset($tp[2]) ? $tp[2] : 4){
       case 1:
         $fi =  new FORMInput($v, $n, 'checkbox', 1);
         if ($d[$n]) $fi->checked = ' checked';
@@ -136,7 +138,7 @@ foreach($cp as $n => $v){
         break;
         case 4:
         case 11:
-          $fi =  new FORMInput($v, $n, 'text', $d[$n]);
+          $fi =  new FORMInput($v, $n, 'text', isset($d[$n])?$d[$n]:'');
           $hf->add_input($fi);
           break;
       default: die("Unknown subtype of '$ft[$n]' $tp[2]");
@@ -144,14 +146,14 @@ foreach($cp as $n => $v){
       break;
     case 'enum':
       $op = str_getcsv($tp[2], ',', "'");
-      $i = array_search($d[$n], $op);
+      $i = array_search(isset($d[$n])?$d[$n]:array(), $op);
       if(($i===false) && $fd[$n]) $i = array_search($fd[$n], $op);;
       $fi =  new FormSelect($v, $n, $op, $i);
-      if ($d[$n]) $fi->checked = ' checked';
+      if (!empty($d[$n])) $fi->checked = ' checked';
       $hf->add_input($fi);
       break;
     case 'float':
-        $vl = str_replace(',', '.', $d[$n]);
+        $vl = str_replace(',', '.', isset($d[$n])?$d[$n]:'');
         $fi =  new FORMInput($v, $n, 'text', $vl);
         $hf->add_input($fi);
         break;

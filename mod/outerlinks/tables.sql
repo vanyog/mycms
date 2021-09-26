@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS `outer_links` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `place` int(11) NOT NULL DEFAULT '0',
-  `date_time_1` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `date_time_1` datetime NOT NULL DEFAULT '0000-01-01 00:00:00',
   `link` varchar(255) DEFAULT '',
   `Title` text,
   `Comment` text NOT NULL,

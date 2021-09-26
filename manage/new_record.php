@@ -60,7 +60,7 @@ foreach($fn as $i => $n){
     else { switch ($ft[$i]){
            case 1:
            case 3: $q .= "`$n`=0, "; break;
-           case 12: $q .= "`$n`='0000-00-00 00:00:00', "; break;
+           case 12: $q .= "`$n`='0000-01-01 00:00:00', "; break;
            default: $q .= "`$n`='', ";
            }
     }

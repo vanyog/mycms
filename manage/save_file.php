@@ -27,7 +27,7 @@ $afn = $apth.$fn;
 $i = strrpos($fn,'/');
 $pn = substr($fn,0,$i);
 $fc = $_POST['editor1'];
-if (get_magic_quotes_gpc()) $fc = stripslashes($fc);
+if ((phpversion()<'7.4.0') && get_magic_quotes_gpc()) $fc = stripslashes($fc);
 
 $fc = str_replace($ta_fctag,$ta_ctag,$fc);
 $fc = str_replace(chr(60).' !--$$_',chr(60).'!--$$_',$fc);

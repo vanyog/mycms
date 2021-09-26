@@ -70,7 +70,7 @@ else {
         // Данни за потребителя
         $dt = db_select_1('*', $user_table, "`ID`=$tid");
         // Поставяне на отметка за изтриване, ако не е влизал никога
-        if( ($dt['date_time_2']=='0000-00-00 00:00:00') &&
+        if( ($dt['date_time_2']<='0000-01-01 00:00:00') &&
             ($dt['date_time_1']==$dt['date_time_1']) &&
             empty($dt['password'])
           ) $i->js = ' checked="checked"';

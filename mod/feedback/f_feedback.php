@@ -224,6 +224,11 @@ return translate($n, false);
 function feedback_fiealds(){
 global $tud, $lang, $uid, $idir, $page_hash;
 $rz = translate_to('emailtemplate_'.$_GET['tid'], $lang, false);
+return replace_fields($rz);
+}
+
+function replace_fields($rz){
+global $tud, $lang, $uid, $idir, $page_hash;
 // Места за заместване
 $ph = array();
 $i = preg_match_all('/\[(.*?)\]/', $rz, $ph);
@@ -246,7 +251,7 @@ case '[mypatrpage]': $lk = 'https://conference.vsu.bg/index.php?pid=57&lang='.$l
                      $rz = str_replace($p, $lk, $rz);
                      break;
 case '[titlestoreview]': include_once($idir.'mod/conference/f_conference.php');
-                         $rz = str_replace($p, conference_userRevList($uid, true), $rz );
+                         $rz = str_replace($p, conference_userRevList($uid, false), $rz );
                          break;
 }
 return $rz;

@@ -136,7 +136,8 @@ $this->js = " $e=\"$js\"";
 public function html($it){
 $dsbl = lock_form_fields();
 $rz = '';
-if ($it) $rz = "<tr><th>";
+if ($it){ if($this->type=='hidden') $rz = "<tr style=\"visibility: collapse;\"><th>";
+          else $rz = "<tr><th>"; }
 if($this->caption)
   if($this->id) $rz .= "<label for=\"$this->id\">$this->caption</label> ";
   else $rz .= $this->caption;

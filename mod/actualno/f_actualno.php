@@ -68,7 +68,7 @@ global $language, $actualno_events_page;
 // Времето на настоящия момент в MySQL формат
 $d = date("Y-m-d H:i:s");
 // Ако е зададена стартова дата:
-$w = " AND (`StartDate`='0000-00-00 00:00:00' OR `StartDate`<'$d')";
+$w = " AND (`StartDate`<='0000-01-01 00:00:00' OR `StartDate`<'$d')";
 if(in_edit_mode()) $w = '';
 // Четене на предстоящите събития
 $al = db_select_m('*','actualno',
@@ -246,7 +246,7 @@ if ($i==0){
 else $d = db_select_1('*', 'actualno', "`ID`=$i");
 if (!$d) return "Incorrect news id";
 $dt = date("Y-m-d H:i:s");
-$vis = in_edit_mode() || ($d['StartDate']=='0000-00-00 00:00:00') || ($d['StartDate']<$dt);
+$vis = in_edit_mode() || ($d['StartDate']<='0000-01-01 00:00:00') || ($d['StartDate']<$dt);
 // Номер на по-нова новина
 $i1 = db_table_field('ID', 'actualno',
       "`type`='$t' AND `Date`>'".$d['Date']."' AND `lang`='$language' ORDER BY `Date` ASC LIMIT 0,1");
@@ -327,7 +327,7 @@ if ($a=='showevent'){
   $t = 'Event';
   $np = $actualno_events_page;
   $d = date("Y-m-d H:i:s");
-  $w = " AND (`StartDate`='0000-00-00 00:00:00' OR `StartDate`<'$d')";
+  $w = " AND (`StartDate`<='0000-00-00 00:00:00' OR `StartDate`<'$d')";
 }
 if(in_edit_mode()) $w = '';
 $da = db_select_m('*', 'actualno', "`type`='$t' AND `lang`='$language' $w ORDER BY `Date` DESC ");
