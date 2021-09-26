@@ -363,7 +363,8 @@ if (!$lid) return "";
 $rz = ""; $lk = ''; $cm = '';
 do {
   $l = db_select_1('*','outer_links',"`ID`=$lid");
-  $lid = $l['up'];
+  if(!$l) break;
+  else $lid = $l['up'];
   if ($rz) $rz = " > \n".$rz;
   if ($lk) $rz = '<a href="'.$lk.'#outer_links">'.$l['Title']."</a>".$rz;
   else{
