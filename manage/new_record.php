@@ -45,9 +45,9 @@ foreach($fn as $i => $n){
      if($tb=='users'){
      if (!isset($_GET['language'])) $q .= "`$n`='English', ";
      else $q .= "`$n`='".addslashes($_GET['language'])."', ";
-     break;
      }
-  case 'place': $pl = db_table_field('MAX(`place`)',$tb,'1')+10;
+     break;
+  case 'place': $pl = intval( db_table_field('MAX(`place`)',$tb,'1') ) + 10;
      $q .= "`$n`='$pl', "; break;
   case 'template_id':
      if (isset($_GET['template_id'])) $q .= "`template_id`=".(1*$_GET['template_id']).', ';

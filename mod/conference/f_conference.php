@@ -35,7 +35,8 @@ include_once($idir.'mod/usermenu/f_usermenu.php');
 include_once($idir.'mod/uploadfile/f_uploadfile.php');
 
 global $user_table, $utype, $fdir, $day_a_submit, 
-       $today, $day_a_submit, $day_a_approve, $day2, $day4, $adm_pth, $page_header, 
+       $today, $day_a_submit, $day_a_approve, $year, $day2, $day4, 
+       $adm_pth, $page_header, 
        $page_hash, $proccount, $plogin, $pedit, $editing;
 
 $editing = in_edit_mode();
@@ -79,6 +80,8 @@ $today = date('Y-m-d H:i:s');
 $day_a_submit = conference_important_day('conference_day_a_submit');
 // Срок за потвърждаване приемането на резюметата
 $day_a_approve = conference_important_day('conference_day_a_approve');
+// Година на провеждане
+$year = substr(conference_important_day('conderence_day_start'),0,4);
 
 // Важна дата в MYSQL формат
 // $n - има на срока от таблица 'options'
@@ -207,11 +210,9 @@ $et = ($today < $day_a_submit) || $adm;
 if (!$et && !count($pd)) return $rz.message(translate('conference_noabs1'));
 // Дали е период за качване на доклади
 $ut = schedules_in_event($day2[1],$day2[0]) || $adm;
-//var_dump($et); die($day2[1].'<br>'.$day2[0]);
 // Адрес на страницата за редактиране на резюме и качване на доклад от участник
 $edp = stored_value('conference_editpaper', '/index.php?pid=1068');
 // Линк "Редактиране"
-//die($pd[$i]['approved_a']);
 if ($i<count($pd)){ 
    if (!$et && isset($pd[$i]['approved_a']) && ($pd[$i]['approved_a']=='1'))
       $rz .= '<p><a href="'.$edp.'&amp;proc='.$pd[$i]['ID'].$page_hash.'">'.translate('conference_editpaper').'</a>';
@@ -225,6 +226,7 @@ if ($i<count($pd)) $rz .= ' &nbsp; <a href="'.current_pth(__FILE__).'delete_pape
 					 translate('conference_deletepaper').'</a>';
 $rz .= "</p>\n";
 if ($i<count($pd)){
+   // Мнения на рецензентите
    $rm = conference_viewRev2rezult($pd[$i]);
    if($rm) 
       $rz .= message(translate('conference_revNotice'));
@@ -451,20 +453,23 @@ $fi->ckbutton = '';
 $f->add_input($fi);
 // Дали сме в период на качване на пълен текст
 $ft = schedules_in_event($day2[1], $day2[0]) || $adm;
+// Дали докладът има забележки от рецензенти, изискващи коригиране
+$mc = db_table_field('decision', "reviewer_work", "`proc_id`=".$d['ID']." AND `decision`='1'",'',true) == "1";
+//die($mc);
 $ti = new FormInput(translate('conference_pages'), 'pages', 'text', $d['pages']);
 $ti->js = ' onfocus="this.select();"';
 if (!$adm) $ti->js .= ' disabled="disabled"';
 $f->add_input($ti);
 $fl = new FormInput(translate('conference_cabstracttextfile'), 'abstracttextfile', 'file', $_SERVER['DOCUMENT_ROOT'].$fdir.stripslashes($d['abstracttextfile']));
-if (!$ft) $fl->js = ' disabled="disabled"';
+if (!$ft && !$mc) $fl->js = ' disabled="disabled"';
 $fl->size = 63;
 $f->add_input($fl);
 $fl = new FormInput(translate('conference_cfulltextfile'), 'fulltextfile', 'file', $_SERVER['DOCUMENT_ROOT'].$fdir.stripslashes($d['fulltextfile']));
-if (!$ft) $fl->js = ' disabled="disabled"';
+if (!$ft && !$mc) $fl->js = ' disabled="disabled"';
 $fl->size = 63;
 $f->add_input($fl);
 $fl = new FormInput(translate('conference_cfulltextfile2'), 'fulltextfile2', 'file', $_SERVER['DOCUMENT_ROOT'].$fdir.stripslashes($d['fulltextfile2']));
-if (!$ft) $fl->js = ' disabled="disabled"';
+if (!$ft && !$mc) $fl->js = ' disabled="disabled"';
 $fl->size = 63;
 $f->add_input($fl);
 $fl = new FormInput(translate('conference_cfulltextfile3'), 'fulltextfile3', 'file', $_SERVER['DOCUMENT_ROOT'].$fdir.stripslashes($d['fulltextfile3']));
@@ -1411,7 +1416,7 @@ function conference_rev2($uid, $adm){
 global $language;
 // Преглед на рецензентите
 if($_GET['rev2']=='on') return conference_revList();
-global $utype, $user_table, $body_adds, $language;
+global $utype, $user_table, $body_adds, $language, $lock_fields;
 $body_adds .= ' onload="CKEDITOR.replace(\'comment1\');'.
                         'CKEDITOR.replace(\'comment2\');'.
                         'CKEDITOR.replace(\'comment3\');"';
@@ -1437,7 +1442,8 @@ if($_GET['rev2']=='0')
   $rd = array('ID'=>0, 'date_time_1'=>'', 'date_time_2'=>'', 'rev_id'=>0, 'proc_id'=>0,
               'grade1'=>0, 'grade2'=>0, 'grade3'=>0, 'grade4'=>0, 'grade5'=>0,
               'grade6'=>0, 'grade7'=>0, 'grade8'=>0, 'grade9'=>0, 'grade10'=>0,
-              'grade11'=>0, 'grade12'=>0, 'decision'=>'', 'comment1'=>'', 'comment2'=>'', 'comment3'=>'');
+              'grade11'=>0, 'grade12'=>0, 'decision'=>'', 
+              'comment1'=>'', 'comment2'=>'', 'comment3'=>'', 'locked'=>0);
 else
   $rd = db_select_1('*', 'reviewer_work', "`rev_id`=$rid AND `proc_id`=".$_GET['rev2'],false);
 if(!$rd) return message("Your are not a reviewer of this article.");
@@ -1490,11 +1496,13 @@ case 'comment1': case 'comment2': case 'comment3':
            $fi->ckbutton = '';
            $f->add_input( $fi );
            break;
+case 'locked':
+           break;
 default:
   $f->add_input( new FormInput(translate("conference_$k"), $k, 'text', $v) );
 }
 $f->add_input( new FormInput('', '', 'submit', translate('conference_rev1submit') ) );
-
+$lock_fields = $rd['locked']=="1";
 $rz .= translate('conference_gradeMeaning').$f->html();
 return $ms.$rz;
 }
@@ -1570,6 +1578,8 @@ foreach($tp as $i=>$t){
        if($c1==$c2) $cl = 'green';
        if($c1==0) $cl = 'red';
        if(($c1>0) && ($c1<$c2)) $cl = 'orange';
+       if(in_edit_mode() && $c1) 
+          $c1 = '<a href="/index.php?pid=79&uid='.$d['ID'].'" target="_blank">'.$c1.'</a>';
        $dt[$j]['count'] = "<span style=\"color:$cl;\">$c1 / $c2</spam>";
     }
   // Брой доклади на български
@@ -1597,9 +1607,18 @@ function conference_revCounts($tp,$rt,$tb,$rb,$te,$re){
 // Показване на рецензиите на доклад
 
 function conference_procRevs(){
-global $utype, $adm_pth, $editing;
-if(empty($_GET['proc']) || !is_numeric($_GET['proc'])) return message('Missing or incorrect "proc" parameter.');
-$rws = db_select_m('*', 'reviewer_work', "`proc_id`=".$_GET['proc'],false);
+global $utype, $adm_pth, $editing, $year;
+if(empty($_GET['proc']) || !is_numeric($_GET['proc'])){
+   if(empty($_GET['uid']) || !is_numeric($_GET['uid']))
+      return message('Missing or incorrect "proc" or "uid" parameter.');
+   $us = db_select_m('ID,utype', 'reviewers', "`user_id`=".$_GET['uid']." AND `utype`='$utype'");
+   $q = '';
+   foreach($us as $u) $q .= ' OR `rev_id`='.$u['ID'];
+   $q = substr($q,4);
+}
+else  $q = "`proc_id`=".$_GET['proc'];
+$rws = db_select_m('*', 'reviewer_work', $q,false);
+//die(print_r(substr($q,4), true));
 $rz = '';
 $cp = array(
 //'ID'=>'',
@@ -1627,20 +1646,24 @@ $cp = array(
 'comment3'=>translate('conference_comment3',false),
 );
 $ds = array(
-  translate('conference_reject', false),
-  translate('conference_acceptIf', false),
-  translate('conference_accept', false)
+  '<span style="color:red">'.translate('conference_reject', false).'</span>',
+  '<span style="color:darkorange">'.translate('conference_acceptIf', false).'</span>',
+  '<span style="color:green">'.translate('conference_accept', false).'</span>'
 );
 foreach($rws as $i => $rw){ //die(print_r($rw, true));
   $rw['title'] = db_table_field('title', 'proceedings', "`ID`=".$rw['proc_id']);
-  $rw['proc_id'] .= ' / 2020';
+  $rw['proc_id'] .= ' / '.$year;
   $rw['dl'] = encode('7 дни');
   if($rw['decision']!='') $rw['decision'] = $ds[$rw['decision']];
-  for($j=1; $j<13; $j++) if(isset($rw["grade$j"]) && ($rw["grade$j"]==0)) $rw["grade$j"] = translate('conference_notApplicable',false);
-  $rz .= '<h2>'.encode('ФОРМА<br>за рецензия на статия от Международната научна конференция на ВСУ')."</h2>\n".
-          view_record($rw,$cp).
+  for($j=1; $j<13; $j++) 
+      if(isset($rw["grade$j"]) && ($rw["grade$j"]==0)) 
+         $rw["grade$j"] = translate('conference_notApplicable',false);
+  $rz .= '<h2>'.encode('ФОРМА<br>за рецензия на статия от Международната научна конференция на ВСУ').
+         "</h2>\n".
+         view_record($rw,$cp).
          '<p>'.encode('Дата на предаване на рецензията: ');
   if($rw['date_time_2']>$rw['date_time_1']) $rz .= $rw['date_time_2'];
+  else $rz .= '<span style="color:red">'.encode("НЕ е предадена").'</span>';
   $rz .= "</p>\n";
   $rz .= "<p>&nbsp;</p>\n<p>".encode('Рецензент: ').$rw['rev_id']." ..................................</p>\n";
   if($editing) $rz .= '<a href="'.$adm_pth.'edit_record.php?t=reviewer_work&r='.$rw['ID'].'" target="_blank">*</a> ';
@@ -1657,9 +1680,9 @@ global $adm_pth, $editing, $editing;
 $rw = db_select_m('*', 'reviewer_work', '`proc_id`='.$d['ID'].' AND `decision` IS NOT NULL');
 $rz = '';
 $ds = array(
-  translate('conference_reject', false),
-  translate('conference_acceptIf', false),
-  translate('conference_accept', false)
+  '<span style="color:red">'.translate('conference_reject', false).'</span>',
+  '<span style="color:darkorange">'.translate('conference_acceptIf', false).'</span>',
+  '<span style="color:green">'.translate('conference_accept', false).'</span>'
 );
 foreach($rw as $i=>$w){
   $rz .= '<h3>'.translate('conference_rev2Dec').($i+1)."</h3>\n";
