@@ -93,7 +93,7 @@ else if ($editMode && $elink){
          // който отваря форма за въвеждане на липсващия надпис.
          if ($can_edit) $h = $pth.'mod/usermenu/edit_text.php?i='.$n.
              '&amp;lang='.$language.
-             '&amp;pid='.$page_data['ID'];
+             '&amp;pid='.(isset($page_data['ID']) ? $page_data['ID'] : '');
          else $h = $adm_pth."new_content.php?n=$n&l=$language";
          return "<a href=\"$h\">$n</a>";
      }

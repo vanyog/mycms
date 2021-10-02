@@ -62,7 +62,12 @@ if(!sDiv){
 }
 sDiv.style.display = "block";
 var v = e.value;
-if(!v) return;
+if(!v.length){ 
+  sDiv.style.display = "none";
+  return;
+}
+var t = e.offsetTop + e.offsetHeight;
+sDiv.style.top = (window.scrollY + 45) + "px";
 var a = "'.current_pth(__FILE__).'ajax_search.php?a=" + Math.floor(Math.random() * 1000) +
         "&text=" + encodeURI(v);
 ajaxO.onreadystatechange = onSearchAjaxResponse;
