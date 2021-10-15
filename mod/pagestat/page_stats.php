@@ -44,7 +44,7 @@ $d2 = db_table_field('MAX(`date`)', 'visit_history', '1');
 
 $w = '1';
 if ($d) $w = "`date`>'".date('Y-m-d', strtotime($d2)-$d*60*60*24)."'";
-if (isset($_GET['pid'])){
+if (isset($_GET['pid']) && is_numeric($_GET['pid'])){
   $pid = 1*$_GET['pid'];
   $w .= " AND `page_id`=$pid";
 }
@@ -58,7 +58,10 @@ $page_content = encode("<p>От: $d1 до: $d2</p>\n");
 
 if (isset($_GET['pid'])){
 //  $pid = 1*$_GET['pid'];
-  $page_content .= one_page($pid, $w);
+  if($_GET['pid']=='all'){
+     $page_content .= total_pages($w); }
+  else 
+     $page_content .= one_page($pid, $w);
 }
 else if (isset($_GET['date'])){
   $page_content = one_day($_GET['date']);
@@ -85,7 +88,10 @@ foreach($da as $d){ $dt[$d['page_id']] = $d['sum(`count`)']; }
 // Подреждане на масива по намаляване на броя посещения
 arsort($dt);
 
-$page_content = '<table style="border-bottom:solid 1px black;">
+$page_content = '<h1>Page statistics</h1>
+<p>See: 
+<a href="page_stats.php?pid=all">Site totals</p>
+<table style="border-bottom:solid 1px black;">
 <tr><th>'.encode('Посещения').'</th><th></th><th>ID</th><th>'.encode('Страница').'</th></tr>';
 
 $t = 0;
@@ -130,8 +136,10 @@ if (!$max) $max = 1;
 $m = 800;
 $tn = $pd['title'];
 $tn = db_table_field('text', 'content', "`name`='$tn' AND `language`='$language'");
-$rz = "<p>Page: <a href=\"$main_index?pid=$i\">$tn</a>, Group <a href=\"?group=".$pd['menu_group']."\">".$pd['menu_group']."</p>".'
-<p>See: <a href="page_stats.php">All pages statistics</a></p>
+$rz = "<p>Page: <a href=\"$main_index?pid=$i\">$tn</a>, Group <a href=\"?group=".$pd['menu_group']."\">".$pd['menu_group']."</a></p>".'
+<p>See: 
+<a href="page_stats.php">All pages statistics</a> &nbsp; 
+<a href="page_stats.php?pid=all">Site totals</p>
 '."Minimum visit count: $min, average: ".number_format(floatval($ave), 1).", Maximum: $max".encode('
 <table>
 <tr><th>Дата</th><th>Посещения</th></tr>');
@@ -186,5 +194,38 @@ $rz .= "</table>\n";
 return $rz;
 }
 
+// Показва статистика за сумата на посещенията на всички страници по дати
 
+function total_pages($w){
+// Четене на сумите за всички страници
+$da = db_select_m('date,SUM(`count`)', 'visit_history', "$w GROUP BY `date` ORDER BY `date` DESC");
+// Добавяне на днешна дата
+$d = array( 'date'=>date("Y-m-d", time() + 24*3600), 'SUM(`count`)'=>db_table_field('SUM(`dcount`)', 'pages', 1) );
+array_unshift( $da, $d );
+$min = 100000000;
+$max = 0;
+$ave = 0;
+foreach($da as $d){
+  if($min>$d['SUM(`count`)']) $min = $d['SUM(`count`)'];
+  if($max<$d['SUM(`count`)']) $max = $d['SUM(`count`)'];
+  $ave += $d['SUM(`count`)'];
+}
+if ($max<$da[0]['SUM(`count`)']) $max = $da[0]['SUM(`count`)'];
+if (!$max) $max = 1;
+//die("$min $max");
+$m = 800;
+$rz = "<h1>Page totals</h1>".'
+<p>See: <a href="page_stats.php">All pages statistics</a></p>
+'."Minimum visits: $min, average: ".number_format(floatval($ave), 1).", Maximum vizits: $max".encode('
+<table>
+<tr><th>Дата</th><th>Посещения</th></tr>');
+foreach($da as $d){
+  $a = $d['SUM(`count`)']/$max * $m;
+  $t = date("N",strtotime($d['date']));
+  $rz .= '<tr><td><a href="page_stats.php?date='.$d['date'].'">'.$d['date']."</a> $t".
+         '</td><td><div style="background-color:red;width:'.$a.'px;">'.$d['SUM(`count`)'].'</div></td>';
+  $rz .= "</tr>\n";
+}
+$rz .= '</table>';
+return $rz;}
 ?>

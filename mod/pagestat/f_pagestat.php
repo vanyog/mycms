@@ -22,15 +22,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // на посещенията на страниците от сайта
 
 function pagestat(){
-global $page_data, $can_edit;
+global $page_data, $can_edit, $adm_pth;
 if ( !( stored_value("pagestat_public") || show_adm_links() || $can_edit ) ) return '';
 $pth = current_pth(__FILE__);
 $rz = translate('pagestat_total').$page_data['tcount'].
       translate('pagestat_today').$page_data['dcount'];
 if ( !( show_adm_links() || $can_edit ) ) return $rz;
 $rz .= ' See <a href="'.$pth.'page_stats.php?pid='.$page_data['ID'].'">page</a>'.
-      ',    <a href="'.$pth.'page_stats.php?group='.$page_data['menu_group'].'">group</a>'.
-      ' or  <a href="'.$pth.'content_stats.php">content</a> stats';      
+       ',    <a href="'.$pth.'page_stats.php?group='.$page_data['menu_group'].'">group</a>'.
+       ' or  <a href="'.$pth.'content_stats.php">content</a> stats<br>'."\n".
+       'Page ID: <a href="'.$adm_pth.
+       'edit_record.php?t=pages&r='.$page_data['ID'].'">'.$page_data['ID']."</a>\n".
+       ' template: <a href="'.$adm_pth.
+       'edit_record.php?t=templates&r='.$page_data['template_id'].'">'.$page_data['template_id'].
+       "</a>\n";      
 return $rz;
 }
 

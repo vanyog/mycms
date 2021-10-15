@@ -60,8 +60,8 @@ foreach($ld as $d){
   $lt[$k] = $v;
 }
 
-$page_content .= encode("<h2>Съдържание на сайта</h2>\n").chart($dt).
-                 encode("<h2>Брой интернет връзки</h2>\n").chart($lt);
+if(count($dt)) $page_content .= encode("<h2>Съдържание на сайта</h2>\n").chart($dt);
+if(count($lt)) $page_content .= encode("<h2>Брой интернет връзки</h2>\n").chart($lt);
 
 include($idir.'lib/build_page.php');
 

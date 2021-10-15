@@ -47,7 +47,7 @@ if(isset($_GET['purge'])){
   db_delete_where('page_cache',$q);
   $i = mysqli_affected_rows($db_link);
   die('<p>Page cache '.$_GET['purge']." purged. $i - records deleted.</p>
-<p><a href=\"".$_SERVER['PHP_SELF'].'?purge=all">Purge all</a></p>
+<p><a href=\"".$_SERVER['PHP_SELF'].'?purge=all&a='.rand().'">Purge all</a></p>
 <p><a href="/?pid='.$_GET['purge'].'">Go to page</a>');
 }
 

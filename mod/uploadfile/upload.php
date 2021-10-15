@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Страница за качване на файл на сайта
+// Страница за качване на файл в сайта
 
 if (!isset($_GET['fid'])) die("No upload id");
 if (!isset($_GET['fn' ])) die("No upload name");
@@ -27,6 +27,7 @@ include($idir.'lib/translation.php');
 include($idir.'lib/o_form.php');
 include_once($idir.'mod/user/f_user.php');
 include_once($idir."lib/f_page_cache.php");
+include_once('lib.php');
 
 // Проверка дали има влязъл потребител
 if (!in_edit_mode()) user('new');
@@ -57,7 +58,7 @@ if ($fd){
   $thide = $fd['date_time_4'];
 }
 
-// Ако са изпратени данни се обработват.
+// Ако са изпратени данни, те се обработват и се извършва връщане към предишната страница.
 if (count($_POST) && !isset($_POST['password'])) process_data();
 // Ако не са изпратени данни се показва форма за редактиране.
 else { 
@@ -71,9 +72,12 @@ else {
 // Показване форма за качване на файл.
 // 
 function show_form(){
-global $ftx, $tshow, $thide, $page_content;
+global $ftx, $tshow, $thide, $page_content, $fd;
 
-$page_content = '<h1>'.translate('uploadfile_upladpagetitle')."</h1>\n";
+$f = uploadfile_href($fd['filename']);
+
+$page_content = '<h1>'.translate('uploadfile_upladpagetitle')."</h1>\n".
+'<p><a href="/'.$f.'" target="_blank">'.basename($fd['filename'])."</a></p>\n";
 
 $uf = new HTMLForm('uploadform');
 

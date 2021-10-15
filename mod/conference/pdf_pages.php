@@ -25,12 +25,12 @@ $ddir = $idir;
 include_once($idir.'lib/f_db_select_m.php');
 include_once($idir.'lib/f_db_update_record.php');
 
-$pd = db_select_m('ID,pages,fulltextfile2', 'proceedings', "`utype`='vsu2020' AND `publish`='yes' AND `fulltextfile2`>' '");
+$pd = db_select_m('ID,pages,fulltextfile2', 'proceedings', "`utype`='vsu2021' AND `publish`='yes' AND `fulltextfile2`>' '");
 
 
 foreach($pd as $i => $d){
-  $fn = '/home/confo2fl/public_html/_vsu2020/'.$d['fulltextfile2'];
-//  $fn = '/Users/vanyog/Sites/nauchna.vsu.bg/_vsu2020/'.$d['fulltextfile2'];
+//  $fn = '/home/confo2fl/public_html/_vsu2021/'.$d['fulltextfile2'];
+  $fn = '/Users/vanyog/Sites/nauchna.vsu.bg/_vsu2021/'.$d['fulltextfile2'];
   if(!file_exists($fn)) die("File not exists: $fn");
   $pd[$i]['pages'] = getNumPagesPdf($fn);
 }
