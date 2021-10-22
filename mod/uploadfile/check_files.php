@@ -31,7 +31,17 @@ $in = $main_index.'?pid=';
 $ar = stored_value('uploadfile_otherroot');
 
 foreach($da as $d){
-  // Ако файлът няма име, най-вероятно е изтрит
+   $pc = db_select_m('ID', 'content', "`text` LIKE '%!--\$\$_UPLOADFILE_".$d['name']."%'",false);
+   echo $d['ID']." ".$d['name']." ".chage_root($d['filename']);
+   if(count($pc)) echo " in strings";
+   else echo " NOT USED";
+   foreach($pc as $p){
+     echo " - <a href=\"".$adm_pth."edit_record.php?t=content&r=".$p['ID'].
+          "\" target=\"_blank\">".$p['ID']."</a>"; 
+   }
+   echo "<br>\n";
+// var_dump($pc); die;
+/*  // Ако файлът няма име, най-вероятно е изтрит
 //  if (!$d['filename'])
   {
     // Проверка дали се използва на страницата
@@ -53,6 +63,7 @@ foreach($da as $d){
     if (!$y) 
         echo $d['name'].' on page '.$lk." not used. ".chage_root($d['filename'])."<br>";
   }
+  */
 }
 
 function chage_root($n){
@@ -60,7 +71,7 @@ global $ar;
 if($ar){
    $ln = substr($n,strlen($ar));
    $n = $_SERVER['DOCUMENT_ROOT'].$ln;
-   if(file_exists($n)) $n = "<a href=\"$ln\">$n</a>";
+   if(file_exists($n)) $n = "<a href=\"$ln\" target=\"_blank\">".basename($n)."</a>";
 }
 return $n;
 }

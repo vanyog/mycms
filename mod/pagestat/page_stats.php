@@ -90,7 +90,7 @@ arsort($dt);
 
 $page_content = '<h1>Page statistics</h1>
 <p>See: 
-<a href="page_stats.php?pid=all">Site totals</p>
+<a href="page_stats.php?pid=all">Site totals</a></p>
 <table style="border-bottom:solid 1px black;">
 <tr><th>'.encode('Посещения').'</th><th></th><th>ID</th><th>'.encode('Страница').'</th></tr>';
 
@@ -98,6 +98,7 @@ $t = 0;
 foreach($dt as $i=>$c){
   // Дани за страница с номер $i
   $ptn = db_select_1('menu_group,title','pages','`ID`='.$i);
+  if($ptn){
   // Текст на заглавието на страницата
   $pt = translate($ptn['title']);
   $page_content .= "<tr>
@@ -105,7 +106,7 @@ foreach($dt as $i=>$c){
 <td> <a href=".set_self_query_var('group', $ptn['menu_group']).">g</a> </td>
 <td align=\"center\"> <a href=\"$pth"."index.php?pid=$i\" target=\"_blank\">$i</a>
 </td><td>$pt</td>
-</tr>\n";
+</tr>\n";}
   $t += $c;
 }
 
@@ -136,10 +137,11 @@ if (!$max) $max = 1;
 $m = 800;
 $tn = $pd['title'];
 $tn = db_table_field('text', 'content', "`name`='$tn' AND `language`='$language'");
-$rz = "<p>Page: <a href=\"$main_index?pid=$i\">$tn</a>, Group <a href=\"?group=".$pd['menu_group']."\">".$pd['menu_group']."</a></p>".'
+$rz = "<h1>Page Statistics</h1>
+<p>Page: <a href=\"$main_index?pid=$i\">$tn</a>, Group <a href=\"?group=".$pd['menu_group']."\">".$pd['menu_group']."</a></p>".'
 <p>See: 
 <a href="page_stats.php">All pages statistics</a> &nbsp; 
-<a href="page_stats.php?pid=all">Site totals</p>
+<a href="page_stats.php?pid=all">Site totals</a></p>
 '."Minimum visit count: $min, average: ".number_format(floatval($ave), 1).", Maximum: $max".encode('
 <table>
 <tr><th>Дата</th><th>Посещения</th></tr>');
@@ -158,13 +160,18 @@ return $rz;
 // Показване на таблица за една дата
 
 function one_day($d){
-$rz = "<p>Visit statistics for: $d</p>";
+$rz = '<h1>Day Statistics</h1>
+<p>See: 
+<a href="page_stats.php">All pages statistics</a> &nbsp; 
+<a href="page_stats.php?pid=all">Site totals</a></p>
+'."<p>Visit statistics for: $d</p>";
 // Четене на данните за дата $d
 $dt = db_select_m('*', 'visit_history', "`date`='$d' ORDER BY `count` DESC");
 $rz .= '<table>
 <tr><th>Visits</th><th>Page</th></tr>';
 foreach($dt as $t){
-  $rz .= "\n<tr><td>".$t['count']."</td><td>".$t['page_id']."</td></tr>";
+  $rz .= "\n<tr><td>".$t['count'].'</td>'.
+         '<td><a href="'.$_SERVER['PHP_SELF'].'?pid='.$t['page_id'].'">'.$t['page_id']."</a></td></tr>";
 }
 $rz .= '</table>';
 return $rz;

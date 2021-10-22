@@ -18,9 +18,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // Молулът връща URL-а на първата картинка, качена с модул uploadfile.
+// Параметърът $a е URL на картинка от същия сайт, която да се използва по подразбиране
+// ако на страницата не е качена друга картинка
 
 function firstimage($a = ''){
-$rz = $a;
+// Замяна на схемата на URL-а с тази на сайта
+$u = parse_url($a);
+$rz = $_SERVER['REQUEST_SCHEME'].'://'.$u['host'].$u['path'];
 if(isset($GLOBALS['og_image']) ){
    $ex = pathinfo($GLOBALS['og_image'], PATHINFO_EXTENSION);
    if($ex=='svg') return $rz;
