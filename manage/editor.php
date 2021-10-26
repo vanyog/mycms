@@ -22,6 +22,19 @@ include("ta_ctag.php");
 include_once($idir.'lib/f_mod_list.php');
 include_once($idir.'lib/f_mod_picker.php');
 
+global $page_header, $body_adds;
+
+$page_header = '<script src="'.$pth.'js/cookies.js"></script>
+<script>
+function findAndSelect(){
+var tf = cookie_value("findthistext");
+window.find(tf);
+}
+</script>
+';
+
+$body_adds .= ' onload="findAndSelect()"';
+
 function editor($n,$tx){//die($n);
 global $ta_ctag, $ta_fctag, $page_header;
 $tx = str_replace('&','&amp;',$tx);
@@ -202,7 +215,7 @@ function ckeb($n){
 global $page_header, $ckpth;
 // Път до основния файл на CKEditor
 $ckep = $_SERVER['DOCUMENT_ROOT'].$ckpth.'ckeditor.js';
-// Проверка дали CKEditor съществува
+// Ако CKEditor съществува се поставя линк към локалния файл, иначе към cdn.ckeditor.com
 if (file_exists($ckep)) $page_header .= '<script src="'.$ckpth."ckeditor.js\"></script>\n";
 else $page_header .= "<script src=\"//cdn.ckeditor.com/4.5.7/full/ckeditor.js\"></script>\n";
 return '

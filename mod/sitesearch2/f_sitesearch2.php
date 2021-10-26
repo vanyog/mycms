@@ -45,7 +45,7 @@ if (window.XMLHttpRequest) ajaxO = new XMLHttpRequest();
 else ajaxO = new ActiveXObject("Microsoft.XMLHTTP");
 }
 var sDiv = null;
-function searchStringChanged(e){
+function searchStringChanged(el,ev){alert(ev.code);
 if(!sDiv){
   sDiv = document.createElement("div");
   sDiv.setAttribute("id", "sResDiv")
@@ -61,12 +61,12 @@ if(!sDiv){
   s.zIndex = "1";
 }
 sDiv.style.display = "block";
-var v = e.value;
+var v = el.value;
 if(!v.length){ 
   sDiv.style.display = "none";
   return;
 }
-var t = e.offsetTop + e.offsetHeight;
+var t = el.offsetTop + el.offsetHeight;
 sDiv.style.top = (window.scrollY + 45) + "px";
 var a = "'.current_pth(__FILE__).'ajax_search.php?a=" + Math.floor(Math.random() * 1000) +
         "&text=" + encodeURI(v);
@@ -110,7 +110,7 @@ if (isset($_SESSION['text_to_search'])) $tx = $_SESSION['text_to_search'];
 else $tx = '';
 $tx = str_replace('"','&quot;',$tx);
 $ti = new FormInput(translate('sitesearch_label'),'searchtext','text', $tx);
-$ti->js = ' onkeyup="searchStringChanged(this)"';
+$ti->js = ' onkeyup="searchStringChanged(this,event)"';
 $ti->id = 'searchtextfield';
 $f->add_input($ti);
 $b = new FormInput('','','button', ' ');

@@ -29,8 +29,12 @@ $lk = $adm_pth.'edit_record.php?t=content&r='.$id;
 $page_header .= '<script>
 function ctrl_pus_e(e,v){
 if((e.ctrlKey || e.metaKey) && (e.key=="k")){
+  var s = window.getSelection();
+  if(s){
+     cookie_set("findthistext",s);
+  }
   document.location = "'.$lk.'";
-  v.preventDefault();
+  e.preventDefault();
 }
 }
 </script>

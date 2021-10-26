@@ -9,8 +9,8 @@ function cookie_value(n, v = false){
     return v;
 }
 
-function cookie_set(n, v, perm = true){//alert(allow_cookies);
-    if(allow_cookies==='no') return;
+function cookie_set(n, v, perm = true){//alert("allow_cookies");
+/*    if(allow_cookies==='no') return;
     if(allow_cookies!=='yes'){
         if(confirm(cookie_message)){
             allow_cookies = 'yes';
@@ -27,5 +27,6 @@ function cookie_set(n, v, perm = true){//alert(allow_cookies);
         d.setTime(d.getTime() + (30*24*60*60*1000));
         ex = "expires=" + d.toUTCString() + ";";
     }
-    document.cookie = n + "=" + v + ";" + ex + "path=/";
+//    alert(n + "=" + v + ";" + ex + "path=/");
+    document.cookie = n + "=" + v + ";" + ex + "path=/"; */
 }
