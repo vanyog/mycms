@@ -61,7 +61,7 @@ $nl = db_select_select_join_1('a.*,b.hidden',
 if (!$nl) $nl = nextpage_from_parent($ld, $dr, $ord);
 if (!$nl) return '';
 // Ќомер на групата на намерената страница
-$gn = db_table_field('menu_group', 'pages', '`ID`='.$nl['link']);
+$gn = db_table_field('menu_group', 'pages', "`ID`='".$nl['link']."'");
 //if (($dr=='<')&&($gr!=$gn)) $nl = nextpage_last_child($nl);
 // »звличане номера на страницата от поле `link`
 $id = $nl['link'];

@@ -164,10 +164,26 @@ else {
          $f = $fn;
       }
       // Ако е инсталиран скрипта lazysizes.min.js
-      if(strpos($page_header, 'lazysizes.min.js')>0)
+      if(strpos($page_header, 'lazysizes.min.js')>0){
          $rz .= '<img data-src="'.$f."\"$ss alt=\"".stripslashes($fr['text']).'" id="'.$fr['name'].'" class="lazyload">';
-      else
+	  }
+      else {
+         // Опит за установяване на размерите
+         $szst = '';
+         $inf = getimagesize($thfn); 
+         if($inf){ // При успешен опит
+            if(!$ss){ // Ако няма атрибут style се добавя такъв
+               $ss = 'style="width:'.$inf[0].'px; height:'.$inf[1].'px;"';
+            }
+            else { // Ако има атрибут style:
+              // но в него няма width се добавя.
+              if(strpos($ss,'width:')===false)  $ss = substr($ss,0,-1).'width:'. $inf[0].'px;"';
+              // Ако няма и height, също се добавя.
+              if(strpos($ss,'height:')===false) $ss = substr($ss,0,-1).'height:'.$inf[1].'px;"';
+            }
+         }
          $rz .= '<img src="'.$f."\"$ss alt=\"".stripslashes($fr['text']).'" id="'.$fr['name'].'">';
+      }
       if(!isset($GLOBALS['og_image'])) $GLOBALS['og_image']=$f;
     }
     // Друг файл

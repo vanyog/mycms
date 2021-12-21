@@ -28,7 +28,7 @@ $id = db_table_field('ID', 'content', "`name`='".$page_data['content']."' AND `l
 $lk = $adm_pth.'edit_record.php?t=content&r='.$id;
 $page_header .= '<script>
 function ctrl_pus_e(e,v){
-if((e.ctrlKey || e.metaKey) && (e.key=="k")){
+if((e.ctrlKey || e.metaKey) && (e.key=="e")){
   var s = window.getSelection();
   if(s){
      cookie_set("findthistext",s);

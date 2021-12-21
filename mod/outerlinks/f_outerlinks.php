@@ -541,21 +541,22 @@ if ( ! in_edit_mode() ) return;
 global $tn_prefix,$db_link;
 
 $id = 0;
-if (isset($_POST['link_id']) && is_numeric($_POST['link_id'])) $id = $_POST['link_id'];
-else $id = 0;
+if( isset($_POST['link_id']) && is_numeric($_POST['link_id']) ) 
+   $id = $_POST['link_id'];
+else 
+   $id = 0;
 if(is_numeric($_POST['link'])){
     $idl = db_table_field('`ID`', 'outer_links', "`ID`=".addslashes($_POST['link']));
     if(!($idl>0)) die('ID = '.$_POST['link'].' do not exists');
     $id = intval($_POST['ID']);
 }
-//die(print_r($_POST,true));
 
 $q0 = " `$tn_prefix"."outer_links` ";
 $q2 = '';
 
 if ($_POST['action']=='delete'){
   if (db_table_field('link', 'outer_links', "`ID`=$id")==''){
-     // Ако подкатегорията не е празна не се изтрива
+     // Ако подкатегория не е празна не се изтрива
      if (db_table_field('COUNT(*)', 'outer_links', "`up`=$id")) die('This is a not empty folder!');
   }
   if(db_table_field('ID', 'bib_title', "`url`=$id")) die(translate('outer_links_inbib'));
@@ -587,7 +588,7 @@ if ( ($q2!="`up`=$lid, ") && (($_POST['action']=='delete') || $_POST['link'] || 
 // ------------------------------------------
 function outerlenks_all($up, $tx, $lv = 1){
 $rz = '';
-// Добавка за пропускане на private линковете
+// Добавка към SQL за пропускане на private линковете
 $qp = '';
 if (!in_edit_mode()) $qp = 'AND `private`=0';
 $dt = db_select_m('*', 'outer_links', "`up`=$up AND (`link`>'')$qp ORDER BY `place` ASC");
@@ -690,14 +691,14 @@ return $rz;
 
 // Автоматичен коментар
 function outerlinks_autocomment($d){
-if (!isset($d['Comment'])) return '';
+if (!isset($d['Comment']) && !is_null($d['Comment'])) return '';
 if ($d['Comment']>' ') return ' - '.stripslashes($d['Comment']);
-if (substr($d['link'],-4)=='.pdf') return encode(' - pdf файл');
-if (substr($d['link'],-4)=='.doc') return encode(' - doc файл');
-if (!(strpos($d['link'], 'scholar.google.bg')===false)) return ' - '.translate('outerlinks_sresult').'scholar.google.bg';
-if (!(strpos($d['link'], 'google.bg')===false)) return ' - '.translate('outerlinks_sresult').'google.bg';
-if (!(strpos($d['link'], 'bg.wikipedia.org')===false)) return ' - '.translate('outerlinks_wiki').'bg.wikipedia.org';
-if (!(strpos($d['link'], 'en.wikipedia.org')===false)) return ' - '.translate('outerlinks_wiki').'en.wikipedia.org';
+if (isset($d['link'])&&(substr($d['link'],-4)=='.pdf')) return encode(' - pdf файл');
+if (isset($d['link'])&&(substr($d['link'],-4)=='.doc')) return encode(' - doc файл');
+if (!isset($d['link']) || !(strpos($d['link'], 'scholar.google.bg')===false)){ return ' - '.translate('outerlinks_sresult').'scholar.google.bg'; }
+if (!(strpos($d['link'], 'google.bg')===false))        { return ' - '.translate('outerlinks_sresult').'google.bg'; }
+if (!(strpos($d['link'], 'bg.wikipedia.org')===false)) { return ' - '.translate('outerlinks_wiki').'bg.wikipedia.org'; }
+if (!(strpos($d['link'], 'en.wikipedia.org')===false)) { return ' - '.translate('outerlinks_wiki').'en.wikipedia.org'; }
 }
 
 // Брой връзки в категория и нейните подкатегории

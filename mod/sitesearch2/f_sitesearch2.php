@@ -45,7 +45,7 @@ if (window.XMLHttpRequest) ajaxO = new XMLHttpRequest();
 else ajaxO = new ActiveXObject("Microsoft.XMLHTTP");
 }
 var sDiv = null;
-function searchStringChanged(el,ev){alert(ev.code);
+function searchStringChanged(el,ev){
 if(!sDiv){
   sDiv = document.createElement("div");
   sDiv.setAttribute("id", "sResDiv")

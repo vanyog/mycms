@@ -28,7 +28,14 @@ $page_header = '<script src="'.$pth.'js/cookies.js"></script>
 <script>
 function findAndSelect(){
 var tf = cookie_value("findthistext");
-window.find(tf);
+if(tf) if(!window.find(tf)){
+   var ta = document.getElementsByTagName("textarea")[0];
+   var s = ta.value.search(tf);
+   ta.focus();
+   ta.selectionStart = s;
+   ta.selectionEnd = s + tf.length;
+//   alert(ta.value.search(tf));
+}
 }
 </script>
 ';
