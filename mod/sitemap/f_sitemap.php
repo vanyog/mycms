@@ -103,8 +103,8 @@ $id_pre = 'map'.$ar[0];
 $rz = sitemap_rec($ar[0], 1, $ar[0]==$mpg_id);
 $clear_link = '';
 if(in_edit_mode()) $clear_link = '<a href="'.set_self_query_var('clear','on').'">Clear cache</a>';
-$rz = '<div id="'.$id.'">'."\n".$clear_link.
-site_map_buttons().$rz.site_map_buttons()."
+$rz = '<div id="'.$id.'">'."\n".
+$clear_link.site_map_buttons().$rz.site_map_buttons().$clear_link."
 <p class=\"clear\"></p></div>";
 // Записване на нов sitemap.xml файл при условия:
 if(    ($smday !== $smfile) // Нов ден
@@ -186,6 +186,8 @@ foreach($mi as $m){
   if (($i==$i_root)||($pid!=$index))
   {
     $lk = $m['link'];
+    $attr = '';
+    if(!empty($m['attr'])){ $attr = ' '.$m['attr']; }
     if ($pid){
        if($rewrite_on) $lk = "/$pid/";
        else $lk = $ind_fl.'?pid='.$pid;
@@ -214,7 +216,7 @@ foreach($mi as $m){
           // Добавяне в html кода за показване
           if( (substr($lk, 0, 4) != 'http') || $ext ){ 
             if(!empty($redirifhidden_cancel)) $lk .= '&noredir='.$redirifhidden_cancel;
-            $rz1 .= '<a href="'.$lk.'">'.translate($m['name']).'</a>';
+            $rz1 .= '<a href="'.$lk.'"'.$attr.'>'.translate($m['name']).'</a>';
             if( $pid==$page_id ) $rz1 .= translate('sitemap_currentpage');
             if( in_edit_mode() ) {
                $rz1 .= " place:".$m['place'].' group:'.$m['group'];

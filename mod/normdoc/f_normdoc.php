@@ -55,8 +55,12 @@ else{
 }
 $lk = '<p><a href="'.set_self_query_var('no', '1').'">'.encode('Необработен текст')."</a></p>\n";
 if(isset($_GET['no']) and ($_GET['no']=='1')){
-  $lk = '<p><a href="'.unset_self_query_var('no', '1').'">'.encode('Обработен текст')."</a></p>\n";
-  return $lk.'<pre>'.translate($nd->name).'</pre>';
+  $lk = '<p><a href="'.unset_self_query_var('no', '1').'">'.encode('Обработен текст')."</a> &nbsp; ";
+  if(in_edit_mode()) $lk .= "<a href=\"".set_self_query_var('save', '1')."\">".encode('Запазване отново')."</a>";
+  $lk .= "</p>\n";
+  return $lk//.'<pre>'
+        .translate($nd->name)//.'</pre>'
+        ;
 }
 $rz .= $nd->display();
 if (in_edit_mode() && count($nd->parts) && ($nd->id>0) ) 
@@ -91,6 +95,7 @@ global $language;
 $cd = db_select_1('ID,text', 'content', "`language`='$language' AND `name`='$this->name'");
 $this->html = $cd['text'];
 $this->txt = str_replace(')<', ') <', $this->html );
+$this->txt = str_replace('.<', '. <', $this->txt );
 $this->txt = strip_tags($this->txt);
 $this->txt = str_replace('&nbsp;', ' ', $this->txt );
 //$this->txt = str_replace(chr(167), '&sect;', $this->txt );
@@ -262,12 +267,12 @@ case encode('ПОСТАНОВЛЕНИЕ'):
 case 'chlen'   :$sp = "/\((\d+)\) /";       $ty = 'alineya';
                 break;
 case 'paragraf':$sp = "/(?:\n| )(\d+)\. /"; $ty = 'tochka'; break;
-case 'alineya' :$sp = "/(?:\n| )(\d+)\. /"; $ty = 'tochka'; break;
+case 'alineya' :$sp = "/(?:\n| )(\d+".encode('(?:а|б|в|г|д|е|ж|з|и|к|л|м)')."{0,1})\. /"; $ty = 'tochka'; 
+                break;
 default:        $sp = "/=========/";        $ty = ''; break;
 }
 $mt = array();
-$mc = preg_match_all($sp, $this->txt, $mt );
-//if(($ty=='chlen') && strpos($this->txt,'SUP')){ echo "$sp\n"; var_dump($mt); die; }
+$mc = preg_match_all($sp, $this->txt, $mt ); 
 // Ако в параграф нe са намерини точки, то се търсят алинеи
 if( ($this->type=='paragraf') and !$mc ){
   $sp = "/\((\d+)\) /";
@@ -280,7 +285,7 @@ if( ($this->type=='chlen') and !$mc ){
   $ty = 'tochka';
   $mc = preg_match_all($sp, $this->txt, $mt );
 }
-$ar = preg_split( $sp, $this->txt );
+$ar = preg_split( $sp, $this->txt ); //if(($this->type=='tochka') && strpos($this->txt, encode('факултети, институти, филиали'))){ die($this->txt); }
 // В случай на параграф или алинея, ако точките не следват последователно, не се прави разделяне
 if( !($mc && in_array($this->type, array('paragraf', 'alineya')) && !is_set_correct($mt[1])) )
  foreach($ar as $ci=>$c){
@@ -298,7 +303,7 @@ if( !($mc && in_array($this->type, array('paragraf', 'alineya')) && !is_set_corr
   case encode('Заключителни разпоредби'):
   case encode('ПОСТАНОВЛЕНИЕ'):
        $this->txt = '';
-       // Част като: (Отм. - ДВ, бр. 59 от 1993 г.) и подобри, се премества от заглавието в текста
+       // Част като: (Отм. - ДВ, бр. 59 от 1993 г.) и подобни, се премества от заглавието в текста
        $lm = array();
        if(preg_match('/\(.*\)/s', $c, $lm)){
           $this->name = $this->type.' <br>'.trim(str_replace($lm[0], '', $c));
@@ -314,6 +319,7 @@ if( !($mc && in_array($this->type, array('paragraf', 'alineya')) && !is_set_corr
     $this->parts[] = new DocPart($this, $ty, $tx, $c, count($this->parts));
   }
 }
+//if(($this->type=='tochka') && strpos($this->txt, encode('факултети, институти, филиали'))){ var_dump($this->parts); die; }
 foreach($this->parts as $p) $p->split_part();
 }
 
@@ -339,7 +345,7 @@ case encode('ПОСТАНОВЛЕНИЕ'):
                 $h1 = '<h2 id="'.$this->id.'" style="cursor:pointer;"'.$ttl.'>'; $h2 = '</h2>';
                 $hlev = 2;
                 break;
-case encode('Раздел ')://var_dump($this); die;
+case encode('Раздел '):
                 $this->id = 's'.$this->index;
                 $h1 = '<h3 id="'.$this->id.'" style="cursor:pointer;"'.$ttl.'>'; $h2 = '</h3>';
                 $hlev = 3;
@@ -365,8 +371,10 @@ if($this->type=='tochka') {
 }
 $this->txt = preg_replace('/(-{4,}|(\.\s*){4,})/', '<p>${1}</p>', $this->txt );
 // Отделяне на заглавие на следваща част, ако има такова
-$h4 = contains_subtitle($this->name, $hlev);
-$h3 = contains_subtitle($this->txt, $hlev);
+//$h4 = contains_subtitle($this->name, $hlev); Създава проблеми при Закона за висшето образование, затова премахвам.
+$h4 = '';
+//$h3 = contains_subtitle($this->txt, $hlev);
+$h3 = '';
 $rz = "$h1$this->name$h2\n$h4\n";
 $rz .= "$t1$this->txt";
 if(in_edit_mode() && ($this->dbid>0)) $rz .= " <a href=\"$adm_pth"."edit_record.php?t=normdoc&r=$this->dbid\">*</a> ";
@@ -428,7 +436,7 @@ $m = array();
 $i = preg_match_all('/\r*\n\r*\n(.*?)(\(.*\))*$/', $txt, $m);
 //if(isset($m[1][0]) && $m[1][0] && $m[2][0]) echo("$i<br>".print_r($m,true)."<p>");
 $h3 = '';
-if($i && $m[1][0]) $h3 .= "<h".($hlev+1).">".$m[1][0]."</h".($hlev+1).">\n";
+if($i && $m[1][0]) $h3 .= "<h".($hlev+1).">".$m[1][0]."</h".($hlev+1).">\n"; 
 if($i && !empty($m[2][0])) $h3 .= "<p>".$m[2][0]."</p>\n";
 if(!empty($h3)) $txt = str_replace($m[0][0], '', $txt);
 return $h3;
@@ -448,7 +456,11 @@ return $rz;
 function is_set_correct($a){
 if(!is_array($a) || !count($a)) return false;
 $rz = $a[0]==1; $i = 1;
-while( ($i < count($a)) && $rz){ $rz = $rz && ($a[$i]==$a[$i-1]+1); $i++; }
+while( ($i < count($a)) && $rz){
+   $rz = $rz && (($a[$i]==intval($a[$i-1])+1) || ($a[$i]==$a[$i-1].encode('а')));
+//   if(!$rz) die("$i ".print_r($a, true));
+   $i++;
+}
 return $rz;
 }
 

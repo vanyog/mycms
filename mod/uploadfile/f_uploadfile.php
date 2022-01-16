@@ -170,7 +170,8 @@ else {
       else {
          // Опит за установяване на размерите
          $szst = '';
-         $inf = getimagesize($thfn); 
+         $inf = false;
+         if(file_exists($thfn)) $inf = getimagesize($thfn); 
          if($inf){ // При успешен опит
             if(!$ss){ // Ако няма атрибут style се добавя такъв
                $ss = 'style="width:'.$inf[0].'px; height:'.$inf[1].'px;"';

@@ -97,7 +97,7 @@ if(tefc){
      p = prompt("'.encode('Въведете стойност на параметър, ако е необходима за този модул'). '");
      if(p) p = "_" + p;
   }
-  insert_text("<!--$$_"+a.innerHTML+p+"_$$-->");
+  insert_2_texts("<!--$$_"+a.innerHTML+p, "_$$-->");
 }
 }
 </script>

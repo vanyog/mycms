@@ -191,6 +191,11 @@ return $js.
 
 '<input type="button" value="tag" onclick="doInsertTag();">'.'
 '.make_tag_button('a','tag_a1','tag_a2').'
+'.make_insert_2_button('b','\'<b>\'','\'</b>\'', '').'
+'.make_insert_2_button('i','\'<i>\'','\'</i>\'', '').'
+'.make_insert_2_button('u','\'<u>\'','\'</u>\'', '').'
+'.make_insert_2_button('code','\'<code>\'','\'</code>\'', '').'
+'.make_insert_2_button('pre','\'<pre>\'','\'</pre>\'', '').'
 '.make_insert_button('php','<?php\n// Copyright: Vanyo Georgiev info@vanyog.com\n\n?>\n').'
 '.make_insert_2_button('case','\'case \\\'\'','\'\\\': break;\'', '').'
 '.make_insert_2_button('include','\'include(\\\'\'','\'\\\');\'', '').'
@@ -200,9 +205,9 @@ return $js.
 '.make_insert_2_button('javascript','tag_s1','tag_s2','Insert SCRIPT tag').ckeb($tec).'
 <input type="button" value="x" onclick="doRemoveTag();" title="Remove next tag">
 <span id="editor'.$tec.'_count"></span>
-<textarea id="editor'.$tec.'" cols="120" name="'.$n.'" rows="'.$row_count.'" style="font-size:120%;" onfocus="onTeFocus();" onkeyup="showCharCount(this);" onkeydown="editor_onKey(this,event);">'.
+<textarea id="editor'.$tec.'" cols="120" name="'.$n.'" rows="'.$row_count.'" style="font-size:120%;" '.
+'onfocus="onTeFocus();" onkeyup="showCharCount(this);" onkeydown="editor_onKey(this,event);">'.
 str_replace($ta_ctag,$ta_fctag,$tx).$ta_ctag;
-
 }
 
 function make_tag_button($n,$t1,$t2){

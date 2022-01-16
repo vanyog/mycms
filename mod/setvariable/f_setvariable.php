@@ -21,7 +21,7 @@ function setvariable($a){
 if(!$a) die('function setvariable: missing parameter');
 $b = explode('|', $a);
 if(count($b)<2) die('Error in module SETVARIABLE: Incorrect parameter.');
-$GLOBALS[$b[0]] = $b[1];
+$GLOBALS[$b[0]] = stripslashes($b[1]);
 return '';
 }
 ?>

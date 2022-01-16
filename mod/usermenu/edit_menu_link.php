@@ -26,8 +26,8 @@ if (!isset($_GET['pid']) || !isset($_GET['id'])) die('Insufficient parameters.')
 $idir = dirname(dirname(dirname(__FILE__))).'/';
 $ddir = $idir;
 
-include("f_usermenu.php");
 include_once($idir."conf_paths.php");
+include("f_usermenu.php");
 include_once($idir."lib/f_db_update_record.php");
 include_once($idir."lib/f_db_update_where.php");
 //include_once($idir."lib/translation.php");
@@ -69,6 +69,8 @@ $f -> add_input( new FormInput(translate('usermenu_menugroup'),'group','text',$m
 $f -> add_input( new FormInput(translate('usermenu_menupos'),'place','text',$m['place']) );
 $f -> add_input( new FormInput(translate('usermenu_menutext'),'text','text',str_replace('"','&quot;', $tx)) );
 $f -> add_input( new FormInput(translate('usermenu_menulinkdb'),'link','text',$m['link']) );
+if(isset($m['attr'])) 
+   $f -> add_input( new FormInput(translate('usermenu_menuattr'),'attr','text',str_replace('"','&quot;', $m['attr'])) );
 $f -> add_input( new FormInput('','','submit',translate('saveData')) );
 
 $page_header .= '<link href="'.$pth.'_style.css" rel="stylesheet" type="text/css">'."\n";
