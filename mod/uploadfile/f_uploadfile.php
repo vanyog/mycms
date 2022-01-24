@@ -174,7 +174,7 @@ else {
          if(file_exists($thfn)) $inf = getimagesize($thfn); 
          if($inf){ // При успешен опит
             if(!$ss){ // Ако няма атрибут style се добавя такъв
-               $ss = 'style="width:'.$inf[0].'px; height:'.$inf[1].'px;"';
+               $ss = ' style="width:'.$inf[0].'px; height:'.$inf[1].'px;"';
             }
             else { // Ако има атрибут style:
               // но в него няма width се добавя.

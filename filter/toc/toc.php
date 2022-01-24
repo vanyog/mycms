@@ -44,7 +44,7 @@ else {
      $tof_contents = "<div id=\"toc\"><div>\n".
                      '<h2>'.translate('filtertoc_toc')."</h2>\n".
                      '<p><a href="#toc_end">'.translate('filtertoc_skiptoc').'</a></p>'.
-                     $tof_contents."</div><a id=\"toc_end\"><a/></div>\n";
+                     $tof_contents."</div><a id=\"toc_end\"></a></div>\n";
      // Добавяне на бутон за връщане в съдържанието
      if(!empty($GLOBALS['filter_toc_link'])){
         $is = current_pth(__FILE__).'toc-button.svg';
