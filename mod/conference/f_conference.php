@@ -907,9 +907,12 @@ function conference_abstract_titles($a = ''){
 global $utype, $adm_pth, $can_manage, $can_edit, 
        $today, $day_a_approve, $page_header, $page_hash, 
        $fdir, $user_table;
+// Установяване правата на влезлия потребител
 usermenu(true);
 // Дали потребителят е от екипа на конференцията
 $team = !empty($can_manage['conference']) || $can_edit;
+// Дали освен това е изпратен параметър за фиксиране на реда на докладите $_GET['fixorder']=1
+$fixo = $team && isset($_GET['fixorder']) && ($_GET['fixorder']=='1');
 // Разрешение за преглед чрез таен параметър
 $secret = stored_value('conference_secret_'.$utype,'basa-team');
 $allowtoshow = !empty($_GET['allowtoshow']) &&  ($_GET['allowtoshow']==$secret);
@@ -933,7 +936,7 @@ if( confirm("'.encode('Потвърждавате ли изтриване на запис за доклад с ID=').'"+
 }
 </script>';
 // Томове
-$vl = db_select_m('vol', 'proceedings', "`utype`='$utype' GROUP BY `vol`");
+$vl = db_select_m('vol', 'proceedings', "`utype`='$utype' GROUP BY `vol` ORDER BY `vol` ASC");
 // Тематични направления $tp
 eval(translate('conference_topics_'.$utype,false));
 // Форми на докладите
@@ -947,12 +950,17 @@ $rc = 0; // Брой готови доклади
 if ($current && ("$today"<"$day_a_approve") && !($team || $allowtoshow))
     return message(translate("conference_shoeafter").db2user_date_time($day_a_approve));
 // Начин на подреждане
-$order = ' ORDER BY '.stored_value('conference_'.$utype.'_order', '`keylec` DESC, `authors` ASC');
+$on = 'conference_'.$utype.'_order';
+$oid = db_table_field('ID', 'options', "`name`='$on'",'',false);
+$order = ' ORDER BY '.stored_value($on, '`keylec` DESC, `authors` ASC');
 $olink = ' <a href="'.set_self_query_var('order','date').$page_hash.'">By title</a>';
 if(isset($_GET['order']) && ($_GET['order']=='date') ){
   $order = " ORDER BY `date_time_2` DESC";
   $olink = ' <a href="'.unset_self_query_var('order').$page_hash.'">By date</a>';
 }
+// Стойност на поле `place`, задаващо реда на докладите.
+// Използва се, когато има параметър $_GET['fixorder']=1
+$place = 10;
 // Имена на автори, които се колекционират с цел статистика
 $auth = array();
 // Флаг за показване на авторите и номерата на докладите
@@ -979,7 +987,7 @@ else if(count($vl)>1) $rz .= '<h2>'.translate('conference_volume').' '.$vl1['vol
 for($i = 0; $i<count($tp); $i++){
    $zip_command = 'zip arh_'.($i+1).'.zip ';
    $c = 0; $c2 = 0; $doc = 0; $pdf = 0; $ano = 0; // Брой доклади в научнато направление
-   $cn = array(0=>0, 1=>0, 2=>0, 3=>0, 'p'=>0);
+   $cn = array(0=>0, 1=>0, 2=>0, 3=>0, 'p'=>0); // Брой доклади в том. Изглежда в момента не се показва никъде.
    $sr = '';  // html код на докладите от научното направление
    $filter = " AND ( ((`utype`<'vsu2020') AND `approved_a`) OR `publish`='yes')";
    // Ако и минал денят за потвърждаване на резюметата при преглеждане чрез таен код неодобрените се прескачат
@@ -987,6 +995,7 @@ for($i = 0; $i<count($tp); $i++){
    if ( $team ){ $filter = ''; }
    // За всеки от езиците
    {
+//     die($order);
      // Доклади от секцията
      $da = db_select_m('*', 'proceedings',
           "`utype`='$utype'".
@@ -1014,6 +1023,7 @@ for($i = 0; $i<count($tp); $i++){
         $stl = ''; // Стил за предизвикване на оцветяване
         $ex3 = strtolower( pathinfo( $d['fulltextfile3'], PATHINFO_EXTENSION ) );
         if ( $team ){
+        //   Преименуване на файловете. Само ако е необходимо се откоментирва този ред
 //           if(isset($_GET['rename']) && ($_GET['rename']=='on')) $d = conference_rename_files($d);
            if ($d['form']==4){ // Форма на участие "Слушател"
               // Име на участника
@@ -1082,10 +1092,16 @@ for($i = 0; $i<count($tp); $i++){
 //       )
        {
            // PDF с пълния текст
-           if($d['fulltextfile2'] && ($team || !$current || $s_auth) )
+           if($d['fulltextfile2'] && ($team || !$current || $s_auth) ){
                $lr .= '<a href="/_pdfjs-2.2.228-dist/web/viewer.html?file='.
-                       $fdir.$d['fulltextfile2'].'" title="'.translate('conference_dfull', false).'">'.$pdfi.'</a> '
-                 ;
+                       $fdir.$d['fulltextfile2'].'" title="'.translate('conference_dfull', false).'">'.$pdfi.'</a> ';
+               // Фиксиране на реда чрез записване на стойност в поле 'place'
+               if($fixo){
+                  db_update_record(array('ID'=>$d['ID'], 'place'=>$place), 'proceedings', false);
+                  $place += 10; 
+               }
+                
+           }
            // PDF с презентация
            if($d['fulltextfile3'] && ($team || !$current || $s_auth))
               switch ($ex3){
@@ -1157,11 +1173,17 @@ for($i = 0; $i<count($tp); $i++){
 } // Край на цикъла по научни направления
 
 } // Край на цикъла по томове
+if($fixo) die(encode('Беше извършено фиксиране на текущия ред на докладите. '.
+                       'За да се показват в този ред променете настройката за реда на докладите. '.
+                       '<a href="'.unset_self_query_var('fixorder').'">Връщане</a>'));
 // Добавяне на обща статистика
 if ( $team || $allowtoshow ){
+     if($oid) $ol = $adm_pth.'edit_record.php?r='.$oid.'&t=options';
+     else $ol = $adm_pth.'new_record.php?t=options&name='.$on.'&value=`keylec` DESC, `authors` ASC';
      $rz = "<p>".count($auth).
            " authors, $tc abstracts, $docs doc, $pdfs pdf, $anos anonymous, $rc ready.<br>".
-           "Sort: $olink ".
+           "Order: $olink <a href=\"$ol\">*</a>".
+           " <a href=\"".set_self_query_var('fixorder','1')."\">Fix</a>".
            " Secret link: <a href=\"".
            set_self_query_var('allowtoshow', $secret).$page_hash."\">$secret</a></p>\n".$rz;
 }
