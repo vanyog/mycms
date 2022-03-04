@@ -18,28 +18,49 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Скриптът генерира SEO подходящи имена на страниците и ги записва в таблица 'seo_names'
+// Скриптът генерира SEO подходящи имена на страниците и ги записва в таблица 'seo_names'.
+// Трябва да се използва само веднъж, след което трябва да се зададат настроиките:
+// 'RewriteEngine', 'SEO_names' и 'redir_pids', както и да се добавят редове във .htaccess.
 
 $idir = dirname(__DIR__).'/';
 $ddir = $idir;
 
 include_once($idir.'conf_paths.php');
 include_once($idir.'lib/f_first_unicode.php');
-include_once($idir.'lib/f_db_replace_m.php');
+include_once($idir.'lib/f_db_insert_m.php');
 
 // Четене номерата и заглавията на всички страници
-$pd = db_select_m('A.ID,B.text', '`bepi_pages` A, `bepi_content` B', "A.title = B.name AND B.language = 'bg'");
+$pd = db_select_m('A.ID,B.text', '`'.$tn_prefix.'pages` A, `'.$tn_prefix.'content` B', "A.title = B.name AND B.language = 'bg'", false);
 
 // Нов масив със записи за таблица 'seo_names'
 $nd = array();
 
+// Масив с ключове новите имена, с цел проверяване за съвпадения
+$nn = array();
+
+// Номер, който се добавя, ако има съвпадение на имена
+$number = 1;
+
 foreach($pd as $d){
-  $nd[] = array('ID' => $d['ID'], 'seo_name' => str_replace(' ', '-', transliterate_text($d['text'])) );
+  $n2 = str_replace(' ', '-', transliterate_text($d['text']));
+  if(isset($nn[$n2])){
+     echo "Conflict of: ".$d['ID'].' - '.$n2."<br>".
+          "Renamed to: ".$nn[$n2];
+          $n2 .= "-$number";
+          $number++; 
+     echo " - $n2<br>\n";
+  }
+  $nn[$n2] = $d['ID'];
+  $nd[] = array('ID' => $d['ID'], 'seo_name' => $n2 );
 }
-echo db_replace_m($nd, 'pages')." records replaced.";
+
+echo db_insert_m($nd, 'seo_names', true)." records replaced.";
 
 
 function transliterate_text($tx){
+$tx = strip_tags($tx);
+$tx = str_replace("\n"," ",$tx);
+$tx = str_replace("\r","",$tx);
 global $site_encoding, $utf8_char_lenght;
 $tb = array(
 1040 => 'A', 1041 => 'B', 1042 => 'V', 1043 => 'G', 1044 => 'D',
@@ -64,7 +85,8 @@ while($p<$l){
   $c = first_unicode($t);
   if($c===0) break;
   if(isset($tb[$c])) $t1 .= $tb[$c];
-  else $t1 .= substr($t, 0, $utf8_char_lenght);
+  else if( (($c>64)&&($c<91)) || (($c>96)&&($c<123)) || ($c==45) || ($c==32)) 
+           $t1 .= substr($t, 0, $utf8_char_lenght);
   $p += $utf8_char_lenght;
 }
 return "$t1";

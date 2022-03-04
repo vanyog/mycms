@@ -20,8 +20,8 @@ try {
     $mail->Host       = $web_host;                              //Set the SMTP server to send through
     $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
     $mail->Username   = $fe;                                    //SMTP username
-    $mail->Password   = stored_value('site_owner_password');    //SMTP password
-    if(empty($mail->Password)) die("'site_owner_password' is not set.");
+    $mail->Password   = $pw;                                    //SMTP password
+    if(empty($mail->Password)) die("'userreg_password_".$d['type']."' OR 'site_owner_password' is not set.");
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         //Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
     $mail->Port       = 587;                                    //TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
 
@@ -46,5 +46,6 @@ try {
     $mail->send();
 //    echo 'Message has been sent';
 } catch (Exception $e) {
-//    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}<br>";
+    die;
 }

@@ -45,9 +45,10 @@ foreach($d as $m){
   if ($lnn){
     $h = db_table_field('hidden', 'pages', "`ID`=$lnn");
     if ($hm && $h && !$editMode /*&& !show_adm_links()*/) continue;
-    if($seo_names) $ln = '/'.db_table_field('seo_name', 'seo_names', "`page_id`='$lnn'").'/';
+    if($seo_names) $ln = '/'.db_table_field('seo_name', 'seo_names', "`ID`='$lnn'").'/';
     else if($rewrite_on) $ln = "/$lnn/";
          else $ln = $ind_fl.'?pid='.$lnn;
+//    var_dump("$ln"); die;
   }
   $ln .= $page_hash;
   if(!(strpos($ln,'http')===0) && $hs) $ln .= "#$hs";

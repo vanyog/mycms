@@ -431,9 +431,11 @@ $fdir = stored_value('conference_files_'.$d['utype']);
 if ( !( ($d['user_id']==$uid) || $adm ) )
    return message(translate('conference_cnnotedit'));
 // Име на участника
-$ud = db_select_1('*', $user_table, "`ID`=".$d['user_id']);// die(print_r($d,true));
-$un = $ud['firstname']." ".$ud['secondname']."  ".$ud['thirdname'];
-if(empty(trim($un))) $un = $ud['email'];
+$ud = db_select_1('*', $user_table, "`ID`=".$d['user_id']);
+if(empty($ud['user_id'])) return '';
+if(!empty($ud['firstname'])) $un = $ud['firstname']." ".$ud['secondname']."  ".$ud['thirdname'];
+else $un = '';
+if(empty(trim($un)) && !empty($ud['email'])) $un = $ud['email'];
 if($adm) $un = '<a href="'.stored_value('conference_admin','/index.php?pid=1358').'#pof'.$d['user_id']."\">$un</a>";
 $f = new HTMLForm('conference_peform',true,false);
 $f->add_input( new FormInput('', 'user_id', 'hidden', $d['user_id']) ); 

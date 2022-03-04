@@ -29,7 +29,7 @@ if($fl[0]!='/') $fpth .= "/";
 $fpth .= $fl;
 if(!file_exists($fpth)) die('File '.$fpth.' not found.');
 
-session_start(); //print_r($_SESSION); die;
+session_start(); //var_dump($_SESSION['can_view_file']); die;
 if( empty($_SESSION['can_view_file']) || !in_array($fl, $_SESSION['can_view_file']) ) die('You have no permission to view this file.');
 
 $e = strtolower( pathinfo($fpth, PATHINFO_EXTENSION) );

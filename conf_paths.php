@@ -50,6 +50,8 @@ load_options(array(
   'phpmyadmin_web',
   'prefere_www',
   'RewriteEngine',
+  'SEO_names',
+  'redir_pids',
   'stop_https',
   'SEO_names'
 ));
@@ -101,11 +103,14 @@ default: die("Unknown colation $colation in conf_paths.php");
 // Кодировка на php файловете на сървъра
 $file_encoding = 'windows-1251';
 
+// Дали се използва RewriteEngine
+$rewrite_on = stored_value('RewriteEngine') == 'on';
+
 // Дали да се използват SEO имена, вместо номера на страниците
 $seo_names = stored_value('SEO_names') == 'on';
 
-// Дали се използва RewriteEngine
-$rewrite_on = stored_value('RewriteEngine') == 'on';
+// Дли да се пренасочват страниците идентифицирани с номера към страници с адреси-имена
+$redir_pids = stored_value('redir_pids') == 'on';
 
 // Списък, разделени със запетая имане на модули, които не трябва да зареждат _style.css файла от директорията си
 $no_style = ',';

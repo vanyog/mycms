@@ -20,17 +20,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Показва стойността на глобална PHP променлива с име $a
 // Може да се покаже и стойността на елемент от масив: $_GET, $_SERVER
 // Например, при $a = 'SERVER['REQUEST_URI']' се показва стойността на: $_SERVER['REQUEST_URI']
+// Ако променливата не е дефинирана се връща празна стойност или
+// стойността, изпратена в параметъра $a, отделена от името на променливата със знак '|'.
 
 function variable($a){
+$aa = explode('|',$a);
 $r = array();
 // Случай на елемент от масив
-$j = preg_match_all('/(.*)\[\'(.*)\'\]/', $a, $r);
+$j = preg_match_all('/(.*)\[\'(.*)\'\]/', $aa[0], $r);
 if($j) switch($r[1][0]){
 case 'GET':    return $_GET[$r[2][0]];    break;
 case 'SERVER': return $_SERVER[$r[2][0]]; break;
 }
 //if($a=='page_header') die($GLOBALS[$a]);
-return isset($GLOBALS[$a]) ? stripslashes($GLOBALS[$a]) : '';
+if(!isset($aa[1])) $aa[1] = '';
+return isset($GLOBALS[$aa[0]]) ? stripslashes($GLOBALS[$aa[0]]) : $aa[1];
 }
 
 ?>
