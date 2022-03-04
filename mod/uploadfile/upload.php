@@ -74,10 +74,11 @@ else {
 function show_form(){
 global $ftx, $tshow, $thide, $page_content, $fd;
 
-$f = uploadfile_href($fd['filename']);
+$f = isset($fd['filename']) ? uploadfile_href($fd['filename']) : '';
 
 $page_content = '<h1>'.translate('uploadfile_upladpagetitle')."</h1>\n".
-'<p>'.$fd['name'].' <a href="'.$f.'" target="_blank">'.basename($fd['filename'])."</a></p>\n";
+'<p>'.(isset($fd['name']) ? $fd['name'] : '').' <a href="'.$f.'" target="_blank">'.
+basename(isset($fd['name']) ? $fd['filename'] : '')."</a></p>\n";
 
 $uf = new HTMLForm('uploadform');
 
@@ -116,7 +117,7 @@ if (!is_writable($fld)) die("Directory '$fld' is not writable.");
 $fln = $fld.$_FILES['file']['name'];
 
 // Четене на данни от запис за файл със същото име.
-$dt = db_select_1('*','files',"`filename`='$fln'");
+$dt = db_select_1('*','files',"`filename`='$fln'",false);
 
 // Ако има такъв запис - прекратяване със съобщение за грешка 
 if ($dt && ($dt['ID']!=$fid)){
@@ -157,7 +158,6 @@ $q .= "`date_time_3`='".$_POST['timeshow'].
 if ($_FILES['file']['tmp_name']) $q .= "`filename`='$fln', ";
 $q .= "`text`='".addslashes($_POST['text'])."'$w;";
 mysqli_query($db_link,$q);
-//print_r($q); die;
 purge_page_cache($_POST['referer']);
 header("Location: ".$_POST['referer']);
 }

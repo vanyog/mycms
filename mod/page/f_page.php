@@ -28,8 +28,18 @@ $rz = '';
 if(isset($aa[1]))
     $rz .= '<a href="'.$main_index.'?pid='.$aa[0].'">'.$aa[1].'</a>';
 else {
-    $pd = db_select_1('*', 'pages', 'ID='.$aa[0]);
-    $rz .= '<a href="'.$main_index."?pid=$aa[0]$page_hash\">".translate($pd['title']).'</a>';
+    $b = explode('#',$aa[0]);
+    $pd = db_select_1('*', 'pages', 'ID='.$b[0]);
+    $t2 = '';
+    if(!empty($b[1])){
+       $t = translate($pd['content']);
+       $m = array();
+       $i = preg_match_all('/id="'.$b[1].'".*?>(.*)</', $t, $m);
+       if(!empty($m[1][0])) $t2 = " - ".$m[1][0];
+       $b[1] = '#'.$b[1];
+    }
+    else $b[1] = $page_hash;
+    $rz .= '<a href="'.$main_index."?pid=$b[0]$b[1]\">".translate($pd['title'],false).$t2.'</a>';
 }
 return $rz;
 }

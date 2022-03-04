@@ -100,15 +100,19 @@ foreach($da as $d){
  $c = array($g);
  do {
    $t = db_select_1('parent,index_page','menu_tree',"`group`=$g");
-   $g = $t['parent'];
-   $rz[$t['index_page']] = 0;
-   if (in_array($g, $c)) { // Установено е зацикляне
-     // Запазване на проблемния запис
-     store_value('hmenu_error', 'page:'.$t['index_page'].' group:'.$g.' parent:'.$t['parent']);
-     // Прекратяване на цикъла
-     break;
+   if($t)
+   {
+      $g = $t['parent'];
+      $rz[$t['index_page']] = 0;
+      if (in_array($g, $c)) { // Установено е зацикляне
+        // Запазване на проблемния запис
+        store_value('hmenu_error', 'page:'.$t['index_page'].' group:'.$g.' parent:'.$t['parent']);
+        // Прекратяване на цикъла
+        break;
+      }
+      $c[] = $g;
    }
-   $c[] = $g;
+   else $g = 0;
  } while ($g);
 }
 return array_keys($rz);

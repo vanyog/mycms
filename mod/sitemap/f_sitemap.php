@@ -67,13 +67,13 @@ var h = p.style.height;
 var ls = document.links;
 for(var i=0;i<ls.length;i++) if(ls[i].parentElement==p) break;
 var v = ls[i].offsetHeight + 2 * (ls[i].offsetTop - p.offsetTop) + "px";
-// Сгъване
+'.encode('// Сгъване').'
 if ( ( (h!=v)&&(a==0) ) || (a==1) ){
   e.innerHTML = "&#9658;"
   p.style.height = v;
   p.style.overflow = "hidden";
 }
-// Разгъване
+'.encode('// Разгъване').'
 if ( ( (h==v)&&(a==0) ) ||(a==2)){
   e.innerHTML = "&#9660;"
   p.style.height = "auto";

@@ -200,7 +200,7 @@ f.submit();
 ';
 }
 
-$page_header .= 'function duDuplicate(e){
+$page_header .= 'function doDuplicate(e){
 if(confirm("Duplicate link?")) document.location = e; //window.open(e);
 }
 </script>
@@ -297,7 +297,7 @@ foreach($ca as $c){
    $rzc .= " - $t1";
    $rzc .= outerlinks_autocomment($c);
    if (in_edit_mode()) $rzc .= ' <a href="'.$adm_pth.'duplicate_record.php?t=outer_links&r='.$c['ID'].
-                               '" onclick="duDuplicate(this);return false;">2</a>';
+                               '" onclick="doDuplicate(this);return false;">2</a>';
    if($spage) $rzc .= ' <img class="sid" src="'.$p.'search.png" alt="" onclick="onSearchClick(this);"> ';
    $rzc .= "</p>\n";
 }
@@ -313,11 +313,11 @@ foreach($la as $l){
   if(is_numeric($l['link'])/* && $l['link']*/){
     $l1 = db_select_1('*', 'outer_links', '`ID`='.$l['link']);
 //    if($l1)
-    {
+    { //die(print_r($l,true).print_r($l1));
       $l1['place'] = $l['place'];
       $l['link'] = $l1['link'];
       $l['Title'] = $l1['Title'];
-      $l['Comment'] = $l1['Comment'];
+//      $l['Comment'] = $l1['Comment'];
     }
   }
   else $l1 = $l;
@@ -334,7 +334,7 @@ foreach($la as $l){
         '" '.$tb.'id="lk'.$l1['ID'].'">'.stripslashes($l['Title'])."</a>";
   $rz .= outerlinks_autocomment($l);
   if (in_edit_mode()) $rz .= ' <a href="'.$adm_pth.'duplicate_record.php?t=outer_links&r='.$l['ID'].
-                            '" onclick="duDuplicate(this);return false;">2</a>';
+                            '" onclick="doDuplicate(this);return false;">2</a>';
   if($spage) $rz .= ' <img class="sid" src="'.$p.'search.png" alt="" onclick="onSearchClick(this);"> ';
   $rz .= "</p>\n";
 }
@@ -695,7 +695,7 @@ if (!isset($d['Comment']) && !is_null($d['Comment'])) return '';
 if ($d['Comment']>' ') return ' - '.stripslashes($d['Comment']);
 if (isset($d['link'])&&(substr($d['link'],-4)=='.pdf')) return encode(' - pdf פאיכ');
 if (isset($d['link'])&&(substr($d['link'],-4)=='.doc')) return encode(' - doc פאיכ');
-if (!isset($d['link']) || !(strpos($d['link'], 'scholar.google.bg')===false)){ return ' - '.translate('outerlinks_sresult').'scholar.google.bg'; }
+if (!(strpos($d['link'], 'scholar.google.bg')===false)){ return ' - '.translate('outerlinks_sresult').'scholar.google.bg'; }
 if (!(strpos($d['link'], 'google.bg')===false))        { return ' - '.translate('outerlinks_sresult').'google.bg'; }
 if (!(strpos($d['link'], 'bg.wikipedia.org')===false)) { return ' - '.translate('outerlinks_wiki').'bg.wikipedia.org'; }
 if (!(strpos($d['link'], 'en.wikipedia.org')===false)) { return ' - '.translate('outerlinks_wiki').'en.wikipedia.org'; }

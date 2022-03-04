@@ -65,7 +65,7 @@ $ta = explode('|', $t);
 $n = "USERREG_".$ta[0];
 $altt = translate($n,false);
 if( $altt && ($altt!=$n) && !in_edit_mode() && isset($ta[1]) && ($ta[1]!='logout')){
-   if(empty($userreg_altt)) {
+   if(empty($userreg_altt) && ($ta[1]!='login')) {
       $userreg_altt = true;
       return $altt;
    }
@@ -234,12 +234,15 @@ return "
 // Връща обект от тип HTMLForm - форма за саморегистриране на потребител
 
 function userreg_new_form($t, $email){
+$gdpr = translate('userreg_gdpr2_'.$t,false);
+if($gdpr=='userreg_gdpr2_'.$t) $gdpr = translate('userreg_gdpr2');
+else $gdpr = translate('userreg_gdpr2_'.$t,true);
 $f = new HTMLForm('userreg_form');
 $f->add_input( new FormInput('', 'type', 'hidden', $t) );
 $f->add_input( new FormInput(translate('user_email'),'email','text',$email) );
 $f->add_input( new FormInput(translate('user_password'),'password','password'));
 $f->add_input( new FormInput(translate('user_passwordconfirm'),'password2','password'));
-$f->add_input( new FormInput(translate('userreg_gdpr'),'gdpr','checkbox', 'yes', translate('userreg_gdpr2')) );
+$f->add_input( new FormInput(translate('userreg_gdpr'),'gdpr','checkbox', 'yes', $gdpr) );
 if(!is_local()) $f->add_input( new FormReCaptcha(translate('userreg_recaptcha'), stored_value('recaptcha_pub') ) );
 $fi = new FormInput('','','button',translate('userreg_regsubmit'));
 $fi->js = ' onclick="ifNotEmpty_userreg_form();"';
@@ -285,15 +288,24 @@ $d = array(
   'code'=>rand_string(40),
   'IP'=>$_SERVER['REMOTE_ADDR']
 );
+// Език по подразбиране на типа потребители
+$lang = stored_value('userreg_language_'.$d['type'], false);
+if(($lang!==false) && empty($d['language'])) $d['language'] = $lang;
 // Вмъкване или актуализиране на записа
 $r = db_insert_or_1($d, stored_value('user_table','users'), "`email`='".$d['email']."'",'b');
 // Изпращане на имейл
 $lk = $_SERVER['REQUEST_SCHEME'].'://'.
       $_SERVER['HTTP_HOST'].set_self_query_var('code',$d['code'],false).
       $page_hash;
-$ms = translate('userreg_regmess')."<a href=\"$lk\">$lk</a>";
-$sb = translate('userreg_regsub');
-$fe = stored_value('site_owner_email','vanyog@gmail.com');
+$ms = translate('userreg_regmess_'.$d['type'],false);
+if($ms=='userreg_regmess_'.$d['type']) $ms = translate('userreg_regmess');
+$ms .= "<a href=\"$lk\">$lk</a>";
+$sb = translate('userreg_regsub_'.$d['type'],false);
+if($sb=='userreg_regsub_'.$d['type']) $sb = translate('userreg_regsub');
+$fe = stored_value('userreg_contact_'.$d['type'], false);
+if(!$fe) $fe = stored_value('site_owner_email','vanyog@gmail.com');
+$pw = stored_value('userreg_password_'.$d['type'], false);
+if(!$pw) $pw = stored_value('site_owner_password', '');
 $hd = 'Content-type: text/plain; charset='.$site_encoding."\r\n".
       'Message-ID: <'.sha1(microtime(true)).'@'.$GLOBALS['web_host'].">\r\n".
       'From: '.$fe."\r\n";

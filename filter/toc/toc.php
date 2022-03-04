@@ -29,7 +29,7 @@ include_once($idir.'lib/f_add_style.php');
 function toc($s){
 // Ако в $s няма подстринг 'TOFCONTENTS', се връща $s без промени
 if(strpos($s, 'TOFCONTENTS')===false) return $s;
-global $h_id, $tof_contents;
+global $h_id, $tof_contents, $page_id, $adm_pth;
 add_style('filter_toc');
 $h_id = 0; // Пореден номер на заглавие, който се използва в id атрибута, вмъкван в заглавието
 $tof_contents = ''; // Html кода на съставянето съдържание
@@ -41,10 +41,33 @@ $s = preg_replace_callback('/<h(\d+)\s*(id=".+?")*>(.*?)<\/h\1>/s', 'toc_cb', $s
 if($h_id<2) $tof_contents = '';
 // При повече намерени заглавия се съставя <div> блок
 else {
-     $tof_contents = "<div id=\"toc\"><div>\n".
-                     '<h2>'.translate('filtertoc_toc')."</h2>\n".
-                     '<p><a href="#toc_end">'.translate('filtertoc_skiptoc').'</a></p>'.
-                     $tof_contents."</div><a id=\"toc_end\"><a/></div>\n";
+     $tf = "<div id=\"toc\"><div>\n".
+           '<h2>'.translate('filtertoc_toc')."</h2>\n<div>\n";
+     // Линк "Прескачане на съдържанието" се показва ако в настройките е зададено 
+     // да се показва глобално на сайта или на конкретната страница
+     $y1 = stored_value('filter_toc', false);
+     $y2 = stored_value('filter_toc_'.$page_id, false);
+     if($y1 || $y2){
+        $tf .= '<p><a href="#toc_end">'.translate('filtertoc_skiptoc');
+        if(in_edit_mode()){
+           $i = 0;
+           if($y1!==false) $i = db_table_field('ID', 'options', "`name`=filter_toc", 0);
+           else $i = db_table_field('ID', 'options', "`name`='filter_toc_".$page_id."'", 0, false);
+           $tf .= ' <a href="'.$adm_pth.'edit_record.php?t=options&r='.$i.'">*</p>';
+        }
+        $tf .= "</a></p>\n";
+     }
+     else if(in_edit_mode()){
+        $i = 0;
+        if($y1!==false) $i = db_table_field('ID', 'options', "`name`=filter_toc", 0);
+        else $i = db_table_field('ID', 'options', "`name`='filter_toc_".$page_id."'", 0, false);
+//        var_dump($y1); var_dump($y2); die("$i");
+        if($i) $tf .= ' <a href="'.$adm_pth.'edit_record.php?t=options&r='.$i.'">Edit skip content Link</p>';
+        else $tf .= '<a href="'.$adm_pth.'new_record.php?t=options&name='.
+                    'filter_toc_'.$page_id.'&value=1'.
+                    '">Add skip content link</p>';
+     }
+     $tof_contents = $tf.$tof_contents."</div>\n<a id=\"toc_end\"></a></div>\n</div>\n";
      // Добавяне на бутон за връщане в съдържанието
      if(!empty($GLOBALS['filter_toc_link'])){
         $is = current_pth(__FILE__).'toc-button.svg';

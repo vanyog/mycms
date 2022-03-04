@@ -130,10 +130,11 @@ else {
   $f = substr($fr['filename'],  $l, strlen($fr['filename'])-$l);
   $f = str_replace(' ', '%20', $f);
   $f = str_replace('_', '%5F', $f);
+//  die($or."<br>".$_SERVER['DOCUMENT_ROOT']."<br>".$fr['filename']."<br>".$f);
   // Дали файлът е във време за показване
   $t1 = strtotime(str_replace('-','/',$fr['date_time_3']));
   $t2 = strtotime(str_replace('-','/',$fr['date_time_4']));
-  $t3 = time()+3600; //die("$t1 $t2 $t3");
+  $t3 = time()+3600;
   $cs = ( (!$t1 || ($t1<0) || ($t3>$t1)) && (!$t2 || ($t2<0) || ($t3<$t2)) );
 //  echo "$t1<br>".date("Y-m-d H:i:s", $t3)."<br>$t2<br><br>";
   // Ако няма файл или е извън DOCUMENT_ROOT, или не е във време за показване
@@ -174,7 +175,7 @@ else {
          if(file_exists($thfn)) $inf = getimagesize($thfn); 
          if($inf){ // При успешен опит
             if(!$ss){ // Ако няма атрибут style се добавя такъв
-               $ss = 'style="width:'.$inf[0].'px; height:'.$inf[1].'px;"';
+               $ss = ' style="width:'.$inf[0].'px; height:'.$inf[1].'px;"';
             }
             else { // Ако има атрибут style:
               // но в него няма width се добавя.
@@ -235,7 +236,11 @@ function upload_file_addimage($add_image,$e){
   if (!$add_image) return '';
   $p = current_pth(__FILE__).'images/'.$e.'.png';
   $a = $_SERVER['DOCUMENT_ROOT'].$p;
-  if (file_exists($a)) return '<img alt="'.$e.'" src="'.$p.'"> ';
+  if (file_exists($a)){
+     $inf = getimagesize($a);
+     if($inf) $ss = ' style="width:'.$inf[0].'px; height:'.$inf[1].'px;"';
+     return '<img alt="'.$e.'" src="'.$p.'"'.$ss.'> ';
+  }
 }
 
 // Проверяване дали потребителят има право да качва, сменя и изтрива файлове
