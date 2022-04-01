@@ -43,7 +43,7 @@ if(tf) if(!window.find(tf)){
 $body_adds .= ' onload="findAndSelect()"';
 
 function editor($n,$tx){//die($n);
-global $ta_ctag, $ta_fctag, $page_header;
+global $ta_ctag, $ta_fctag, $page_header, $idir, $adm_pth;
 $tx = str_replace('&','&amp;',$tx);
 $tx = str_replace(chr(60).'!--$$_',chr(60).' !--$$_',$tx);
 if(!empty($tx)) $row_count = substr_count($tx, "\n") + 2;
@@ -187,7 +187,7 @@ te.selectionEnd = s;
 } else $js = '';
 $tec += 1;
 // Връщане на резултата
-return $js.
+$rz = $js.
 
 '<input type="button" value="tag" onclick="doInsertTag();">'.'
 '.make_tag_button('a','tag_a1','tag_a2').'
@@ -202,12 +202,53 @@ return $js.
 '.make_insert_2_button('include_once','\'include_once($idir.\\\'\'','\'\\\');\'', '').'
 '.make_insert_2_button('print_r','\'print_r($\'','\'); die;\'', '').'
 '.make_insert_2_button('<!--$$_','\'<!--$$_\'','\'_$$-->\'', 'Insert a module').'
-'.make_insert_2_button('javascript','tag_s1','tag_s2','Insert SCRIPT tag').ckeb($tec).'
+'.make_insert_2_button('javascript','tag_s1','tag_s2','Insert SCRIPT tag').ckeb($tec);
+$trp = $idir.'_google-cloud-translate';
+if(file_exists($trp)) $rz .= '<script>
+if(typeof ajaxO == "undefined"){
+  if (window.XMLHttpRequest) ajaxO = new XMLHttpRequest();
+  else ajaxO = new ActiveXObject("Microsoft.XMLHTTP");
+}
+function doTranslate(l){
+var haveKey = ';
+$gak = stored_value('GoogleTranslateAPIkey','');
+if(empty($gak)) $rz .= 'false';
+else $rz .= 'true';
+$rz .= ';
+if(!haveKey) { alert("\'GoogleTranslateAPIkey\' is not set."); return; }
+var f = document.forms.edit_form;
+var te = f.editor1;
+var tx = te.value.substring(te.selectionStart,te.selectionEnd);
+if(!tx) { alert("Select some text and try again."); return; }
+tx = encodeURI(tx);
+var fa = f.action;
+var na = "'.$adm_pth.'translate_byGoogle.php" + 
+         "?a=" + Math.floor(Math.random() * 1000) +
+         "&lang=" + l + 
+         "&text=" + tx;
+ajaxO.onreadystatechange = onAjaxResponse;
+ajaxO.open("GET", na, true);
+ajaxO.send();
+}
+function onAjaxResponse(){
+if (ajaxO.readyState == 4 && ajaxO.status == 200){
+var f = document.forms.edit_form;
+var te = f.editor1;
+te.value = te.value.substring(0,te.selectionStart) + 
+           ajaxO.responseText + 
+           te.value.substr(te.selectionEnd);
+}
+}
+</script> 
+<input type="button" value="English" onclick="doTranslate(\'en\');"> 
+<input type="button" value="Bulgarian" onclick="doTranslate(\'bg\');">'."\n";
+$rz .= '
 <input type="button" value="x" onclick="doRemoveTag();" title="Remove next tag">
 <span id="editor'.$tec.'_count"></span>
 <textarea id="editor'.$tec.'" cols="120" name="'.$n.'" rows="'.$row_count.'" style="font-size:120%;" '.
 'onfocus="onTeFocus();" onkeyup="showCharCount(this);" onkeydown="editor_onKey(this,event);">'.
 str_replace($ta_ctag,$ta_fctag,$tx).$ta_ctag;
+return $rz;
 }
 
 function make_tag_button($n,$t1,$t2){

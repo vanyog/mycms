@@ -18,6 +18,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // Помощен скрипт към translate_content.php ', чрез който се получава превод от Google Cloud
+// Праметри:
+// $_GET['text'] - текстът за превеждане (Езикът на текста се разпознава автоматично)
+// $_GET['lang'] - езикът, към който ще се преведе.
+
+
 
 error_reporting(E_ALL); ini_set('display_errors',1);
 
@@ -30,7 +35,8 @@ $gak = stored_value('GoogleTranslateAPIkey','');
 if(!$gak) die("No GoogleTranslateAPIkey is set in options table.");
 if(empty($_GET['text'])) die("No text is send for translation.");
 if(empty($_GET['lang'])) die("To which language to translate?");
-if(!array_key_exists($_GET['lang'],$languages)) die("Language is not in the site langage list.");
+// Проверка, която временно я изключвам
+// if(!array_key_exists($_GET['lang'],$languages)) die("Language is not in the site langage list.");
 
 require $idir.'_google-cloud-translate/vendor/autoload.php';
 
