@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+// Отговаряне на ajax заявка за търсене.
+
 if(!isset($_GET['text'])) die;
 
 $idir = dirname(dirname(__DIR__)).'/';
@@ -44,6 +46,10 @@ foreach($rl as $r){
   $rz .= '<p><a href="'.current_pth(__FILE__).'open_by_cid.php?lid='.$r['ID'].'">'.
         preg_replace("/($tx|$txu)/i", "<span>$1</span>", $r['Title'])."</a></p>\n";
 }
+
+if(!(count($rt) + count($rl))) 
+   $rz .= '<a href="https://www.google.bg/search?q='.urlencode($tx).
+          '" target="_blank">Google Search</a>';
 
 echo $rz;
 

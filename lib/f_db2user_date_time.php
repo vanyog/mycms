@@ -37,18 +37,18 @@ if($c=='month_names') die("No '$c' defined in 'content' table.");
 eval($c);
 if ((substr($dts,11,8)=="00:00:00")||!$tm) $t = '';
 else {
-  $h = (1*substr($dts,11,2)); // Час
+  $h = (1*intval(substr($dts,11,2))); // Час
   if ( ($h<10) && $ts ) $t = ' &nbsp;'; else $t = ' ';
   $t .= $h.substr($dts,13,3);                       // Минути
-  if ( (1*substr($dts,17,2)) && $sc) $t .= substr($dts,16,3); // Секунди
+  if ( (1*intval(substr($dts,17,2))) && $sc) $t .= substr($dts,16,3); // Секунди
   $t .= translate('chasa_na');
 }
-$d = 1*substr($dts,8,2);
+$d = 1*intval(substr($dts,8,2));
 if ( ($d<10) && $ts ) $d = '&nbsp;'.$d;
 if($t) $t .= ' ';
 $rz = $t.
   $d.' '.
-  $month[1*substr($dts,5,2)].' '.
+  $month[1*intval(substr($dts,5,2))].' '.
   substr($dts,0,4);  // Година
 return $rz;
 }
