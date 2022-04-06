@@ -204,7 +204,7 @@ $rz = $js.
 '.make_insert_2_button('<!--$$_','\'<!--$$_\'','\'_$$-->\'', 'Insert a module').'
 '.make_insert_2_button('javascript','tag_s1','tag_s2','Insert SCRIPT tag').ckeb($tec);
 $trp = $idir.'_google-cloud-translate';
-if(file_exists($trp)) $rz .= '<script>
+if(file_exists($trp)){ $rz .= '<script>
 if(typeof ajaxO == "undefined"){
   if (window.XMLHttpRequest) ajaxO = new XMLHttpRequest();
   else ajaxO = new ActiveXObject("Microsoft.XMLHTTP");
@@ -241,7 +241,7 @@ te.value = te.value.substring(0,te.selectionStart) +
 }
 </script> 
 <input type="button" value="English" onclick="doTranslate(\'en\');"> 
-<input type="button" value="Bulgarian" onclick="doTranslate(\'bg\');">'."\n";
+<input type="button" value="Bulgarian" onclick="doTranslate(\'bg\');">'."\n";}
 $rz .= '
 <input type="button" value="x" onclick="doRemoveTag();" title="Remove next tag">
 <span id="editor'.$tec.'_count"></span>
