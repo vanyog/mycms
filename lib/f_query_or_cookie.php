@@ -26,7 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 function query_or_cookie($k,$v){
 if (isset($_GET[$k])){
-   setcookie($k,$_GET[$k],time()+60*60*24*30,'/');
+   setcookie($k, $_GET[$k], 
+             ['expires'=>time()+60*60*24*30, 'path'=>'/', 'SameSite'=>'Strict'] );
    return ($_GET[$k]==$v);
 }
 else if (isset($_COOKIE[$k])) return ($_COOKIE[$k]==$v);

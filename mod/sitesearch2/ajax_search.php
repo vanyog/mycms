@@ -26,7 +26,11 @@ $ddir = $idir;
 
 include_once($idir.'conf_paths.php');
 
-$tx = $_GET['text'];
+// Стринга по който ще се търси
+$tx0 = $_GET['text'];
+// Ако съдържа '/', се заменя с '\/';
+$tx = str_replace('/', '\/', $tx0);
+// С първа главна буква
 $txu = mb_strtoupper(mb_substr($tx,0,1)).mb_substr($tx,1);
 
 $rz = '';
@@ -48,7 +52,7 @@ foreach($rl as $r){
 }
 
 if(!(count($rt) + count($rl))) 
-   $rz .= '<a href="https://www.google.bg/search?q='.urlencode($tx).
+   $rz .= '<a href="https://www.google.bg/search?q='.urlencode($tx0).
           '" target="_blank">Google Search</a>';
 
 echo $rz;

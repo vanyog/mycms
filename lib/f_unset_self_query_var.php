@@ -24,7 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 function unset_self_query_var($n, $a = true){
 $r = $_GET;
-if (isset($r[$n])) unset($r[$n]);
+if(!is_array($n)){ $n = [$n]; }
+foreach ($n as $v) if (isset($r[$v])) unset($r[$v]);
 $rz = http_build_query($r);
 if ($a) $rz = str_replace('&','&amp;',$rz);
 if ($rz) $rz = '?'.$rz;

@@ -41,7 +41,7 @@ $t = '<span>'.translate('nextpage_next'.$dr).'</span><a href="'.$main_index.'?pi
 return $t;
 }
 
-// Данните на следващата страница
+// Данните на следващата/предишната страница
 
 function nextpage_data($gr, $page_id, $dr){
 global $tn_prefix;
@@ -69,9 +69,10 @@ if(!is_numeric($nl['link'])){
   $a = array();
   $i = preg_match('/pid=(\d+)/', $nl['link'], $a);
   if($i) $id = $a[1];
+//  die("$id");
 }
 // Данни за следващата страница
-return db_select_1('*', 'pages', "`ID`=$id" );
+return db_select_1('*', 'pages', "`ID`='$id'", false );
 }
 
 // Следващ линк от родителското меню
