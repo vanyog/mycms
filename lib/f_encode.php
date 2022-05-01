@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 function encode($a){
 global $file_encoding, $site_encoding;
+if(empty($file_encoding)||empty($site_encoding)||empty($a)) return $a;
 return iconv($file_encoding, "$site_encoding//IGNORE", $a);
 }
 
