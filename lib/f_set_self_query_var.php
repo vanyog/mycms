@@ -23,9 +23,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // трябва да се подаде и трети параметър $a = false, за да не се замества & с &amp;.
 
 function set_self_query_var($n, $v, $a = true){
-global $ind_fl;
+global $ind_fl, $adm_name, $edit_name;
 $r = $_GET;
 $r[$n] = $v;
+unset($r[$adm_name]);
+unset($r[$edit_name]);
 ksort($r);
 $rz = http_build_query($r);
 if ($a) $rz = str_replace('&','&amp;',$rz);

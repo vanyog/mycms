@@ -37,7 +37,7 @@ if(in_edit_mode() && $pd['hidden']){
                        "new_record.php?t=options&name=redirifhidden_cancel\">".
                        "Create value for 'redirifhidden_cancel' option</a>\n";
   $a = set_self_query_var('noredir',$v);
-  return "<a href=\"$a\">$v</a>\n";
+  return "Link to view even though the page is hidden <a href=\"$a\">$a</a>\n";
 }
 if(isset($_GET['noredir'])){
   if($v && ($_GET['noredir']==$v)){
