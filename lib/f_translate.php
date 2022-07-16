@@ -84,7 +84,7 @@ $r1 = db_select_1('c.*, f.filters',
 if ($r1){ // Ако има такъв запис
   $content_create_time = $r1['date_time_1'];
   $content_date_time = $r1['date_time_2'];
-  $t = stripslashes($r1['text']);
+  $t = isset($r1['text']) ? stripslashes($r1['text']) : '';
   $rz = apply_filters($r1['filters'], parse_content($t));
   if ((!isset($r1['nolink']) || !$r1['nolink']) && $elink) $rz .= $el;
 }
