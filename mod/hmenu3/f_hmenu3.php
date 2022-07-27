@@ -50,7 +50,7 @@ $page_header .= "\n</script>\n";
 $il = db_select_m('*','menu_items',"`group`=$a ORDER BY `place` ASC");
 $sm = ''; // HTML код на подменютата
 $rz = ''; // HTML код ма линковете от менюто
-$ci = hmenu_c($a);
+$ci = hmenu_c($a); // ID на линка на текущата страница
 //$ia = index_array();
 $j = 1;
 foreach($il as $i){
@@ -74,7 +74,6 @@ foreach($il as $i){
      $rz .= '<a href="'.$pth.'mod/usermenu/edit_menu_link.php?pid='.$page_id.'&amp;id='.$i['ID'].
      '" style="color:#000000;background-color:#ffffff;margin:0;padding:0;">*</a>';
   }
-//  if(!$c)
   $rz .= "</a>";
   $rz .= "\n";
   $j++;
@@ -87,15 +86,16 @@ if (in_edit_mode()){
 return $sm.'<div id="menu_'.$a."\">\n".$rz.'</div>';
 }
 
-// Връща подменюто към линк $lk
+// Подменю на линк към страница номер $lk
 
 function hsubmenu($lk,/*$ia,*/ $j){
 global $ind_fl, $seo_names, $rewrite_on, $page_id, $pth;
 // Номер на менюто, на което страница $lk е главна
 $g = db_table_field('`group`','menu_tree',"`index_page`=$lk");
+if(empty($g)) return '';
 $ci = hmenu_c($g);
 // Записите от това меню
-$da = db_select_m('*','menu_items',"`group`=$g ORDER BY `place` ASC");
+$da = db_select_m('*','menu_items',"`group`=$g ORDER BY `place` ASC");//var_dump($g);die;
 $rz = '';
 if (count($da)>1) foreach($da as $d){
   $lk = 1*intval($d['link']);
@@ -162,7 +162,7 @@ foreach($da as $d){
 return array_keys($rz);
 }
 
-// Опит за съставяне на функция за откриване от кой линк на меню с номер $m се стига до текущата страница
+// От кой линк на меню с номер $m се стига до текущата страница
 
 function hmenu_c($m){
 global $page_data;
@@ -170,7 +170,7 @@ global $page_data;
 // Масив с прегледаните менюта. Използва се за откриване на зацикляне
 $pa = array();
 
-// Текуща страница
+// Данните на текущата страница
 $pd = $page_data;
 
 // Група на текущата страница
@@ -183,7 +183,7 @@ do { //echo "$m $gr - ".$pd['ID']."<br>";
   if($gr==0) return 0;
 
   // Ако текущата страница е от меню $m
-  if($m == $gr) return $pd['ID'];
+  if($m == $gr) return isset($pd['ID']) ? $pd['ID'] : 0;
 
   // Запис(и) за групата на текущата страница от таблица menu_tree
   $mt = db_select_m('*', 'menu_tree', "`group`=".$gr); //echo print_r($mt,true)."<br>";

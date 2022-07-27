@@ -47,12 +47,12 @@ if(isset($_GET['noredir'])){
 }
 $pid = stored_value('main_index_pageid',1);
 $gd = db_select_1('*', 'menu_tree', "`group`=".$pd['menu_group']);
-if($gd['index_page']!=$pd) $pd = db_select_1('*', 'pages', "`ID`=".$gd['index_page']);
-while ($gd['parent']) {
+if(isset($gd['index_page']) && ($gd['index_page']!=$pd)) $pd = db_select_1('*', 'pages', "`ID`=".$gd['index_page']);
+while (isset($gd['index_page']) && $gd['parent']) {
   if($redir && !$pd['hidden']){ $pid = $pd['ID']; break; }
-  $redir = $pd['hidden'];
+  $redir = isset($pd['hidden']) ? $pd['hidden'] : 0;
   $gd = db_select_1('*', 'menu_tree', "`group`=".$gd['parent']);
-  $pd = db_select_1('*', 'pages', "`ID`=".$gd['index_page']);
+  if(isset($gd['index_page'])) $pd = db_select_1('*', 'pages', "`ID`=".$gd['index_page']);
 };
 if($redir) header("Location: $main_index?pid=$pid");
 return '';

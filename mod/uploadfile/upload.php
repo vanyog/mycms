@@ -77,7 +77,8 @@ global $ftx, $tshow, $thide, $page_content, $fd;
 $f = uploadfile_href($fd['filename']);
 
 $page_content = '<h1>'.translate('uploadfile_upladpagetitle')."</h1>\n".
-'<p><a href="/'.$f.'" target="_blank">'.basename($fd['filename'])."</a></p>\n";
+'<p><a href="'.$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].
+$f.'" target="_blank">'.basename($fd['filename'])."</a></p>\n";
 
 $uf = new HTMLForm('uploadform');
 
