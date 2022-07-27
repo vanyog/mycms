@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Функцията sitemap($i) генерира html код за показване карта на сайта
+// Функцията sitemap($a) генерира html код за показване карта на сайта
 // и ежедневно генерира файл sitemap.xml, който се записва в DOCUMENT_ROOT.
 
-// Параметърът $i е номерът на менюто на страницата, от която се разклонява картата,
+// Параметърът $a е номерът на менюто на страницата, от която се разклонява картата,
 // но може да съдържа и втори, отделен с | параметър,
 // който се задава като id атрибут на <div> тага, в който се представя картата.
 // Когато втори параметър не е зададен се използва id="site_map".
@@ -117,6 +117,7 @@ if(    ($smday !== $smfile) // Нов ден
              $smfile.
              "</urlset>";
    $smfn = $_SERVER['DOCUMENT_ROOT'].'/sitemap.xml';
+//   var_dump(is_writable($smfn)); die;
    if(is_writable($smfn)) file_put_contents($smfn, $smfile);
 }
 if( isset($_GET['clear']) && ($_GET['clear']=='on') ){
@@ -234,7 +235,7 @@ foreach($mi as $m){
       $mtd = db_select_1('parent,index_page', 'menu_tree', '`group`='.$p['menu_group']);
       // Рекурсивно извикване за получаване карта на подменюто
       if ( !in_array($p['menu_group'],$page_passed) && 
-           ($p['ID']==$mtd['index_page']) && 
+           (isset($mtd['index_page'])) && ($p['ID']==$mtd['index_page']) && 
            ($i==$mtd['parent'])
          ){
         $map_level++;
@@ -247,7 +248,6 @@ foreach($mi as $m){
            if($n>1) $rz1 .= '...';
         }
         $map_level--;
-//        if($n>1)
            $rz2 = '<span onclick="mapHideShow(this);" class="bullet">&#9660;</span>&nbsp;';
       }
     }

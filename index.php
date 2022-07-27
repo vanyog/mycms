@@ -88,7 +88,7 @@ if( $seo_names && (!isset($_GET['pid']) || !is_numeric($_GET['pid'])) ){
                  addslashes($_GET['pid'])."'", $page_id, false) );
 }
 else {
-   if($redir_pids && $seo_names && is_numeric($page_id) && !empty($_SERVER['REQUEST_URI'])){
+   if(!empty($redir_pids) && $seo_names && is_numeric($page_id) && !empty($_SERVER['REQUEST_URI'])){
       $h = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].'/'.
            db_table_field('seo_name','seo_names',"`ID`=$page_id");
       if(strpos($_SERVER['REQUEST_URI'], '&')===false)
@@ -156,7 +156,7 @@ mysqli_close($db_link);
 function page404(){
 $rz = Array (
 'ID' => 0,
-'menu_group' => 1,
+'menu_group' => stored_value('error_404_group',1),
 'title' => 'error_404_title',
 'content' => 'error_404_content',
 'template_id' => stored_value('error_404_template',1),

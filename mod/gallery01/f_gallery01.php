@@ -20,7 +20,8 @@ include_once($idir.'lib/f_set_self_query_var.php');
 
 function gallery01($a){
 $i = 0; // Номер на снимката, която да се покаже
-if (isset($_GET['iid'])) $i = 1*$_GET['iid'];
+if (isset($_GET['iid']) && is_numeric($_GET['iid'])) $i = 1*$_GET['iid'];
+else $i = 0;
 // Абсолютен път до директорията със снимките
 $p = $_SERVER['DOCUMENT_ROOT']."/$a";
 // Зареждане заглавията на снимките

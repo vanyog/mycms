@@ -410,7 +410,8 @@ if($id) return userreg_outlink($t);
 else {
    // Адрес на страницата за влизане
    $lp = stored_value("userreg_login_$t").$page_hash;
-   return '<p class="user"><a href="'.$lp.'">'.translate('userreg_login').'</a></p>';
+   return '<p class="user"><a href="'.$lp.'" title="'.
+          translate('userreg_lilink_title',false).'">'.translate('userreg_login').'</a></p>';
 }
 }
 
@@ -427,8 +428,10 @@ if (!$lp) die("'userreg_logout_$t' option is not set.");
 $_SESSION['user2_returnpage'] = $_SERVER['REQUEST_URI'];
 $hp = stored_value("userreg_home_$t").$page_hash;
 $rz = $_SESSION['user_username'];
-if($hp) $rz = "<a href=\"$hp\" style=\"text-transform:none;\">$rz</a>";
-return '<p class="user">'.$rz.' <a href="'.$lp.'">'.translate('user_logaut').'</a></p>';
+if($hp) $rz = "<a href=\"$hp\" style=\"text-transform:none;\" title=\"".
+               translate("userreg_hplink_title",false)."\">$rz</a>";
+return '<p class="user">'.$rz.' <a href="'.$lp.'" title="'.
+          translate('userreg_lolink_title',false).'">'.translate('user_logaut').'</a></p>';
 }
 
 //

@@ -140,7 +140,7 @@ case 'abstracts'   : return conference_abstract_book($uid, $adm, $aa[1]);
 case 'participants': return conference_participants();
 case 'review'      : return message("Missing report ID.");
 case 'procrevs'    : return conference_procRevs();
-case 'topics'      : return conference_topics();
+case 'topics'      : return conference_topics($aa[1]);
 case 'program'     : return conference_program();
 default            : return message("Unknown parameter value '$a' in 'conference() function.");
 }
@@ -220,9 +220,10 @@ $ut = schedules_in_event($day2[1],$day2[0]) || $adm;
 // Адрес на страницата за редактиране на резюме и качване на доклад от участник
 $edp = stored_value('conference_editpaper', '/index.php?pid=1068');
 // Линк "Редактиране"
-if ($i<count($pd)){ 
-   if (!$et && isset($pd[$i]['approved_a']) && ($pd[$i]['approved_a']=='1'))
-      $rz .= '<p><a href="'.$edp.'&amp;proc='.$pd[$i]['ID'].$page_hash.'">'.translate('conference_editpaper').'</a>';
+if ($i<count($pd)){
+   //if (!$et && isset($pd[$i]['approved_a']) && ($pd[$i]['approved_a']=='1'))
+      $rz .= '<p><a href="'.$edp.'&amp;proc='.$pd[$i]['ID'].$page_hash.'">'.
+             translate('conference_editpaper').'</a>';
 } else 
    if ($i<$proccount)
       $rz .= '<p><a href="'.$edp.$page_hash.'">'.translate('conference_editpaper').'</a>';
@@ -432,7 +433,7 @@ if ( !( ($d['user_id']==$uid) || $adm ) )
    return message(translate('conference_cnnotedit'));
 // Име на участника
 $ud = db_select_1('*', $user_table, "`ID`=".$d['user_id']);
-if(empty($ud['user_id'])) return '';
+if(empty($ud['ID'])) return '';
 if(!empty($ud['firstname'])) $un = $ud['firstname']." ".$ud['secondname']."  ".$ud['thirdname'];
 else $un = '';
 if(empty(trim($un)) && !empty($ud['email'])) $un = $ud['email'];
@@ -923,7 +924,6 @@ $afretapr = stored_value('anference_titles_after_a_approve');
 $afretapr = 1;
 $current = ($utype == $a);
 if($a){
-//  $preview = ($utype != $a);
   $utype = $a;
   $fdir = stored_value('conference_files_'.$utype, $fdir);
 }
@@ -994,11 +994,11 @@ for($i = 0; $i<count($tp); $i++){
    $filter = " AND ( ((`utype`<'vsu2020') AND `approved_a`) OR `publish`='yes')";
    // Ако и минал денят за потвърждаване на резюметата при преглеждане чрез таен код неодобрените се прескачат
 //   if(($allowtoshow || $afretapr) && ($today > $day_a_approve)) $filter = " AND `approved_a`";
-   if ( $team ){ $filter = ''; }
+   if ( $team || $allowtoshow ){ $filter = ''; }
    // За всеки от езиците
    {
-//     die($order);
-     // Доклади от секцията
+//     die($filter);
+     // Доклади от направлението
      $da = db_select_m('*', 'proceedings',
           "`utype`='$utype'".
           " AND `topic`='$i'".
@@ -1075,6 +1075,7 @@ for($i = 0; $i<count($tp); $i++){
           if($d['fulltextfile2']) $pdf++;
           if($d['fulltextfile4']) $ano++;
         }
+        
         if( $team || !empty($d['title']) || $allowtoshow ) {
            if($d['keylec']){
              if(!$stl) $stl .= ' style="';
@@ -1126,17 +1127,20 @@ for($i = 0; $i<count($tp); $i++){
              }
 //             else $lr .= ". ";
            }
+           
            if($d['title']) $lr .= "<ptitle>".mb_strtoupper(stripslashes($d['title']))."</ptitle><br>\n";
            else $c--;
+           
            // При добавен в адреса на страницата таен параметър се показва и резюмето и ключовите думи.
-           if($allowtoshow){
+           /* if($allowtoshow){
               $lr .= '<pabstract>'.$d['abstract']."</pabstract>\n".
                      '<p class="keywords"><span>'.
                      translate_to('conference_ckeywords',$d['language']).
                      '</span> '.
                      conference_formatKeyWorts($d['keywords'])."</p>\n";
               if($d['fulltextfile4']) $lr .= '<p>Anonimouse full text: '.file_link_and_size($d['fulltextfile4'], $fdir)."</p>\n";
-           }
+           } */
+           
            if ($team || !$current || $s_auth) 
                $lr .= '<author>'.conference_only_names($d['authors'])."</author>";
            if($d['pages']){
@@ -1155,18 +1159,19 @@ for($i = 0; $i<count($tp); $i++){
                     ) $lk .= 'OLD! ';
                  $lk .= file_link_and_size($d['fulltextfile4'], $fdir);
                }
-           if( isset($_GET['allowtoshow']) && ($_GET['allowtoshow']=='rev2data') ) $lk .= conference_rev2data($d);
+           if( isset($_GET['allowtoshow']) && ($_GET['allowtoshow']=='rev2data') ) 
+               $lk .= conference_rev2data($d);
            $lr .= "$lk</div>\n";
-        }
+        } // Край на if( $team || !empty($d['title']) || $allowtoshow )
      } // Край на цикъла по доклади
      $sr .= $lr;
    }
-   if( $team || !empty($c) ){
+   if( $team || $allowtoshow || !empty($c) ){
      $rz .= '<h3>'.$tp[$i];
      if ( $team || $allowtoshow) $rz .= " - $c abstracts, $doc doc, $pdf pdf, $ano anonymous files";
      $rz .= "</h3>\n";
 //     if ( $team ) $rz .= "<p>$zip_command </p>\n";
-     if (!$current || ("$today">="$day_a_approve") || $team || $preview ) $rz .= $sr;
+     if (!$current || ("$today">="$day_a_approve") || $team || $allowtoshow) $rz .= $sr;
      $tc += $c;
      $docs += $doc;
      $pdfs += $pdf;
@@ -1184,8 +1189,9 @@ if ( $team || $allowtoshow ){
      else $ol = $adm_pth.'new_record.php?t=options&name='.$on.'&value=`keylec` DESC, `authors` ASC';
      $rz = "<p>".count($auth).
            " authors, $tc abstracts, $docs doc, $pdfs pdf, $anos anonymous, $rc ready.<br>".
-           "Order: $olink <a href=\"$ol\">*</a>".
-           " <a href=\"".set_self_query_var('fixorder','1')."\">Fix</a>".
+           "Order: $olink".
+           (in_edit_mode() ? " <a href=\"$ol\">*</a>".
+                             " <a href=\"".set_self_query_var('fixorder','1')."\">Fix</a>": '').
            " Secret link: <a href=\"".
            set_self_query_var('allowtoshow', $secret).$page_hash."\">$secret</a></p>\n".$rz;
 }
@@ -1321,7 +1327,7 @@ for($i = 0; $i<count($tp); $i++){
         "`utype`='$utype'".
         " AND `title` > ' '".
         " AND `topic`='$i'".
-        " ".$filter.$order, false );
+        " ".$filter.$order, false ); //die;
   if(count($da)) $rz .= '<h2>'.$tp[$i]."</h2>\n";
   // За всеки доклад
   foreach($da as $d){
@@ -1788,14 +1794,23 @@ $rz .= $rzr;
 return $rz;
 }
 
+// Помощна функция от https://stackoverflow.com/questions/1252693/using-str-replace-so-that-it-only-acts-on-the-first-match
+
+function str_replace_first($search, $replace, $subject)
+{
+    $search = '/'.preg_quote($search, '/').'/';
+    return preg_replace($search, $replace, $subject, 1);
+}
+
 // Визуализиране като списък на научните направления
 
-function conference_topics(){
+function conference_topics($ut){
 global $utype, $language, $adm_pth, $editing;
-eval(translate('conference_topics_'.$utype, false));
-$rz = "<div id=\"ctopics\"><h2>".translate('conference_topics_heading_'.$utype)."</h2>\n";
+if(empty($ut)) $ut = 'vsu2021';
+eval(translate('conference_topics_'.$ut, false));
+$rz = "<div id=\"ctopics\"><h2>".translate('conference_topics_heading_'.$ut)."</h2>\n";
 foreach($tp as $i=>$t){
-$t1 = str_replace('. ', '.</span> ', $t);
+$t1 = str_replace_first('. ', '.</span> ', $t);
 $rz .= '<p><span>'.$t1."</p>\n";
 }
 if($editing){
