@@ -60,7 +60,7 @@ else {
       $f->add_input( new FormInput(translate('user_password'),'password','text', rand_string(8)) );
       $f->add_input( new FormInput('','','submit', translate('userreg_create')) );
       $page_content = '<h1>'.translate('userreg_new').'</h1>
-'.$ms.$f->html();
+'.$ms.$f->html().'<script>document.forms.newuserreg_form.email.focus();</script>';
     }
   }
 }
@@ -92,7 +92,8 @@ $d = array(
   'password'=>pass_encrypt($_POST['password']),
   'IP'=>$_SERVER['REMOTE_ADDR']
 );
-die( db_insert_1($d,$user_table, true) );
+$r = db_insert_1($d,$user_table, false);
+
 }
 
 ?>

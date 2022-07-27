@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+// Отговаряне на ajax заявка за търсене.
+
 if(!isset($_GET['text'])) die;
 
 $idir = dirname(dirname(__DIR__)).'/';
@@ -24,7 +26,14 @@ $ddir = $idir;
 
 include_once($idir.'conf_paths.php');
 
-$tx = $_GET['text'];
+// Стринга по който ще се търси
+$tx0 = $_GET['text'];
+// Ако съдържа символи със специална роля в регулярни изрази, пред тях се поставя '\';
+// Извършва се само за символи, забелязани, че предизвикват грешка.
+$tx = str_replace('/', '\/', $tx0);
+$tx = str_replace('?', '\?', $tx);
+$tx = str_replace('.', '\.', $tx);
+// С първа главна буква
 $txu = mb_strtoupper(mb_substr($tx,0,1)).mb_substr($tx,1);
 
 $rz = '';
@@ -44,6 +53,10 @@ foreach($rl as $r){
   $rz .= '<p><a href="'.current_pth(__FILE__).'open_by_cid.php?lid='.$r['ID'].'">'.
         preg_replace("/($tx|$txu)/i", "<span>$1</span>", $r['Title'])."</a></p>\n";
 }
+
+if(!(count($rt) + count($rl))) 
+   $rz .= '<a href="https://www.google.bg/search?q='.urlencode($tx0).
+          '" target="_blank">Google Search</a>';
 
 echo $rz;
 

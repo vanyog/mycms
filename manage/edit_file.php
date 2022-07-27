@@ -186,7 +186,8 @@ include_once("editor.php");
 include_once($idir.'lib/f_set_self_query_var.php');
 
 $fc = array();
-$can_edit = array('css', 'inc', 'js', 'htaccess', 'html', 'htm', 'php', 'po', 'pot', 'sql', 'svg', 'txt', 'xml', '');
+$can_edit = array('css', 'inc', 'js', 'htaccess', 'html', 'htm', 'php', 'po', 
+'pot', 'sql', 'svg', 'txt', 'webmanifest', 'xml', '');
 $e = pathinfo($d,PATHINFO_EXTENSION);
 if (is_file($d) && in_array($e,$can_edit)) $fc=file($d);
 else {

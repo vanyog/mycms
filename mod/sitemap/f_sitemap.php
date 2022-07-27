@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Функцията sitemap($i) генерира html код за показване карта на сайта
+// Функцията sitemap($a) генерира html код за показване карта на сайта
 // и ежедневно генерира файл sitemap.xml, който се записва в DOCUMENT_ROOT.
 
-// Параметърът $i е номерът на менюто на страницата, от която се разклонява картата,
+// Параметърът $a е номерът на менюто на страницата, от която се разклонява картата,
 // но може да съдържа и втори, отделен с | параметър,
 // който се задава като id атрибут на <div> тага, в който се представя картата.
 // Когато втори параметър не е зададен се използва id="site_map".
@@ -67,13 +67,13 @@ var h = p.style.height;
 var ls = document.links;
 for(var i=0;i<ls.length;i++) if(ls[i].parentElement==p) break;
 var v = ls[i].offsetHeight + 2 * (ls[i].offsetTop - p.offsetTop) + "px";
-// Сгъване
+'.encode('// Сгъване').'
 if ( ( (h!=v)&&(a==0) ) || (a==1) ){
   e.innerHTML = "&#9658;"
   p.style.height = v;
   p.style.overflow = "hidden";
 }
-// Разгъване
+'.encode('// Разгъване').'
 if ( ( (h==v)&&(a==0) ) ||(a==2)){
   e.innerHTML = "&#9660;"
   p.style.height = "auto";
@@ -103,8 +103,8 @@ $id_pre = 'map'.$ar[0];
 $rz = sitemap_rec($ar[0], 1, $ar[0]==$mpg_id);
 $clear_link = '';
 if(in_edit_mode()) $clear_link = '<a href="'.set_self_query_var('clear','on').'">Clear cache</a>';
-$rz = '<div id="'.$id.'">'."\n".$clear_link.
-site_map_buttons().$rz.site_map_buttons()."
+$rz = '<div id="'.$id.'">'."\n".
+$clear_link.site_map_buttons().$rz.site_map_buttons().$clear_link."
 <p class=\"clear\"></p></div>";
 // Записване на нов sitemap.xml файл при условия:
 if(    ($smday !== $smfile) // Нов ден
@@ -117,6 +117,7 @@ if(    ($smday !== $smfile) // Нов ден
              $smfile.
              "</urlset>";
    $smfn = $_SERVER['DOCUMENT_ROOT'].'/sitemap.xml';
+//   var_dump(is_writable($smfn)); die;
    if(is_writable($smfn)) file_put_contents($smfn, $smfile);
 }
 if( isset($_GET['clear']) && ($_GET['clear']=='on') ){
@@ -186,6 +187,8 @@ foreach($mi as $m){
   if (($i==$i_root)||($pid!=$index))
   {
     $lk = $m['link'];
+    $attr = '';
+    if(!empty($m['attr'])){ $attr = ' '.$m['attr']; }
     if ($pid){
        if($rewrite_on) $lk = "/$pid/";
        else $lk = $ind_fl.'?pid='.$pid;
@@ -214,7 +217,7 @@ foreach($mi as $m){
           // Добавяне в html кода за показване
           if( (substr($lk, 0, 4) != 'http') || $ext ){ 
             if(!empty($redirifhidden_cancel)) $lk .= '&noredir='.$redirifhidden_cancel;
-            $rz1 .= '<a href="'.$lk.'">'.translate($m['name']).'</a>';
+            $rz1 .= '<a href="'.$lk.'"'.$attr.'>'.translate($m['name']).'</a>';
             if( $pid==$page_id ) $rz1 .= translate('sitemap_currentpage');
             if( in_edit_mode() ) {
                $rz1 .= " place:".$m['place'].' group:'.$m['group'];
@@ -232,7 +235,7 @@ foreach($mi as $m){
       $mtd = db_select_1('parent,index_page', 'menu_tree', '`group`='.$p['menu_group']);
       // Рекурсивно извикване за получаване карта на подменюто
       if ( !in_array($p['menu_group'],$page_passed) && 
-           ($p['ID']==$mtd['index_page']) && 
+           (isset($mtd['index_page'])) && ($p['ID']==$mtd['index_page']) && 
            ($i==$mtd['parent'])
          ){
         $map_level++;
@@ -245,7 +248,6 @@ foreach($mi as $m){
            if($n>1) $rz1 .= '...';
         }
         $map_level--;
-//        if($n>1)
            $rz2 = '<span onclick="mapHideShow(this);" class="bullet">&#9660;</span>&nbsp;';
       }
     }

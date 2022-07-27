@@ -240,7 +240,8 @@ case '[thirdname]': if($tud['thirdname']) $rz = str_replace($p, $tud['thirdname'
                     break;
 case '[title]': $rz = str_replace($p, mb_strtoupper( db_table_field('title', 'proceedings', "`ID`=".$_GET['proc']) ), $rz); break;
 case '[apstractpreview]': $ac = stored_value('conference_aAbsAccess');
-                          $lk = 'https://conference.vsu.bg/index.php?pid=92&proc='.$_GET['proc'].
+                          $ap = stored_value('conference_abstractBook');
+                          $lk = 'https://conference.vsu.bg'.$ap.'&proc='.$_GET['proc'].
                                 '&ac='.$ac.
                                 '&lang='.$lang.$page_hash;
                           $lk = "<a href=\"$lk\">$lk</a>";

@@ -58,6 +58,8 @@ $rz = '';
 
 // Четене записа на менюто на страницата
 $pr = db_select_1('*','menu_tree',"`group`=".$page_data['menu_group']);
+// Допълнителни атрибути на таг <a>
+$attr = menutree2_attr($pr);
 // Съставяне на подменю
 $sm = menutree2_submenu($page_data['menu_group'], $page_id);
 if (!$pr) return $rz;
@@ -67,7 +69,8 @@ $pg = $page_data;
 // Четене записа на главната страница на менюто
 $pg = db_select_1('*','pages','ID='.$pr['index_page']);
 $rz1 = '<a id="sm_'.$page_data['menu_group'].'" href="'.$main_index.'?pid='.$pg['ID'].
-       '" onclick="show_sub('.$page_data['menu_group'].');return false;">'.translate($pg['title']).'</a>';
+       '" onclick="show_sub('.$page_data['menu_group'].');return false;"'.$attr.'>'.
+       translate($pg['title']).'</a>';
 if(in_edit_mode()) $rz1 .= " ".$pr['group'];
 $rz = $rz1.$rz;
 
@@ -81,11 +84,13 @@ while ($pr['parent'])
 
   $pi = $pr['parent']; $ci = $pg['ID'];
   $pr = db_select_1('*','menu_tree',"`group`=".$pr['parent']);
+  $attr = menutree2_attr($pr);
   if (!$pr) $pg = db_select_1('*','pages',"`menu_group`=$pi");
   else $pg = db_select_1('*','pages','ID='.$pr['index_page']);
 
   $rz = '<a id="sm_'.$pg['menu_group'].'" href="'.$main_index.'?pid='.$pg['ID'].
-        '" onclick="show_sub('.$pg['menu_group'].');return false;">'.translate($pg['title']).'</a>'.$rz;
+        '" onclick="show_sub('.$pg['menu_group'].');return false;"'.$attr.'>'.
+        translate($pg['title']).'</a>'.$rz;
   $sm .= menutree2_submenu($pg['menu_group'], $ci);
 }
 return '<div id="menu_tree">
@@ -108,6 +113,7 @@ if(isset($_GET['template'])){
 }
 $md = db_select_m('*','menu_items',"`group`=$g ORDER BY `place` ASC");
 foreach($md as $d){
+  $attr = menutree2_attr($d);
   $rf = is_numeric($d['link']) ? 1*$d['link'] : 0;
   if($rf){
      $h = db_table_field('hidden', 'pages', "`ID`=$rf") && !in_edit_mode();
@@ -124,7 +130,7 @@ foreach($md as $d){
            '"  style="color:#000000;background-color:#ffffff;margin:0;padding:0;">*</a>';
     $pl = ' '.$d['place'];
   }
-  $rz .= "<a href=\"$rf\"$cr>".translate($d['name'], false).$pl."</a>$el\n";
+  $rz .= "<a href=\"$rf\"$cr$attr>".translate($d['name'], false).$pl."</a>$el\n";
 }
 if(in_edit_mode()){
   $m = db_table_field('MAX(`ID`)', 'menu_items', 1) + 1;
@@ -132,6 +138,14 @@ if(in_edit_mode()){
 }
 $rz .= '</div>';
 return $rz;
+}
+
+// Допълнителни атрибути на таг <a>
+
+function menutree2_attr($pr){
+$attr = '';
+if(!empty($pr['attr'])){ $attr = ' '.$pr['attr']; }
+return $attr;
 }
 
 ?>

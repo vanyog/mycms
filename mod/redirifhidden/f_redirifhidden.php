@@ -37,7 +37,7 @@ if(in_edit_mode() && $pd['hidden']){
                        "new_record.php?t=options&name=redirifhidden_cancel\">".
                        "Create value for 'redirifhidden_cancel' option</a>\n";
   $a = set_self_query_var('noredir',$v);
-  return "<a href=\"$a\">$v</a>\n";
+  return "Link to view even though the page is hidden <a href=\"$a\">$a</a>\n";
 }
 if(isset($_GET['noredir'])){
   if($v && ($_GET['noredir']==$v)){
@@ -48,7 +48,7 @@ if(isset($_GET['noredir'])){
 $pid = stored_value('main_index_pageid',1);
 $gd = db_select_1('*', 'menu_tree', "`group`=".$pd['menu_group']);
 if(isset($gd['index_page']) && ($gd['index_page']!=$pd)) $pd = db_select_1('*', 'pages', "`ID`=".$gd['index_page']);
-while (isset($gd['index_page']) && $gd['parent']) {
+while (!empty($gd['parent'])) {
   if($redir && !$pd['hidden']){ $pid = $pd['ID']; break; }
   $redir = isset($pd['hidden']) ? $pd['hidden'] : 0;
   $gd = db_select_1('*', 'menu_tree', "`group`=".$gd['parent']);

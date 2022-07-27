@@ -200,6 +200,7 @@ case 'MAX_FILE_SIZE':
   {
      if(empty($GLOBALS['upfile_path'])) die('$GLOBALS[\'upfile_path\'] is not defined.');
      $fln = $_SERVER['DOCUMENT_ROOT'].$GLOBALS['upfile_path'].$cp['ID'].'.'.pathinfo($a['name'], PATHINFO_EXTENSION );
+//     die($fln."<br>".print_r($a,true)); die;
      $m = move_uploaded_file($a['tmp_name'], $fln);
      if($m){
         if ($q) $q .= ', ';
@@ -234,7 +235,7 @@ default: //die(print_r($ft,true));
     else $q .= "`$n`=0";
   }
   else if ($ft[$n]==3){ // Цяло число
-    if (isset($cp[$n])) $q .= "`$n`='".(1*$cp[$n])."'";
+    if (is_numeric($cp[$n])) $q .= "`$n`='".(1*$cp[$n])."'";
     else $q .= "`$n`=0";
   }
   else if ($ft[$n]==4){ // Реално число

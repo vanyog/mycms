@@ -67,8 +67,8 @@ var r = 1;
 for(i=0;i<l-1;i++){
   var e = f.elements[i];
 //  if ((e.type=="text")||(e.type=="textarea")) r = r*e.value.length;
-//  Изключвам от проверка textarea елементите защото възниква грешка при активиран CHEDITOR
-//  в бъдеще трябва да се оправи
+'.encode('//  Изключвам от проверка textarea елементите защото възниква грешка при активиран CHEDITOR
+//  в бъдеще трябва да се оправи').'
   if (e.type=="text") r = r*e.value.length;
 }
 if (r) f.submit(); else alert("'.translate_if('fillin_all', 'All fields mut be filled in.').'");

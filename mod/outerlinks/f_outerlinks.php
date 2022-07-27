@@ -200,7 +200,7 @@ f.submit();
 ';
 }
 
-$page_header .= 'function duDuplicate(e){
+$page_header .= 'function doDuplicate(e){
 if(confirm("Duplicate link?")) document.location = e; //window.open(e);
 }
 </script>
@@ -297,7 +297,7 @@ foreach($ca as $c){
    $rzc .= " - $t1";
    $rzc .= outerlinks_autocomment($c);
    if (in_edit_mode()) $rzc .= ' <a href="'.$adm_pth.'duplicate_record.php?t=outer_links&r='.$c['ID'].
-                               '" onclick="duDuplicate(this);return false;">2</a>';
+                               '" onclick="doDuplicate(this);return false;">2</a>';
    if($spage) $rzc .= ' <img class="sid" src="'.$p.'search.png" alt="" onclick="onSearchClick(this);"> ';
    $rzc .= "</p>\n";
 }
@@ -310,15 +310,11 @@ if (count($la)) $rz .= '<p>'.count($la).' '.translate('outerlinks_links')."</p>\
 foreach($la as $l){
   $l2 = $l['ID'];
   $tb = 'target="_blank" ';
-  if(is_numeric($l['link'])/* && $l['link']*/){
+  if(is_numeric($l['link'])/* && $l['link']*/){//die(print_r($l,true));
     $l1 = db_select_1('*', 'outer_links', '`ID`='.$l['link']);
-//    if($l1)
-    {
-      $l1['place'] = $l['place'];
-      $l['link'] = $l1['link'];
-      $l['Title'] = $l1['Title'];
-      $l['Comment'] = $l1['Comment'];
-    }
+    $l1['place'] = $l['place'];
+    $l['link'] = $l1['link'];
+    $l['Title'] = $l1['Title'];
   }
   else $l1 = $l;
   // Премахване на target="_blank", когато линкът е към друг раздел с връзки
@@ -330,19 +326,23 @@ foreach($la as $l){
     $rz .= "/$page_id/lid/".$l1['ID']."/";
   else
     $rz .= set_self_query_var('lid',$l1['ID']);
-  $rz .= '" title="'.urldecode($l['link']).
-        '" '.$tb.'id="lk'.$l1['ID'].'">'.stripslashes($l['Title'])."</a>";
-  $rz .= outerlinks_autocomment($l);
+  if(!empty($l1['link'])){
+     $rz .= '" title="'.urldecode($l1['link']).
+            '" '.$tb.'id="lk'.$l1['ID'].'">'.stripslashes($l1['Title'])."</a>";
+  }
+  else $rz .= '"></a>';
+//  if($l1!=$l) die($rz."<br>".print_r($l,true)."<br>".print_r($l,true));
+  $rz .= outerlinks_autocomment($l1);
   if (in_edit_mode()) $rz .= ' <a href="'.$adm_pth.'duplicate_record.php?t=outer_links&r='.$l['ID'].
-                            '" onclick="duDuplicate(this);return false;">2</a>';
+                            '" onclick="doDuplicate(this);return false;">2</a>';
   if($spage) $rz .= ' <img class="sid" src="'.$p.'search.png" alt="" onclick="onSearchClick(this);"> ';
   $rz .= "</p>\n";
 }
 
-}
+} // if (!$what || $lid)
 
 // Бисквита, запомняща отворената категория
-setcookie('lid',$lid, 0, '/');
+setcookie('lid',$lid, ['path' => '/', 'samesite' => 'Strict' ]);
 
 // Край на формата за редактиране
 if (($what!='all') && ($what!='cat')) $rz .= "\n".end_edit_form($lid);
@@ -462,10 +462,10 @@ global $page_id;
 if (!in_edit_mode()) return '';
 else return '
 <script>
-// Създаване на обект за ajax заявки
+'.encode('// Създаване на обект за ajax заявки').'
 if (window.XMLHttpRequest) ajaxO = new XMLHttpRequest();
 else ajaxO = new ActiveXObject("Microsoft.XMLHTTP");
-// Изпълнява се при щракване на бутон "Delete"
+'.encode('// Изпълнява се при щракване на бутон "Delete"').'
 function doDelete_link(){
 var f = document.forms.link_edit_form;
 var r = f.link_id;
@@ -477,20 +477,20 @@ if (confirm("Do you really want to delete the checked link?")){
   f.submit();
 }
 }
-// Изпълнява се при преместване на фокуса в поле Title:
+'.encode('// Изпълнява се при преместване на фокуса в поле Title:').'
 function enter_title_field(){
-// Адреса от поле URL
+'.encode('// Адреса от поле URL').'
 var u = document.forms.link_edit_form.link.value;
-// Не са прави нищо ако адреса е празен
+'.encode('// Не са прави нищо ако адреса е празен').'
 if(!u) return;
-// Поле Title
+'.encode('// Поле Title').'
 var t = document.forms.link_edit_form.title;
-// Ако не е празно се се прави нищо
+'.encode('// Ако не е празно се се прави нищо').'
 if(t.value.length>0) return;
-// Отваряне на адреса
+'.encode('// Отваряне на адреса').'
 ajaxO.open("GET", "'.current_pth(__FILE__).'get_site_title.php?url=" + encodeURIComponent(u) + "&a=" + Math.random(), false);
 ajaxO.send(null);
-// HTML код получен от адреса
+'.encode('// HTML код получен от адреса').'
 var h = ajaxO.responseText;
 t.value = h;
 }
@@ -541,21 +541,22 @@ if ( ! in_edit_mode() ) return;
 global $tn_prefix,$db_link;
 
 $id = 0;
-if (isset($_POST['link_id']) && is_numeric($_POST['link_id'])) $id = $_POST['link_id'];
-else $id = 0;
+if( isset($_POST['link_id']) && is_numeric($_POST['link_id']) ) 
+   $id = $_POST['link_id'];
+else 
+   $id = 0;
 if(is_numeric($_POST['link'])){
     $idl = db_table_field('`ID`', 'outer_links', "`ID`=".addslashes($_POST['link']));
     if(!($idl>0)) die('ID = '.$_POST['link'].' do not exists');
     $id = intval($_POST['ID']);
 }
-//die(print_r($_POST,true));
 
 $q0 = " `$tn_prefix"."outer_links` ";
 $q2 = '';
 
 if ($_POST['action']=='delete'){
   if (db_table_field('link', 'outer_links', "`ID`=$id")==''){
-     // Ако подкатегорията не е празна не се изтрива
+     // Ако подкатегория не е празна не се изтрива
      if (db_table_field('COUNT(*)', 'outer_links', "`up`=$id")) die('This is a not empty folder!');
   }
   if(db_table_field('ID', 'bib_title', "`url`=$id")) die(translate('outer_links_inbib'));
@@ -587,7 +588,7 @@ if ( ($q2!="`up`=$lid, ") && (($_POST['action']=='delete') || $_POST['link'] || 
 // ------------------------------------------
 function outerlenks_all($up, $tx, $lv = 1){
 $rz = '';
-// Добавка за пропускане на private линковете
+// Добавка към SQL за пропускане на private линковете
 $qp = '';
 if (!in_edit_mode()) $qp = 'AND `private`=0';
 $dt = db_select_m('*', 'outer_links', "`up`=$up AND (`link`>'')$qp ORDER BY `place` ASC");
@@ -690,14 +691,18 @@ return $rz;
 
 // Автоматичен коментар
 function outerlinks_autocomment($d){
-if (!isset($d['Comment'])) return '';
+if (!isset($d['Comment']) && !is_null($d['Comment'])) return '';
 if ($d['Comment']>' ') return ' - '.stripslashes($d['Comment']);
-if (substr($d['link'],-4)=='.pdf') return encode(' - pdf файл');
-if (substr($d['link'],-4)=='.doc') return encode(' - doc файл');
-if (!(strpos($d['link'], 'scholar.google.bg')===false)) return ' - '.translate('outerlinks_sresult').'scholar.google.bg';
-if (!(strpos($d['link'], 'google.bg')===false)) return ' - '.translate('outerlinks_sresult').'google.bg';
-if (!(strpos($d['link'], 'bg.wikipedia.org')===false)) return ' - '.translate('outerlinks_wiki').'bg.wikipedia.org';
-if (!(strpos($d['link'], 'en.wikipedia.org')===false)) return ' - '.translate('outerlinks_wiki').'en.wikipedia.org';
+if (isset($d['link'])&&(substr($d['link'],-4)=='.pdf')) return encode(' - pdf файл');
+if (isset($d['link'])&&(substr($d['link'],-4)=='.doc')) return encode(' - doc файл');
+if (!empty($d['link']) && !(strpos($d['link'], 'scholar.google.bg')===false))
+{ return ' - '.translate('outerlinks_sresult').'scholar.google.bg'; }
+if (!empty($d['link']) && !(strpos($d['link'], 'google.bg')===false))
+{ return ' - '.translate('outerlinks_sresult').'google.bg'; }
+if (!empty($d['link']) && !(strpos($d['link'], 'bg.wikipedia.org')===false))
+{ return ' - '.translate('outerlinks_wiki').'bg.wikipedia.org'; }
+if (!empty($d['link']) && !(strpos($d['link'], 'en.wikipedia.org')===false)) 
+{ return ' - '.translate('outerlinks_wiki').'en.wikipedia.org'; }
 }
 
 // Брой връзки в категория и нейните подкатегории

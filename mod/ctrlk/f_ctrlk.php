@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Този модул активира възможността в режим на редактиране с натискане на Ctrl+K
+// Този модул активира възможността в режим на редактиране с натискане на Ctrl+E
 // да се отваря за редактиране съдържанието на текущата страница
 // Използване: <body <!--$$_BODYADDS_$$--> ... ><!--$$_CTRLK_$$-->
 
@@ -28,7 +28,7 @@ $id = db_table_field('ID', 'content', "`name`='".$page_data['content']."' AND `l
 $lk = $adm_pth.'edit_record.php?t=content&r='.$id;
 $page_header .= '<script>
 function ctrl_pus_e(e,v){
-if((e.ctrlKey || e.metaKey) && (e.key=="k")){
+if((e.ctrlKey || e.metaKey) && (e.key=="e")){
   var s = window.getSelection();
   if(s){
      cookie_set("findthistext",s);

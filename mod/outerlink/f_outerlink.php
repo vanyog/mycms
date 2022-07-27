@@ -43,7 +43,8 @@ if(isset($bb[1])){
   return '<a href="'.$n.'&lid='.$bb[1].'" target="_blank">'.$o->Title.'</a>';
 }
 // Четене данните за хипервръзката
-$d = db_select_1('*', 'outer_links', "`ID`=".$aa[0] );
+$d = db_select_1('*', 'outer_links', "`ID`=".$aa[0], false );
+if(!isset($d['link'])) $d['link'] = '';
 $p = stored_value('outer_links_pid');
 if(!$d) return '<a href="'.$main_index.'?pid='.$p.'">Link do not exist</a>';
 if (isset($aa[1])){

@@ -100,6 +100,7 @@ $q .= "`page_ID`=".$page_data['ID'].
       $r;
 if ($id) $q .= " WHERE `ID`=$id;";
 else $q .';';
+//die($q);
 mysqli_query($db_link,$q);
 }
 

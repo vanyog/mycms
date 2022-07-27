@@ -28,8 +28,8 @@ include($idir.'conf_paths.php');
 include($idir.'lib/f_page_cache.php');
 
 $_COOKIE['noadm']='no';
-setcookie($adm_name, $adm_value, time()+60*60*24*30,'/');
-setcookie('noadm', 'no', time()+60*60*24*30,'/');
+setcookie($adm_name, $adm_value, ['expires' => time()+60*60*24*30, 'path' => '/', 'samesite' => 'Strict' ]);
+setcookie('noadm', 'no', ['expires' => time()+60*60*24*30, 'path' => '/', 'samesite' => 'Strict' ]);
 purge_page_cache($pth);
 
 $page_content = '<p>&nbsp;</p>

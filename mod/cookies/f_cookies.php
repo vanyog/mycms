@@ -49,7 +49,7 @@ $page_header .= '<script>
 function cookies_accept(){
 var d = new Date();
 d = new Date(d.valueOf()+30*24*3600*1000);
-document.cookie = "cookies_accept=yes;expires="+d.toGMTString();
+document.cookie = "cookies_accept=yes;expires="+d.toGMTString()+"path=/;SameSite=Strict";
 }
 </script>';
 return '<script>

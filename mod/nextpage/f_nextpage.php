@@ -41,7 +41,7 @@ $t = '<span>'.translate('nextpage_next'.$dr).'</span><a href="'.$main_index.'?pi
 return $t;
 }
 
-// ƒанните на следващата страница
+// ƒанните на следващата/предишната страница
 
 function nextpage_data($gr, $page_id, $dr){
 global $tn_prefix;
@@ -61,7 +61,7 @@ $nl = db_select_select_join_1('a.*,b.hidden',
 if (!$nl) $nl = nextpage_from_parent($ld, $dr, $ord);
 if (!$nl) return '';
 // Ќомер на групата на намерената страница
-$gn = db_table_field('menu_group', 'pages', '`ID`='.$nl['link']);
+$gn = db_table_field('menu_group', 'pages', "`ID`='".$nl['link']."'");
 //if (($dr=='<')&&($gr!=$gn)) $nl = nextpage_last_child($nl);
 // »звличане номера на страницата от поле `link`
 $id = $nl['link'];
@@ -69,9 +69,10 @@ if(!is_numeric($nl['link'])){
   $a = array();
   $i = preg_match('/pid=(\d+)/', $nl['link'], $a);
   if($i) $id = $a[1];
+//  die("$id");
 }
 // ƒанни за следващата страница
-return db_select_1('*', 'pages', "`ID`=$id" );
+return db_select_1('*', 'pages', "`ID`='$id'", false );
 }
 
 // —ледващ линк от родителското меню

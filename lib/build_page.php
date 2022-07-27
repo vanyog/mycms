@@ -52,7 +52,7 @@ if(isset($exe_time)){
   $page_content = str_replace('DB_REQ_COUNT',"$db_req_count $exe_time ", $page_content);
 }
 
-echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+echo '<!DOCTYPE html>
 <html>
 <head>
    <title>'.$page_title.'</title>

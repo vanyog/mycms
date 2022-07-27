@@ -97,6 +97,7 @@ else {
 }
 
 // Заместване на елемента с генерирания html код, който е присвоен на $tx
+if(!isset($tx)) $tx = '';
 $cnt = substr_replace($cnt,$tx,$p0,$p3-$p0);
 
 if( !empty($debug_mode) ) echo db_req_count()."<br>\n";

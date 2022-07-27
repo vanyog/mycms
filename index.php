@@ -82,9 +82,20 @@ if (isset($_GET['pid'])) $page_id = is_numeric($_GET['pid']) ? 1*$_GET['pid'] : 
 $page_title = '';
 
 // Чете се описанието на страницата от таблица $tn_prefix.'pages'
-if($seo_names && !is_numeric($page_id))
-     $page_data = db_select_1('*','pages',"ID=".db_table_field('page_id', 'seo_names', "`seo_name`='$page_id'") );
-else $page_data = db_select_1('*','pages',"ID=$page_id");
+if( $seo_names && (!isset($_GET['pid']) || !is_numeric($_GET['pid'])) ){
+    $page_data = db_select_1('*','pages',
+                 "ID=".db_table_field('ID', 'seo_names', "`seo_name`='".
+                 addslashes($_GET['pid'])."'", $page_id, false) );
+}
+else {
+   if(!empty($redir_pids) && $seo_names && is_numeric($page_id) && !empty($_SERVER['REQUEST_URI'])){
+      $h = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].'/'.
+           db_table_field('seo_name','seo_names',"`ID`=$page_id");
+      if(strpos($_SERVER['REQUEST_URI'], '&')===false)
+           header("Location: $h");
+   }
+   $page_data = db_select_1('*','pages',"ID=$page_id");
+}
 if (!$page_data) $page_data = page404();
 
 // Пренасочване към http, ако не е необходим https протокол
@@ -145,7 +156,7 @@ mysqli_close($db_link);
 function page404(){
 $rz = Array (
 'ID' => 0,
-'menu_group' => 1,
+'menu_group' => stored_value('error_404_group',1),
 'title' => 'error_404_title',
 'content' => 'error_404_content',
 'template_id' => stored_value('error_404_template',1),
