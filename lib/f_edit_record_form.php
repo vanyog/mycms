@@ -64,6 +64,7 @@ $opt = array();
 $hf = new HTMLForm('editrecord_form');
 // Добавяне на елементи за всяко от полетата, които ще се редактират
 foreach($cp as $n => $v){
+  if(!isset($d[$n])) $d[$n]='';
   switch ($n) {
   case 'ID': // Номерът - скрито поле
     $fi = new FORMInput('', 'ID', 'hidden', $v);

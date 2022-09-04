@@ -62,9 +62,11 @@ if ($r) foreach($r as $k => $v){
  case 5  :
  case 10 :
  case 12 : 
- case 254: $page_content .= '<td class="r">'.$k.':</td><td><input type="text" name="'.$k.'" value="'.$v.'"></td>'."\n";
+ case 254: $page_content .= '<td class="r">'.$k.':</td><td><input type="text" name="'.$k.
+                            '" value="'.$v.'"></td>'."\n";
            break;
- case 253: $v = stripslashes($v); $v = str_replace('"','&quot;',$v);
+ case 253: $v = isset($v) ? stripslashes($v) : ''; 
+    $v = str_replace('"','&quot;',$v);
     $page_content .= '<td class="r">'.$k.':</td><td><input type="text" name="'.$k.'" value="'.$v.'"></td>'."\n"; 
     break;
  default: $page_content .= '<td>'.$k.'</td><td>Unknown type '.$ft[$i].'</td>';

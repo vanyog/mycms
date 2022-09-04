@@ -41,7 +41,7 @@ $page_content .= encode('<p>Нови или редактирани доклади ').count($da).':</p>';
 foreach($da as $d){
   $updated = '';
   if ($d['date_time_1']<$date) $updated = encode('<sup>Актуализиран</sup> '); 
-  $page_content .= '<p>'.$d['title']."<br>".$d['authors']."</p>\n";
+  $page_content .= '<div style="border-bottom:solid 1px;">'.mb_strtoupper($d['title'])."<br>".$d['authors']."</div>\n";
 }
 
 $ut = stored_value('conference_usertype');

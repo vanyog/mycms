@@ -29,6 +29,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include_once($idir.'lib/f_db_insert_1.php');
 
 function email($t){
+// В режим на редактиране филтърът не се изпълнява
+if(in_edit_mode()) return $t;
 $search = '/([a-zA-Z0-9\._-]+@[a-z\-0-9]+(?:\.[a-z-]+){1,4})/';
 $im = stored_value('filter_email_toimage');
 if($im=='on') return preg_replace_callback($search, 'email_image', $t);

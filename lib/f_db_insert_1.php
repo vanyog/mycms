@@ -30,6 +30,7 @@ function db_insert_1($d,$t,$y=false){
 global $tn_prefix, $db_link, $db_req_count;
 $q = "INSERT INTO `$tn_prefix$t` SET ";
 foreach($d as $n=>$v){
+  if(!isset($v)) $v = '';
   if ($v=='NOW()') $q .= "`$n`=$v,";
   else $q .= "`$n`='".element_correction(addslashes($v))."',";
 }

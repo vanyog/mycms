@@ -731,7 +731,7 @@ foreach($pd as $d) if (isset($up[$d['user_id']])) $up[$d['user_id']]++; else $up
 
 $rz = '<p><a href="'.set_self_query_var('rev2','on').'">'.encode('Рецензенти')."</a></p>\n";
 
-$rz .= encode('<p>Регистрирани потребители - ').count($ud).encode(', резюмета - ').count($pd).
+$rz .= encode('<p>Регистрирани потребители - ').count($ud).encode(', заявки - ').count($pd).
 ', &nbsp; '.translate('user_sortby').': 
 <select id="sby">'."\n";
 if ($sby=='date_time_2') $rz .= '<option value="date_time_2">'.translate('user_lastlogin').'</option>
@@ -1014,6 +1014,9 @@ for($i = 0; $i<count($tp); $i++){
      $fr = -1;
      // За всеки доклад
      foreach($da as $d){
+        if(!isset($d['fulltextfile']))  $d['fulltextfile'] = '';
+        if(!isset($d['fulltextfile2'])) $d['fulltextfile2'] = '';
+        if(!isset($d['fulltextfile3'])) $d['fulltextfile3'] = '';
         if(($utype>='vsu2020') && ($d['form']!=$fr)){
            if(strpos($order,'`form`')!==false) $lr .= '<h4>'.$fs[$d['form']]."</h4>\n";
            $fr = $d['form'];
@@ -1299,24 +1302,32 @@ if(isset($_GET['after'])){
   $filter .= " AND `date_time_1`>'".$_GET['after']."'";
   $fp = '&after='.$_GET['after'];
 }
+// Тайна стойност за разрешаване на достъп
 $acb = stored_value('conference_aBookAccess');
+// Тайна стойност за разрешаване достъп за рецензиране на резюме
 $aca = stored_value('conference_aRev1Access');
-if($acb && isset($_GET['ac']) && ($_GET['ac']==$acb)) $adm = true;
+// Дали преглеждането е с цел рецензиране
+$rev = isset($_GET['ac']) && ($_GET['ac']==$aca);
+$abl = false; // Дали е разрешен достъп чрез линк
+if($acb && isset($_GET['ac']) && ($_GET['ac']==$acb)) $abl = true;
 // Дата за обявяване на приетите пълни доклади
 $t4 = '2020-08-28 23:59:59';
-if(is_array($day4)) $t4 = db_table_field('date_time_2', 'schedules', "`sch_name`='".$day4[0]."' AND `ev_name`='".$day4[1]."'",$t4,false);
+if(is_array($day4)) $t4 = db_table_field('date_time_2', 'schedules', 
+                    "`sch_name`='".$day4[0]."' AND `ev_name`='".$day4[1]."'",$t4,false);
 // Настоящия момент
 $td = date('Y-m-d H:i:s');
+$editp = stored_value('conference_editpaper');
+$revp = stored_value('conference_reviewpage');
 if($adm){
-  $editp = stored_value('conference_editpaper');
-  $revp = stored_value('conference_reviewpage');
   if(!$revp) die('"conference_reviewpage" option not set');
   $c = db_table_field('COUNT(*)', 'proceedings', "`utype`='$utype' AND `title` > ' ' AND `topic`>-1 $access $filter", '', false);
-  $rz .= "<p>Proceeding count: $c";
-  $rz .= " &nbsp; Access by <a href=\"$main_index?pid=$page_id&ac=$acb$fp\">Link</a>";
-  $rz .= "</p>\n";
+  $rz .= "<p>Proceeding count: $c\n".
+         " &nbsp; Access by <a href=\"$main_index?pid=$page_id&ac=$acb$fp\">Link</a>\n".
+         " &nbsp; or &nbsp; <a href=\"$main_index?pid=$page_id&ac=$aca$fp\">For review</a>".
+         "</p>\n";
 }
-else if("$td"<"$t4") return message(translate('conference_contentAfter').db2user_date_time($t4).$rz);
+else if(("$td"<"$t4")&&!$abl&&!$rev) return message(translate('conference_contentAfter').
+                                             db2user_date_time($t4).$rz);
 // За всяко научно направление
 for($i = 0; $i<count($tp); $i++){
   $inf = translate($utype.'_sec_'.$i.'_info');
@@ -1331,35 +1342,43 @@ for($i = 0; $i<count($tp); $i++){
   if(count($da)) $rz .= '<h2>'.$tp[$i]."</h2>\n";
   // За всеки доклад
   foreach($da as $d){
-       if($d['publish']=='yes') $count++;
+       if(($d['publish']=='yes') || $rev) $count++;
        $rz .= '<div class="who">'."\n";
        $rz .= '<h3 id="pof'.$d['ID'].'">'.($i+1)."-$count. ".mb_strtoupper(stripslashes($d['title']))."</h3>\n";
-       if(!empty($d['authors'])&&($d['authors'][0]!='<'))
-          $rz .= '<p>'.$d['authors']."</p>\n";
-       else
-          $rz .= $d['authors'];
+       // При показване с цел рецензиране, не се показват авторите
+       if( !$rev ){
+          if(!empty($d['authors'])&&($d['authors'][0]!='<'))
+             $rz .= '<p>'.$d['authors']."</p>\n";
+          else
+             $rz .= $d['authors'];
+       }
        $rz .= $d['abstract']."\n";
        if($d['keywords'])
           $rz .= '<p class="keywords"><span>'.translate_to('conference_ckeywords',$d['language']).'</span> '.
                  conference_formatKeyWorts($d['keywords'])."</p>\n";
+       // При показване с цел рецензиране, не се показват данните на авторите 
+       if( !$rev ){         
           if(!empty($d['addresses'])&&($d['addresses'][0]!='<'))
-             $rz .= '<p>'.stripslashes($d['addresses'])."</p>";
+              $rz .= '<p>'.stripslashes($d['addresses'])."</p>";
           else
-             $rz .= stripslashes($d['addresses']);
-       if($adm && !$acb){
-         // Линк "Редактиране"
-         $rz .= '<p><a href="'.$editp.'&proc='.$d['ID'].$page_hash.'">'.
-                translate('conference_editpaper')."</a></p>\n";
-         if (!$d['approved_a'])
-            // Линк "Рецензиране на резюмето"
-            $rz .= '<p><a href="'.$revp.'&rev1='.$d['ID'].'&ac='.$aca.$page_hash.'">'.
-            translate('conference_rev1')."</a></p>\n";
+              $rz .= stripslashes($d['addresses']);
        }
+       // Линк "Редактиране" не се показва при разглиждане с цел рецензиране
+       if($adm && !$abl && !$rev ) 
+          $rz .= '<p><a href="'.$editp.'&proc='.$d['ID'].$page_hash.'">'.
+                 translate('conference_editpaper')."</a></p>\n";
+       // Линк "Рецензиране на резюмето"
+       if($adm || $rev )
+           $rz .= '<p><a href="'.$revp.'&rev1='.$d['ID'].'&ac='.$aca.$page_hash.'">'.
+           translate('conference_rev1')."</a></p>\n";
        $rz .= '<p>';
-       if($d['fulltextfile2']) $rz .= '<a href="'.$fdir.$d['fulltextfile2'].
+       // PDF файл с пълен текст - не се показва при преглеждане за рецензиране
+       if($d['fulltextfile2'] && !$rev) $rz .= '<a href="'.$fdir.$d['fulltextfile2'].
                                       '">'.translate_to('conference_fulltext',$d['language'])."</a>";
-       if($d['fulltextfile'] && $acb ) $rz .= ' &nbsp; <a href="'.$fdir.$d['fulltextfile'].'">DOC file</a>';
+       // DOC файл с пълен текст - не се показва при преглеждане за рецензиране
+       if($d['fulltextfile'] && $acb && !$rev) $rz .= ' &nbsp; <a href="'.$fdir.$d['fulltextfile'].'">DOC file</a>';
        $rz .= "</p>\n";
+       // Лезюме на втори език
        if( ($d['language']=='bg') && !$acb ) $rz .= translate_to('conference_abstract_'.$d['ID'],'en');
        $rz .= "</div>\n";
   }

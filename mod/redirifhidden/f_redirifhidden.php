@@ -52,7 +52,8 @@ while (!empty($gd['parent'])) {
   if($redir && !$pd['hidden']){ $pid = $pd['ID']; break; }
   $redir = isset($pd['hidden']) ? $pd['hidden'] : 0;
   $gd = db_select_1('*', 'menu_tree', "`group`=".$gd['parent']);
-  if(isset($gd['index_page'])) $pd = db_select_1('*', 'pages', "`ID`=".$gd['index_page']);
+  if(isset($gd['index_page']))
+     $pd = db_select_1('*', 'pages', "`ID`=".$gd['index_page'],true);
 };
 if($redir) header("Location: $main_index?pid=$pid");
 return '';

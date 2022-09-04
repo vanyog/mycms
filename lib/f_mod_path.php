@@ -23,7 +23,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 function mod_path($f){
 global $mod_pth,$pth;
-if(empty($mod_pth) || empty($pth)) die("Error in function mod_path.");
+if(empty($mod_pth) || empty($pth)){ 
+   $mod_pth = stored_value('mod_path',$pth.'mod').'/';
+   if ($mod_pth[0]!='/') $mod_pth = $pth.$mod_pth;
+}
 $fn = "$mod_pth$f/f_$f.php";
 $afn = $_SERVER['DOCUMENT_ROOT']."$fn";
 if ( ($mod_pth!='/mod/') && !file_exists($afn) ){

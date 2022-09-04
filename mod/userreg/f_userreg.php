@@ -549,6 +549,7 @@ $cp = array(
 'username'=>translate('user_username'),
 'password'=>translate('user_password'),
 'email'=>translate('user_email'),
+'aemails'=>translate('user_aemails'),
 'firstname'=>translate('user_firstname'),
 'secondname'=>translate('user_secondname'),
 'thirdname'=>translate('user_thirdname'),

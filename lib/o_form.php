@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Клас за създаване на html форми
 
 include_once($idir.'lib/f_add_style.php');
+include_once($idir.'lib/f_stored_value.php');
+include_once($idir.'lib/f_encode.php');
 
 //----- HTMLForm ------------
 
@@ -192,6 +194,7 @@ public $size = true;
 
 function __construct($c,$n,$cl=100,$r=10,$t=''){
 global $mod_pth, $page_header, $ckpth;
+if(!isset($page_header)) $page_header = '';
 $this->caption = $c;
 $this->name = $n;
 $this->cols = $cl;

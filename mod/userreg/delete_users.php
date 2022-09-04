@@ -152,7 +152,7 @@ foreach($es as $e){
       $rcds = db_select_m('*', 'proceedings', "`user_id`=$tid");
       if(count($rcds)){
         $rz .= encode('<p>Има '.count($rcds).' публикации !</p>')."\n";
-        foreach($rcds as $r) $rz .= '<p>'.$r['title']."</p>\n";
+        foreach($rcds as $r) $rz .= '<p>'.$r['title'].' - '.$r['utype']."</p>\n";
       }
       return $rz.view_table(array($d));
     }

@@ -25,6 +25,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 function add_style($n){
 global $added_styles;
+if(!isset($added_styles)) $added_styles = '';
 $v = stored_value("css_$n");
 if($v && strpos($added_styles, $v)===false) $added_styles .= $v;
 }

@@ -37,7 +37,17 @@ function usermenu($nom = false){
 
 global $page_id, $page_data, $can_edit, $can_create, $can_manage, $can_visit, $pth, $adm_pth, $page_header;
 
-if(!isset($page_data)) $page_data = db_select_1('*', 'pages', "`ID`=$page_id");
+if(!isset($page_id)){ 
+  if(!isset($_SERVER['HTTP_REFERER'])) 
+     //$_SERVER['HTTP_REFERER']='http://nc/index.php?pid=96';
+     die('Error in modul USERMENU. No HTTP_REFERER is set.');
+  $r = array();
+  preg_match_all('/pid=(\d+)/', $_SERVER['HTTP_REFERER'], $r);
+  if(isset($r[1][0])) $page_id = $r[1][0];
+  else die('Error in modul USERMENU. Cannot determine pid parameter.');
+}
+
+if(!isset($page_data)) $page_data = db_select_1('*', 'pages', "`ID`=$page_id", false);
 
 // Ако в сесията няма данни за потребител, връща празен стринг.
 if (!isset($_SESSION['user_username'])||!isset($_SESSION['user_password'])) return '';
