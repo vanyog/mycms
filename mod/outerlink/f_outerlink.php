@@ -26,7 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Адресите на външни сървъри се задават в таблица options под имена:
 // outer_links_server_x
 
-// Параметърът $a може да съдържа и текст, отделен от номера с |, който да замени надписа на линка
+// Параметърът $a може да съдържа и текст, отделен от номера с |, който да замени надписа на линка.
+// Ако този текст е 'href', вместо надпис върху линка се показва URL-ът на линка.
+// Ако започва с # се добавя като сегмент към адреса на линка, след тире - кам надписа му.
 
 function outerlink($a){
 global $main_index;
@@ -36,7 +38,10 @@ $bb = explode(':',$aa[0]);
 if(isset($bb[1])){
   $n = stored_value('outer_links_server_'.$bb[0]);
   if(!$n) die('outer_links_server_'.$bb[0].' server is not defined in options table');
-  if(isset($aa[1])) return '<a href="'.$n.'&lid='.$bb[1].'" target="_blank">'.$aa[1].'</a>';
+  die($aa[1]);
+  if(isset($aa[1])){
+     return '<a href="'.$n.'&lid='.$bb[1].'" target="_blank">'.$aa[1].'</a>';
+  }
   $u = $n.'&lid='.$bb[1].'&just=data';
   $d =  file_get_contents($u);
   $o =  json_decode($d);
@@ -47,7 +52,12 @@ $d = db_select_1('*', 'outer_links', "`ID`=".$aa[0], false );
 if(!isset($d['link'])) $d['link'] = '';
 $p = stored_value('outer_links_pid');
 if(!$d) return '<a href="'.$main_index.'?pid='.$p.'">Link do not exist</a>';
-if (isset($aa[1])){
+if (isset($aa[1])){ 
+    if ($aa[1][0]=='#') {
+        $h = substr($aa[1],1);
+        $p .= "&h=$h";
+        $aa[1] = $d['Title'].' - '.$h;
+    }
     if ($aa[1]=='href') $aa[1] = $d['link'];
 }
 else $aa[1] = $d['Title'];

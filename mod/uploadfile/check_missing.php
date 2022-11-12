@@ -68,7 +68,7 @@ global $pgs;
     $na = explode(',', $n);
     if(isset($na[1]) && is_numeric($na[1])) $pid = $na[1];
     // Четене на запис от таблица 'files'
-    $f = db_select_1('*', 'files', "`pid`=$pid AND `name`='".$na[0]."'", true);
+    $f = db_select_1('*', 'files', "`pid`=$pid AND `name`='".$na[0]."'", false);
      if($n=="A379"){ var_dump($f); die; }
     if(!$f && ($f['pid']==$pid)) $pgs[$pid] = $n;
   }
