@@ -28,6 +28,7 @@ include_once($idir.'lib/o_form.php');
 include_once($idir.'lib/f_db_insert_or_1.php');
 
 // Проверка на правата на влезлия потребител
+if(!isset($page_id)) $page_id = 4;
 usermenu(true);
 
 // Ако няма право за модул conference - край
@@ -58,7 +59,7 @@ if(!count($d)){
   $d1['user_id']=$_GET['uid'];
   $d1['topic']=0;
   $d1['languages']='';
-  $d1['confirmed']=0;
+  $d1['confirmed']=1;
 }
 else $d1 = end($d);
 
@@ -77,7 +78,8 @@ $f->add_input( new FormInput( '', 'user_id', 'hidden', $d1['user_id']) );
 $fi = new FormSelect( translate('conference_ctopic'), 'topic', $tp, $d1['topic'] );
 $fi->values='k';
 $f->add_input( $fi );
-$f->add_input( new FormInput( translate('conference_languages'), 'languages', 'text', $d1['languages']) );
+$f->add_input( new FormSelect( translate('conference_languages'), 'languages', 
+                               array('bg,en','bg','en')) );
 $fi = new FormInput( translate('conference_Rconfirmed'), 'confirmed', 'checkbox');
 if($d1['confirmed']) $fi->js = ' checked';
 $f->add_input( $fi );
@@ -89,7 +91,8 @@ $page_header = '<link href="/_style.css" rel="stylesheet" type="text/css">
 
 $page_title = translate('conference_makeReviewer');
 
-$page_content = "<h1>$page_title</h1>
+$page_content = "<h1>$page_title</h1>".
+'<p><a href="/index.php?pid=4&rev2=on" target="allRevs">'.encode('Рецензенти')."</a></p>
 <p>".$u['position'].' '.$u['firstname'].' '.$u['secondname'].' '.$u['thirdname'].' '."</p>\n".
 "<p>".translate('user_institution')." ".$u['institution']."</p>\n";
 if(count($d)){

@@ -39,12 +39,28 @@ $f->add_input( new FormInput('', '', 'submit', encode('Проверяване')) );
 
 $page_header = '<style>
 th { vertical-align:top; text-align:right; }
-</style>';
+</style>
+<script>
+function fromClipboard(){
+if(navigator.clipboard == undefined){
+  alert("navigator.clipboard == undefined");
+  return;
+}
+var tf = document.forms.check_form;
+var ta = tf.text;
+navigator.clipboard.readText().then((clipText) => (ta.value = clipText));
+setTimeout(()=>{tf.submit();},1000)
+}
+</script>';
 
-$page_content = '<h1>'.encode('Проверка на цитирането в статия').'</h1>'.
-//                '<p>'.encode('<b>Указание:</b> Запишете doc/docx файла със статията в Plan Text (.txt) формат c encoding Cyrillic (Windows). Поставете с Copy-Paste в полето долу чистия текст на статията от създадения .txt файл.').'</p>'.
-                $rz.
-                $f->html();
+$page_content = '<p><a href="/">'.encode('Начална страница').'</a></p>'."\n".
+                '<h1>'.encode('Проверка на цитирането в статия').'</h1>'."\n";
+$page_content .= '<p>'.encode('Версия на страницата от: ').date('d.m.Y',filemtime(mod_path('conference'))).'</p>'."\n";
+$page_content .= '<div class="message">'.$rz."</div>\n".
+                 '<button onclick="fromClipboard();">'.encode('От клипборд').'</button>'."\n".
+                 $f->html().
+                 '<h2>'.encode('Помощ')."</h2>\n".
+                 '<p>'.encode('Бутон "От клипборд" работи само във FireFox, ако на дарес about:config да се зададе стойност true на настройките dom.events.asyncClipboard.readText и dom.events.testing.asyncClipboard.');
 
 include_once($idir.'lib/build_page.php');
 
@@ -66,8 +82,13 @@ for($i=1; $i<count($r2[1]); $i++){
 }    
 // Проверяване на цитиранията
 $r = array();
-preg_match_all('/\[((\d+)\,* *)+\]/', $a[0], $r);
+preg_match_all('/\[(?:\d+\,{0,1} *)*\]/', $a[0], $r);
 $c = array();
+foreach($r[0] as $e){
+  $m = array();
+  preg_match_all('/\d+/', $e, $m);
+  foreach($m[0] as $n) $c[$n] = '';
+}
 for($i = 1; $i<count($r); $i++){
     foreach($r[$i] as $j){
       if($j) $c[$j] = '';
@@ -77,7 +98,8 @@ $k = array_keys($c); $z = '';
 foreach($r2[1] as $i){
    if(!in_array($i, $k)) $z .= "$i, ";
 }
-if($z) $rz .= encode('Източници '.$z.' не са цитирани.'); 
+if($z) $rz .= encode('Посочени в ЛИТЕРАТУРА: ').count($r2[1]).'<br>'.
+              encode('Източници '.$z.' не са цитирани по препоръчания начин в [ ].');
 if(!$rz) $rz = encode('Всички '.count($r2[1]).' източници са цитирани правилно.');
 return '<h2>'.encode('Резултат').'</h2>'.
        '<p>'.encode('Намерени в текста цитирания: ').implode(' ',$r[0]).'</p>'.

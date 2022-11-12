@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // При грешка в изпълнението на функция eval(), адреса на страницата се запазва в таблица
 // `options` под име 'eval_error_uri'.
 
+global $debug_mode;
+
 include_once($idir.'lib/f_translate.php');
 include_once($idir.'lib/f_adm_links.php');
 include_once($idir.'lib/f_mod_path.php');
@@ -64,9 +66,10 @@ $tx = ''; // Html код, който ще замести елемента
 $sc = script($tg[0]);
 
 if (!$sc){ // Ако няма такъв скрипт се търси модул с това име
-  if( !empty($debug_mode) ) echo "Module ".$tg[0]."(".( isset($tg[1]) ? $tg[1] : '' ).") ";
   $f = strtolower($tg[0]);
   $fn = mod_path($f);
+  if( !empty($debug_mode) ) 
+       echo 'Module <a href="'.$adm_pth.'edit_file.php?f='.current_pth($fn).'">'.$tg[0]."</a>(".( isset($tg[1]) ? $tg[1] : '' ).") ";
   if ($fn){
     // Зареждане на файл _style.css, ако в директорията на модула има такъв
     $sf = dirname($fn).'/_style.css';

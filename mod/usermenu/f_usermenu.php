@@ -35,7 +35,8 @@ if (!session_id() && isset($_COOKIE['PHPSESSID'])) session_start();
 
 function usermenu($nom = false){
 
-global $page_id, $page_data, $can_edit, $can_create, $can_manage, $can_visit, $pth, $adm_pth, $page_header;
+global $page_id, $page_data, $can_edit, $can_create, $can_manage, $can_visit, $pth, 
+       $adm_pth, $page_header, $added_styles;
 
 if(!isset($page_id)){ 
   if(!isset($_SERVER['HTTP_REFERER'])) 
@@ -44,7 +45,9 @@ if(!isset($page_id)){
   $r = array();
   preg_match_all('/pid=(\d+)/', $_SERVER['HTTP_REFERER'], $r);
   if(isset($r[1][0])) $page_id = $r[1][0];
-  else die('Error in modul USERMENU. Cannot determine pid parameter.');
+  else {
+     die('Error in modul USERMENU. Cannot determine pid parameter.');
+  }
 }
 
 if(!isset($page_data)) $page_data = db_select_1('*', 'pages', "`ID`=$page_id", false);
@@ -162,7 +165,8 @@ foreach($can_manage as $m=>$yn) if( $yn ) {
   $fn = dirname(mod_path($m)).'/f_menu_items.php';
   if (file_exists($fn)){
     include_once($fn);
-    eval('$rz .= '.$m.'_menu_items();');
+    $added_styles .= 'div.sep { border-bottom:solid 1px; padding:0; margin:0; }';
+    eval('$rz .= "<div class=\"sep\"></div>".'.$m.'_menu_items();');
   }
 }
 $hp = stored_value('usermenu_helppage');

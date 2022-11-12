@@ -28,6 +28,7 @@ include_once($idir."lib/f_db_field_names.php");
 
 $t = ''; $r = 0; $gtc = false;
 $q1 = "UPDATE "; $q2 = ' SET'; $q3 = ' WHERE ID='; 
+if(!count($_POST)) die("No data posted.");
 foreach($_POST as $k => $v){
 switch ($k) {
 case 'table_name':
@@ -35,7 +36,7 @@ case 'table_name':
      $t = $v;
      $ft = db_field_types($v);
      $fn = db_field_names($v);
-     $ft = array_combine($fn, $ft);//die(print_r($ft,true));
+     $ft = array_combine($fn, $ft); //die(print_r($ft,true));
      break;
 case 'record_id': $q3 .= $v; $r = $v; break;
 //case 'ID': break;
@@ -53,8 +54,11 @@ case 'username': if(($t=='users')&&($v=='')) break;
 default:
   $v1 = element_correction($v);
   if( ($t=='content') && ($k=='text') ) $v1 = str_replace( ' />', '>', $v1);
-  if(($ft[$k]==3) && ($v1=='')) ;
-  else $q2 .= " `$k`='".addslashes($v1)."',";
+  if($v1=='') switch ($ft[$k]){
+              case 1: $q2 .= " `$k`=0,";
+              }
+  else if(is_numeric($v1)) $q2 .= " `$k`=".addslashes($v1).",";
+       else $q2 .= " `$k`='".addslashes($v1)."',";
 }
 }
 

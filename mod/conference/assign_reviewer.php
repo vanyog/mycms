@@ -29,6 +29,7 @@ include_once($idir.'lib/o_form.php');
 include_once($idir.'lib/f_db_insert_or_1.php');
 
 // Проверка на правата на влезлия потребител
+if(!isset($page_id)) $page_id = 4;
 usermenu(true);
 
 // Ако няма право за модул conference - край

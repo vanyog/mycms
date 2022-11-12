@@ -8,7 +8,7 @@ use PHPMailer\PHPMailer\Exception;
 require $idir.'_PHPMailer/src/Exception.php';
 require $idir.'_PHPMailer/src/PHPMailer.php';
 require $idir.'_PHPMailer/src/SMTP.php';
-require $idir.'lib/f_message.php';
+require_once $idir.'lib/f_message.php';
 
 //Instantiation and passing `true` enables exceptions
 $mail = new PHPMailer(true);
@@ -33,7 +33,10 @@ try {
     $mail->addAddress($to, '');                            //Add a recipient
 //    $mail->addAddress('ellen@example.com');               //Name is optional
     $mail->addReplyTo($e, $nm);
-//    $mail->addCC('cc@example.com');
+    if(!empty($cc)){
+        $cca = explode(',',$cc);
+        foreach($cca as $a) $mail->addCC($a);
+    }
 //    $mail->addBCC('bcc@example.com');
 
     //Attachments

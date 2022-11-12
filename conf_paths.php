@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 if(!isset($idir)) $idir = dirname(__FILE__).'/';
 if(!isset($ddir)) $ddir = $idir;
 
-if( isset($_GET['debug']) && $_GET['debug'] ) $GLOBALS['debug_mode'] = true;
+if( isset($_GET['debug']) && ($_GET['debug']=='1') ) $GLOBALS['debug_mode'] = true;
 
 include_once($idir.'lib/f_stored_value.php');
 include_once($idir.'lib/f_is_local.php');

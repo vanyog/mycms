@@ -33,6 +33,7 @@ include_once($idir.'lib/f_unset_self_query_var.php');
 include_once($idir.'mod/usermenu/f_usermenu.php');
 
 // Проверка на правата на влезлия потребител
+if(!isset($page_id)) $page_id = stored_value('main_index_pageid',1);
 usermenu(true);
 
 // Ако няма право за модул conference - край

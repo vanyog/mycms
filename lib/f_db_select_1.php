@@ -31,6 +31,7 @@ include_once($idir."lib/usedatabase.php");
 
 function db_select_1($fn,$tb,$whr,$y = false){
 global $db_link, $tn_prefix, $db_req_count;
+if($db_link===false) die('No link to database.');
 $t = "$tn_prefix$tb";
 if($t[0]!='`') $t = "`$t`";
 $q="SELECT $fn FROM $t WHERE $whr LIMIT 1;";

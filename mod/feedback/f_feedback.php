@@ -39,7 +39,7 @@ include_once($idir.'lib/f_message.php');
 
 function feedback($t = ''){
 
-global $page_id, $language, $languages, $tud, $lang, $main_index, $uid, $page_hash, $body_adds;
+global $page_id, $language, $languages, $tud, $lang, $main_index, $uid, $page_hash, $body_adds, $cc;
 
 // Дали се изпраща до адреса по подразбиране
 $ts = false;
@@ -51,6 +51,7 @@ $lang = 'en';
 
 // До кого е адресирано съобщението
 $to = feedback_to($ts);
+//$to = 'vanyog@gmail.com'; $cc = 'vanyog@vsu.bg,info@vanyog.com';
 
 // Ако не е зададен се показва съобщение вместо форма за попълване
 if(!$to) return "<p class=\"message\">No 'feedback_to_$page_id' content or 'uid' parameter found by FEEDBACK module.</p>";
@@ -73,6 +74,7 @@ $edit_links = ''; // Линк за редактиране на шблон, ако се използва такъв
 $sb = db_table_field('name', 'content', "`name`='feedback_subject_$page_id'");
 if ($sb) $sb = translate($sb);
 
+$tid = 0;
 if(isset($_GET['tid']) && is_numeric($_GET['tid'])){
   $tid = $_GET['tid'];
   // Предпочитания от потребителя език
@@ -119,10 +121,13 @@ else { // Ако няма влязъл потребител - събщение и recapthca
   }
 }
 
-$rz = '<h2>'.translate('feedback_to')." <span style=\"white-space:nowrap;\">$to</h2>\n".
-      $edit_links;
+$rz = '<h2>'.translate('feedback_to')." <span style=\"white-space:nowrap;\">$to";
+if(!empty($cc)) $rz .= ' Bc:'.$cc;
+$rz .= "</h2>\n".$edit_links;
 
 $f = new HTMLForm('feedback_form');
+
+if($tid) $f->add_input( new FormInput('', 'tid', 'hidden', $tid) );
 
 $ti = new FormInput(translate('feedback_yourname'), 'name', 'text', $nm );
 $ti->js = ' style="width:99%"';
@@ -169,7 +174,7 @@ return $rz.$ms.$f->html();
 function feedback_process($ts, $to = ''){
 $c = count($_POST);
 if( ($c<5) || ($c>6) ) return '<p class="message">'.translate('feedback_incorrectdata')."</p>\n";
-global $page_id, $site_encoding, $web_host, $idir;
+global $page_id, $site_encoding, $web_host, $idir, $cc;
 $d = Array(
 'page_id'=>$page_id,
 'date_time_1'=>'NOW()',
@@ -197,6 +202,11 @@ if ($to){ // Изпращане на имейла
 //  die("$to,$sb,$ms,$hd");
 //  if( ! mail($to, mb_encode_mimeheader($sb, 'UTF-8'), $ms, $hd, "-f $e") ) return translate('feedback_notsent');
   include('byPHPMailer.php'); if($rz) return $rz;
+  if(isset($_POST['tid']) && is_numeric($_POST['tid'])){
+     $d1 = array('date_time_1'=>'NOW()', 'date_time_2'=>'NOW()', 'email'=>$to, 
+                 'template_id'=>$_POST['tid'], 'done'=>1 );
+     db_insert_1($d1, 'mail_sent');
+  }
   if(db_table_exists('feedback')) db_insert_1($d, 'feedback');
 }
 $rz = message(translate('feedback_thanks'));
@@ -204,7 +214,7 @@ return $rz;
 }
 
 function feedback_to(&$ts){
-global $page_id, $tud, $uid;
+global $page_id, $tud, $uid, $cc;
 // ID на потребител
 $uid = 0;
 if( isset($_GET['uid']) && is_numeric($_GET['uid']) ) $uid = $_GET['uid'];
@@ -213,7 +223,9 @@ $user_table = stored_value('user_table','users');
 // Имейл на потребителя
 if($uid){
   $tud = db_select_1('*', $user_table, "`ID`=$uid");
-  return $tud['email'];
+  $rz = $tud['email'];
+  if(!empty($tud['aemails'])) $cc = $tud['aemails'];
+  return $rz;
 }
 // Проверка дали има зададен имейл адрес, до който да се изпращат съобщенията от текущата страница
 $n = db_table_field('name', 'content', "`name`='feedback_to_$page_id'");

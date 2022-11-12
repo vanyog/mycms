@@ -148,7 +148,7 @@ $cnt = str_replace('DB_REQ_COUNT',"$db_req_count $exe_time ", $cnt);
 // Изпращане на страницата
 echo $cnt;
 
-mysqli_close($db_link);
+if(!($db_link===false)) mysqli_close($db_link);
 
 // --------------------------------
 

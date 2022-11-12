@@ -34,11 +34,13 @@ include_once($ddir."conf_database.php");
 $db_link = get_db_link($user, $password, $database, $colation);
 
 function get_db_link($user, $password, $database, $colation = 'cp1251'){
-$l = mysqli_connect("localhost",$user,$password,$database);
-if (!$l){
+try { $l = mysqli_connect("localhost",$user,$password,$database); }
+catch (Exception $e){
  header("Content-Type: text/html; charset=Windows-1251");
- echo '<p>Не се получава връзка с MySQL сървъра!'; die;
+ echo '<p>Не се получава връзка с MySQL сървъра!';
+ die;
 }
+if($l===false) die('No link to database.');
 mysqli_query($l,"SET NAMES '$colation';");
 return $l;
 }

@@ -274,9 +274,17 @@ if (isset($_POST["g-recaptcha-response"])){
     return translate('reCAPTCHA_error');
 }
 // Мерки за сигурност
-$ea = explode(' ',trim($_POST['email'])); $e = trim($ea[0]);
+$ea = explode(' ',strtolower(trim($_POST['email']))); 
+$e = trim($ea[0]);
 $ea = explode("\n",$e); $e = trim($ea[0]);
 $ea = explode("\r",$e); $e = trim($ea[0]);
+// Проверка дали имейлът не е допълнителен имейл на друг потребител
+$ae = db_select_m('email', 'users', 
+      "`type`='".addslashes($_POST['type'])."' AND `aemails` REGEXP '(^|,{1} *)".$e."($|,{1} *)'");
+if(count($ae)){
+   $_POST['email'] = $ae[0]['email'];
+   return translate('userreg_usedEmail');
+}
 // Данни за нов потребител
 $d = array(
   'type'=>addslashes($_POST['type']),
@@ -469,14 +477,21 @@ $guf = new HTMLForm('userreg_login');
 $guf->add_input( new FORMInput(translate('user_username'),'username','text') );
 $guf->add_input( new FORMInput(translate('user_password'),'password','password') );
 $guf->add_input( new FORMInput('','','submit', translate('user_login_button')) );
-$rp = stored_value("userreg_newreg_$t").$page_hash;
-if (!$rp) die("'userreg_newreg_$t' option is not set.");
 $altt = '';
 if(in_edit_mode()) $altt = translate("USERREG_$t");
-$lk = '<a href="'.$rp.'">'.translate('userreg_newreg')."</a>";
+$lk = userreg_newRegLink($t);
 if(!empty($_SESSION['userreg_message'])) $altt .= message($_SESSION['userreg_message']." $lk")."\n";
 unset($_SESSION['userreg_message']);
 return $altt.translate('userreg_logintext').$lk."</p>\n".$guf->html();
+}
+
+// Помощна функция линк "Нова регистрация"
+
+function userreg_newRegLink($t){
+global $page_hash;
+$rp = stored_value("userreg_newreg_$t").$page_hash;
+if (!$rp) die("'userreg_newreg_$t' option is not set.");
+return '<a href="'.$rp.'">'.translate('userreg_newreg')."</a>";
 }
 
 //
@@ -515,8 +530,7 @@ unset($_SESSION['user_password']);
 unset($_SESSION['user_password_raw']);
 $rz = '<p>'.translate('userreg_logoutcontent').
       ' <a href="'.stored_value("userreg_login_$t").$page_hash.'">'.
-      translate('userreg_login').'</a></p>
-';
+      translate('userreg_login').'</a>. &nbsp; ('.userreg_newRegLink($t).")</p>\n";
 if (isset($_SESSION['user2_returnpage']))
    if (isset($_SERVER['HTTP_REFERER'])) $rf = $_SERVER['HTTP_REFERER'];
    else $rf = $_SESSION['user2_returnpage'];

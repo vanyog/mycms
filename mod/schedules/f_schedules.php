@@ -199,6 +199,7 @@ $m0 = ''; // Последно показан ден
 $hr = false; // Дали и сложена линия на днешната дата
 eval(translate('month_names'));
 $c = 0; // Брой показани събития
+if(in_edit_mode()) $_SESSION['http_referer'] = $_SERVER['REQUEST_URI'];
 foreach($ce as $e){
  $y = substr($e['date_time_1'], 0, 4);
  $m = substr($e['date_time_1'], 5, 2);

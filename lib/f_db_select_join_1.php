@@ -18,19 +18,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Функцията db_select_select_join_1, дефинирана в този файл
-// чете полетата $fn на един запис от таблица $ta,
-// едновремено с полета от таблица $tb
+// Функцията db_select_join_1($fn,$ta,$tb,$on,$whr,$y = false), дефинирана в този файл
+// чете полетата $fn, които са както от запис от таблица $ta, така и от запис на таблица $tb
 // Полетата от първата таблица се означават с a.имеНаПоле, а от втората с - b.имеНаПоле
 // $n е условието за присъединяване на полета от втората таблица
 // Прочетеният запис удовлетворява условието $whr.
-// Функцията връща, асоцииран масив, или false при неуспех.
+// Функцията връща в асоциативен масив с прочетения запис, или false при неуспех.
 // Ключовете на масива са имената на полетата,
 // а стойностите - съдържанието на полетата от таблиците.
 
 include_once($idir."lib/usedatabase.php");
 
-function db_select_select_join_1($fn,$ta,$tb,$on,$whr,$y = false){
+function db_select_join_1($fn,$ta,$tb,$on,$whr,$y = false){
 global $db_link, $tn_prefix, $db_req_count;
 $ta = "`$tn_prefix$ta`";
 $tb = "`$tn_prefix$tb`";
