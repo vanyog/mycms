@@ -22,6 +22,9 @@ include_once($idir."lib/usedatabase.php");
 
 function db_table_exists($t){
 global $database, $db_link, $tn_prefix, $db_req_count;
+if($db_link===false) die('Can\'t check if table \''.$t.
+'\' exists because $db_link is not defined. '.
+'Run <a href="_install.php">manage/_install.php</a> script.');
 $r = mysqli_query($db_link,"SHOW TABLES FROM $database;");
 $db_req_count++;
 $ls = array();
