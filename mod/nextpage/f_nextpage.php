@@ -54,7 +54,7 @@ $h = "`hidden`=0 AND ";
 // Но не и в режим на редактиране
 $h = '';
 // Данни за следващия линк в менюто
-$nl = db_select_select_join_1('a.*,b.hidden', 
+$nl = db_select_join_1('a.*,b.hidden', 
         'menu_items', 'pages',  'a.link=b.ID', 
         "$h `group`='$gr' AND `place`$dr".$ld['place']." ORDER BY `place` $ord", false);
 // Ако няма такъв се търси следващ линк в родителските менюта

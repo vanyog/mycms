@@ -35,6 +35,7 @@ global $main_index;
 $aa = explode('|',$a);
 if(isset($aa[1])) $aa[1] = stripslashes($aa[1]);
 $bb = explode(':',$aa[0]);
+// Ако е посочен линк от външен сървър
 if(isset($bb[1])){
   $n = stored_value('outer_links_server_'.$bb[0]);
   if(!$n) die('outer_links_server_'.$bb[0].' server is not defined in options table');
@@ -52,7 +53,7 @@ $d = db_select_1('*', 'outer_links', "`ID`=".$aa[0], false );
 if(!isset($d['link'])) $d['link'] = '';
 $p = stored_value('outer_links_pid');
 if(!$d) return '<a href="'.$main_index.'?pid='.$p.'">Link do not exist</a>';
-if (isset($aa[1])){ 
+if (isset($aa[1])){
     if ($aa[1][0]=='#') {
         $h = substr($aa[1],1);
         $p .= "&h=$h";
@@ -62,9 +63,13 @@ if (isset($aa[1])){
 }
 else $aa[1] = $d['Title'];
 if(!$p) die('outer_links_pid option is not set');
-if(!$d['private'] || in_edit_mode())
-  $rz = '<a href="'.$main_index.'?lid='.$aa[0].'&pid='.$p.'" target="_blank" title="'.
-         urldecode($d['link']).'">'.$aa[1].'</a>';
+if(!$d['private'] || in_edit_mode()){
+  $rz = '<a href="'.$main_index.'?lid='.$aa[0].'&pid='.$p.
+         '" target="_blank"'.
+          ' title="'.urldecode($d['link']).'"';
+  if($d['private']) $rz .=  ' style="opacity: 0.5;"';
+  $rz .=  '>'.$aa[1].'</a>';
+}
 else
   $rz = '<span>'.$aa[1].'</span>';
 if(!($d['link']>' ')) $rz .= encode('<sup>(колекция връзки)</sup>');
