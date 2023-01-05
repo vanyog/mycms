@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Този файл инициализира променливата $db_link
 // която се използва в mysqli_ функциите
 
+global $db_link, $db_req_count;
+
 $db_link = false;
 $db_req_count = 0;
 

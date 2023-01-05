@@ -39,7 +39,7 @@ else {
    if (!file_exists($idir.'conf_database.php')) create_conf_database();
 }
 
-include($idir.'conf_paths.php');
+//include($idir.'conf_paths.php');
 
 $p = 'tables.sql';
 
@@ -48,6 +48,11 @@ if (isset($_GET['m'])) $p = $_SERVER['DOCUMENT_ROOT'].$mod_pth.$_GET['m']."/$p";
 
 // Ако не е изпратено име на модул, се инсталира самата система
 else create_conf_database();
+
+include($idir.'conf_database.php');
+//include($idir.'conf_paths.php');
+
+$site_encoding = $site_encoding = 'UTF-8';
 
 header("Content-Type: text/html; charset=$site_encoding");
 
@@ -77,7 +82,7 @@ foreach($fa as $q){
 
 echo '<p>Success</p>
 
-<p><a href="'.$pth.'">Go next</a></p>';
+<p><a href="'.dirname($_SERVER['PHP_SELF']).'">Go next</a></p>';
 
 // 
 // Функция, показваща форма за въвеждане на данните, които трябва
@@ -89,14 +94,14 @@ include_once($idir.'lib/o_form.php');
 // Ако файл conf_database.php вече съществува
 if (file_exists($ddir.'conf_database.php')){
   // Ако вече е отговорено да се продължи
-  if (isset($_POST['continue'])&&($_POST['continue']=='yes')) return;
+  if (isset($_GET['continue'])&&($_GET['continue']=='yes')) { return; }
   // Показва се бутон за продължаване
-  $f = new HTMLForm('pform'); $f->astable = false;
+/*  $f = new HTMLForm('pform'); $f->astable = false;
   $i = new FormInput('','continue','hidden','yes'); $f->add_input($i);
-  $i = new FormInput('Click the button to ','','submit','continue'); $f->add_input($i);
+  $i = new FormInput('Click the button to ','','submit','continue'); $f->add_input($i);*/
   echo '<p>File '.$ddir.'<strong>conf_database.php</strong>'.' exists.</p>
-  '.$f->html().'
-  <p>Or remove it to start a new instalation.</p>';
+<p><a href="'.$_SERVER['PHP_SELF'].'?continue=yes">Click here</a> to continue the instalation.</p>
+<p>Or remove it to start a new instalation.</p>';
   die;
 }
 $f = new HTMLForm('pform');
@@ -118,7 +123,9 @@ else { echo $f->html(); die; }
 function process_data(){
 global $idir;
 // Създаване на базата данни, ако не съществува
-$db_link = mysqli_connect("localhost",$_POST['user'],$_POST['password']);
+try{
+   $db_link = mysqli_connect("localhost",$_POST['user'],$_POST['password']);
+} catch (Exception $e){ die('Invalid credentials. Try again.');}
 if (!$db_link) die("Failed to connect to MySQL: " . mysqli_connect_error());
 $q = "CREATE DATABASE IF NOT EXISTS `".$_POST['database']."` COLLATE=utf8_unicode_ci;";
 if (!mysqli_query($db_link,$q)) die("Error creating database: " . mysqli_error($db_link));
@@ -135,6 +142,8 @@ $database ="'.$_POST['database'].'";
 $user     ="'.$_POST['user'].'";
 $password ="'.$_POST['password'].'";
 $tn_prefix = "'.$_POST['prefix'].'";
+$colation = "utf8";
+
 ?>
 ';
 // Ако директорията е забранена за запис - съобщение

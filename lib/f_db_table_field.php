@@ -28,11 +28,12 @@ include_once($idir."lib/usedatabase.php");
 
 function db_table_field($fn, $tb, $whr, $def = '', $y = false){
 global $db_link,$tn_prefix, $db_req_count;
-//if(is_null($db_link)) die('$db_link is NULL.');
 if(($db_link===false)||is_null($db_link)) return $def;
 $q="SELECT $fn FROM $tn_prefix$tb WHERE $whr;";
 if ($y===true) echo $q."<br>\n";
-$r=mysqli_query($db_link,$q);
+try 
+{ $r=mysqli_query($db_link,$q); }
+catch (Exception $e){ print_r(debug_backtrace()); die("Incorrect SQL:<br>$q"); }
 $db_req_count++;
 if (!$r){
   return $def;
