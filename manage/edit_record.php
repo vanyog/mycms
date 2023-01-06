@@ -54,7 +54,9 @@ $i = 0;
 if ($r) foreach($r as $k => $v){
  $page_content .= '<tr>';
  switch ($ft[$i]){
- case 252: $page_content .= '<td class="r">'.$k.':</td><td>'.editor($k,stripslashes($v)).'</td>'."\n"; break;
+ case 252: if(!isset($v)) $v = ''; 
+           $page_content .= '<td class="r">'.$k.':</td><td>'.editor($k,stripslashes($v)).'</td>'."\n"; 
+           break;
  case 1  :
  case 2  :
  case 3  :

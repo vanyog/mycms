@@ -112,6 +112,10 @@ INSERT INTO `content` (`name`, `nolink`, `date_time_1`, `date_time_2`, `language
 ('usermenu_newpagetitle', 1, NOW(), NOW(), 'en', 'Heading:'),
 ('usermenu_texttoedit', 1, NOW(), NOW(), 'bg', 'Текст:'),
 ('usermenu_texttoedit', 1, NOW(), NOW(), 'en', 'Text:'),
+('menu_start_1', 1, NOW(), NOW(), 'bg', ''),
+('menu_start_1', 1, NOW(), NOW(), 'en', ''),
+('admin_style', 1, NOW(), NOW(), 'bg', ''),
+('admin_style', 1, NOW(), NOW(), 'en', ''),
 ('p2_title', 0, NOW(), NOW(), 'bg', 'Страница за администриране'),
 ('p2_content', 0, NOW(), NOW(), 'bg', '<!--$$_USER_edit_$$-->');
 -- --------------------------------------------------------
@@ -220,13 +224,13 @@ CREATE TABLE IF NOT EXISTS `visit_history` (
   KEY `count` (`count`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sci_filters` (
+CREATE TABLE IF NOT EXISTS `filters` (
   `ID` int NOT NULL AUTO_INCREMENT,
   `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `filters` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb3 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `page_cache` (
   `page_ID` int(11) NOT NULL,
@@ -271,8 +275,8 @@ CREATE TABLE IF NOT EXISTS `permissions` (
 INSERT INTO `permissions` (`ID`, `user_id`, `type`, `object`, `yes_no`) VALUES
 (1, 1, 'all', '', 1);
 -- --------------------------------------------------------
-CREATE TABLE IF NOT EXISTS `filters` (
-  `ID` int NOT NULL,
-  `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `filters` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_bin;
+CREATE TABLE IF NOT EXISTS `worktime` (
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `time` int NOT NULL,
+  PRIMARY KEY (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
