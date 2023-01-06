@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS `content` (
   `date_time_1` datetime NOT NULL,
   `date_time_2` datetime NOT NULL,
   `language` varchar(5) CHARACTER SET latin1 NOT NULL DEFAULT 'bg',
-  `text` mediumtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `text` mediumtext CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`ID`),
   KEY `date_time_1` (`date_time_1`),
   KEY `date_time_2` (`date_time_2`),

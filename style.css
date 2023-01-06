@@ -20,6 +20,8 @@ div { padding:5px; }
   z-index:100;
 }
 
+#lang_flag img { width: 4em; height: auto; }
+
 #page_menu { border-bottom:solid 1px black; width:170px; }
 #page_menu a { display:block; }
 
