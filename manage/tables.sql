@@ -230,15 +230,21 @@ CREATE TABLE IF NOT EXISTS `filters` (
   `filters` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 -- --------------------------------------------------------
-CREATE TABLE IF NOT EXISTS `page_cache` (
-  `page_ID` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `mc_page_cache` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `page_ID` int NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `language` varchar(5) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `date_time_1` datetime NOT NULL,
-  `text` mediumtext COLLATE utf8_bin NOT NULL,
-  UNIQUE KEY `page_ID` (`page_ID`),
-  FULLTEXT KEY `text` (`text`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  `text` mediumtext CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `referer` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `name` (`name`),
+  KEY `language` (`language`),
+  KEY `page_ID` (`page_ID`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `users` (
   `ID` int(11) NOT NULL,
@@ -259,7 +265,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `address` text CHARACTER SET utf8 NOT NULL,
   `telephone` varchar(20) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   `IP` varchar(15) CHARACTER SET armscii8 COLLATE armscii8_bin NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 -- --------------------------------------------------------
 INSERT INTO `users` (`ID`, `type`, `date_time_0`, `date_time_1`, `date_time_2`, `username`, `password`, `newpass`, `email`, `code`, `firstname`, `secondname`, `thirdname`, `country`, `institution`, `address`, `telephone`, `IP`) VALUES
 (1, '', '2016-01-24 10:50:28', '2016-01-24 10:50:28', '2016-01-24 11:01:39', 'admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', '', '', '', '', '', '', '', '', '', '', '127.0.0.1');
@@ -270,7 +276,7 @@ CREATE TABLE IF NOT EXISTS `permissions` (
   `type` enum('all','page','menu','module','record') COLLATE cp1251_bulgarian_ci NOT NULL DEFAULT 'page',
   `object` varchar(20) COLLATE cp1251_bulgarian_ci NOT NULL,
   `yes_no` tinyint(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=cp1251 COLLATE=cp1251_bulgarian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=cp1251 COLLATE=cp1251_bulgarian_ci;
 -- --------------------------------------------------------
 INSERT INTO `permissions` (`ID`, `user_id`, `type`, `object`, `yes_no`) VALUES
 (1, 1, 'all', '', 1);
