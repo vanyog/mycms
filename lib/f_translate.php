@@ -64,7 +64,7 @@ $el = ''; // Линк за редактиране. Показва се ако сайтът е в режим на редактиране
 if ($editMode && $elink){
   $id = db_select_1('ID','content',"`name`='$n' AND `language`='$language'",$debug);
   if($id){
-    if ($can_edit && isset($page_data['ID'])) 
+    if ($can_edit && isset($page_data['ID']) && !show_adm_links()) 
          $h = $pth.'mod/usermenu/edit_text.php?i='.$id['ID'].'&amp;pid='.$page_data['ID'];
     else $h = $adm_pth.'edit_record.php?t=content&amp;r='.$id['ID'];
     $el = '<a href="'.$h.

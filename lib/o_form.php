@@ -32,6 +32,7 @@ public $method = 'post';
 public $astable = true;
 public $action = '';
 public $text = '';
+public $labels = true;
 private $ins = array();
 
 // $n - name атрибут на формата
@@ -80,9 +81,10 @@ $rz = "<form enctype=\"multipart/form-data\" name=\"$this->name\" id=\"$this->na
 if ($this->astable) $rz .= "<table>\n";
 $rz .= $this->text;
 $has_files = false;
-foreach($this->ins as $i){
-  if($has_files) $i->max_file_size = '';
-  $rz .= $i->html($this->astable);
+foreach($this->ins as $j => $i){
+  if($has_files && isset($i->max_file_size)) $i->max_file_size = '';
+  if($this->labels) $rz .= $i->html($this->astable, $this->name."_$j");
+  else $rz .= $i->html($this->astable, );
   if(isset($i->type) && ($i->type=='file')) $has_files = true;
   if (!(strpos($i->js, 'ifNotEmpty_'.$this->name.'()')===false)) $js .= $js1;
 }
@@ -135,14 +137,15 @@ public function set_event($e,$js){
 $this->js = " $e=\"$js\"";
 }
 
-public function html($it){
+public function html($it,$id = ''){
 $dsbl = lock_form_fields();
 $rz = '';
 if ($it){ if($this->type=='hidden') $rz = "<tr style=\"visibility: collapse;\"><th>";
           else $rz = "<tr><th>"; }
 if($this->caption)
   if($this->id) $rz .= "<label for=\"$this->id\">$this->caption</label> ";
-  else $rz .= $this->caption;
+  else if($id)  $rz .= "<label for=\"$id\">$this->caption</label> ";
+       else $rz .= $this->caption;
 if ($it) $rz .= " </th><td>";
 if( ($this->type=='file') && $this->value){
    $p = strrpos($this->value, '/');
@@ -161,6 +164,7 @@ if ($this->name) $rz .= "name=\"$this->name\"";
 if (strlen($this->value)) $rz .= " value=\"$this->value\"";
 if ($this->size) $rz .= " size=\"$this->size\"";
 if ($this->id) $rz .= " id=\"$this->id\"";
+else if($id) $rz .= " id=\"$id\"";
 if ($this->js) $rz .= " $this->js";
 if ($this->checked) $rz .= " $this->checked";
 $rz .= "$dsbl>";

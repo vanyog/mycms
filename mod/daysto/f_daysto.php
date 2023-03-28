@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // Показва текст, който казва, колко дни, часове, минути и секудни остават от настоящия момент
-// до друг, зададен момент.
+// до друг, зададен момент. Ако този момент е минал, не се показва нищо.
 // Параметърът $a e стринг, разделен с | на три части:
 // - моментът, до който се мери времето.
 //   Може да бъде във вида 'schedule:XX', където 'XX' е номер на запис от таблица 'schedules' от който се взема
@@ -31,6 +31,7 @@ $b = explode('|', $a);
 $s = explode(':', $b[0]);
 if($s[0]=='schedule') $b[0] = db_table_field('date_time_2', 'schedules', "`ID`=".$s[1]);
 $dt = strtotime($b[0]);
+if(time()>$dt) return "";
 $rz = '<span id="daysto">aaa</span>
 <script>
 var daysto = '.$dt.' - Math.round(new Date/1000);

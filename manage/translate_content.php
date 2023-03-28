@@ -140,7 +140,7 @@ include_once("build_page.php");
 // $l  - език, но който трябва да се преведе
 
 function new_translation($n1,$l){
-global $languages, $default_language;
+global $languages, $default_language, $adm_pth;
   $d = db_select_1('*','content',"`name`='$n1' AND `language`='$default_language'");
   $v = $d['text'];
   $t = db_select_1('*','content',"`name`='$n1' AND `language`='$l'");
@@ -169,7 +169,8 @@ global $languages, $default_language;
          ":</p>\n".'<textarea id="deflang" cols="100" rows="10"  disabled="disabled">'.
          str_replace('&','&amp;',stripslashes($d['text'])).
          "</textarea>\n".
-         '<input type="button" value="Copy" onclick="copyAgain()">'.$f->html();
+         '<input type="button" value="Copy" onclick="copyAgain()"> &nbsp; '.
+         '<a href="'.$adm_pth.'edit_record.php?t=content&r='.$d['ID'].'" target="editTub">Edit</a>'.$f->html();
 }
 
 //

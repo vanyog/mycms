@@ -53,16 +53,21 @@ include_once($idir.'lib/f_edit_record_form.php');
 include_once($idir.'lib/f_message.php');
 include_once($idir.'mod/user/f_user.php');
 
-global $user_table, $userreg_altt;
+global $user_table, $userreg_altt, $added_styles;
 
 // Име на таблицата с данни за потребителите
 $user_table = stored_value('user_table','users');
 
 function userreg($t = ''){
-global $main_index, $can_visit, $userreg_altt;
+global $main_index, $can_visit, $userreg_altt, $added_styles;
 if (!$t) die('No user type specified in userreg module.');
 $ta = explode('|', $t);
 $n = "USERREG_".$ta[0];
+static $style = '';
+if(!$style){ 
+   $style = stored_value('style_'.$ta[0]);
+   $added_styles .= $style;
+}
 $altt = translate($n,false);
 if( $altt && ($altt!=$n) && !in_edit_mode() && isset($ta[1]) && ($ta[1]!='logout')){
    if(empty($userreg_altt) && ($ta[1]!='login')) {
@@ -283,7 +288,7 @@ $ae = db_select_m('email', 'users',
       "`type`='".addslashes($_POST['type'])."' AND `aemails` REGEXP '(^|,{1} *)".$e."($|,{1} *)'");
 if(count($ae)){
    $_POST['email'] = $ae[0]['email'];
-   return translate('userreg_usedEmail');
+   return translate('userreg_usedEmail').' ('.$ae[0]['email'].')';
 }
 // Данни за нов потребител
 $d = array(

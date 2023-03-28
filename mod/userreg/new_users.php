@@ -53,7 +53,7 @@ else {
       // Съобщение за резултата от обработката на изпратени с $_POST данни
       $ms = userreg_processnew($t);
       if ($ms) $ms = '<p class="message">'.$ms.'</p>';
-      // Форма за създаване на нов потребител
+      // Форма за създаване на нови потребители
       $f = new HTMLForm('newuserreg_form');
       $f->add_input( new FormInput('','type','hidden',$t) );
       $i = new FormTextArea(translate('user_emails'),'emails');
@@ -92,9 +92,10 @@ if(count($es)==1) $es = explode(',', $_POST['emails']);
 $d = array();
 $w = 0;
 foreach($es as $e){
-  // Проверка дали вече няма потребител с имейл $e
+  // Проверка дали вече няма потребител с основен или допълнителен имейл $e
   $e1 = strtolower(trim($e));
-  $i = db_table_field('ID', $user_table, "`type`='$t' AND `email` LIKE '$e1'");
+  $i = db_table_field('ID', $user_table, 
+       "`type`='$t' AND (`email` LIKE '$e1' OR `aemails` LIKE '%$e1%')");
   if (!$i && ($e1>' ') ){
      // Проверка дали не е в списъка от използвани вече грешни имейли
      $e2 = db_table_field('email', 'mail_wrong', "`email`='$e1'");
@@ -112,6 +113,7 @@ foreach($es as $e){
             'email'=>$e1
           );
   }
+  else $rz .= "$e1 - ID = $i<br>";
 }
 return "<p>$w<br>$rz</p>\n<pre>\n".count($d)."\n".db_insert_m($d, $user_table, true)."<pre>\n";
 }

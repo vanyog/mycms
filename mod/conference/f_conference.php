@@ -437,7 +437,7 @@ $d = array(
  'pages'=>0,
  'place'=>0
 );
-// Ако има номер на запис - четене от таблица 'proceedings'.
+// Ако е изпратен номер на запис - четене от таблица 'proceedings'.
 if (isset($_GET['proc'])){
   $d = db_select_1('*', 'proceedings', "`ID`=".(1*$_GET['proc']) );
   $d['topic']++;
@@ -452,7 +452,11 @@ if(empty($ud['ID'])) return '';
 if(!empty($ud['firstname'])) $un = $ud['firstname']." ".$ud['secondname']."  ".$ud['thirdname'];
 else $un = '';
 if(empty(trim($un)) && !empty($ud['email'])) $un = $ud['email'];
-if($adm) $un = '<a href="'.stored_value('conference_admin','/index.php?pid=1358').'#pof'.$d['user_id']."\">$un</a>";
+if($adm) {
+   $un = '<a href="'.stored_value('conference_admin','/index.php?pid=1358').'#pof'.$d['user_id']."\">$un</a>";
+   // Дата на последно актуализиране на доклада
+   if(isset($d['date_time_2'])) $un .= '<br>'.$d['date_time_2'];
+}
 $f = new HTMLForm('conference_peform',true,false);
 $f->add_input( new FormInput('', 'user_id', 'hidden', $d['user_id']) ); 
 $f->add_input( new FormInput('', 'utype',   'hidden', $d['utype']));
@@ -489,7 +493,7 @@ else {
 // Дали сме в период на редактиране на резюмета
 $et = ($today < $day_a_submit) || $adm;
 // Съставяне на формата за редактиране
-$ti = new FormSelect(translate('usermenu_language'), 'language', $languages, $d['language']);
+$ti = new FormSelect(translate('conference_language'), 'language', $languages, $d['language']);
 if (!$et) $ti->js = ' disabled="disabled"';
 $ti->values = 'k';
 $f->add_input($ti);

@@ -61,18 +61,17 @@ else {
         $i = 0;
         if($y1!==false) $i = db_table_field('ID', 'options', "`name`=filter_toc", 0);
         else $i = db_table_field('ID', 'options', "`name`='filter_toc_".$page_id."'", 0, false);
-//        var_dump($y1); var_dump($y2); die("$i");
         if($i) $tf .= ' <a href="'.$adm_pth.'edit_record.php?t=options&r='.$i.'">Edit skip content Link</p>';
         else $tf .= '<a href="'.$adm_pth.'new_record.php?t=options&name='.
                     'filter_toc_'.$page_id.'&value=1'.
                     '">Add skip content link</p>';
      }
-     $tof_contents = $tf.$tof_contents."</div>\n<a id=\"toc_end\"></a></div>\n</div>\n";
+     $tof_contents = $tf.$tof_contents."</div>\n<span id=\"toc_end\"></span></div>\n</div>\n";
      // Добавяне на бутон за връщане в съдържанието
      if(!empty($GLOBALS['filter_toc_link'])){
         $is = current_pth(__FILE__).'toc-button.svg';
         $tof_contents .= '<a href="#toc"><img alt="Go to TOC" src="'.$is.
-                         '" id="toc-image"></a>'."\n";
+                         '" title="'.translate('filter_toc_linktitle',false).'" id="toc-image"></a>'."\n";
      }
 }
 // Заместване на подстринг 'TOFCONTENTS' със съставеното съдържание
