@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // Форма за обратна връзка.
-// В таблица content под име feedback_to_$page_id трябва да се сахранява имейл по подразбиране,
+// В таблица content под име "feedback_to_$page_id" трябва да се сахранява имейл по подразбиране,
 // до който се изпращат съобщенията от формата.
 // Ако вместо имел адрес, стойността в този запис е 'no', вместо форма се показва друг зададен текст. Така формата е отменена.
 // При наличие на $_GET['uid'] съобщението от формата се изпраща до потребител с този номер.
@@ -90,8 +90,9 @@ if(isset($_GET['tid']) && is_numeric($_GET['tid'])){
     else
       $edit_links = '<p class="message">No \'feedback_templatepage\' option is specified'."</p>\n";
     if($uid) {
-      $lk = stored_value('conference_editpage', '/index.php?pid=2');
-      $edit_links .= "<p><a href=\"$lk&user2=edit&uid=$uid$page_hash\" target=\"_blank\">".
+      $lk = stored_value("userreg_login_$t", '/index.php?pid=2');
+      $lk = str_replace('&user2=login',"&user2=edit&uid=$uid$page_hash",$lk);
+      $edit_links .= "<p><a href=\"$lk\" target=\"_blank\">".
                       encode('Редактиране на потребителя')."<a/></p>\n";
     }
   }
@@ -264,7 +265,7 @@ case '[mypatrpage]': $lk = 'https://conference.vsu.bg/index.php?pid=57&lang='.$l
                      $rz = str_replace($p, $lk, $rz);
                      break;
 case '[titlestoreview]': include_once($idir.'mod/conference/f_conference.php');
-                         $rz = str_replace($p, conference_userRevList($uid, false), $rz );
+                         $rz = str_replace($p, conference_userRevList($uid, false, false), $rz );
                          break;
 }
 return $rz;

@@ -36,7 +36,9 @@ $t = "$tn_prefix$tb";
 if($t[0]!='`') $t = "`$t`";
 $q="SELECT $fn FROM $t WHERE $whr LIMIT 1;";
 if ($y) echo "$q<br>\n";
-$r=mysqli_query($db_link,$q);
+$r = false;
+try { $r = mysqli_query($db_link,$q); }
+catch(Exception $e){ die($e->getMessage()."<br>".$q); }
 $db_req_count++;
 if ($r===false) return false;
 $rc=mysqli_fetch_assoc($r);

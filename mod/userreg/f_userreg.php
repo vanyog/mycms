@@ -580,7 +580,7 @@ $cp = array(
 );
 // Ако е изпратен параметър $_GET['uid'] - друг номер на потребител, чиито данни да се редактират
 $id2 = 0;
-if (isset($_GET['uid'])) $id2 = 1*$_GET['uid'];
+if (isset($_GET['uid']) && is_numeric($_GET['uid'])) $id2 = 1*$_GET['uid'];
 // Четене номера на влезлия потребител
 $id1 = db_table_field('ID', $user_table, "`username`='".$_SESSION['user_username'].
        "' AND `password`='".$_SESSION['user_password']."' AND `type`='$t'", 0, false);
