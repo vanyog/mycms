@@ -17,8 +17,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Функция, която от съдържанието на страницата $page_content прави извадка - описание за споделяне в социални мрежи.
-// Съдържанието на страницата се присвоява на променлива $page_content от скрипта с име CONTENT, който се пази в таблица 'scripts'.
+// Модул, който от съдържанието на страницата $page_content прави извадка-описание,
+// за за целите на SEO и социални мрежи. Ако на глобална променлива $og_descriptio
+// е присвоена стойност, се връща тази стойност.
+// (Съдържанието на страницата е присвоено на променлива $page_content от скрипта 
+// с име CONTENT, който се пази в таблица 'scripts'.)
 
 function ogdescription(){
 global $page_content, $og_description, $site_encoding;
