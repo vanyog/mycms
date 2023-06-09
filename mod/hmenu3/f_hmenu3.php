@@ -67,7 +67,7 @@ foreach($il as $i){
   $lk = " href=\"$lk\"";
   if($c) $lk = '';
   $rz .= "<a$lk$c".' onMouseOver="show_hlayer('.$j.',this)" onmouseleave="hide_layer2('.$j.', this, event);"'.
-          'onclick="hmenu3_hclick('.$j.',this); return !isTouch;">';
+          ' onclick="hmenu3_hclick('.$j.',this); return !isTouch;">';
   $rz .= translate($i['name'],false);
   // Добавяне на * за редактиране 
   if (in_edit_mode()){

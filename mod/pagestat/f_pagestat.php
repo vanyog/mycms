@@ -36,7 +36,7 @@ $rz .= ' See <a href="'.$pth.'page_stats.php?pid='.$page_data['ID'].'">page</a>'
        ' template: <a href="'.$adm_pth.
        'edit_record.php?t=templates&r='.$page_data['template_id'].'">'.$page_data['template_id'].
        ' &nbsp; <a href="https://realfavicongenerator.net/favicon_checker?protocol='.$_SERVER['REQUEST_SCHEME'].
-       '&site='.stored_value('host_web').'" targit="_blank">favicon check</a>'.
+       '&site='.stored_value('host_web').'" target="_blank">favicon check</a>'.
        "</a>\n";      
 return $rz;
 }
