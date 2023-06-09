@@ -66,11 +66,7 @@ if (isset($page_data['donotcache']) && ($page_data['donotcache']>1) ) $t = $page
 $htp = acceptable($_SERVER['REQUEST_URI'],false);
 // Четене на данните от кеш таблицата
 $d = db_select_1('*', 'page_cache', 
-<<<<<<< Updated upstream
-     '`page_ID`='.$page_data['ID']." AND `name`='".addslashes($htp)."' AND `language`='$language'");//die("aaa");
-=======
      '`page_ID`='.$page_data['ID']." AND `name`='".addslashes($htp)."' AND `language`='$language'",false);
->>>>>>> Stashed changes
 if (!$d) return '';
 else{
   if(isset($page_data['donotcache']) && ($page_data['donotcache']==-1) ) return $d['text'];
