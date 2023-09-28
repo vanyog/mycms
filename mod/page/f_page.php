@@ -29,6 +29,7 @@ if(isset($aa[1]))
     $rz .= '<a href="'.$main_index.'?pid='.$aa[0].'">'.$aa[1].'</a>';
 else {
     $b = explode('#',$aa[0]);
+    if(!is_numeric($b[0])) die("Incorrect parameter '".$b[0]."' for PAGE module");
     $pd = db_select_1('*', 'pages', 'ID='.$b[0]);
     $t2 = '';
     if(!empty($b[1])){
