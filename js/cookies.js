@@ -1,4 +1,5 @@
 var allow_cookies = cookie_value("cookies_accept",'');
+if(!allow_cookies && cookie_value("FCNEC")) allow_cookies = 'yes';
 
 function cookie_value(n, v = false){
     var a = document.cookie.split(";");

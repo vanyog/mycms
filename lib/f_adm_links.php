@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Функцията adm_links() генерира html код за показване на някои линкове за администриране.
+// Функцията adm_links() генерира html код за показване на линкове за главно администриране.
 
 // По подразбиране след реда с линкове се вмъква празен ред.
 // Това отмества цялата страница надолу и прави ленковете по-лесно четими, но на страници,
@@ -75,11 +75,11 @@ else {
        $w3c = '';  $mob = ''; $spt = '';
     }
     else {
-       $w3c = ' &#x25C7; <a href="http://validator.w3.org/check?uri='.
+       $w3c = ' <a href="http://validator.w3.org/check?uri='.
               urlencode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).'" target="_blank">w3c</a>';
-       $mob = ' &#x25C7; <a href="https://www.google.com/webmasters/tools/mobile-friendly/?url='.
+       $mob = ' <a href="https://www.google.com/webmasters/tools/mobile-friendly/?url='.
               urlencode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).'" target="_blank">mob</a>';
-       $spt = ' &#x25C7; <a href="https://developers.google.com/speed/pagespeed/insights/?url='.
+       $spt = ' <a href="https://developers.google.com/speed/pagespeed/insights/?url='.
               urlencode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).'" target="_blank">sp</a>';
     }
   }
@@ -87,9 +87,9 @@ else {
   $clink = stored_value('adm_links_custom','');
 
   $enmch = '';
-  if ($pth!='/') $enmch = '<a href="/">/</a> &#x25C7; '."\n";
-  if (!in_admin_path()) $enmch .= edit_normal_link(false).' &#x25C7;
-<a href="" onclick="doNewPage();return false">New page</a> &#x25C7; ';
+  if ($pth!='/') $enmch = '<a href="/">/</a> '."\n";
+  if (!in_admin_path()) $enmch .= edit_normal_link(false).' 
+<a href="" onclick="doNewPage();return false">New page</a> ';
 
 //if(in_admin_path())
    $f = relative_to($apth, $idir);
@@ -130,23 +130,23 @@ e.style.display = "none";
 </script>
 <p id="adm_links">&nbsp; '.translate('admin_style').'
 <a href="'.$adm_pth.'">'.$_SERVER['REMOTE_ADDR'].'</a>
-<a href="'.$main_index.'">Home</a> &#x25C7; '.$enmch.'
+<a href="'.$main_index.'">Home</a> '.$enmch.'
 <a href="'.$main_index.'?pid='.$ppid.'">&lt;</a>
 <input type="text" size="4" id="gtpNumber" onkeypress="gotoPageNumber(event);">
 <a href="'.$main_index.'?pid='.$npid.'">&gt;</a>
 <a href="'.$main_index.'?pid='.$lpid.'&amp;'.$edit_name.'='.urlencode($edit_value).'">'.$lpid.'</a>
-<a href="'.$rp.'">R</a> &#x25C7;
-<a href="'.$pth.'mod/all_pages.php?t=1">all</a> &#x25C7;
-<a href="'.$adm_pth.'edit_file.php?f='.$f.'">File system</a> &#x25C7;
-<a href="'.$adm_pth.'edit_data.php">Database</a> &#x25C7;
-<a href="'.$pth.'lib/f_page_cache.php?purge='.(1*( isset($_GET['pid']) && is_numeric($_GET['pid']) ? $_GET['pid'] : 0 )).'">Purge</a> &#x25C7;
-<a href="'.stored_value('adm_links_cpanel').'" target="_blank">cPanel</a> &#x25C7;
-<a href="'.$mphp.'" target="_blank">phpMyAdmin</a> &#x25C7;
-<a href="'.$adm_pth.'showenv.php?AAAAAAA" target="_blank">$_SERVER</a> &#x25C7;
-<a href="https://github.com/vanyog/mycms/wiki" target="_blank">Help</a> &#x25C7;
-<a href="'.$go.'">'.$gon.'</a><!--&#x25C7;
+<a href="'.$rp.'">Random page</a>
+<a href="'.$pth.'mod/all_pages.php?t=1">All pages</a>
+<a href="'.$adm_pth.'edit_file.php?f='.$f.'">File system</a>
+<a href="'.$adm_pth.'edit_data.php">Database</a>
+<a href="'.$pth.'lib/f_page_cache.php?purge='.(1*( isset($_GET['pid']) && is_numeric($_GET['pid']) ? $_GET['pid'] : 0 )).'">Purge</a> 
+<a href="'.stored_value('adm_links_cpanel').'" target="_blank">cPanel</a>
+<a href="'.$mphp.'" target="_blank">phpMyAdmin</a> 
+<a href="'.$adm_pth.'showenv.php?AAAAAAA" target="_blank">$_SERVER</a> 
+<a href="https://github.com/vanyog/mycms/wiki" target="_blank">Help</a> 
+<a href="'.$go.'">'.$gon.'</a><!--
 <a hr  ="'.$adm_pth.'dump_data.php">Dump</a-->
-'.$w3c.$mob.$spt.' &#x25C7;
+'.$w3c.$mob.$spt.' 
 '.$clink.' DB_REQ_COUNT
 <a href="#" onclick="closeAdminLinks();return false;">x</a>&nbsp;
 </p>';

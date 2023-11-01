@@ -37,7 +37,7 @@ foreach($_COOKIE as $k=>$v){
 }
 $rz .= '</table>
 <p><a href="'.set_self_query_var('clear','all').'">'.translate('cookies_clear').'</a></p>
-';
+';//.print_r(session_get_cookie_params(),true);
 return $rz;
 }
 
