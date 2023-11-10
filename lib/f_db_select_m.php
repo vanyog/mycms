@@ -36,7 +36,10 @@ if($db_link==false) return array();
 if(($tb[0]!='`') && (strpos($tb,' ')===false) ) $tb = "`$tn_prefix$tb`";
 $q="SELECT $fn FROM $tb WHERE $whr;";
 if ($y) echo "$q<br>\n";
-$dbr=mysqli_query($db_link,$q);
+try { $dbr=mysqli_query($db_link,$q); }
+catch (Exception $e){ 
+  die("<p>function db_select_m<br>".mysqli_errno($db_link).":".mysqli_error($db_link)."<br>$q</p>"); 
+}
 $db_req_count++;
 $r=array();
 if (!$dbr) return $r; 
