@@ -32,7 +32,11 @@ setcookie($adm_name, $adm_value, ['expires' => time()+60*60*24*30, 'path' => '/'
 setcookie('noadm', 'no', ['expires' => time()+60*60*24*30, 'path' => '/', 'samesite' => 'Strict' ]);
 purge_page_cache($pth);
 
-$page_content = '<p>&nbsp;</p>
+if(basename(dirname($_SERVER['PHP_SELF']))=='manage') 
+  $page_content = '<p>This "manage" directory is not renamed and secured. '.
+  'Run <a href="_secure.php">_secure.php</a> to secure the site.</p>';
+
+$page_content .= '<p>&nbsp;</p>
 <p><a href="'.$adm_pth.'/places10.php?t=menu_items">Menu items renum</a></p>';
 
 include("build_page.php");

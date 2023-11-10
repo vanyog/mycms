@@ -26,15 +26,19 @@ include($idir.'lib/f_rand_string.php');
 // Масив от имена на стойности от таблица $tn_prefix.'options', на които се генерират случайни стойности
 $na = array('admin_path', 'adm_name', 'adm_value', 'edit_name', 'edit_value');
 
+$ap = '';
+
 // Промяна на стойностите с имена от масива $na
 foreach($na as $i=>$n){
   $sl = stored_value('security_level', 6);
   $v = rand_string($sl);
   if (!$i){
     $v[0] = '_';
-    echo "Rename 'manage' directory to '$v' and after that <a href=\"$pth"."$v\">click here</a>";
+    $ap = $v;
+    echo "'manage' directory was renamed to '$v'. <a href=\"$pth"."$v\">Click here</a>";
   }
   store_value($n,$v);
 }
-
+if(is_local()) system("cp -r $adm_apth ".dirname($adm_apth).'/'.$ap);
+else rename($adm_apth, dirname($adm_apth).'/'.$ap);
 ?>

@@ -82,11 +82,11 @@ foreach($fa as $q){
 
 mysqli_multi_query($db_link, $fc);
 
-echo '<p>Success</p>
+echo '<p>All done.</p>
 
-<p><a href="'.dirname($_SERVER['PHP_SELF']).'">Go next</a></p>';
-
-die($fc);
+<p><a href="'.dirname($_SERVER['PHP_SELF']).
+'/">Go to manage</a> folder or go to <a href="'.dirname(dirname($_SERVER['PHP_SELF'])).
+'/index.php">Home page</a>.</p>';
 
 // 
 // Функция, показваща форма за въвеждане на данните, които трябва
@@ -100,12 +100,11 @@ if (file_exists($ddir.'conf_database.php')){
   // Ако вече е отговорено да се продължи
   if (isset($_GET['continue'])&&($_GET['continue']=='yes')) { return; }
   // Показва се бутон за продължаване
-/*  $f = new HTMLForm('pform'); $f->astable = false;
-  $i = new FormInput('','continue','hidden','yes'); $f->add_input($i);
-  $i = new FormInput('Click the button to ','','submit','continue'); $f->add_input($i);*/
-  echo '<p>File '.$ddir.'<strong>conf_database.php</strong>'.' exists.</p>
-<p><a href="'.$_SERVER['PHP_SELF'].'?continue=yes">Click here</a> to continue the instalation.</p>
-<p>Or remove it to start a new instalation.</p>';
+  echo '<h1>Creation of tables in the database</h1>
+<p>File '.$ddir.'<strong>conf_database.php</strong>'.' exists.</p>
+<p><a href="'.$_SERVER['PHP_SELF'].
+'?continue=yes">Click here</a> to continue with creation of data tables.</p>
+<p>Or remove conf_database.php file to start a new instalation.</p>';
   die;
 }
 $f = new HTMLForm('pform');
@@ -117,7 +116,7 @@ $i = new FormInput('','','button','Save');
 $i -> set_event('onclick','ifNotEmpty_pform();');
 $f->add_input($i);
 if (count($_POST)) process_data();
-else { echo '<h1>Create the tables in the database</h1>'.$f->html(); die; }
+else { echo '<h1>Creation of conf_database.php file</h1>'.$f->html(); die; }
 }
 
 //

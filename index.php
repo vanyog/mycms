@@ -44,7 +44,7 @@ if (
   !file_exists($idir.'conf_database.php')
   || !file_exists($idir.'conf_paths.php')
 )
-include($idir.'manage/_install.php'); 
+header('Location: manage/_install.php'); 
 
 $page_header = ''; // Добавки към хедъра на страницата
 

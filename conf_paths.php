@@ -77,7 +77,10 @@ if(is_local()) $adm_pth = 'manage/';
 if ($adm_pth[0]!='/') $adm_pth = $pth.$adm_pth;
 
 // Абсолютна директория на директорията за администриране във файловата система на сървъра
-$adm_apth = $_SERVER['DOCUMENT_ROOT'].$adm_pth;
+if(substr($_SERVER['DOCUMENT_ROOT'],-1,1)=='/')
+   $adm_apth = substr($_SERVER['DOCUMENT_ROOT'],0,-1).$adm_pth;
+else
+   $adm_apth = $_SERVER['DOCUMENT_ROOT'].$adm_pth;
 
 // Адрес на phpMyAdmin за отдалечения сървър 
 $phpmyadmin = $adm_pth.'db/index.php';
