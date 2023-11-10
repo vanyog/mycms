@@ -60,6 +60,9 @@ load_options(array(
 $document_root = stored_value('document_root');
 if (file_exists($document_root)) $_SERVER['DOCUMENT_ROOT'] = $document_root;
 
+if(substr($_SERVER['DOCUMENT_ROOT'],-1,1)=='/')  
+   $_SERVER['DOCUMENT_ROOT'] = substr($_SERVER['DOCUMENT_ROOT'],0,-1);
+
 // Директория на входната страница.
 // Задава се ако сайтът се изгражда като раздел в друг сайт и се намира в директория на главния сайт.
 // Трябва да завършва с /.
@@ -77,10 +80,7 @@ if(is_local()) $adm_pth = 'manage/';
 if ($adm_pth[0]!='/') $adm_pth = $pth.$adm_pth;
 
 // Абсолютна директория на директорията за администриране във файловата система на сървъра
-if(substr($_SERVER['DOCUMENT_ROOT'],-1,1)=='/')
-   $adm_apth = substr($_SERVER['DOCUMENT_ROOT'],0,-1).$adm_pth;
-else
-   $adm_apth = $_SERVER['DOCUMENT_ROOT'].$adm_pth;
+$adm_apth = $_SERVER['DOCUMENT_ROOT'].$adm_pth;
 
 // Адрес на phpMyAdmin за отдалечения сървър 
 $phpmyadmin = $adm_pth.'db/index.php';
