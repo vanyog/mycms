@@ -229,6 +229,7 @@ case 'password':
     }
     else $rz .= '<span class="warning">'.translate('user_passwordinvalid')."</span><br>\n";
   break;
+case 'password2': break;  
 default: //die(print_r($ft,true));
   if ($q) $q .= ', ';
   if ($ft[$n]==1){ // Малко цяло число

@@ -276,9 +276,9 @@ $cp = array(
 'thirdname'=>translate('user_thirdname'),
 'country'=>translate('user_country'),
 'telephone'=>translate('user_telephone')
-);// print_r($cp); die;
+); //print_r($_POST); die;
 $rz = '';
-if (count($_POST)) $rz .= process_record($cp, $user_table);
+if (count($_POST)>2) $rz .= process_record($_POST, $user_table);
 return $rz.edit_record_form($cp, $user_table);
 }
 

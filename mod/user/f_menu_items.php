@@ -22,8 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 function user_menu_items(){
 $p = current_pth(__FILE__);
-return '<a href="'.$p.'user.php?user=newreg">User New</a><br>
-<a href="'.$p.'user.php?user=delete">User Delete</a><br>'."\n";
+return '<a href="'.$p.'user.php?user=newreg">User New</a> 
+<a href="'.$p.'user.php?user=delete">User Delete</a> '."\n";
 }
 
 ?>

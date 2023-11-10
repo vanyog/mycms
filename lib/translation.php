@@ -67,7 +67,7 @@ $how = stored_value('flag_setting','flag');
 if ($a) $how = $a;
 if (!$dont_translate) foreach($ls as $l) if ($l!=$language){
   $h = set_self_query_var('lang',$l).$page_hash;
-  $r .= '<a href="'.$h.'" id="lang_flag">';
+  $r .= '<a href="'.$h.'" class="lang_flag">';
   switch ($how){
   case 'text': $r .= $languages[$l]; break;
   case 'flag&text': $r .= '<img src="'.$pth.'images/flag-'.$l.'.svg" alt="'.$l.'">'."<br>$languages[$l]";

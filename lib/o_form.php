@@ -74,7 +74,7 @@ for(i=0;i<l-1;i++){
 //  в бъдеще трябва да се оправи').'
   if (e.type=="text") r = r*e.value.length;
 }
-if (r) f.submit(); else alert("'.translate_if('fillin_all', 'All fields mut be filled in.').'");
+if (r) f.submit(); else alert("'.translate_if('fillin_all', 'All fields must be filled in.').'");
 }
 ';
 $rz = "<form enctype=\"multipart/form-data\" name=\"$this->name\" id=\"$this->name\" method=\"$this->method\" action=\"$this->action\">\n";

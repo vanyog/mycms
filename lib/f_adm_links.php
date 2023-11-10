@@ -38,12 +38,14 @@ include_once($idir.'lib/f_db_table_exists.php');
 include_once($idir.'lib/f_parse_content.php');
 include_once($idir."lib/f_edit_normal_links.php");
 include_once($idir."lib/translation.php");
+include_once($idir."lib/f_add_style.php");
 
 function adm_links(){
 global $idir, $pth, $apth, $adm_pth, $edit_name, $edit_value, $web_host, $local_host, $main_index,
        $phpmyadmin_site, $phpmyadmin_local, $page_data;
 if ( !show_adm_links() ) return '';
 else {
+  add_style("adm_links");
   // $lpid - Ќомер на най-новата страница на сайта
   if (db_table_exists('pages')) $lpid = db_select_1('ID','pages','1 ORDER by `ID` DESC');
   if (isset($lpid['ID'])) $lpid = $lpid['ID']; else $lpid = 1;

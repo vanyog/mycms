@@ -27,13 +27,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include_once($idir."lib/usedatabase.php");
 
 function db_table_field($fn, $tb, $whr, $def = '', $y = false){
-global $db_link,$tn_prefix, $db_req_count;
+global $db_link,$tn_prefix, $db_req_count;//var_dump($db_link);die;
 if(($db_link===false)||is_null($db_link)) return $def;
 $q="SELECT $fn FROM $tn_prefix$tb WHERE $whr;";
 if ($y===true) echo $q."<br>\n";
 try 
 { $r=mysqli_query($db_link,$q); }
-catch (Exception $e){ print_r(debug_backtrace()); die("Incorrect SQL:<br>$q"); }
+catch (Exception $e){ 
+if(mysqli_errno($db_link)==1146) 
+  die(mysqli_error($db_link).'<br>Run <a href="manage/_install.php">manage/_install.php</a> to crate it.');
+  die("<p>function db_table_field<br>".mysqli_errno($db_link).":".mysqli_error($db_link)."<br>$q</p>"); 
+}
 $db_req_count++;
 if (!$r){
   return $def;
