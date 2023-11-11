@@ -33,10 +33,10 @@ if (!isset($ddir) || !file_exists($ddir."conf_database.php")) return;
 
 include_once($ddir."conf_database.php");
 
-$db_link = get_db_link($user, $password, $database, $colation);
+$db_link = get_db_link($host, $user, $password, $database, $colation);
 
-function get_db_link($user, $password, $database, $colation = 'cp1251'){
-try { $l = mysqli_connect("localhost",$user,$password,$database); }
+function get_db_link($host, $user, $password, $database, $colation = 'cp1251'){
+try { $l = mysqli_connect($host,$user,$password,$database); }
 catch (Exception $e){
  header("Content-Type: text/html; charset=Windows-1251");
  echo '<p>Не се получава връзка с MySQL сървъра!';

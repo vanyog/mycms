@@ -204,7 +204,7 @@ $q = "INSERT INTO `$tn_prefix"."visit_history` (`page_id`, `date`, `count`) VALU
 foreach($dt as $r){
   $q .= "(".$r['ID'].", '$dd', ".$r['dcount']."),\n";
 }
-$q = substr($q, 0, strlen($q)-2).";"; die($q);
+$q = substr($q, 0, strlen($q)-2).";";
 mysqli_query($db_link,$q);
 // нулира се броя на посещенията в таблица $tn_prefix.'pages'
 $q = "UPDATE `$tn_prefix"."pages` SET tcount = tcount + dcount, dcount = 0;";
