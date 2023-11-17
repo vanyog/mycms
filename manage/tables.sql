@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost
--- Време на генериране: 10 ное 2023 в 00:26
+-- Време на генериране: 17 ное 2023 в 16:18
 -- Версия на сървъра: 8.0.26
 -- Версия на PHP: 8.2.12
 
@@ -27,11 +27,12 @@ SET time_zone = "+00:00";
 -- Структура на таблица `content`
 --
 
+DROP TABLE IF EXISTS `content`;
 CREATE TABLE `content` (
   `ID` int NOT NULL,
   `name` varchar(50) NOT NULL,
   `nolink` tinyint(1) NOT NULL DEFAULT '0',
-  `date_time_1` datetime NOT NULL,
+  `date_time_1` datetime NOT NULL DEFAULT '0000-01-01 00:00:00',
   `date_time_2` datetime NOT NULL,
   `language` varchar(5) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT 'bg',
   `text` mediumtext CHARACTER SET utf8 COLLATE utf8_unicode_ci
@@ -44,8 +45,8 @@ CREATE TABLE `content` (
 INSERT INTO `content` (`ID`, `name`, `nolink`, `date_time_1`, `date_time_2`, `language`, `text`) VALUES
 (1, 'home_page_title', 0, '2023-11-01 09:14:59', '2023-11-01 09:14:59', 'bg', 'Начална страница'),
 (2, 'home_page_title', 0, '2023-11-01 09:14:59', '2023-11-01 09:14:59', 'en', 'Home Page'),
-(3, 'home_page_content', 0, '2023-11-01 09:14:59', '2023-11-01 09:14:59', 'bg', '<p>Текст на страницата.</p>'),
-(4, 'home_page_content', 0, '2023-11-01 09:14:59', '2023-11-01 09:14:59', 'en', '<p>Content of the Homa Page.</p>'),
+(3, 'home_page_content', 0, '2023-11-01 09:14:59', '2023-11-16 17:51:24', 'bg', '<p><b>Поздравления!</b></p>\r\n\r\n<p>Вие успешно сте инталирали ситема за управление на съдържанието Vanyog CMS на своя сайт.</p>\r\n\r\n<p>Може да започнете с редактиране на всяко от примерните страници, за да представите в тях свое съдържание, а след това да продължите със създаване на още страници.</p>\r\n\r\n<p>Приятно и успешно представяне!</p>'),
+(4, 'home_page_content', 0, '2023-11-01 09:14:59', '2023-11-16 17:54:23', 'en', '<p><b>Congratulations!</b></p>\r\n\r\n<p>You have successfully installed the Vanyog CMS content management system on your site.</p>\r\n\r\n<p>You can start by editing each of the sample pages to feature your own content, then continue to create more pages.</p>\r\n\r\n<p>Enjoy and successful presentation!</p>'),
 (5, 'error_404_title', 0, '2023-11-01 09:14:59', '2023-11-01 09:14:59', 'bg', 'Грешен номер на страница'),
 (6, 'error_404_title', 0, '2023-11-01 09:14:59', '2023-11-01 09:14:59', 'en', 'Incorrect page number'),
 (7, 'error_404_content', 0, '2023-11-01 09:14:59', '2023-11-01 09:14:59', 'bg', '<p>На сайта няма страница с такъв номер.</p>'),
@@ -86,7 +87,7 @@ INSERT INTO `content` (`ID`, `name`, `nolink`, `date_time_1`, `date_time_2`, `la
 (42, 'user_login', 1, '2023-11-01 09:14:59', '2023-11-01 09:14:59', 'bg', 'Влизане в системата'),
 (43, 'user_login', 1, '2023-11-01 09:14:59', '2023-11-01 09:14:59', 'en', 'User login'),
 (44, 'user_login_button', 1, '2023-11-01 09:14:59', '2023-11-01 09:14:59', 'bg', 'Влизане'),
-(45, 'user_login_button', 1, '2023-11-01 09:14:59', '2023-11-01 09:14:59', 'en', 'Log in'),
+(45, 'user_login_button', 1, '2023-11-01 09:14:59', '2023-11-17 15:27:08', 'en', 'Log in'),
 (46, 'user_logoutcontent', 1, '2023-11-01 09:14:59', '2023-11-01 09:14:59', 'bg', '<p>Вие успешно излязохте от системата</p>'),
 (47, 'user_logoutcontent', 1, '2023-11-01 09:14:59', '2023-11-01 09:14:59', 'en', '<p>You have successfully logged out of the system</p>'),
 (48, 'user_logouttitle', 1, '2023-11-01 09:14:59', '2023-11-01 09:14:59', 'bg', 'Изход от системата'),
@@ -143,18 +144,16 @@ INSERT INTO `content` (`ID`, `name`, `nolink`, `date_time_1`, `date_time_2`, `la
 (99, 'menu_start_1', 1, '2023-11-01 09:14:59', '2023-11-01 09:14:59', 'en', ''),
 (100, 'admin_style', 1, '2023-11-01 09:14:59', '2023-11-01 09:14:59', 'bg', ''),
 (101, 'admin_style', 1, '2023-11-01 09:14:59', '2023-11-01 09:14:59', 'en', ''),
-(102, 'p2_title', 0, '2023-11-01 09:14:59', '2023-11-01 22:20:07', 'bg', 'Редактиране на потребител'),
-(103, 'p2_content', 0, '2023-11-01 09:14:59', '2023-11-01 09:14:59', 'bg', '<!--$$_USER_edit_$$-->'),
+(102, 'p2_title', 0, '2023-11-01 09:14:59', '2023-11-12 04:18:20', 'bg', 'Регистриран потребител'),
 (104, 'pagestat_total', 0, '2023-11-01 09:34:03', '2023-11-01 09:34:32', 'bg', 'Посещения на страницата: общо '),
 (105, 'pagestat_today', 0, '2023-11-01 09:34:36', '2023-11-01 09:34:42', 'bg', ' днес '),
-(106, 'powered_by', 0, '2023-11-01 11:15:28', '2023-11-01 11:16:10', 'en', 'Powered by '),
+(106, 'powered_by', 0, '2023-11-01 11:15:28', '2023-11-12 04:45:40', 'en', 'Powered by '),
 (107, 'powered_by', 0, '2023-11-01 11:16:19', '2023-11-01 17:38:35', 'bg', 'Направено с '),
-(108, 'home_page_title', 0, '2023-11-01 12:23:46', '2023-11-01 12:23:46', 'bg', 'Начална страница'),
-(109, 'home_page_title', 0, '2023-11-01 12:23:46', '2023-11-01 12:23:46', 'en', 'Home Page'),
+(326, 'sitesearch_notfound', 0, '2023-11-16 22:13:07', '2023-11-16 22:13:07', 'en', 'No result was found for '),
 (110, 'home_page_content', 0, '2023-11-01 12:23:46', '2023-11-01 12:23:46', 'bg', '<p>Текст на страницата.</p>'),
 (111, 'home_page_content', 0, '2023-11-01 12:23:46', '2023-11-01 12:23:46', 'en', '<p>Content of the Homa Page.</p>'),
-(112, 'error_404_title', 0, '2023-11-01 12:23:46', '2023-11-01 12:23:46', 'bg', 'Грешен номер на страница'),
-(113, 'error_404_title', 0, '2023-11-01 12:23:46', '2023-11-01 12:23:46', 'en', 'Incorrect page number'),
+(325, 'sitesearch_clear', 1, '2023-11-16 22:11:59', '2023-11-16 22:12:32', 'en', 'Cleaning'),
+(324, 'sitesearch_submit', 1, '2023-11-16 22:11:40', '2023-11-16 22:11:40', 'en', 'Search'),
 (114, 'error_404_content', 0, '2023-11-01 12:23:46', '2023-11-01 12:23:46', 'bg', '<p>На сайта няма страница с такъв номер.</p>'),
 (115, 'error_404_content', 0, '2023-11-01 12:23:46', '2023-11-01 12:23:46', 'en', '<p>Page is not found.</p>'),
 (116, 'p1_link', 127, '2023-11-01 12:23:46', '2023-11-01 12:23:46', 'bg', 'Начало'),
@@ -193,7 +192,6 @@ INSERT INTO `content` (`ID`, `name`, `nolink`, `date_time_1`, `date_time_2`, `la
 (149, 'user_login', 1, '2023-11-01 12:23:46', '2023-11-01 12:23:46', 'bg', 'Влизане в системата'),
 (150, 'user_login', 1, '2023-11-01 12:23:46', '2023-11-01 12:23:46', 'en', 'User login'),
 (151, 'user_login_button', 1, '2023-11-01 12:23:46', '2023-11-01 12:23:46', 'bg', 'Влизане'),
-(152, 'user_login_button', 1, '2023-11-01 12:23:46', '2023-11-01 12:23:46', 'en', 'Log in'),
 (153, 'user_logoutcontent', 1, '2023-11-01 12:23:46', '2023-11-01 12:23:46', 'bg', '<p>Вие успешно излязохте от системата</p>'),
 (154, 'user_logoutcontent', 1, '2023-11-01 12:23:46', '2023-11-01 12:23:46', 'en', '<p>You have successfully logged out of the system</p>'),
 (155, 'user_logouttitle', 1, '2023-11-01 12:23:46', '2023-11-01 12:23:46', 'bg', 'Изход от системата'),
@@ -250,13 +248,131 @@ INSERT INTO `content` (`ID`, `name`, `nolink`, `date_time_1`, `date_time_2`, `la
 (206, 'menu_start_1', 1, '2023-11-01 12:23:46', '2023-11-01 12:23:46', 'en', ''),
 (207, 'admin_style', 1, '2023-11-01 12:23:46', '2023-11-01 12:23:46', 'bg', ''),
 (208, 'admin_style', 1, '2023-11-01 12:23:46', '2023-11-01 12:23:46', 'en', ''),
-(209, 'p2_title', 0, '2023-11-01 12:23:46', '2023-11-01 12:23:46', 'bg', 'Страница за администриране'),
-(210, 'p2_content', 0, '2023-11-01 12:23:46', '2023-11-01 12:23:46', 'bg', '<!--$$_USER_edit_$$-->'),
+(323, 'sitesearch_label', 1, '2023-11-16 22:10:52', '2023-11-16 22:10:52', 'en', 'Search the site'),
+(210, 'p2_content', 0, '2023-11-01 12:23:46', '2023-11-12 04:58:03', 'bg', '<!--$$_USERREG_admin|logout_$$-->\r\n<!--$$_USERREG_admin|edit_$$-->'),
 (211, 'pagestat_total', 0, '2023-11-01 12:25:02', '2023-11-01 12:27:14', 'en', 'Page is visited: in total '),
 (212, 'pagestat_today', 0, '2023-11-01 12:26:22', '2023-11-01 12:28:23', 'en', ', today '),
 (213, 'userreg_nouserlogedin', 0, '2023-11-01 20:06:12', '2023-11-01 20:06:31', 'bg', 'Няма влязъл потребител'),
 (214, 'userreg_new', 0, '2023-11-01 21:19:27', '2023-11-01 21:19:40', 'bg', 'Нов потребител'),
-(215, 'userreg_create', 0, '2023-11-01 21:20:44', '2023-11-01 21:21:11', 'bg', 'Създаване на потребителя');
+(215, 'userreg_create', 0, '2023-11-01 21:20:44', '2023-11-01 21:21:11', 'bg', 'Създаване на потребителя'),
+(216, 'user_language', 0, '2023-11-11 21:54:29', '2023-11-11 21:55:49', 'bg', 'Предпочитан език за кореспонденция: '),
+(217, 'user_aemails', 0, '2023-11-11 21:55:17', '2023-11-11 21:55:17', 'bg', 'Допълнителни имейли, отделени със запетаи, без интервали: '),
+(218, 'user_position', 0, '2023-11-11 21:57:04', '2023-11-11 21:57:04', 'bg', 'Предпочитано обръщение (проф. инж. и др. подобни): '),
+(219, 'userreg_egithelp', 0, '2023-11-11 21:57:44', '2023-11-11 21:58:38', 'bg', '<p>&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<h2>Указания за попълване</h2>\r\n\r\n<p>Попълването на нито едно от полетата не е задължително, но може да е необходимо за целта, поради която е създаден профила.</p>\r\n\r\n<p>Променете само съдържанието на полетата с информация, която искате да промените или добавите, и натискате бутона <strong>&quot;Съхраняване на данните&quot;</strong></p>\r\n\r\n<p>След натискане на бутона &quot;Съхраняване на данните&quot;, системата зарежда променените данни и показва отново настоящата страница. Така виждате промените и убеждавате, че са запазени.</p>\r\n\r\n<p>Ако няма да променяте личните си данни или когато свършите с редактирането, преминете към друга страница от сайта чрез някоя от хипервръзките, намиращи се около този формуляр.</p>\r\n\r\n<p>Полетата <strong>&quot;Парола&quot;</strong> и &quot;<strong>Повторение на паролата&quot;</strong> се попълват само ако искате да смените сегашната си парола с друга. Промяната се извършва само ако в двете полета се въведат еднакви пароли.</p>\r\n\r\n<p>Поле <strong>&quot;Потребителско име&quot;</strong> се променя само ако желаете при влизане в сайта да пишете нещо друго, а не имейл адреса си.</p>\r\n\r\n<p>Ако промените &quot;Потребителско име&quot; или &quot;Парола&quot; промяната настъпва веднага след натискане на бутона &quot;Съхраняване на данните&quot; и при следващото влизане в сайта трябва да използвате новите.</p>\r\n\r\n<p>Полето <strong>&quot;Длъжност и звание&quot;</strong> се използва в обръщението към Вас в изпращани от системата имейли. Имайте предвид това и го напишете, както бихте искали да стои пред Вашето име. Например: \"доц. д-р инж.\"</p>\r\n\r\n<p>В полето &quot;<strong>Допълнителни имейли</strong>&quot; може да попълните други имайл адреси, които използвате и до които искате да бъдат изпращани съобщенията от системата.</p>\r\n'),
+(220, 'p2_content', 0, '2023-11-11 22:00:15', '2023-11-12 05:22:41', 'en', '<!--$$_USERREG_admin|logout_$$-->\r\n<!--$$_USERREG_admin|edit_$$-->'),
+(221, 'p2_title', 0, '2023-11-11 22:00:43', '2023-11-12 04:43:53', 'en', 'Registered user'),
+(222, 'user_language', 0, '2023-11-11 22:01:57', '2023-11-11 22:01:57', 'en', 'Preferred language for correspondence: '),
+(223, 'user_aemails', 0, '2023-11-11 22:03:08', '2023-11-11 22:03:08', 'en', 'Additional emails separated by commas, no spaces: '),
+(224, 'user_position', 0, '2023-11-11 22:07:23', '2023-11-11 22:07:23', 'en', 'Rank & degree (Prof. Eng., etc.): '),
+(225, 'userreg_egithelp', 0, '2023-11-11 22:07:53', '2023-11-11 22:07:53', 'en', '<p><a id=\\\"help\\\" name=\\\"help\\\"></a></p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<h2>Instructions for completion of this form</h2>\r\n\r\n<p>Completing of any of the fields is optional.</p>\r\n\r\n<p>Edit only the contents of the field with the information you want to add or change and click the <strong>&quot;Save Changes&quot;</strong> button.</p>\r\n\r\n<p>After clicking the &quot;Save Changes&quot; button, the system loads the changed data and displays this page again to show you the changes.</p>\r\n\r\n<p>If you have finished editing or you do not want to change your personal data, use the hyperlinks you see above and around this form to go to another page on the site.</p>\r\n\r\n<p>Edit the fields <strong>&quot;Password&quot;</strong> and <strong>&quot;Repeat password&quot;</strong> only if you want to change your current password with another one. The change shall be made only if the both fields have the same passwords.</p>\r\n\r\n<p>Change the field <strong>&quot;Username&quot;</strong> if only you want to log in with another username instead of your email address.</p>\r\n\r\n<p>If you change the &quot;Username&quot; and &quot;Password&quot; be careful not to forget that you had made changes, and the next time log in the site with your new username and password.</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>&nbsp;</p>'),
+(226, 'userreg_newreg', 0, '2023-11-12 04:21:23', '2023-11-12 04:21:40', 'bg', 'Нова регистрация'),
+(227, 'userreg_logintext', 0, '2023-11-12 04:21:55', '2023-11-12 04:22:57', 'bg', '<h2>Вход за регистрирани потребители</h2>\r\n<p>Потребителското име трябва да е имейл адресът, с който сте се регистрирали, освен ако при редактиране на личните си данни не сте задали Вие друго потребителско име.</p>\r\n<p><b>Ако още не сте се регистрирали или сте забравили паролата си,<br>отворете страница</b> '),
+(228, 'USERREG_admin', 0, '2023-11-12 04:23:10', '2023-11-12 04:23:14', 'bg', NULL),
+(229, 'userreg_login', 0, '2023-11-12 04:24:12', '2023-11-12 04:26:40', 'bg', '<b>Вход</b>'),
+(230, 'userreg_newregtext', 0, '2023-11-12 04:25:17', '2023-11-12 04:26:18', 'bg', '<h2>Регистриране или смяна на паролата</h2>\r\n<p>Паролата трябва да е не по-къса от 8 символа.</p>\r\n<p><b>Ако вече сте се регистрирали, за да влезете в сайта, използвайте страница</b>'),
+(231, 'userreg_gdpr', 0, '2023-11-12 04:26:51', '2023-11-12 04:27:49', 'bg', 'Лични данни:'),
+(232, 'userreg_gdpr2', 0, '2023-11-12 04:27:59', '2023-11-12 04:30:41', 'bg', 'С поставяне на тази отметка, Вие се съгласявате на настоящия сайт да се запазват и обработват Ваши лични данни.</a>\r\n'),
+(233, 'userreg_regsubmit', 0, '2023-11-12 04:31:46', '2023-11-12 04:32:06', 'bg', 'Регистриране'),
+(234, 'userreg_newhelp', 0, '2023-11-12 04:32:58', '2023-11-12 04:34:19', 'bg', '<p>&nbsp;</p>\r\n<hr>\r\n\r\n<h2>Указания за регистриране</h2>\r\n\r\n<div class=\"who\">\r\n<p>Този формуляр се използва в два случая:</p>\r\n\r\n<ol>\r\n	<li>Ако за първи път се регистрирате.</li>\r\n	<li>Ако сте се регистрирали и искате да смените/възстановите паролата си.</li>\r\n</ol>\r\n\r\n<p>И в двата случая се прави едно и също.</p>\r\n\r\n<p>И трите полета е задължително да се попълнят.</p>\r\n\r\n<p><strong>Имейл адресът</strong>, трябва да е от реално съществуваща електронна поща, защото регистрацията се завършва след отваряне на изпратено до попълнения адрес съобщение.</p>\r\n\r\n<p>В случай, че използвате този формуляр за да смените паролата си, посочете имейла, с който вече сте се регистрирали.</p>\r\n\r\n<p><strong>Паролата</strong> трябва де е не по-къса от 8 символа. <span style=\"color:red\">Запомнете паролата или я запишете!</span></p>\r\n\r\n<p>Поставете отметката &quot;<strong>Не съм робот</strong>&quot;.</p>\r\n\r\n<p>Щом натиснете бутона &quot;Регистриране&quot; системата изпраща съобщение до посочения имел.</p>\r\n\r\n<p>Завършването на регистрацията или смяната на паролата с нова, става след като я потвърдите, като отворите адреса от полученото съобщение.</p>\r\n\r\n<p>При следващо влизане в своя профил посочете имейл адреса си и новата парола, която сте потвърдили.</p>\r\n</div>\r\n\r\n<p>&nbsp;</p>'),
+(235, 'userreg_newhelp', 0, '2023-11-12 04:39:23', '2023-11-12 04:39:23', 'en', '<p>&nbsp;</p>\r\n<hr>\r\n\r\n<h2>Registration instructions</h2>\r\n\r\n<div class=\"who\">\r\n<p>This form is used in two cases:</p>\r\n\r\n<ol>\r\n	<li>If you are registering for the first time.</li>\r\n	<li>If you have registered and want to change/reset your password.</li>\r\n</ol>\r\n\r\n<p>In both cases, the same thing is done.</p>\r\n\r\n<p>All three fields must be filled out.</p>\r\n\r\n<p><strong>Email address</strong>, must be from a real existing e-mail, because the registration is completed after opening a message sent to the filled-in address.</p>\r\n\r\n<p>If you are using this form to change your password, please enter the email you have already registered with.</p>\r\n\r\n<p><strong>Password</strong> must be no shorter than 8 characters. <span style=\"color:red\">Remember the password or write it down!</span></p>\r\n\r\n<p>Tick &quot;<strong>I\'m not a robot</strong>&quot;.</p>\r\n\r\n<p>As soon as you press the button &quot;Register&quot; the system sends a message to the specified mistletoe.</p>\r\n\r\n<p>Completing the registration or changing the password to a new one is done after confirming it by opening the address from the received message.</p>\r\n\r\n<p>The next time you log into your account, provide your email address and the new password you confirmed.</p>\r\n</div>\r\n\r\n<p>&nbsp;</p>'),
+(236, 'userreg_regsubmit', 0, '2023-11-12 04:39:45', '2023-11-12 04:39:45', 'en', 'Registration'),
+(237, 'userreg_gdpr2', 0, '2023-11-12 04:41:08', '2023-11-12 04:41:08', 'en', 'By placing this checkmark, you agree to this site to store and process your personal data.'),
+(238, 'userreg_gdpr', 0, '2023-11-12 04:41:27', '2023-11-12 04:41:27', 'en', 'Personal data:'),
+(239, 'userreg_login', 0, '2023-11-12 04:41:41', '2023-11-12 04:41:41', 'en', '<b>Log in</b>'),
+(240, 'userreg_newregtext', 0, '2023-11-12 04:42:16', '2023-11-12 04:42:16', 'en', '<h2>Register or change password</h2>\r\n<p>The password must be no shorter than 8 characters.</p>\r\n<p><b>If you have already registered to enter the site, use page</b>'),
+(241, 'userreg_logintext', 0, '2023-11-12 04:42:39', '2023-11-17 15:23:13', 'en', '<h2>Login for registered users</h2>\r\n<p>The username must be the email address you registered with, unless you set a different username when editing your personal data.</p>\r\n<p><b>If you have not yet registered or have forgotten your password,<br>go to page </b>'),
+(242, 'userreg_newreg', 0, '2023-11-12 04:42:45', '2023-11-12 04:42:45', 'en', 'New registration'),
+(243, 'userreg_create', 0, '2023-11-12 04:44:52', '2023-11-12 04:44:52', 'en', 'Create the user'),
+(244, 'userreg_new', 0, '2023-11-12 04:45:03', '2023-11-12 04:45:03', 'en', 'New user'),
+(245, 'userreg_nouserlogedin', 0, '2023-11-12 04:45:34', '2023-11-12 04:45:34', 'en', 'There is no user logged in'),
+(246, 'userreg_mustlogin', 0, '2023-11-12 04:58:26', '2023-11-12 05:06:31', 'bg', 'За да видите съдържанието на настоящатаа страница, трябва да влезете през страница '),
+(247, 'userreg_logoutcontent', 0, '2023-11-12 05:09:39', '2023-11-12 05:10:16', 'bg', '<h2>Вие излязохте от системата</h2>\r\n<p>Можете да влезете отново през страница  '),
+(248, 'userreg_backto', 0, '2023-11-12 05:12:41', '2023-11-12 05:12:58', 'bg', 'Връщане на страницата, от която излязохте'),
+(249, 'userreg_wrong', 0, '2023-11-12 05:16:03', '2023-11-12 05:16:46', 'bg', 'Грешна парола или потребителско име. При забравена парола използвайте страница '),
+(250, 'userreg_wrong', 0, '2023-11-12 05:19:18', '2023-11-12 05:19:18', 'en', 'Wrong password or username. If you forgot your password, use page '),
+(251, 'userreg_backto', 0, '2023-11-12 05:19:57', '2023-11-12 05:19:57', 'en', 'Return to the page you exited from'),
+(252, 'userreg_logoutcontent', 0, '2023-11-12 05:20:47', '2023-11-12 05:20:47', 'en', '<h2>You have logged out</h2>\r\n<p>You can log in again through page '),
+(253, 'userreg_mustlogin', 0, '2023-11-12 05:21:29', '2023-11-12 05:21:29', 'en', 'To view the content of the current page, you must log in through page '),
+(254, 'usermenu_editmenu', 0, '2023-11-14 15:55:46', '2023-11-14 15:55:46', 'bg', 'Редактиране на хипервръзка от меню'),
+(255, 'usermenu_menugroup', 1, '2023-11-14 15:59:18', '2023-11-14 15:59:47', 'bg', 'Номер на менюто:'),
+(256, 'usermenu_menutext', 1, '2023-11-14 16:00:15', '2023-11-14 16:00:24', 'bg', 'Текст върху хипервръзката:'),
+(257, 'usermenu_menulinkdb', 1, '2023-11-14 16:00:57', '2023-11-14 16:01:07', 'bg', 'Номер на страницата, която се отваря:'),
+(258, 'p2_link', 0, '0000-01-01 00:00:00', '2023-11-16 17:04:12', 'bg', 'Вход'),
+(259, 'p3_title', 0, '2023-11-14 16:09:29', '2023-11-16 16:53:53', 'bg', 'Относно'),
+(260, 'p3_content', 0, '2023-11-14 16:09:29', '2023-11-16 16:25:28', 'bg', '<p>Обикновено всеки сайт има такава страница. Редактирайте тази, за да представите в нея информация подходяща за Вашия сайт.</p>\r\n'),
+(261, 'p3_link', 0, '2023-11-14 16:09:29', '2023-11-14 16:09:29', 'bg', 'Относно'),
+(262, 'm1_link', 0, '2023-11-14 16:09:29', '2023-11-14 16:09:29', 'bg', 'Относно'),
+(263, 'cookies_message', 0, '2023-11-15 10:23:30', '2023-11-15 23:59:08', 'bg', '<p>За да бъде приятно Вашето изживяване, този сайт използва &quot;бисквитки&quot;. <a href=\"/index.php?pid=5\">Вижте повече</a>. Съгласни ли сте да приемете тези &quot;бисквитки&quot;?&nbsp; <a href=\"\" onclick=\"cookies_accept();return false;\">ДА</a></p>'),
+(264, 'cookies_message', 0, '2023-11-15 10:30:11', '2023-11-16 17:58:21', 'en', '<p id=\"cookie_message\">This website uses cookies to ensure you get the best experience on our website. <a href=\"/index.php?pid=108\">More info</a>. &nbsp; <a href=\"\" onclick=\"cookies_accept();return false;\">Got It</a>!</p>\r\n'),
+(265, 'p3_title', 0, '2023-11-15 16:00:56', '2023-11-16 17:57:23', 'en', 'About'),
+(266, 'p3_content', 0, '2023-11-15 16:01:48', '2023-11-16 17:58:08', 'en', '<p>Usually every site has such a page. Edit this page to present information relevant to your site.</p>'),
+(267, 'p3_link', 0, '2023-11-15 16:02:01', '2023-11-15 16:02:01', 'en', 'About'),
+(268, 'm1_link', 0, '2023-11-15 16:02:07', '2023-11-15 16:02:07', 'en', 'About'),
+(269, 'p2_link', 0, '2023-11-15 16:02:12', '2023-11-16 17:55:01', 'en', 'Login'),
+(270, 'usermenu_menulinkdb', 1, '2023-11-15 16:02:41', '2023-11-15 16:02:41', 'en', 'Number of the page that opens:'),
+(271, 'usermenu_menutext', 1, '2023-11-15 16:03:02', '2023-11-15 16:03:02', 'en', 'Hyperlink text:'),
+(272, 'usermenu_menugroup', 1, '2023-11-15 16:03:33', '2023-11-15 16:03:33', 'en', 'Menu number:'),
+(273, 'usermenu_editmenu', 0, '2023-11-15 16:03:54', '2023-11-15 16:03:54', 'en', 'Edit a hyperlink from a menu'),
+(274, 'p4_title', 0, '2023-11-15 20:21:29', '2023-11-15 20:21:29', 'bg', 'Политика за лични данни на този сайт'),
+(275, 'p4_content', 0, '2023-11-15 20:22:28', '2023-11-17 07:27:47', 'bg', '<p>Настоящият сайт не обработва и не съхранява лични данни по начин позволяващ свързване на данни с конкретна личност.</p>\r\n<h2>\"Бисквитки\" и други подобни технологии</h2>\r\n<p>С цел подобряване на Вашето изживялане при посещаване на сайта използваме \"бисквитки\".  Вижте повече за тази технология в <a href=\"https://bg.wikipedia.org/wiki/HTTP_%D0%B1%D0%B8%D1%81%D0%BA%D0%B2%D0%B8%D1%82%D0%BA%D0%B0\" target=\"_blank\">bg.wikipedia.org/wiki/HTTP_бисквитка</a>.</p>\r\n<!--$$_COOKIES_$$-->\r\n<p>При желание от Ваша страна, когато бъдете попитани дали позволявате запазване на \"бисквитки\", породено от посещаване на този сайт, можете да откажете, а чрез инструментите на своя браузър можете да изтриете запазените \"бисквитки\".</p>'),
+(276, 'cookies_table', 1, '2023-11-15 20:24:10', '2023-11-17 07:29:56', 'bg', 'Може да прегледате списъка на \"бисквитките\" от този сайт във Вашето устройство:'),
+(277, 'cookies_name', 1, '2023-11-15 20:24:22', '2023-11-15 20:36:59', 'bg', 'Име'),
+(278, 'cookies_value', 1, '2023-11-15 20:24:34', '2023-11-15 20:37:08', 'bg', 'Стойност'),
+(279, 'cookies_description', 1, '2023-11-15 20:24:46', '2023-11-15 20:37:18', 'bg', 'Предназначение'),
+(280, 'cookies_cookies_accept_description', 1, '2023-11-15 20:25:17', '2023-11-15 20:35:00', 'bg', 'Вашето съгласие, да приемате \"бисквитки\".'),
+(281, 'cookies_PHPSESSID_description', 1, '2023-11-15 20:25:49', '2023-11-15 20:35:17', 'bg', 'Идентификатор на Вашата комуникационна сесия.'),
+(282, 'cookies_edit_description', 1, '2023-11-15 20:32:16', '2023-11-15 20:35:28', 'bg', 'Дали е включен режим на редактиране.'),
+(283, 'cookies_language_description', 1, '2023-11-15 20:34:18', '2023-11-15 20:35:37', 'bg', 'Избраният от Вас език, на който да се показва сайта.'),
+(311, 'cookies_language_description', 1, '2023-11-16 18:01:42', '2023-11-16 18:01:42', 'en', 'Your chosen language in which to display the site.'),
+(285, 'cookies_nocookie', 1, '2023-11-15 21:26:07', '2023-11-15 21:26:56', 'bg', 'Няма \"бисквитки\" от този сайт на Вашето устройство.'),
+(286, 'p4_link', 0, '0000-01-01 00:00:00', '2023-11-16 16:52:04', 'bg', 'Лични данни'),
+(287, 'p5_link', 0, '0000-01-01 00:00:00', '2023-11-16 16:54:30', 'bg', 'Относно'),
+(288, 'menu_start_2', 0, '2023-11-16 16:32:50', '2023-11-16 16:32:50', 'bg', ''),
+(289, 'menutree_start', 0, '2023-11-16 16:46:49', '2023-11-16 16:46:49', 'bg', ''),
+(290, 'p5_title', 0, '2023-11-16 16:57:06', '2023-11-16 16:57:06', 'bg', 'Карта на сайта'),
+(291, 'p5_content', 0, '2023-11-16 16:57:06', '2023-11-16 16:57:32', 'bg', '<!--$$_SITEMAP_$$-->'),
+(292, 'p6_link', 0, '2023-11-16 16:57:06', '2023-11-16 16:57:06', 'bg', 'Карта на сайта'),
+(293, 'm1_link', 0, '2023-11-16 16:57:06', '2023-11-16 16:57:06', 'bg', 'Карта на сайта'),
+(294, 'site_map_contract', 0, '2023-11-16 16:58:54', '2023-11-16 16:59:09', 'bg', 'Сгъване на всички'),
+(295, 'site_map_expand', 0, '2023-11-16 16:59:47', '2023-11-16 16:59:47', 'bg', 'Разгъване на всички'),
+(296, 'sitemap_currentpage', 0, '2023-11-16 17:29:47', '2023-11-16 17:31:02', 'bg', ' - текущата страница'),
+(297, 'sitemap_currentpage', 0, '2023-11-16 17:54:57', '2023-11-16 17:54:57', 'en', '- the current page'),
+(298, 'site_map_expand', 0, '2023-11-16 17:55:50', '2023-11-16 17:55:50', 'en', 'Expand all'),
+(299, 'site_map_contract', 0, '2023-11-16 17:56:17', '2023-11-16 17:56:17', 'en', 'Collapse all'),
+(300, 'p5_content', 0, '2023-11-16 17:56:22', '2023-11-16 17:56:22', 'en', '<!--$$_SITEMAP_$$-->'),
+(301, 'p5_title', 0, '2023-11-16 17:56:57', '2023-11-16 17:56:57', 'en', 'Site Map'),
+(302, 'p6_link', 0, '2023-11-16 17:57:01', '2023-11-16 17:57:01', 'en', 'Site Map'),
+(303, 'p5_link', 0, '2023-11-16 17:57:13', '2023-11-16 17:57:13', 'en', 'About'),
+(304, 'p4_link', 0, '2023-11-16 17:57:52', '2023-11-16 17:57:52', 'en', 'Personal data'),
+(305, 'cookies_nocookie', 1, '2023-11-16 17:58:58', '2023-11-16 17:58:58', 'en', 'There are no cookies from this site on your device.'),
+(306, 'p4_content', 0, '2023-11-16 17:59:04', '2023-11-17 15:21:30', 'en', '<p>This site does not process or store personal data in a way that allows data to be linked to a specific person.</p>\r\n<h2>Cookies and other similar technologies</h2>\r\n<p>In order to improve your experience when visiting the site, we use \"cookies\". See more about this technology at <a href=\"https://en.wikipedia.org/wiki/HTTP_cookie\" target=\"_blank\">bg.wikipedia.org/wiki/HTTP_cookie</a>.</p>\r\n<!--$$_COOKIES_$$-->\r\n<p>If you wish, when you are asked whether you allow the storage of \"cookies\" resulting from visiting this site, you can refuse, and through the tools of your browser you can delete the stored \"cookies\".</p>'),
+(307, 'cookies_description', 1, '2023-11-16 17:59:24', '2023-11-16 17:59:24', 'en', 'Purpose'),
+(308, 'cookies_value', 1, '2023-11-16 17:59:43', '2023-11-16 17:59:43', 'en', 'Value'),
+(309, 'cookies_name', 1, '2023-11-16 17:59:50', '2023-11-16 17:59:50', 'en', 'Name'),
+(310, 'cookies_table', 1, '2023-11-16 18:00:12', '2023-11-17 07:49:28', 'en', 'You can view the list of cookies from this site on your device:'),
+(312, 'cookies_edit_description', 1, '2023-11-16 18:02:03', '2023-11-16 18:02:03', 'en', 'Whether edit mode is enabled.'),
+(313, 'cookies_PHPSESSID_description', 1, '2023-11-16 18:02:32', '2023-11-16 18:02:32', 'en', 'Identifier of your communication session.'),
+(314, 'cookies_cookies_accept_description', 1, '2023-11-16 18:02:57', '2023-11-16 18:02:57', 'en', 'Your consent to accept cookies.'),
+(315, 'p4_title', 0, '2023-11-16 18:03:26', '2023-11-16 18:03:26', 'en', 'This site\'s privacy policy'),
+(316, 'sitesearch_start', 0, '2023-11-16 18:37:28', '2023-11-16 18:37:28', 'bg', ''),
+(317, 'sitesearch_label', 1, '2023-11-16 18:37:48', '2023-11-16 21:15:20', 'bg', 'Търсне в сайта'),
+(318, 'sitesearch_submit', 1, '2023-11-16 18:38:10', '2023-11-16 21:14:51', 'bg', 'Търсене'),
+(319, 'sitesearch_clear', 1, '2023-11-16 18:54:23', '2023-11-16 21:13:51', 'bg', 'Почистване'),
+(320, 'sitesearch_searchfor', 0, '2023-11-16 19:00:46', '2023-11-16 19:01:19', 'bg', 'Резултат от търсене на'),
+(321, 'sitesearch_count', 0, '2023-11-16 19:01:31', '2023-11-16 19:01:48', 'bg', 'Намерени резултати'),
+(322, 'sitesearch_notfound', 0, '2023-11-16 19:10:45', '2023-11-16 19:11:32', 'bg', 'Не беше намерен резултат за '),
+(327, 'sitesearch_count', 0, '2023-11-16 22:13:30', '2023-11-16 22:13:30', 'en', 'Results found '),
+(328, 'sitesearch_searchfor', 0, '2023-11-16 22:13:52', '2023-11-16 22:13:52', 'en', 'Search result for '),
+(329, 'p7_title', 0, '2023-11-16 22:17:42', '2023-11-16 22:17:42', 'bg', 'Резултати от търсене'),
+(330, 'p7_content', 0, '2023-11-16 22:19:15', '2023-11-16 22:19:15', 'bg', '<!--$$_SITESEARCH2_result_$$-->'),
+(331, 'p7_content', 0, '2023-11-16 22:24:41', '2023-11-16 22:24:41', 'en', '<!--$$_SITESEARCH2_result_$$-->'),
+(332, 'p7_title', 0, '2023-11-16 22:25:01', '2023-11-16 22:25:01', 'en', 'Search results'),
+(333, 'cookies_admin_description', 1, '2023-11-17 07:06:12', '2023-11-17 07:10:26', 'bg', 'Означава дали сайта е в решим на администриране.'),
+(334, 'cookies_noadm_description', 1, '2023-11-17 07:09:05', '2023-11-17 07:16:50', 'bg', 'Дали да са скрити линковете за редактиране в режим на администриране. '),
+(335, 'cookies_limit_description', 1, '2023-11-17 07:10:03', '2023-11-17 07:10:50', 'bg', 'Ограничение за броя на показваните записи от базата данни при едминистриране.'),
+(336, 'cookies_noadm_description', 1, '2023-11-17 07:50:44', '2023-11-17 07:50:44', 'en', 'Whether to hide the edit links in admin mode.'),
+(337, 'cookies_limit_description', 1, '2023-11-17 07:51:06', '2023-11-17 07:51:06', 'en', 'Limit on the number of displayed database records in administration.'),
+(338, 'cookies_admin_description', 1, '2023-11-17 07:51:31', '2023-11-17 07:51:31', 'en', 'Indicates whether the site is under administration.');
 
 -- --------------------------------------------------------
 
@@ -264,6 +380,7 @@ INSERT INTO `content` (`ID`, `name`, `nolink`, `date_time_1`, `date_time_2`, `la
 -- Структура на таблица `filters`
 --
 
+DROP TABLE IF EXISTS `filters`;
 CREATE TABLE `filters` (
   `ID` int NOT NULL,
   `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
@@ -276,6 +393,7 @@ CREATE TABLE `filters` (
 -- Структура на таблица `menu_items`
 --
 
+DROP TABLE IF EXISTS `menu_items`;
 CREATE TABLE `menu_items` (
   `ID` int NOT NULL,
   `place` int NOT NULL,
@@ -289,7 +407,12 @@ CREATE TABLE `menu_items` (
 --
 
 INSERT INTO `menu_items` (`ID`, `place`, `group`, `name`, `link`) VALUES
-(1, 10, 1, 'p1_link', '1');
+(1, 10, 1, 'p1_link', '1'),
+(2, 60, 1, 'p2_link', '2'),
+(3, 20, 1, 'p3_link', '3'),
+(4, 40, 2, 'p4_link', '4'),
+(5, 30, 2, 'p5_link', '3'),
+(6, 50, 1, 'p6_link', '5');
 
 -- --------------------------------------------------------
 
@@ -297,6 +420,7 @@ INSERT INTO `menu_items` (`ID`, `place`, `group`, `name`, `link`) VALUES
 -- Структура на таблица `menu_tree`
 --
 
+DROP TABLE IF EXISTS `menu_tree`;
 CREATE TABLE `menu_tree` (
   `ID` int NOT NULL,
   `group` int NOT NULL,
@@ -309,7 +433,8 @@ CREATE TABLE `menu_tree` (
 --
 
 INSERT INTO `menu_tree` (`ID`, `group`, `parent`, `index_page`) VALUES
-(1, 1, 0, 1);
+(1, 1, 0, 1),
+(2, 2, 1, 3);
 
 -- --------------------------------------------------------
 
@@ -317,6 +442,7 @@ INSERT INTO `menu_tree` (`ID`, `group`, `parent`, `index_page`) VALUES
 -- Структура на таблица `options`
 --
 
+DROP TABLE IF EXISTS `options`;
 CREATE TABLE `options` (
   `ID` int NOT NULL,
   `name` varchar(100) NOT NULL,
@@ -335,15 +461,26 @@ INSERT INTO `options` (`ID`, `name`, `value`) VALUES
 (5, 'adm_value', 'on'),
 (6, 'edit_name', 'edit'),
 (7, 'edit_value', 'on'),
-(8, 'host_web', 'mysite.org'),
-(9, 'host_local', 'localhost'),
+(8, 'host_web', 'vanyog.atwebpages.com'),
+(9, 'host_local', 'localhost/n'),
 (10, 'phpmyadmin_web', 'http://localhost/phpmyadmin'),
 (11, 'phpmyadmin_local', 'http://localhost/phpmyadmin'),
 (12, 'mod_path', '_mod'),
 (13, 'cache_time', '10'),
-(14, 'css_adm_links', '#adm_links { font-size:200%; opacity:0.1; position:fixed; top:0; margin:0; background-color:white; width:30px; height:100vh; overflow-y:scroll; overflow-x:hidden; }\r\n#adm_links:hover { opacity:1; width:auto; }\r\n#adm_links a { display:block; }'),
-(15, 'css_all_pages', 'body { font-family: arial, sans-serif; }\r\na { text-decoration:none; }\r\n.lang_flag img { width:40px; height:20px; vertical-align:middle; }\r\nnav { display:inline-block; }\r\nheader a, header span { margin:0 5px; }\r\nheader { background-color:#00468e; color:#fff; padding: 10px; }\r\nsection { min-height:77vh; max-width:870px; margin:10px auto; box-shadow: 1px 1px 5px 0 rgba(50,50,50,0.4); padding:10px; }\r\n'),
-(17, 'css_usermenu', '#user_menu { display:inline-block; position:absolute; top:0; right:0; padding:5px; opacity:0.1; }\r\n#user_menu:hover { background-color:#fff; opacity:1; }\r\n#user_menu a { display:block; }\r\n');
+(14, 'css_adm_links', '#adm_links { font-size:200%; opacity:0.1; position:fixed; top:0; margin:0; background-color:white; width:30px; height:100vh; overflow-y:scroll; overflow-x:hidden; }\r\n#adm_links:hover { opacity:1; width:auto; }\r\n#adm_links a { display:block; }\r\n#adm_links a:hover { text-decoration:underline; }'),
+(15, 'css_all_pages', 'body { font-family: arial, sans-serif; }\r\na { color:#005941; }\r\n.lang_flag { float:left; margin:0 15px 0 0; padding:0; }\r\n.lang_flag img { width:60px; height:30px; vertical-align:middle; }\r\nnav { display:inline-block; }\r\nheader { background-color:#005941; color:#fff; padding: 10px; overflow:auto; line-height:50px; }\r\nheader a { color:#fff; text-decoration:none; margin:15px; padding:10px; }\r\nheader span { border: solid 1px; padding:10px; margin:14px; }\r\nheader a:hover { color:#97ff93; }\r\nsection { min-height: calc(100vh - 185px); max-width:870px; margin:10px auto; box-shadow: 1px 1px 5px 0 rgba(50,50,50,0.4); padding:10px; }\r\nfooter { text-align:center; }\r\n#cookies_message { text-align:center; overflow:auto; background-color:#ffeda4; }\r\n.searched { background-color:yellow; }\r\ntd { padding-right:10px; }\r\n#site_search input[type=\"button\"] { height:30px; }\r\n'),
+(17, 'css_usermenu', '#user_menu { display:inline-block; position:absolute; top:0; right:0; padding:5px; opacity:0.1; }\r\n#user_menu:hover { background-color:#fff; opacity:1; }\r\n#user_menu a { display:block; }\r\n'),
+(18, 'userreg_login_admin', 'index.php?pid=2&user2=login'),
+(19, 'userreg_newreg_admin', 'index.php?pid=2&user2=newreg'),
+(20, 'userreg_logout_admin', 'index.php?pid=2&user2=logout'),
+(23, 'css_o_form', ''),
+(24, 'css_site_map', 'div#site_map div div { margin-left: 12px; }\r\ndiv#site_map div { padding: 10px; }\r\ndiv#site_map .buttons a { margin:10px; }\r\ndiv#site_map .bullet { cursor:pointer; }'),
+(25, 'css_site_serarch', 'div#site_search { display:inline-block; float:right; }\r\ndiv#site_search form { display:inline-block; }\r\ndiv#sResDiv { background-color: white; box-shadow: -0px 0px 10px 3px rgba(50,50,50,0.6); padding: 0 6px; }'),
+(26, 'sitesearch_resultpage', 'index.php?pid=7'),
+(27, 'sitemap_1_en_cache', '<div id=\"site_map\">\n<p class=\"buttons\">\r\n<a href=\"\" onclick=\"mapContractExpandAll(1); return false;\">Collapse all</a>\r\n<a href=\"\" onclick=\"mapContractExpandAll(2); return false;\">Expand all</a>\r\n</p>\r\n\n<div id=\"map1\">\n<a href=\"/n/index.php?pid=1\">Home</a><br>\n</div>\n<div id=\"map3\">\n<span onclick=\"mapHideShow(this);\" class=\"bullet\">&#9660;</span>&nbsp;<a href=\"/n/index.php?pid=3\">About</a><br>\n<div id=\"map4\">\n<a href=\"/n/index.php?pid=4\">Personal data</a><br>\n</div>\n</div>\n<div id=\"map6\">\n<a href=\"/n/index.php?pid=5\">Site Map</a>- the current page<br>\n</div>\n<div id=\"map2\">\n<a href=\"/n/index.php?pid=2\">Login</a><br>\n</div>\n<p class=\"buttons\">\r\n<a href=\"\" onclick=\"mapContractExpandAll(1); return false;\">Collapse all</a>\r\n<a href=\"\" onclick=\"mapContractExpandAll(2); return false;\">Expand all</a>\r\n</p>\r\n\r\n<p class=\"clear\"></p></div>'),
+(28, 'sitemap_1_bg_cache', '<div id=\"site_map\">\n<p class=\"buttons\">\r\n<a href=\"\" onclick=\"mapContractExpandAll(1); return false;\">Сгъване на всички</a>\r\n<a href=\"\" onclick=\"mapContractExpandAll(2); return false;\">Разгъване на всички</a>\r\n</p>\r\n\n<div id=\"map1\">\n<a href=\"/n/index.php?pid=1\">Начало</a><br>\n</div>\n<div id=\"map3\">\n<span onclick=\"mapHideShow(this);\" class=\"bullet\">&#9660;</span>&nbsp;<a href=\"/n/index.php?pid=3\">Относно</a><br>\n<div id=\"map4\">\n<a href=\"/n/index.php?pid=4\">Лични данни</a><br>\n</div>\n</div>\n<div id=\"map6\">\n<a href=\"/n/index.php?pid=5\">Карта на сайта</a> - текущата страница<br>\n</div>\n<div id=\"map2\">\n<a href=\"/n/index.php?pid=2\">Вход</a><br>\n</div>\n<p class=\"buttons\">\r\n<a href=\"\" onclick=\"mapContractExpandAll(1); return false;\">Сгъване на всички</a>\r\n<a href=\"\" onclick=\"mapContractExpandAll(2); return false;\">Разгъване на всички</a>\r\n</p>\r\n\r\n<p class=\"clear\"></p></div>'),
+(29, 'css_menu_tree', 'div#menu_tree { padding:10px; }'),
+(30, 'css_p.message', '');
 
 -- --------------------------------------------------------
 
@@ -351,6 +488,7 @@ INSERT INTO `options` (`ID`, `name`, `value`) VALUES
 -- Структура на таблица `pages`
 --
 
+DROP TABLE IF EXISTS `pages`;
 CREATE TABLE `pages` (
   `ID` int NOT NULL,
   `menu_group` int NOT NULL,
@@ -358,6 +496,7 @@ CREATE TABLE `pages` (
   `content` varchar(50) NOT NULL,
   `template_id` int NOT NULL DEFAULT '1',
   `hidden` tinyint(1) NOT NULL DEFAULT '1',
+  `donotcache` tinyint(1) NOT NULL DEFAULT '0',
   `options` varchar(50) DEFAULT NULL,
   `dcount` int NOT NULL DEFAULT '0',
   `tcount` int NOT NULL DEFAULT '0'
@@ -367,9 +506,14 @@ CREATE TABLE `pages` (
 -- Схема на данните от таблица `pages`
 --
 
-INSERT INTO `pages` (`ID`, `menu_group`, `title`, `content`, `template_id`, `hidden`, `options`, `dcount`, `tcount`) VALUES
-(1, 1, 'home_page_title', 'home_page_content', 1, 0, '', 0, 0),
-(2, 1, 'p2_title', 'p2_content', 1, 1, '', 0, 0);
+INSERT INTO `pages` (`ID`, `menu_group`, `title`, `content`, `template_id`, `hidden`, `donotcache`, `options`, `dcount`, `tcount`) VALUES
+(1, 1, 'home_page_title', 'home_page_content', 1, 0, 0, '', 0, 0),
+(2, 1, 'p2_title', 'p2_content', 1, 0, 0, '', 0, 0),
+(3, 2, 'p3_title', 'p3_content', 1, 0, 0, NULL, 0, 0),
+(4, 2, 'p4_title', 'p4_content', 1, 0, 0, '', 0, 0),
+(5, 1, 'p5_title', 'p5_content', 1, 0, 0, NULL, 0, 0),
+(6, 1, 'error_404_title', 'error_404_content', 1, 0, 0, '', 0, 0),
+(7, 1, 'p7_title', 'p7_content', 1, 0, 0, '', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -377,6 +521,7 @@ INSERT INTO `pages` (`ID`, `menu_group`, `title`, `content`, `template_id`, `hid
 -- Структура на таблица `page_cache`
 --
 
+DROP TABLE IF EXISTS `page_cache`;
 CREATE TABLE `page_cache` (
   `ID` int NOT NULL,
   `page_ID` int NOT NULL,
@@ -387,12 +532,20 @@ CREATE TABLE `page_cache` (
   `referer` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8_bin;
 
+--
+-- Схема на данните от таблица `page_cache`
+--
+
+INSERT INTO `page_cache` (`ID`, `page_ID`, `name`, `language`, `date_time_1`, `text`, `referer`) VALUES
+(28, 1, '/n/index.php', 'en', '2023-11-17 18:09:27', '<!DOCTYPE HTML>\r\n<html lang=\"bg\">\r\n<head>\r\n  <title>Home Page</title>\r\n  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\r\n  <meta name=viewport content=\"width=device-width, initial-scale=1\">\r\n  <meta name=\"description\" content=\"Congratulations!  You have successfully installed the Vanyog CMS content management system on your site.  You can start by editing each of the sample pages to feature your own content, then continue to create more pages.  Enjoy and successful presentation!\">\r\n<link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"/n/favicon_package_v0.16/apple-touch-icon.png\">\r\n<link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/n/favicon_package_v0.16/favicon-32x32.png\">\r\n<link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/n/favicon_package_v0.16/favicon-16x16.png\">\r\n<link rel=\"manifest\" href=\"/n/favicon_package_v0.16/site.webmanifest\">\r\n<link rel=\"mask-icon\" href=\"/n/favicon_package_v0.16/safari-pinned-tab.svg\" color=\"#5bbad5\">\r\n<meta name=\"msapplication-TileColor\" content=\"#da532c\">\r\n<meta name=\"theme-color\" content=\"#ffffff\">\r\n<script>\r\nfunction cookies_accept(){\r\nvar d = new Date();\r\nd = new Date(d.valueOf()+30*24*3600*1000);\r\ndocument.cookie = \"cookies_accept=yes;expires=\"+d.toGMTString()+\"path=/;SameSite=Strict\";\r\ndocument.location.reload(true);\r\n}\r\n</script><style>\r\n#search_button{ background-image:url(/n/mod/sitesearch2/images/search19x19.png); background-repeat: no-repeat; background-position: center; }\r\n#search_clear { background-image:url(/n/mod/sitesearch2/images/clear19x19.png); background-repeat: no-repeat; background-position: center; }\r\n</style>\r\n<script>\r\nfunction doSiteSearch(){\r\nvar f = document.forms.site_search_form;\r\nvar t = f.searchtext.value;\r\nif(Number.isInteger(1*t)){\r\n  if(confirm(\"sitesearch_gpn\"+t+\"?\")){\r\n    document.location = \"/n/index.php?pid=\"+t;\r\n  }\r\n}\r\nelse f.submit();\r\n}\r\nif(typeof ajaxO == \"undefined\"){\r\nif (window.XMLHttpRequest) ajaxO = new XMLHttpRequest();\r\nelse ajaxO = new ActiveXObject(\"Microsoft.XMLHTTP\");\r\n}\r\nvar sDiv = null;\r\nfunction searchStringChanged(el,ev){\r\nif(!sDiv){\r\n  sDiv = document.createElement(\"div\");\r\n  sDiv.setAttribute(\"id\", \"sResDiv\")\r\n  document.body.appendChild(sDiv);\r\n  sDiv.addEventListener(\"click\", sDivHide);\r\n  var s = sDiv.style;\r\n  var l = document.getElementById(\"searchtextfield\").offsetLeft;\r\n  if(l < window.innerWidth * 0.4) l = l + \"px\";\r\n  else l = \"10%\";\r\n  s.position = \"absolute\";\r\n  s.top = \"43px\";\r\n  s.left = l;\r\n  s.zIndex = \"1\";\r\n}\r\nsDiv.style.display = \"block\";\r\nvar v = el.value;\r\nif(!v.length){ \r\n  sDiv.style.display = \"none\";\r\n  return;\r\n}\r\nvar t = el.offsetTop + el.offsetHeight;\r\nsDiv.style.top = (window.scrollY + 45) + \"px\";\r\nvar a = \"/n/mod/sitesearch2/ajax_search.php?a=\" + Math.floor(Math.random() * 1000) +\r\n        \"&text=\" + encodeURI(v);\r\najaxO.onreadystatechange = onSearchAjaxResponse;\r\najaxO.open(\"GET\", a, true);\r\najaxO.send();\r\n}\r\nfunction sDivHide(){\r\nsDiv.style.display = \"none\";\r\n}\r\nfunction onSearchAjaxResponse(){\r\nif (ajaxO.readyState == 4 && ajaxO.status == 200){\r\n  sDiv.innerHTML = ajaxO.responseText;\r\n}\r\n}\r\n</script>\r\n<style>\r\n#sResDiv span { color:red; }\r\n</style>\r\n<style>\r\nbody { font-family: arial, sans-serif; }\r\na { color:#005941; }\r\n.lang_flag { float:left; margin:0 15px 0 0; padding:0; }\r\n.lang_flag img { width:60px; height:30px; vertical-align:middle; }\r\nnav { display:inline-block; margin-top:6px; }\r\nheader { background-color:#005941; color:#fff; padding: 10px; overflow:auto; line-height:50px; }\r\nheader a { color:#fff; text-decoration:none; margin:15px; padding:10px; }\r\nheader span { border: solid 1px; padding:10px; margin:14px; }\r\nheader a:hover { color:#97ff93; }\r\nsection { min-height: calc(100vh - 185px); max-width:870px; margin:10px auto; box-shadow: 1px 1px 5px 0 rgba(50,50,50,0.4); padding:10px; }\r\nfooter { text-align:center; }\r\n#cookies_message { text-align:center; overflow:auto; background-color:#ffeda4; }\r\n.searched { background-color:yellow; }\r\ntd { padding-right:10px; }\r\n#site_search input[type=\"button\"] { height:30px; }\r\ndiv#site_search { display:inline-block; float:right; }\r\ndiv#site_search form { display:inline-block; }\r\ndiv#sResDiv { background-color: white; box-shadow: -0px 0px 10px 3px rgba(50,50,50,0.6); padding: 0 6px; }#adm_links { font-size:200%; opacity:0.1; position:fixed; top:0; margin:0; background-color:white; width:30px; height:100vh; overflow-y:scroll; overflow-x:hidden; }\r\n#adm_links:hover { opacity:1; width:auto; }\r\n#adm_links a { display:block; }\r\n#adm_links a:hover { text-decoration:underline; }\r\n</style>\r\n</head>\r\n<body>\r\n<script>\r\nfunction doNewPage(){\r\nif (confirm(\"Do you want to create new page?\"))\r\nna = \"/n/manage/new_record.php?t=pages&menu_group=1&title=p8_title&content=p8_content&template_id=1\";\r\ndocument.location=na;\r\n}\r\nfunction hide(){\r\nif (confirm(\"Hide this menu?\")){\r\n  deleteAllCookies();\r\n  window.location.reload();\r\n}\r\n}\r\nfunction gotoPageNumber(e){\r\nif (e.keyCode==13){\r\n  var n = document.getElementById(\"gtpNumber\").value;\r\n  if (n){\r\n    var l = \"/n/index.php?pid=\"+n;\r\n    if (e.ctrlKey || e.metaKey) window.open(l);\r\n    else document.location = l;\r\n  }\r\n}\r\n}\r\nfunction closeAdminLinks(){\r\nvar e = document.getElementById(\"adm_links\");\r\ne.style.display = \"none\";\r\n}\r\n</script>\r\n<p id=\"adm_links\">DB_REQ_COUNT \r\n<a href=\"/n/manage/\">127.0.0.1</a>\r\n<a href=\"/n/index.php\">Home</a> <a href=\"/\">/</a> \n<a href=\"/n/index.php?lang=en&amp;edit=on\" title=\"Switch to edit mode\">Edit mode</a> <a href=\"/n/manage/edit_record.php?t=content&r=4\">Open to edit</a> \r\n<a href=\"\" onclick=\"doNewPage();return false\">New page</a> \r\n<a href=\"/n/index.php?pid=\">&lt;</a>\r\n<input type=\"text\" size=\"4\" id=\"gtpNumber\" onkeypress=\"gotoPageNumber(event);\">\r\n<a href=\"/n/index.php?pid=2\">&gt;</a>\r\n<a href=\"/n/index.php?pid=7&amp;edit=on\">7</a>\r\n<a href=\"/n/index.php?pid=7\">Random page</a>\r\n<a href=\"/n/mod/all_pages.php?t=1\">All pages</a>\r\n<a href=\"/n/manage/edit_file.php?f=/\">File system</a>\r\n<a href=\"/n/manage/edit_data.php\">Database</a>\r\n<a href=\"/n/lib/f_page_cache.php?purge=0\">Purge</a> \r\n<a href=\"\" target=\"_blank\">cPanel</a>\r\n<a href=\"http://localhost/phpmyadmin\" target=\"_blank\">phpMyAdmin</a> \r\n<a href=\"/n/manage/showenv.php?AAAAAAA\" target=\"_blank\">$_SERVER</a> \r\n<a href=\"https://github.com/vanyog/VanyoG CMS/wiki\" target=\"_blank\">Help</a> \r\n<a href=\"https://vanyog.atwebpages.com/index.php?lang=en\">go to WEB</a>\r\n<a href=\"#\" onclick=\"closeAdminLinks();return false;\">x</a>\r\n</p>\r\n<header>\r\n<a href=\"/n/index.php?lang=bg\" class=\"lang_flag\"><img src=\"/n/images/flag-bg.svg\" alt=\"bg\"></a>\n<nav id=\"page_menu\">\n<span class=\"current\">Home</span> \n<a href=\"/n/index.php?pid=3\">About</a> \n<a href=\"/n/index.php?pid=5\">Site Map</a> \n<a href=\"/n/index.php?pid=2\">Login</a> \n</nav>\n<div id=\"site_search\">\n<form enctype=\"multipart/form-data\" name=\"site_search_form\" id=\"site_search_form\" method=\"post\" action=\"/n/index.php?lang=en\">\n<label for=\"searchtextfield\">Search the site</label> <input type=\"text\" name=\"searchtext\" id=\"searchtextfield\"  onkeyup=\"searchStringChanged(this,event)\">\n<input type=\"button\"  value=\"Search\" id=\"site_search_form_1\" onclick=\"doSiteSearch();\" id=\"search_button\" title=\"Search\">\n</form>\n</div>\n<script>\r\nif (true && (document.cookie.indexOf(\"cookies_accept=yes\")<0)){\r\nvar cm = document.createElement(\"div\");\r\ncm.id = \"cookies_message\";\r\ncm.innerHTML = \"<p id=\\\"cookie_message\\\">This website uses cookies to ensure you get the best experience on our website. <a href=\\\"/index.php?pid=108\\\">More info</a>. &nbsp; <a href=\\\"\\\" onclick=\\\"cookies_accept();return false;\\\">Got It</a>!</p>\" + \n\"\";\r\ndocument.body.appendChild(cm);\r\n}\r\n</script>\r\n</header>\r\n<section>\r\n<h1>Home Page</h1>\r\n<p><b>Congratulations!</b></p>\r\n<p>You have successfully installed the Vanyog CMS content management system on your site.</p>\r\n<p>You can start by editing each of the sample pages to feature your own content, then continue to create more pages.</p>\r\n<p>Enjoy and successful presentation!</p>\r\n</section>\r\n<footer>\r\n<p id=\"powered_by\">Powered by <a href=\"https://github.com/vanyog/mycms/wiki\" target=\"_blank\">VanyoG CMS</a> Page is visited: in total 0, today 0<br> See <a href=\"/n/mod/pagestat/page_stats.php?pid=1\">page</a>,    <a href=\"/n/mod/pagestat/page_stats.php?group=1\">group</a> or  <a href=\"/n/mod/pagestat/content_stats.php\">content</a> stats<br>\nPage ID: <a href=\"/n/manage/edit_record.php?t=pages&r=1\">1</a>,\n template: <a href=\"/n/manage/edit_record.php?t=templates&r=1\">1</a>, <a href=\"/n/manage/edit_styles.php\"  target=\"styles\">Styles</a>, <a href=\"https://realfavicongenerator.net/favicon_checker?protocol=https&site=vanyog.atwebpages.com\" target=\"favicon\">favicon check</a>\n</p>\r\n</footer>\r\n</body>\r\n</html>\r\n', NULL);
+
 -- --------------------------------------------------------
 
 --
 -- Структура на таблица `permissions`
 --
 
+DROP TABLE IF EXISTS `permissions`;
 CREATE TABLE `permissions` (
   `ID` int NOT NULL,
   `user_id` int NOT NULL,
@@ -414,6 +567,7 @@ INSERT INTO `permissions` (`ID`, `user_id`, `type`, `object`, `yes_no`) VALUES
 -- Структура на таблица `scripts`
 --
 
+DROP TABLE IF EXISTS `scripts`;
 CREATE TABLE `scripts` (
   `ID` int NOT NULL,
   `name` varchar(50) NOT NULL,
@@ -428,7 +582,7 @@ CREATE TABLE `scripts` (
 INSERT INTO `scripts` (`ID`, `name`, `script`, `coment`) VALUES
 (1, 'ADMINMENU', 'include_once($idir.\"lib/f_adm_links.php\"); $tx = adm_links();', 'Показва линкове за администриране на сайта'),
 (2, 'PAGETITLE', '$tx = translate($page_data[\'title\']);', 'Заглавие на страницата, показвано между таговете <h1></h1>.'),
-(3, 'CONTENT', 'if (isset($tg[1])) $tx = translate($tg[1]);\r\nelse $tx = translate($page_data[\'content\']);', 'Показване съдържанието на страницата и ли надпис със зададено име.'),
+(3, 'CONTENT', 'if (isset($tg[1])) $tx = translate($tg[1]);\r\nelse $tx = translate($page_data[\'content\']);\r\n$page_content = $tx;', 'Показване съдържанието на страницата и ли надпис със зададено име.'),
 (4, 'MENU', 'include_once($idir.\"lib/f_menu.php\");\r\n$tx = menu($page_data[\'menu_group\']);', 'Показване на група от хипервръзки (меню)'),
 (5, 'BODYADDS', '$tx = $body_adds;', 'Вмъква добавките към <body> тага'),
 (6, 'PAGEHEADER', '$tx = $page_header;', 'Вмъква добавките към хедъра на страницата'),
@@ -441,6 +595,7 @@ INSERT INTO `scripts` (`ID`, `name`, `script`, `coment`) VALUES
 -- Структура на таблица `templates`
 --
 
+DROP TABLE IF EXISTS `templates`;
 CREATE TABLE `templates` (
   `ID` int NOT NULL,
   `parent` int DEFAULT NULL,
@@ -453,7 +608,7 @@ CREATE TABLE `templates` (
 --
 
 INSERT INTO `templates` (`ID`, `parent`, `template`, `comment`) VALUES
-(1, 0, '<!DOCTYPE HTML>\r\n<html lang=\"<!--$$_VARIABLE_default_language_$$-->\">\r\n<head>\r\n  <title><!--$$_HEADTITLE_$$--></title>\r\n  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=<!--$$_VARIABLE_site_encoding_$$-->\">\r\n  <meta name=viewport content=\"width=device-width, initial-scale=1\">\r\n<!--$$_VARIABLE_page_header_$$-->\r\n<style>\r\n<!--$$_VARIABLE_added_styles_$$-->\r\n</style>\r\n</head>\r\n<body<!--$$_BODYADDS_$$-->>\r\n<!--$$_ADMINMENU_$$-->\r\n\r\n<header>\r\n<!--$$_LANGUAGEFLAGS_$$-->\r\n<!--$$_MENU_$$-->\r\n</header>\r\n<section>\r\n<h1><!--$$_PAGETITLE_$$--></h1>\r\n<!--$$_CONTENT_$$-->\r\n</section>\r\n\r\n<footer>\r\n<p id=\"powered_by\"><!--$$_CONTENT_powered_by_$$--><a href=\"https://github.com/vanyog/mycms/wiki\" target=\"_blank\">MyCMS</a> <!--$$_PAGESTAT_$$--></p>\r\n</footer>\r\n\r\n<!--$$_USERMENU_/index.php?pid=2&amp;user2=logout_$$-->\r\n</body>\r\n</html>\r\n\r\n', 'Шаблон по подразбиране');
+(1, 0, '<!DOCTYPE HTML>\r\n<html lang=\"<!--$$_VARIABLE_default_language_$$-->\">\r\n<head>\r\n  <title><!--$$_HEADTITLE_$$--></title>\r\n  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=<!--$$_VARIABLE_site_encoding_$$-->\">\r\n  <meta name=viewport content=\"width=device-width, initial-scale=1\">\r\n  <meta name=\"description\" content=\"<!--$$_OGDESCRIPTION_$$-->\">\r\n<!--$$_SITEICONS_$$-->\r\n<!--$$_VARIABLE_page_header_$$-->\r\n<style>\r\n<!--$$_VARIABLE_added_styles_$$-->\r\n</style>\r\n</head>\r\n<body<!--$$_BODYADDS_$$-->>\r\n<!--$$_ADMINMENU_$$-->\r\n\r\n<header>\r\n<!--$$_LANGUAGEFLAGS_$$-->\r\n<!--$$_MENU_$$-->\r\n<!--$$_SITESEARCH2_$$-->\r\n<!--$$_COOKIES_message_$$-->\r\n</header>\r\n<!--$$_MENUTREE_$$-->\r\n<section>\r\n<h1><!--$$_PAGETITLE_$$--></h1>\r\n<!--$$_CONTENT_$$-->\r\n</section>\r\n\r\n<footer>\r\n<p id=\"powered_by\"><!--$$_CONTENT_powered_by_$$--><a href=\"https://github.com/vanyog/mycms/wiki\" target=\"_blank\">VanyoG CMS</a> <!--$$_PAGESTAT_$$--></p>\r\n</footer>\r\n\r\n<!--$$_USERMENU_index.php?pid=2&amp;user2=logout_$$-->\r\n</body>\r\n</html>\r\n\r\n', 'Шаблон по подразбиране');
 
 -- --------------------------------------------------------
 
@@ -461,6 +616,7 @@ INSERT INTO `templates` (`ID`, `parent`, `template`, `comment`) VALUES
 -- Структура на таблица `users`
 --
 
+DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `ID` int NOT NULL,
   `creator_id` int NOT NULL DEFAULT '0',
@@ -493,7 +649,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`ID`, `creator_id`, `type`, `date_time_0`, `date_time_1`, `date_time_2`, `gdpr`, `language`, `username`, `password`, `newpass`, `email`, `aemails`, `code`, `firstname`, `secondname`, `thirdname`, `country`, `institution`, `position`, `address`, `telephone`, `IP`, `nomessage`) VALUES
-(1, 0, '', '2023-11-01 22:12:19', '2023-11-01 22:12:19', '0000-01-01 00:00:00', 0, 'English', 'admin', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', NULL, '', NULL, NULL, '', '', '', 'BG', NULL, NULL, NULL, '', '127.0.0.1', 0);
+(1, 0, 'admin', '2023-11-01 22:12:19', '2023-11-01 22:12:19', '2023-11-16 16:28:34', 0, 'English', 'admin', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', NULL, '', NULL, NULL, '', '', '', 'BG', NULL, NULL, NULL, '', '127.0.0.1', 0);
 
 -- --------------------------------------------------------
 
@@ -501,6 +657,7 @@ INSERT INTO `users` (`ID`, `creator_id`, `type`, `date_time_0`, `date_time_1`, `
 -- Структура на таблица `visit_history`
 --
 
+DROP TABLE IF EXISTS `visit_history`;
 CREATE TABLE `visit_history` (
   `ID` int NOT NULL,
   `page_id` int NOT NULL,
@@ -511,9 +668,71 @@ CREATE TABLE `visit_history` (
 -- --------------------------------------------------------
 
 --
+-- Структура на таблица `who_made_change`
+--
+
+DROP TABLE IF EXISTS `who_made_change`;
+CREATE TABLE `who_made_change` (
+  `ID` int NOT NULL,
+  `date_time_1` datetime NOT NULL,
+  `user_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `is_admin` tinyint(1) NOT NULL,
+  `content_id` int NOT NULL,
+  `page_id` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_bin;
+
+--
+-- Схема на данните от таблица `who_made_change`
+--
+
+INSERT INTO `who_made_change` (`ID`, `date_time_1`, `user_name`, `is_admin`, `content_id`, `page_id`) VALUES
+(1, '2023-11-11 21:54:29', 'admin', 1, 0, 2),
+(2, '2023-11-11 21:55:17', 'admin', 1, 0, 2),
+(3, '2023-11-11 21:57:04', 'admin', 1, 0, 2),
+(4, '2023-11-11 21:57:44', 'admin', 1, 0, 2),
+(5, '2023-11-11 22:00:15', 'admin', 1, 0, 2),
+(6, '2023-11-11 22:00:43', 'admin', 1, 0, 2),
+(7, '2023-11-11 22:01:57', 'admin', 1, 0, 2),
+(8, '2023-11-11 22:03:08', 'admin', 1, 0, 2),
+(9, '2023-11-11 22:07:23', 'admin', 1, 0, 2),
+(10, '2023-11-11 22:07:53', 'admin', 1, 0, 2),
+(11, '2023-11-14 15:55:46', 'admin', 1, 0, 2),
+(12, '2023-11-14 15:59:18', 'admin', 1, 0, 2),
+(13, '2023-11-14 16:00:15', 'admin', 1, 0, 2),
+(14, '2023-11-14 16:00:57', 'admin', 1, 0, 2),
+(15, '2023-11-15 20:21:29', 'admin', 1, 0, 4),
+(16, '2023-11-15 20:22:28', 'admin', 1, 0, 4),
+(17, '2023-11-15 20:24:10', 'admin', 1, 0, 4),
+(18, '2023-11-15 20:24:22', 'admin', 1, 0, 4),
+(19, '2023-11-15 20:24:34', 'admin', 1, 0, 4),
+(20, '2023-11-15 20:24:46', 'admin', 1, 0, 4),
+(21, '2023-11-15 20:25:17', 'admin', 1, 0, 4),
+(22, '2023-11-15 20:25:49', 'admin', 1, 0, 4),
+(23, '2023-11-15 20:32:16', 'admin', 1, 0, 4),
+(24, '2023-11-15 20:34:18', 'admin', 1, 0, 4),
+(25, '2023-11-15 20:36:25', 'admin', 1, 0, 4),
+(26, '2023-11-16 16:32:50', 'admin', 1, 0, 3),
+(27, '2023-11-16 16:46:49', 'admin', 1, 0, 3),
+(28, '2023-11-16 16:58:54', 'admin', 1, 0, 5),
+(29, '2023-11-16 16:59:09', 'admin', 1, 294, 5),
+(30, '2023-11-16 16:59:47', 'admin', 1, 0, 5),
+(31, '2023-11-16 17:29:47', 'admin', 1, 0, 5),
+(32, '2023-11-16 17:30:04', 'admin', 1, 296, 5),
+(33, '2023-11-16 18:37:28', 'admin', 1, 0, 1),
+(34, '2023-11-16 18:37:48', 'admin', 1, 0, 1),
+(35, '2023-11-16 22:17:42', 'admin', 1, 0, 7),
+(36, '2023-11-16 22:19:15', 'admin', 1, 0, 7),
+(37, '2023-11-17 07:06:12', 'admin', 1, 0, 4),
+(38, '2023-11-17 07:09:05', 'admin', 1, 0, 4),
+(39, '2023-11-17 07:10:03', 'admin', 1, 0, 4);
+
+-- --------------------------------------------------------
+
+--
 -- Структура на таблица `worktime`
 --
 
+DROP TABLE IF EXISTS `worktime`;
 CREATE TABLE `worktime` (
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `time` int NOT NULL
@@ -525,25 +744,96 @@ CREATE TABLE `worktime` (
 
 INSERT INTO `worktime` (`name`, `time`) VALUES
 ('USAGE.txt', 1933),
-('content.102', 180),
+('content.102', 199),
+('content.103', 195),
 ('content.104', 29),
 ('content.105', 6),
 ('content.106', 42),
 ('content.107', 29),
+('content.210', 22),
 ('content.211', 80),
 ('content.212', 61),
 ('content.213', 19),
 ('content.214', 13),
 ('content.215', 27),
+('content.216', 13),
+('content.219', 16),
+('content.220', 154),
+('content.226', 17),
+('content.227', 62),
+('content.228', 4),
+('content.229', 57),
+('content.230', 61),
+('content.231', 58),
+('content.232', 162),
+('content.233', 20),
+('content.234', 63),
+('content.241', 39),
+('content.246', 97),
+('content.247', 37),
+('content.248', 17),
+('content.249', 43),
+('content.255', 16),
+('content.256', 6),
+('content.257', 6),
+('content.259', 12),
+('content.260', 10),
+('content.263', 223),
+('content.264', 63),
+('content.275', 969),
+('content.276', 35),
+('content.277', 5),
+('content.278', 6),
+('content.279', 6),
+('content.280', 6),
+('content.281', 11),
+('content.282', 11),
+('content.283', 6),
+('content.284', 7),
+('content.285', 49),
+('content.291', 17),
+('content.296', 7),
+('content.3', 273),
+('content.306', 41),
+('content.317', 9),
+('content.318', 27),
+('content.319', 22),
+('content.320', 33),
+('content.321', 17),
+('content.322', 35),
+('content.325', 5),
+('content.333', 10),
+('content.334', 28),
+('content.335', 7),
+('content.45', 21),
+('favicon_package_v0.16/site.webmanifest', 201),
+('lib/build_page.php', 280),
+('menu_items.2', 9),
+('menu_items.4', 3),
+('menu_items.5', 3),
 ('mod/userreg/new_user.php', 3843),
 ('options.1', 19),
 ('options.10', 12),
-('options.15', 2530),
+('options.14', 85),
+('options.15', 8560),
 ('options.16', 213),
 ('options.17', 994),
-('options.8', 78),
-('options.9', 18),
-('templates.1', 854);
+('options.18', 162),
+('options.19', 56),
+('options.20', 35),
+('options.24', 532),
+('options.25', 524),
+('options.26', 64),
+('options.29', 85),
+('options.8', 88),
+('options.9', 34),
+('pages.2', 6),
+('pages.3', 9),
+('pages.4', 17),
+('pages.6', 61),
+('pages.7', 13),
+('scripts.3', 45),
+('templates.1', 2242);
 
 --
 -- Indexes for dumped tables
@@ -585,7 +875,8 @@ ALTER TABLE `menu_tree`
 -- Индекси за таблица `options`
 --
 ALTER TABLE `options`
-  ADD PRIMARY KEY (`ID`);
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `name` (`name`);
 
 --
 -- Индекси за таблица `pages`
@@ -641,6 +932,17 @@ ALTER TABLE `visit_history`
   ADD KEY `count` (`count`);
 
 --
+-- Индекси за таблица `who_made_change`
+--
+ALTER TABLE `who_made_change`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `user_name` (`user_name`),
+  ADD KEY `is_admin` (`is_admin`),
+  ADD KEY `content_id` (`content_id`),
+  ADD KEY `page_id` (`page_id`),
+  ADD KEY `date_time_1` (`date_time_1`);
+
+--
 -- Индекси за таблица `worktime`
 --
 ALTER TABLE `worktime`
@@ -654,7 +956,7 @@ ALTER TABLE `worktime`
 -- AUTO_INCREMENT for table `content`
 --
 ALTER TABLE `content`
-  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=216;
+  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=339;
 
 --
 -- AUTO_INCREMENT for table `filters`
@@ -663,40 +965,34 @@ ALTER TABLE `filters`
   MODIFY `ID` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `page_cache`
---
-ALTER TABLE `page_cache`
-  MODIFY `ID` int NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `menu_items`
 --
 ALTER TABLE `menu_items`
-  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `menu_tree`
 --
 ALTER TABLE `menu_tree`
-  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `options`
 --
 ALTER TABLE `options`
-  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `pages`
 --
 ALTER TABLE `pages`
-  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `page_cache`
 --
 ALTER TABLE `page_cache`
-  MODIFY `ID` int NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `scripts`
@@ -721,6 +1017,12 @@ ALTER TABLE `users`
 --
 ALTER TABLE `visit_history`
   MODIFY `ID` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `who_made_change`
+--
+ALTER TABLE `who_made_change`
+  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

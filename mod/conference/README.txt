@@ -2,7 +2,7 @@
 ===========================
 
 Ако имате въпроси, на които не намирате отговор в този файл, задайте ги през
-https://github.com/vanyog/mycms/issues
+https://github.com/vanyog/VanyoG CMS/issues
 
 Настоящият модул CONFERENCE изисква модули: USERREG, SCHEDULES, FEEDBACK, както и други непубликувани модули.
 

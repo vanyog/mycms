@@ -1,6 +1,6 @@
 <?php
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2013  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -156,17 +156,19 @@ if (g){
 $page_header .= '<script>
 function closeUMemu(){
 var m = document.getElementById("user_menu");
-if(confirm("Would you like to hide user menu? It will appear again after page reload."))
+if(true || confirm("Would you like to hide user menu? It will appear again after page reload."))
   m.style.display = "none";
 }
 </script>'."\n";
 if ($can_edit) $rz .= edit_normal_link()." \n";
 foreach($can_manage as $m=>$yn) if( $yn ) {
   $fn = dirname(mod_path($m)).'/f_menu_items.php';
-  if (file_exists($fn)){
+  if (file_exists($fn)) {
     include_once($fn);
     $added_styles .= 'div.sep { border-bottom:solid 1px; padding:0; margin:0; }';
-    eval('$rz .= "<div class=\"sep\"></div>".'.$m.'_menu_items();');
+    $mi = '';
+    eval('$mi = '.$m.'_menu_items();');
+    if($mi) $rz .= "<div class=\"sep\"></div>".$mi;
   }
 }
 $hp = stored_value('usermenu_helppage');

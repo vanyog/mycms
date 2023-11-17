@@ -1,6 +1,6 @@
 <?php
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -59,6 +59,7 @@ add_style('o_form');
 // За да се изпълни, на бутона за изпращане на формата трябва да се присвои ->js = ' onclick="ifNotEmpty_имеНаФорма();"';
 // Този бутон трябва да има атрибут type="button", а не type="submit"
 $js1 = 'var noEmptyCheck = "";
+var noCheckList_'.$this->name.' = [%s];
 function ifNotEmpty_'.$this->name.'(){
 var f = document.forms["'.$this->name.'"];
 if(noEmptyCheck){
@@ -66,13 +67,13 @@ if(noEmptyCheck){
    return;
 }
 var l = f.length;
-var r = 1;
+var r = true;
 for(i=0;i<l-1;i++){
   var e = f.elements[i];
 //  if ((e.type=="text")||(e.type=="textarea")) r = r*e.value.length;
 '.encode('//  Изключвам от проверка textarea елементите защото възниква грешка при активиран CHEDITOR
 //  в бъдеще трябва да се оправи').'
-  if (e.type=="text") r = r*e.value.length;
+  if (!noCheckList_'.$this->name.'.includes(e.name) && (e.type=="text")) r = r && (e.value.length>0);
 }
 if (r) f.submit(); else alert("'.translate_if('fillin_all', 'All fields must be filled in.').'");
 }
@@ -81,12 +82,17 @@ $rz = "<form enctype=\"multipart/form-data\" name=\"$this->name\" id=\"$this->na
 if ($this->astable) $rz .= "<table>\n";
 $rz .= $this->text;
 $has_files = false;
+$noCheckList = '';
 foreach($this->ins as $j => $i){
   if($has_files && isset($i->max_file_size)) $i->max_file_size = '';
   if($this->labels) $rz .= $i->html($this->astable, $this->name."_$j");
   else $rz .= $i->html($this->astable, );
   if(isset($i->type) && ($i->type=='file')) $has_files = true;
-  if (!(strpos($i->js, 'ifNotEmpty_'.$this->name.'()')===false)) $js .= $js1;
+  if($i->nocheck){ $noCheckList .= '"'.$i->name.'",'; }
+  if (!(strpos($i->js, 'ifNotEmpty_'.$this->name.'()')===false)){
+     if($noCheckList) $js1 = sprintf($js1, substr($noCheckList,0,-1) );
+     $js .= $js1;
+  }
 }
 if ($this->astable) $rz .= "</table>\n";
 $rz .= "</form>\n";
@@ -120,6 +126,7 @@ public $js = '';
 public $max_file_size = 524288000;
 public $textAfter = '';
 public $help = '';
+public $nocheck = false;
 
 function __construct($c,$n,$t,$v = '',$ta = ''){
 $this->caption = $c;
@@ -195,6 +202,7 @@ public $text = '';
 public $js = '';
 public $ckbutton = ''; // Бутон CKEditor
 public $size = true;
+public $nocheck = false;
 
 function __construct($c,$n,$cl=100,$r=10,$t=''){
 global $mod_pth, $page_header, $ckpth;
@@ -246,6 +254,7 @@ public $options = array();
 public $values = 'v';
 public $selected = -1;
 public $js = '';
+public $nocheck = false;
 
 function __construct($c, $n, $op, $s = -1){
 $this->caption = $c;
@@ -300,6 +309,7 @@ public $name = '';
 public $options = array();
 public $selected = -1;
 public $js = '';
+public $nocheck = false;
 
 function __construct($c, $n, $op, $s = -1){
 $this->caption = $c;

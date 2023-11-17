@@ -29,5 +29,5 @@ function cookie_set(n, v, perm = true){//alert("allow_cookies");
         ex = "expires=" + d.toUTCString() + ";";
     }
 //    alert(n + "="+v+";"+ex);
-    document.cookie = n + "=" + v + ";" + ex + "path=/;SameSite=Lax;";
+    document.cookie = n + "=" + v + ";" + ex + "path=/;SameSite=Strict;";
 }

@@ -1,7 +1,7 @@
 <?php
 
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -26,8 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 function query_or_cookie($k,$v){
 if (isset($_GET[$k])){
-   setcookie($k, $_GET[$k], 
-             ['expires'=>time()+60*60*24*30, 'path'=>'/', 'SameSite'=>'Strict'] );
+   if(!mysetcookie($k, $_GET[$k])) 
+      die("The cookie could not be set. Maybe cookies are disabled by the user.");
    return ($_GET[$k]==$v);
 }
 else if (isset($_COOKIE[$k])) return ($_COOKIE[$k]==$v);

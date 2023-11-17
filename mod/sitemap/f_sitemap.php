@@ -1,6 +1,6 @@
 <?php
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2013  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -55,7 +55,7 @@ $GLOBALS['mpg_id'] = stored_value('site_map_root',1);
 
 function sitemap($a = ''){
 global $page_passed, $map_level, $i_root, $id_pre, $page_header, $smfile, $smday, $mpg_id,
-       $db_link, $tn_prefix, $redirifhidden_cancel;
+       $db_link, $tn_prefix, $redirifhidden_cancel, $language;
 $ar = explode('|',$a);
 if(!$ar[0]) $ar[0] = stored_value('main_index_pageid',1);
 $id = 'site_map';
@@ -90,8 +90,9 @@ for(var i=0; i<c; i++) if(sm.children[i].nodeName=="DIV"){
 }
 }
 </script>';
-$cache_name = 'sitemap_'.$ar[0].'_cache';
+$cache_name = 'sitemap_'.$ar[0].'_'.$language.'_cache';
 if(in_edit_mode()) $cache_name = $cache_name.'_edit';
+add_style('site_map');
 if( !( isset($_GET['clear']) && ($_GET['clear']=='on') ) ){
     $rz = stored_value($cache_name);
     if($rz && empty($redirifhidden_cancel)) return $rz;

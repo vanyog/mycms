@@ -1,7 +1,7 @@
 <?php
 
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -111,7 +111,7 @@ else if ($editMode && $elink){
            $content_create_time = $r2['date_time_1'];
            $content_date_time = $r2['date_time_2'];
          }
-         $t = stripslashes($r2['text']);
+         $t = isset($r2['text']) ? stripslashes($r2['text']) : '';
          // Заместват се със съдържание евентуални <!--$$_XXX_$$--> елементи и се прилагат филтри
          $rz = apply_filters($r2['filters'], parse_content($t));
      }

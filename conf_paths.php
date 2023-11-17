@@ -1,7 +1,7 @@
 <?php
 
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -141,13 +141,14 @@ function current_pth($f = __FILE__){
 $p1 = $_SERVER['DOCUMENT_ROOT'];         $n1 = strlen($p1);
 if ($p1[$n1-1]=='/') $n1--;
 $p2 = str_replace('\\','/',dirname($f)); $n2 = strlen($p2);
-//die("$p1<br>$p2");
 if(substr($p2, 0, $n1)!=$p1){
   $or = stored_value('uploadfile_otherroot');
   if($or){
     $p1 = $or;
     $n1 = strlen($p1);
   }
+  else die("Problem:<br>\$_SERVER['SCRIPT_NAME']: $p1<br>__DIR__: $p2<br>".
+           "Set 'document_root' option to correct.");
 }
 $r = substr($p2,$n1,$n2-$n1).'/';
 return $r;

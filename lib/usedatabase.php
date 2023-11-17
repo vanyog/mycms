@@ -1,7 +1,7 @@
 <?php
 
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -39,7 +39,8 @@ function get_db_link($host, $user, $password, $database, $colation = 'cp1251'){
 try { $l = mysqli_connect($host,$user,$password,$database); }
 catch (Exception $e){
  header("Content-Type: text/html; charset=Windows-1251");
- echo '<p>Не се получава връзка с MySQL сървъра!';
+ echo '<p>Не се получава връзка с MySQL сървъра!</p>';
+ debug_print_backtrace();
  die;
 }
 if($l===false) die('No link to database.');

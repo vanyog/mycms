@@ -1,6 +1,6 @@
 <?php
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2013  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -49,8 +49,9 @@ if(isset($_GET['purge'])){
   db_delete_where('page_cache',$q);
   $i = mysqli_affected_rows($db_link);
   die('<p>Page cache '.$_GET['purge']." purged. $i - records deleted.</p>
-<p><a href=\"".$_SERVER['PHP_SELF'].'?purge=all&a='.rand().'">Purge all</a></p>
-<p><a href="/?pid='.$_GET['purge'].'">Go to page</a>');
+<p><a href=\"".$_SERVER['PHP_SELF'].'?purge=all&a='.rand().'">Purge all</a> or 
+<a href="javascript:document.location.reload(true);">Reload</a></p>
+<p><a href="/?pid='.$_GET['purge'].'">Go to page</a> or <a href="../">Home</a>');
 }
 
 function page_cache(){
@@ -102,7 +103,6 @@ $q .= "`page_ID`=".$page_data['ID'].
       $r;
 if ($id) $q .= " WHERE `ID`=$id;";
 else $q .';';
-//die($q);
 mysqli_query($db_link,$q);
 }
 

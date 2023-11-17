@@ -1,7 +1,7 @@
 <?php
 
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2023  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -27,9 +27,11 @@ include_once("conf_manage.php");
 include_once($idir.'conf_paths.php');
 include_once($idir.'lib/o_form.php');
 
-$da = db_select_m('*', 'options', 'name LIKE "css_%"');
+$da = db_select_m('*', 'options', 'name LIKE "css_%" ORDER BY `name` ASC');
 
 echo "<h1>Edit styles</h1>";
+
+echo '<p><a href="'.dirname(dirname($_SERVER['PHP_SELF'])).'">Home</a></p>';
 
 echo "<p>\n";
 foreach($da as $d) echo '<a href="'.$adm_pth.'edit_record.php?t=options&r='.$d['ID'].'">'.$d['name']."</a><br>\n";

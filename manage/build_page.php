@@ -1,6 +1,6 @@
 <?php
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,6 @@ $page_header .= "\n".'<link href="'.$adm_pth.'style.css" rel="stylesheet" type="
                 "\n".'<meta name=viewport content="width=device-width, initial-scale=1">';
 
 $page_content = adm_links().'
-<p>&nbsp;</p>
 '.$page_content;
 
 include($idir."lib/build_page.php");

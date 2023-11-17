@@ -1,6 +1,6 @@
 <?php
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2013  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -32,11 +32,12 @@ $rz .= '<br> See <a href="'.$pth.'page_stats.php?pid='.$page_data['ID'].'">page<
        ',    <a href="'.$pth.'page_stats.php?group='.$page_data['menu_group'].'">group</a>'.
        ' or  <a href="'.$pth.'content_stats.php">content</a> stats<br>'."\n".
        'Page ID: <a href="'.$adm_pth.
-       'edit_record.php?t=pages&r='.$page_data['ID'].'">'.$page_data['ID']."</a>\n".
+       'edit_record.php?t=pages&r='.$page_data['ID'].'">'.$page_data['ID']."</a>,\n".
        ' template: <a href="'.$adm_pth.
        'edit_record.php?t=templates&r='.$page_data['template_id'].'">'.$page_data['template_id'].
-       '</a> &nbsp; <a href="https://realfavicongenerator.net/favicon_checker?protocol='.$_SERVER['REQUEST_SCHEME'].
-       '&site='.stored_value('host_web').'" target="_blank">favicon check</a>'.
+       '</a>, <a href="'.$adm_pth.'edit_styles.php"  target="styles">Styles</a>, '.
+       '<a href="https://realfavicongenerator.net/favicon_checker?protocol='.$_SERVER['REQUEST_SCHEME'].
+       '&site='.stored_value('host_web').'" target="favicon">favicon check</a>'.
        "\n";      
 return $rz;
 }

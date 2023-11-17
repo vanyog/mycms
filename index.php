@@ -1,7 +1,7 @@
 <?php
 
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -32,6 +32,8 @@ error_reporting(E_ALL); ini_set('display_errors',1);
 if(!ob_start("ob_gzhandler")) ob_start();
 
 if (phpversion()>'5.0') date_default_timezone_set("Europe/Sofia");
+
+$mod_coocies = true;
 
 // Път до директорията на системата
 $idir = str_replace('\\','/',dirname(__FILE__)).'/';

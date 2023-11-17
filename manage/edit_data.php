@@ -1,6 +1,6 @@
 <?php
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -29,7 +29,8 @@ include($idir."lib/f_db_field_names.php");
 
 $tl = db_tables();
 
-$page_content = '<p> Database: <strong>'.$database.'</strong> </p>
+$page_content = '<h1>Database tables</h1>
+<p> Database: <strong>'.$database.'</strong> </p>
 <p>Tables:  <strong>'.$tn_prefix.'</strong></p>
 <table>';
 

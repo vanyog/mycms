@@ -1,6 +1,6 @@
 <?php
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -28,6 +28,10 @@ include_once($idir.'lib/f_db_select_1.php');
 function menutree(){
 global $pth, $page_id, $page_data, $main_index;
 $rz = '';
+// На главната страница не се показва
+if($page_id==stored_value('main_index_pageid',1)) return $rz;
+// Ако страницата е от групата на главната страница, също не се покава
+if($page_data['menu_group']==1) return $rz;
 // Четене записа на менюто на страницата
 $pr = db_select_1('*','menu_tree',"`group`=".$page_data['menu_group']);
 if (!$pr) return $rz;
@@ -55,6 +59,7 @@ while ($pr['parent'])
   if ($rz) $rz = ' &gt;&gt; '.$rz;
   $rz = '<a href="'.$main_index.'?pid='.$pg['ID'].'">'.translate($pg['title']).'</a>'.$rz;
 }
+add_style('menu_tree');
 return '<div id="menu_tree">
 '.translate('menutree_start').$rz.'
 </div>';

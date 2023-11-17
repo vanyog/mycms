@@ -1,6 +1,6 @@
 <?php
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2013  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -153,7 +153,7 @@ return "
 <script>
 
 // This code is from https://developers.fac book.com/docs/facebook-login/web#checklogin
-// modified by the needs of MyCMS project
+// modified by the needs of VanyoG CMS project
 
   function statusChangeCallback(response) {
     if (response.status === 'connected') {
@@ -555,7 +555,8 @@ global $user_table, $idir;
 $r = userreg_id($t);
 if (!$r){
    $lp = stored_value("userreg_login_$t");
-   return message(translate('userreg_mustlogin').' <a href="'.$lp.'">Log in</a>');
+   return message(translate('userreg_mustlogin').' <a href="'.$lp.'">'.
+   translate('userreg_login').'</a>');
 }
 // Превключване към https, ако се изисква
 if((stored_value('userreg_https')=='on') && !(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']=='on')) ){
