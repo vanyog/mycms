@@ -1,7 +1,7 @@
 <?php
 
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -104,7 +104,8 @@ if(e.keyCode==13) ChangeLimit();
 
 // Сглобяване на страницата
 
-$page_content = "<p>Database: <strong>$database</strong> Table: <strong>$tn_prefix$t</strong> $c records \n";
+$page_content = "<h1>Database: $database &nbsp; Table: $tn_prefix$t</h1>
+<p> $c records \n";
 
 $page_content .= '<input type="text" size="4" value="'.$l.'" id="limit" onkeyup="keyPressed(event);"> viewed
 <input type="button" value="Change" onclick="ChangeLimit(event);"></p>'."\n";

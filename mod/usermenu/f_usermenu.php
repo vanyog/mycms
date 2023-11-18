@@ -1,6 +1,6 @@
 <?php
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2013  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -77,9 +77,9 @@ $can_manage = array();// Права за администриране на модули
 
 foreach($p as $q) if($q['yes_no']) switch($q['type']) {
 case 'all':
-  $rz .= "<a href=\"$adm_pth\">Admin path</a><br>\n";
+  $rz .= "<a href=\"$adm_pth\">Admin path</a> \n";
   $ap = stored_value('admin_page');
-  if($ap) $rz .= "<a href=\"$ap\">Admin page</a><br>\n";
+  if($ap) $rz .= "<a href=\"$ap\">Admin page</a> \n";
   $can_edit = $q['yes_no'];
   $can_create = $q['yes_no'];
   $ml = mod_list(true);
@@ -112,9 +112,9 @@ if ($nom===true) return '';
 // Съставяне на менюто
 $pt = current_pth(__FILE__);
 if ($can_create){
- $rz .= '<a href="'.$pt.'new_page.php?p='.$page_data['ID']."\">Page New</a><br>\n";
- $rz .= '<a href="'.$pt.'new_page_from_h.php?p='.$page_data['ID'].'">Page From H</a><br>'."\n";
- $rz .= '<a href="'.$pt.'correct_h_tags.php?p='.$page_data['ID'].'">Page Crrect H</a><br>'."\n";
+ $rz .= '<a href="'.$pt.'new_page.php?p='.$page_data['ID']."\">Page New</a> \n";
+ $rz .= '<a href="'.$pt.'new_page_from_h.php?p='.$page_data['ID'].'">Page From H</a> '."\n";
+ $rz .= '<a href="'.$pt.'correct_h_tags.php?p='.$page_data['ID'].'">Page Crrect H</a> '."\n";
  // Брой на страниците в раздела
  $gc = db_table_field('COUNT(*)','menu_items','`group`='.$page_data['menu_group']);
  // Индекс на главната страница на раздела
@@ -127,12 +127,12 @@ function confirm_page_deleting(){
 if (confirm("'.translate('usermenu_confirdeleting').'")) document.location = "'.$pt.'delete_page.php?pid='.$page_data['ID'].'";
 }
 </script>'."\n";
-  $rz .= '<a href="" onclick="confirm_page_deleting();return false;">Page Delete</a><br>'."\n";
+  $rz .= '<a href="" onclick="confirm_page_deleting();return false;">Page Delete</a> '."\n";
  }
  if (isset($page_data['hidden']) && $page_data['hidden'])
-     $rz .= '<a href="'.$pt.'/toggle_visibility.php?pid='.$page_data['ID'].'">Page Public</a><br>'."\n";
+     $rz .= '<a href="'.$pt.'/toggle_visibility.php?pid='.$page_data['ID'].'">Page Public</a> '."\n";
  else
-     $rz .= '<a href="'.$pt.'/toggle_visibility.php?pid='.$page_data['ID'].'">Page Hide</a><br>'."\n";
+     $rz .= '<a href="'.$pt.'/toggle_visibility.php?pid='.$page_data['ID'].'">Page Hide</a> '."\n";
  $new_group = db_table_field('MAX(`menu_group`)', 'pages', '1') + 1;
  $page_header .= '<script>
 function getPage(){
@@ -150,35 +150,37 @@ if (g){
 }
 }
 </script>'."\n";
- $rz .= '<a href="javascript:void(0);" onclick="getPage();">Page Get</a><br>'."\n";
- $rz .= '<a href="javascript:void(0);" onclick="moveTo();">Page Move</a><br>'."\n";
+ $rz .= '<a href="javascript:void(0);" onclick="getPage();">Page Get</a> '."\n";
+ $rz .= '<a href="javascript:void(0);" onclick="moveTo();">Page Move</a> '."\n";
 }
 $page_header .= '<script>
 function closeUMemu(){
 var m = document.getElementById("user_menu");
-if(confirm("Would you like to hide user menu? It will appear again after page reload."))
+if(true || confirm("Would you like to hide user menu? It will appear again after page reload."))
   m.style.display = "none";
 }
 </script>'."\n";
-if ($can_edit) $rz .= edit_normal_link()."<br>\n";
+if ($can_edit) $rz .= edit_normal_link()." \n";
 foreach($can_manage as $m=>$yn) if( $yn ) {
   $fn = dirname(mod_path($m)).'/f_menu_items.php';
-  if (file_exists($fn)){
+  if (file_exists($fn)) {
     include_once($fn);
     $added_styles .= 'div.sep { border-bottom:solid 1px; padding:0; margin:0; }';
-    eval('$rz .= "<div class=\"sep\"></div>".'.$m.'_menu_items();');
+    $mi = '';
+    eval('$mi = '.$m.'_menu_items();');
+    if($mi) $rz .= "<div class=\"sep\"></div>".$mi;
   }
 }
 $hp = stored_value('usermenu_helppage');
 if ( strlen($nom) && strlen($rz) ){
-  if ($hp) $rz .= "<a href=\"$hp\" target=\"_blank\">Help</a><br>\n";
+  if ($hp) $rz .= "<a href=\"$hp\" target=\"_blank\">Help</a> \n";
   $rz .= '<span class="user">'.$_SESSION['user_username'].
-         ' <a href="'.$nom.'">'.translate('user_logaut').'</a></span>'."<br>\n";
+         ' <a href="'.$nom.'">'.translate('user_logaut').'</a></span>'." \n";
 }
 if($rz){
   add_style('usermenu');
   return '<div id="user_menu">
-<a href="" class="cLink" onclick="closeUMemu();return false;">close</a><br>
+<a href="" class="cLink" onclick="closeUMemu();return false;">close</a> 
 '."\n".$rz."\n</div>
 ";
 }

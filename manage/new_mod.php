@@ -1,6 +1,6 @@
 <?php
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -44,7 +44,7 @@ $el = $adm_pth.'edit_file.php?f='.relative_to($apth,$ff);
 // Съдържание на файла
 $fc = '<?php
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) '.date("Y").'  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify

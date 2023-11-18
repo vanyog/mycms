@@ -1,7 +1,7 @@
 <?php
 
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2019  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 function userreg_menu_items(){
 $lk = current_pth(__FILE__).'new_user.php';
-return "<a href=\"$lk\" target=\"UserReg\">UserReg New</a><br>";
+return "<a href=\"$lk\" target=\"UserReg\">UserReg New</a> ";
 }
 
 ?>

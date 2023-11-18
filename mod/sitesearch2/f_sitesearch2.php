@@ -1,6 +1,6 @@
 <?php
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2021  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -113,19 +113,20 @@ $ti = new FormInput(translate('sitesearch_label'),'searchtext','text', $tx);
 $ti->js = ' onkeyup="searchStringChanged(this,event)"';
 $ti->id = 'searchtextfield';
 $f->add_input($ti);
-$b = new FormInput('','','button', ' ');
+$b = new FormInput('','','button', translate('sitesearch_submit'));
 $p = current_pth(__FILE__);
 $b->js = 'onclick="doSiteSearch();" id="search_button"'.
          ' title="'.translate('sitesearch_submit').'"'; 
 $f->add_input($b);
 if (isset($_SESSION['text_to_search'])){
-  $b = new FormInput('','','button',' ');
+  $b = new FormInput('','','button',translate('sitesearch_clear'));
   $b->js = 'onclick="document.location=\''.$p.'clear.php\';" '.
            ' id="search_clear"'.
            ' title="'.translate('sitesearch_clear').'"';
   $f->add_input( $b );
 }
-return translate('sitesearch_start').$f->html();
+add_style('site_serarch');
+return '<div id="site_search">'.translate('sitesearch_start')."\n".$f->html()."</div>\n";
 }
 
 

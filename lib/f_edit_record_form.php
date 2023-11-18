@@ -1,6 +1,6 @@
 <?php
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2013  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -229,6 +229,7 @@ case 'password':
     }
     else $rz .= '<span class="warning">'.translate('user_passwordinvalid')."</span><br>\n";
   break;
+case 'password2': break;  
 default: //die(print_r($ft,true));
   if ($q) $q .= ', ';
   if ($ft[$n]==1){ // Малко цяло число

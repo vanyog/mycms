@@ -1,7 +1,7 @@
 <?php
 
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // $page_title - заглавието на страницата
 // $page_header - допълнителни тагове, които се вмъкнат между <head></head>
 // $body_adds - допълнителни атрибути на <body> тага
+// $added_styles - CSS правила за форматиране
 
 // Брояч на презарежданията на страниците
 //include("count-visits.php");
@@ -41,6 +42,7 @@ if (!isset($page_title)) $page_title = '';
 if (!isset($page_header)) $page_header = '';
 if (!isset($body_adds)) $body_adds = '';
 if (!isset($site_encoding)) $site_encoding = 'windows-1251';
+if (!isset($added_styles)) $added_styles = '';
 
 if (!isset($pth)) $pth = '../';
 
@@ -58,6 +60,9 @@ echo '<!DOCTYPE html>
    <title>'.$page_title.'</title>
    <meta http-equiv="Content-Type" content="text/html; charset='.$site_encoding.'">
    '.$page_header.'
+<style>
+'.$added_styles.'
+</style>
 </head>
 
 <body'.$body_adds.'>

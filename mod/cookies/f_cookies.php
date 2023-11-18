@@ -1,6 +1,6 @@
 <?php
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2013  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 function cookies($a=''){
 global $page_header;
-if (isset($_GET['clear'])&&($_GET['clear']=='all')) return cookies_clear_all();
 if ($a=='message') return cookies_message();
 $rz = '';
 if (!count($_COOKIE)) return '<p>'.translate('cookies_nocookie').'</p>';
@@ -33,10 +32,12 @@ $rz .= '<p>'.translate('cookies_table').'</p>
 '<th>'.translate('cookies_value').'</th>'."\n".
 '<th>'.translate('cookies_description').'</th>'."\n";
 foreach($_COOKIE as $k=>$v){
-  $rz .= "<tr><td>$k</td><td>$v</td><td>".translate('cookies_'.$k.'_description')."</td></tr>\n";
+  $rz .= "<tr><td>$k</td><td>";
+  if($k=='PHPSESSID') $rz .= '********';
+  else $rz .= "$v";
+  $rz .= "</td><td>".translate('cookies_'.$k.'_description')."</td></tr>\n";
 }
 $rz .= '</table>
-<p><a href="'.set_self_query_var('clear','all').'">'.translate('cookies_clear').'</a></p>
 ';//.print_r(session_get_cookie_params(),true);
 return $rz;
 }
@@ -50,10 +51,12 @@ function cookies_accept(){
 var d = new Date();
 d = new Date(d.valueOf()+30*24*3600*1000);
 document.cookie = "cookies_accept=yes;expires="+d.toGMTString()+"path=/;SameSite=Strict";
+document.location.reload(true);
 }
 </script>';
+if(!isset($GLOBALS['need_cookie'])) $GLOBALS['need_cookie'] = 'document.cookie';
 return '<script>
-if (document.cookie && (document.cookie.indexOf("cookies_accept=yes")<0)){
+if ('.$GLOBALS['need_cookie'].' && (document.cookie.indexOf("cookies_accept=yes")<0)){
 var cm = document.createElement("div");
 cm.id = "cookies_message";
 cm.innerHTML = '.for_javascript(translate('cookies_message')).';
@@ -79,21 +82,6 @@ foreach($aa as $l){
   $rz .= 'document.write("'.addslashes(trim($l)).'");';
 }
 return $rz;
-}
-
-// Изтриване на всички бисквитки
-
-function cookies_clear_all(){
-global $edit_name, $edit_value, $language;
-if (isset($_SERVER['HTTP_REFERER'])){
-   foreach($_COOKIE as $n=>$v){
-     setcookie($n,'',time()-60*60*24,'/');
-   }
-   $h = str_replace("&$edit_name=$edit_value",'',$_SERVER['HTTP_REFERER']);
-   $h = str_replace("&lang=$language",'',$h);
-   header('Location: '.$h);
-   die;
-}
 }
 
 ?>

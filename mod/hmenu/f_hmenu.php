@@ -1,6 +1,6 @@
 <?php
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2013  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -77,7 +77,7 @@ return $sm.'<div id="menu_'.$a."\">\n".$rz.'</div>';
 function hsubmenu($lk,/*$ia,*/ $j){
 global $ind_fl, $seo_names, $rewrite_on;
 // Номер на менюто, на което страница $lk е главна
-$g = db_table_field('`group`','menu_tree',"`index_page`=$lk");
+$g = db_table_field('`group`','menu_tree',"`index_page`=$lk",0 ,false);
 $ci = hmenu_c($g);
 // Записите от това меню
 $da = db_select_m('*','menu_items',"`group`=$g ORDER BY `place` ASC");

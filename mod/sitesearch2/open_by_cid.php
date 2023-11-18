@@ -1,6 +1,6 @@
 <?php
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2021  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -27,7 +27,7 @@ $ddir = $idir;
 
 include_once($idir.'conf_paths.php');
 
-// Отваряне на страница по нимер на заглавието
+// Отваряне на страница по номер на заглавието
 if(isset($_GET['cid'])){
   $n = db_table_field('name', 'content', 'ID='.(1*$_GET['cid']) );
   $i = db_table_field('ID', 'pages', "`title`='$n'");

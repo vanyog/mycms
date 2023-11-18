@@ -1,6 +1,6 @@
 <?php
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2019  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // Модул, който от съдържанието на страницата $page_content прави извадка-описание,
-// за за целите на SEO и социални мрежи. Ако на глобална променлива $og_descriptio
+// за целите на SEO и социални мрежи. Ако на глобална променлива $og_description
 // е присвоена стойност, се връща тази стойност.
 // (Съдържанието на страницата е присвоено на променлива $page_content от скрипта 
 // с име CONTENT, който се пази в таблица 'scripts'.)
@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 function ogdescription(){
 global $page_content, $og_description, $site_encoding;
 if(!empty($og_description)) return $og_description;
-$a = strip_tags($page_content);
+$a = !empty($page_content) ? strip_tags($page_content) : '';
 $a = str_replace('&nbsp;',' ',$a);
 $a = str_replace("\n",' ',$a);
 $a = str_replace("\r",'',$a);

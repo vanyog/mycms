@@ -1,7 +1,7 @@
 <?php
 
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -38,7 +38,7 @@ $d = str_replace('\\', '/', realpath($apth.$f));
 $f = relative_to($apth,$d.'/');
 //echo("$apth$f<br>$d<br>$f<br>");
 
-$page_content = '';
+$page_content = "<h1>File system</h1>\n";
 
 // Показване на съобщение за неуспех на последната операция, ако има такова
 session_start();

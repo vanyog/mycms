@@ -1,7 +1,7 @@
 <?php
 
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -59,6 +59,9 @@ load_options(array(
 // Задаване друга стойност на $_SERVER['DOCUMENT_ROOT'], ако връщаната от сървъра не е правилна
 $document_root = stored_value('document_root');
 if (file_exists($document_root)) $_SERVER['DOCUMENT_ROOT'] = $document_root;
+
+if(substr($_SERVER['DOCUMENT_ROOT'],-1,1)=='/')  
+   $_SERVER['DOCUMENT_ROOT'] = substr($_SERVER['DOCUMENT_ROOT'],0,-1);
 
 // Директория на входната страница.
 // Задава се ако сайтът се изгражда като раздел в друг сайт и се намира в директория на главния сайт.
@@ -144,6 +147,8 @@ if(substr($p2, 0, $n1)!=$p1){
     $p1 = $or;
     $n1 = strlen($p1);
   }
+  else die("Problem:<br>\$_SERVER['SCRIPT_NAME']: $p1<br>__DIR__: $p2<br>".
+           "Set 'document_root' option to correct.");
 }
 $r = substr($p2,$n1,$n2-$n1).'/';
 return $r;

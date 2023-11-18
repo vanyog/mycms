@@ -1,6 +1,6 @@
 <?php
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -25,8 +25,10 @@ include_once($idir.'lib/f_db_select_m.php');
 // Ако не съществува такъв запис, връща стойността $def.
 
 function stored_value($n, $def = false, $y = false){
-global $option_value, $db_req_count; // Глобална променлива, която служи за кеш.
-if (!isset($option_value[$n])) $option_value[$n] = db_table_field('value', 'options',"`name`='$n'", $def, $y);
+global $option_value, // Глобална променлива, която служи за кеш.
+       $db_req_count;
+if (!isset($option_value[$n])) 
+    $option_value[$n] = db_table_field('value', 'options',"`name`='$n'", $def, $y);
 if(empty($option_value[$n]) && $def) $option_value[$n] = $def;
 return $option_value[$n];
 }

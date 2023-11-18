@@ -1,7 +1,7 @@
 <?php
 
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -22,8 +22,7 @@ include_once($idir."lib/usedatabase.php");
 
 function db_table_exists($t){
 global $database, $db_link, $tn_prefix, $db_req_count;
-if($db_link===false) die('Can\'t check if table \''.$t.
-'\' exists because $db_link is not defined. '.
+if($db_link===false) die('function db_table_exists()<br>$db_link is not defined. '.
 'Run <a href="_install.php">manage/_install.php</a> script.');
 $r = mysqli_query($db_link,"SHOW TABLES FROM $database;");
 $db_req_count++;

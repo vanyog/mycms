@@ -1,6 +1,6 @@
 <?php
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -23,9 +23,14 @@ include_once($idir."lib/f_adm_links.php");
 
 // Променливи и фуркции, които дават информация за хостинга и администрирането
 
-$web_host = stored_value('host_web','mysite.com'); // Домейн на сайта.
+$web_host = stored_value('host_web','mysite.org'); // Домейн на сайта.
+if ((substr($_SERVER['SERVER_ADDR'],0,8)!='127.0.0.') &&
+     ($_SERVER['SERVER_ADDR']!='::1') && ($web_host=='mysite.org')
+   ) 
+   echo("<p>Please set 'host_web' option.</p>\n");
 
-$local_host = stored_value('host_local','localhost'); // Локален домейн на сайта, който не е достъпен през Интернет.
+$local_host = stored_value('host_local','localhost'); // Локален домейн на сайта, 
+                      // който не е достъпен през Интернет.
                       // Използва се, когато се създава пробно локално копие на сайта.
 
 // Адрес на phpMyAdmin за отдалечения сървър
@@ -36,11 +41,13 @@ $phpmyadmin_local = stored_value('phpmyadmin_local','http://localhost/phpmyadmin
 
 // Връща истина, ако сайтът се намира на локален сървър.
 function is_local(){
-global $local_host;
+/*global $local_host;
 if (isset($_SERVER['HTTP_HOST'])) 
     return ($local_host==$_SERVER['HTTP_HOST']) || 
            ($_SERVER['HTTP_HOST']=='localhost');
-else return false;
+else return false;*/
+return (substr($_SERVER['SERVER_ADDR'],0,8)=='127.0.0.') ||
+       ($_SERVER['SERVER_ADDR']=='::1');
 }
 
 // Функцията in_edit_mode() връща истина ако сайтът е в режим на редактиране

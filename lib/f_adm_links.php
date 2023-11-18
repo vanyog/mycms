@@ -1,6 +1,6 @@
 <?php
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -37,13 +37,15 @@ include_once($idir.'lib/f_db_select_1.php');
 include_once($idir.'lib/f_db_table_exists.php');
 include_once($idir.'lib/f_parse_content.php');
 include_once($idir."lib/f_edit_normal_links.php");
-include_once($idir."lib/translation.php");
+//include_once($idir."lib/translation.php");
+include_once($idir."lib/f_add_style.php");
 
 function adm_links(){
 global $idir, $pth, $apth, $adm_pth, $edit_name, $edit_value, $web_host, $local_host, $main_index,
        $phpmyadmin_site, $phpmyadmin_local, $page_data;
 if ( !show_adm_links() ) return '';
 else {
+  add_style("adm_links");
   // $lpid - Ќомер на най-новата страница на сайта
   if (db_table_exists('pages')) $lpid = db_select_1('ID','pages','1 ORDER by `ID` DESC');
   if (isset($lpid['ID'])) $lpid = $lpid['ID']; else $lpid = 1;
@@ -55,11 +57,11 @@ else {
   if(isset($page_data['ID'])) $npid = db_table_field('ID', "pages", "`ID`>".$page_data['ID']." ORDER BY `ID` ASC LIMIT 1");
 
   $mphp = $phpmyadmin_site;
-  $go = 'http://'.$local_host.$_SERVER['REQUEST_URI'];
+  $go = $_SERVER['REQUEST_SCHEME'].'://'.$local_host.$_SERVER['REQUEST_URI'];
   $gon = 'go to LOCAL';
   if (is_local()){
     $mphp = $phpmyadmin_local;
-    $go = 'http://'.$web_host.$_SERVER['REQUEST_URI'];
+    $go = $_SERVER['REQUEST_SCHEME'].'://'.$web_host.substr($_SERVER['REQUEST_URI'],strlen($pth)-1);
     if (substr($_SERVER['REQUEST_URI'],0,strlen($adm_pth))==$adm_pth){
        $wp = stored_value('admin_path','manage').'/';
        if ($wp[0]!='/') $wp = $pth.$wp;
@@ -76,11 +78,14 @@ else {
     }
     else {
        $w3c = ' <a href="http://validator.w3.org/check?uri='.
-              urlencode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).'" target="_blank">w3c</a>';
+              urlencode($_SERVER['REQUEST_SCHEME'].'//'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).
+              '" target="_blank">w3c</a>';
        $mob = ' <a href="https://www.google.com/webmasters/tools/mobile-friendly/?url='.
-              urlencode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).'" target="_blank">mob</a>';
+              urlencode($_SERVER['REQUEST_SCHEME'].'//'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).
+              '" target="_blank">mob</a>';
        $spt = ' <a href="https://developers.google.com/speed/pagespeed/insights/?url='.
-              urlencode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).'" target="_blank">sp</a>';
+              urlencode($_SERVER['REQUEST_SCHEME'].'//'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).
+              '" target="_blank">sp</a>';
     }
   }
   
@@ -128,7 +133,7 @@ var e = document.getElementById("adm_links");
 e.style.display = "none";
 }
 </script>
-<p id="adm_links">&nbsp; '.translate('admin_style').'
+<p id="adm_links">DB_REQ_COUNT 
 <a href="'.$adm_pth.'">'.$_SERVER['REMOTE_ADDR'].'</a>
 <a href="'.$main_index.'">Home</a> '.$enmch.'
 <a href="'.$main_index.'?pid='.$ppid.'">&lt;</a>
@@ -143,14 +148,13 @@ e.style.display = "none";
 <a href="'.stored_value('adm_links_cpanel').'" target="_blank">cPanel</a>
 <a href="'.$mphp.'" target="_blank">phpMyAdmin</a> 
 <a href="'.$adm_pth.'showenv.php?AAAAAAA" target="_blank">$_SERVER</a> 
-<a href="https://github.com/vanyog/mycms/wiki" target="_blank">Help</a> 
+<a href="https://github.com/vanyog/VanyoG CMS/wiki" target="_blank">Help</a> 
 <a href="'.$go.'">'.$gon.'</a><!--
 <a hr  ="'.$adm_pth.'dump_data.php">Dump</a-->
 '.$w3c.$mob.$spt.' 
-'.$clink.' DB_REQ_COUNT
-<a href="#" onclick="closeAdminLinks();return false;">x</a>&nbsp;
+'.$clink.'
+<a href="#" onclick="closeAdminLinks();return false;">x</a>
 </p>';
-//  if (stored_value('adm_links_over',0)!=1) $rz .= '<p>&nbsp;</p>';
   return $rz;
   }
 }

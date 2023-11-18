@@ -1,6 +1,6 @@
 <?php
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2013  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -52,7 +52,7 @@ $la = $languages;
 unset($la[$default_language]);
 $la = array_keys($la);
 
-$page_content = '';
+$page_content = "<h1>Translate content</h1>\n";
 
 if (!count($la)) $page_content = '<p>Този сайт е само на '.$languages[$default_language].'</p>';
 else {
@@ -191,7 +191,7 @@ global $la, $default_language;
        )
        return new_translation($n1,$l);
   }
-  return '';
+  return '<p>No strings for translation</p>';
 }
 
 //

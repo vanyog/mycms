@@ -1,7 +1,7 @@
 <?php
 
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // Вмъкване на нов запис в таблица $_GET['t']
+// Стойностите на други параметри $_G['x'], се използват като стойности на полета 'x'
 // След вмъкване на записа той се отваря за редактиране с edit_record.php
 
 include("conf_manage.php"); 

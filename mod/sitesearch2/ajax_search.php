@@ -1,6 +1,6 @@
 <?php
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2021  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -47,11 +47,14 @@ foreach($rt as $r){
 }
 
 // Търсене в колекцията връзки
-$rl = db_select_m('ID,Title', 'outer_links', "`Title` LIKE '%".addslashes($tx)."%' LIMIT 10");
-if(count($rl)) $rz .= "<h2>Връзки</h2>\n";
+$rl = array();
+if(db_table_exists('outer_links')) {
+$rl = db_select_m('ID,Title', 'outer_links', "`Title` LIKE '%".addslashes($tx)."%' LIMIT 10"); 
+if(count($rl)) $rz .= "<h2>".translate('sitesearch2_pages')."</h2>\n";
 foreach($rl as $r){
   $rz .= '<p><a href="'.current_pth(__FILE__).'open_by_cid.php?lid='.$r['ID'].'">'.
         preg_replace("/($tx|$txu)/i", "<span>$1</span>", $r['Title'])."</a></p>\n";
+}
 }
 
 if(!(count($rt) + count($rl))) 

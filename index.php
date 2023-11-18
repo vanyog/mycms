@@ -1,7 +1,7 @@
 <?php
 
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -33,6 +33,8 @@ if(!ob_start("ob_gzhandler")) ob_start();
 
 if (phpversion()>'5.0') date_default_timezone_set("Europe/Sofia");
 
+$mod_coocies = true;
+
 // Път до директорията на системата
 $idir = str_replace('\\','/',dirname(__FILE__)).'/';
 
@@ -43,8 +45,8 @@ $ddir = $idir;
 if (
   !file_exists($idir.'conf_database.php')
   || !file_exists($idir.'conf_paths.php')
-) 
-die('The system is not propperly installed. See <a href="http://vanyog.com/_new/index.php?pid=91" target="_blank">USAGE.txt</a> file.');
+)
+header('Location: manage/_install.php'); 
 
 $page_header = ''; // Добавки към хедъра на страницата
 
@@ -53,6 +55,7 @@ include_once($idir.'lib/f_parse_template.php');
 include_once($idir.'lib/translation.php');
 include_once($idir.'lib/f_page_cache.php');
 include_once($idir.'lib/f_db_table_status.php');
+include_once($idir.'lib/f_add_style.php');
 
 // Пренасочване, когато сайт с друг домейн се хоства в поддиректория на същия сървър.
 // Адресът, към който се пренасочва, трябва да е въведен в таблица options, в 
@@ -61,6 +64,7 @@ $redir = stored_value($_SERVER['HTTP_HOST']);
 if($redir) header("Location: ".$_SERVER['REQUEST_SCHEME']."://$redir");
 
 header("Content-Type: text/html; charset=$site_encoding");
+
 // Кеширане от браузъра за един час
 header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + (60 * 60)));
 
@@ -80,6 +84,8 @@ if (isset($_GET['pid'])) $page_id = is_numeric($_GET['pid']) ? 1*$_GET['pid'] : 
 
 // Заглавие на страницата
 $page_title = '';
+
+add_style("all_pages"); // Добавя глобалния стил, който се използва на всички страници
 
 // Чете се описанието на страницата от таблица $tn_prefix.'pages'
 if( $seo_names && (!isset($_GET['pid']) || !is_numeric($_GET['pid'])) ){
@@ -200,7 +206,7 @@ $q = "INSERT INTO `$tn_prefix"."visit_history` (`page_id`, `date`, `count`) VALU
 foreach($dt as $r){
   $q .= "(".$r['ID'].", '$dd', ".$r['dcount']."),\n";
 }
-$q = substr($q, 0, strlen($q)-2).";"; die($q);
+$q = substr($q, 0, strlen($q)-2).";";
 mysqli_query($db_link,$q);
 // нулира се броя на посещенията в таблица $tn_prefix.'pages'
 $q = "UPDATE `$tn_prefix"."pages` SET tcount = tcount + dcount, dcount = 0;";

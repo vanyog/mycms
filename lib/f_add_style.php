@@ -1,6 +1,6 @@
 <?php
 /* 
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2021 Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -27,7 +27,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 function add_style($n){
 global $added_styles;
 if(!isset($added_styles)) $added_styles = '';
-$v = stored_value("css_$n");
+$v = '';
+$vd = db_select_m('value', 'options', "`name`='css_$n'");
+if(!$vd) store_value("css_$n", '');
+else $v = $vd[0]['value'];
 if($v && strpos($added_styles, $v)===false) $added_styles .= $v;
 }
 

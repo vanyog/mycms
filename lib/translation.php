@@ -1,6 +1,6 @@
 <?php
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 include_once($idir."lib/f_stored_value.php");
 include_once($idir."lib/f_encode.php");
+include_once($idir."lib/f_mysetcookie.php");
 
 load_options(array(
   'languages',
@@ -47,11 +48,11 @@ $l3 = '';
 if (isset($_GET['lang'])) $l3 = $_GET['lang'];      // според ?lang=xx
 $l = $default_language;                             // по подразбиране
 if ($l1) $l = $l1;
-if ($l2) $l = $l2;
+if ($l2) $l = $l2;//debug_print_backtrace(); die;
 $ks = array_keys($languages); //print_r($ks);
 if ($l3){ 
   $l = $l3;
-  if (in_array($l,$ks)) setcookie('language',$l3,time()+30*3600*24,'/');
+  if (in_array($l,$ks)) mysetcookie('language', $l3);
 }  // echo "| $l1 | $l2 | $l3 | $l |";// print_r(array_keys($languages));
 if (in_array($l,$ks)) return $l;
 else return $default_language;
@@ -67,7 +68,7 @@ $how = stored_value('flag_setting','flag');
 if ($a) $how = $a;
 if (!$dont_translate) foreach($ls as $l) if ($l!=$language){
   $h = set_self_query_var('lang',$l).$page_hash;
-  $r .= '<a href="'.$h.'" id="lang_flag">';
+  $r .= '<a href="'.$h.'" class="lang_flag">';
   switch ($how){
   case 'text': $r .= $languages[$l]; break;
   case 'flag&text': $r .= '<img src="'.$pth.'images/flag-'.$l.'.svg" alt="'.$l.'">'."<br>$languages[$l]";

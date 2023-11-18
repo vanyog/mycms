@@ -1,6 +1,6 @@
 <?php
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2013  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -32,21 +32,24 @@ include_once($idir.'lib/f_db_insert_1.php');
 if(!session_id()) session_start();
 
 // Ако в сесията няма данни за влязъл потребител - съобщение, че трябва да се влезе
-if (!isset($_SESSION['user_username']) || !isset($_SESSION['user_password']) )
+if ( (!isset($_SESSION['user_username']) || !isset($_SESSION['user_password']) ) && !show_adm_links())
    $page_content = '<p class="message">'.translate('userreg_nouserlogedin').'</p>';
 else {
+  $id = 0;
   // Таблица с данни за потребители
   $user_table = stored_value('user_table', 'users');
+  if(!show_adm_links()){
   // Номер на влезлия потребител
   $id = db_table_field('ID', $user_table,
         "`username`='".$_SESSION['user_username']."' AND `password`='".$_SESSION['user_password']."'");
+  }
   // Ако номера на влезлия потребител не е валиден - съобщение, че трябва да се влезе
-  if (!$id) $page_content = '<p class="message">'.translate('userreg_mustlogin2').'</p>';
+  if (!$id && !show_adm_links()) $page_content = '<p class="message">'.translate('userreg_mustlogin2').'</p>';
   else { //die($id);
     // Проверка дали влезлият потребител има право да създава нови потребители
     $p = db_table_field('yes_no','permissions',
            "`user_id`=$id AND ((`type`='module' AND `object`='userreg') OR `type`='all')");
-    if (!$p) $page_content = '<p class="message">'.translate('userreg_nopermission').'</p>';
+    if (!$p && !show_adm_links()) $page_content = '<p class="message">'.translate('userreg_nopermission').'</p>';
     else {
       // Тип на влезлия потребител
       $t = db_table_field('type', $user_table, "`ID`=$id");

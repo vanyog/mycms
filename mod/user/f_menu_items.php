@@ -1,6 +1,6 @@
 <?php
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2013  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -22,8 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 function user_menu_items(){
 $p = current_pth(__FILE__);
-return '<a href="'.$p.'user.php?user=newreg">User New</a><br>
-<a href="'.$p.'user.php?user=delete">User Delete</a><br>'."\n";
+return '<a href="'.$p.'user.php?user=newreg">User New</a> 
+<a href="'.$p.'user.php?user=delete">User Delete</a> '."\n";
 }
 
 ?>

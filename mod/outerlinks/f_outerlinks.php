@@ -1,6 +1,6 @@
 <?php
 /*
-MyCMS - a simple Content Management System
+VanyoG CMS - a simple Content Management System
 Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -344,7 +344,7 @@ foreach($la as $l){
 } // if (!$what || $lid)
 
 // Бисквита, запомняща отворената категория
-setcookie('lid',$lid, ['path' => '/', 'samesite' => 'Strict' ]);
+setcookie('lid',$lid, ['path' => '/', 'SameSite' => 'Strict' ]);
 
 // Край на формата за редактиране
 if (($what!='all') && ($what!='cat')) $rz .= "\n".end_edit_form($lid);
