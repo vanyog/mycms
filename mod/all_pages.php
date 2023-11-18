@@ -72,7 +72,7 @@ foreach($pd as $p){
      else $tt = db_table_field('text','content',"`name`='".$p['title']."' AND `language`='$default_language'");
      if($p['hidden']) $tt .= '<td>hidden</td>';
      else $tt .= '<td>&nbsp;</td>';
-     $rz .= "<td>$tt</td></tr>\n";
+     $rz .= "<td>$tt</tr>\n";
   }
   else {
     $rz = '<td><a href="'.$pth.'index.php?pid='.$p['ID'].$lnl.'" target="_blank">'.$p['ID'].'</a></td>'.$rz;

@@ -13,13 +13,14 @@ function cookie_value(n, v = false){
 function cookie_set(n, v, perm = true){//alert("allow_cookies");
     if(allow_cookies==='no') return;
     if(allow_cookies!=='yes'){
+        if(!cookie_message) cookie_message = "Will you accept cookies from this site?";
         if(confirm(cookie_message)){
             allow_cookies = 'yes';
-            cookie_set("cookies_accept",allow_cookies);
+            cookie_set("cookies_accept", allow_cookies);
         }
         else{
             allow_cookies = 'no';
-            cookie_set("cookies_accept",allow_cookies,false);
+            cookie_set("cookies_accept", allow_cookies, false);
         }
     }
     var ex = "";
