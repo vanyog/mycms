@@ -26,8 +26,8 @@ include_once($idir."lib/f_adm_links.php");
 $web_host = stored_value('host_web','mysite.org'); // Домейн на сайта.
 if ((substr($_SERVER['SERVER_ADDR'],0,8)!='127.0.0.') &&
      ($_SERVER['SERVER_ADDR']!='::1') && ($web_host=='mysite.org')
-   ) 
-   echo("<p>Please set 'host_web' option.</p>\n");
+   )
+   $page_content = "<p>Please set 'host_web' option. ";
 
 $local_host = stored_value('host_local','localhost'); // Локален домейн на сайта, 
                       // който не е достъпен през Интернет.

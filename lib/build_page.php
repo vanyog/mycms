@@ -59,6 +59,7 @@ echo '<!DOCTYPE html>
 <head>
    <title>'.$page_title.'</title>
    <meta http-equiv="Content-Type" content="text/html; charset='.$site_encoding.'">
+   <meta name=viewport content="width=device-width, initial-scale=1">
    '.$page_header.'
 <style>
 '.$added_styles.'

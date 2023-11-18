@@ -20,8 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include_once($idir."lib/f_adm_links.php");
 
 if (!isset($page_header)) $page_header = '';
-$page_header .= "\n".'<link href="'.$adm_pth.'style.css" rel="stylesheet" type="text/css">'.
-                "\n".'<meta name=viewport content="width=device-width, initial-scale=1">';
+$page_header .= "\n".'<link href="'.$adm_pth.'style.css" rel="stylesheet" type="text/css">';
 
 $page_content = adm_links().'
 '.$page_content;

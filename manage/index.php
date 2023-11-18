@@ -20,8 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 error_reporting(E_ALL); ini_set('display_errors',1);
 
-$page_head = '';
-$page_content = "<h1>Administration</h1>\n";
 $exe_time = microtime(true);
 
 include_once("conf_manage.php");
@@ -29,6 +27,14 @@ include($idir.'conf_paths.php');
 include($idir.'lib/f_page_cache.php');
 include_once($idir.'lib/f_mysetcookie.php');
 
+$h1 = "<h1>Administration</h1>\n";
+
+if(!isset($page_content)) $page_content = $h1; 
+else {
+  $page_content = $h1.$page_content.' <a href="edit_record.php?t=options&r='.
+                  db_table_field('ID','options',"`name`='host_web'").
+                  '&value='.$_SERVER['HTTP_HOST'].'">Click here</a></p>';;
+}
 $_COOKIE['noadm']='no';
 mysetcookie($adm_name, $adm_value);
 mysetcookie('noadm', 'no');

@@ -14,7 +14,7 @@ sort($k);
 echo '<table border=0>';
 foreach ($k as $k0){
  echo '<tr><td>$_SERVER[\''.$k0.
- '\']</td><td nowrap> = '.$_SERVER[$k0].'</td></tr>'."\n";
+ '\']</td><td nowrap> = '.print_r($_SERVER[$k0],true).'</td></tr>'."\n";
 }
 echo '</table>';
 phpinfo();

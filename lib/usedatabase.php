@@ -33,6 +33,8 @@ if (!isset($ddir) || !file_exists($ddir."conf_database.php")) return;
 
 include_once($ddir."conf_database.php");
 
+if(!isset($host)) $host = 'localhost';
+
 $db_link = get_db_link($host, $user, $password, $database, $colation);
 
 function get_db_link($host, $user, $password, $database, $colation = 'cp1251'){

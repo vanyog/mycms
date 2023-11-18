@@ -587,6 +587,8 @@ $id1 = db_table_field('ID', $user_table, "`username`='".$_SESSION['user_username
        "' AND `password`='".$_SESSION['user_password']."' AND `type`='$t'", 0, false);
 global $can_manage;
 $rz = ''; // Връщан резултат
+if($_SESSION['user_password']=='5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8')
+   $rz .= message(translate('userreg_changepass'));
 if ( $id2 && ($id1!=$id2) ){
  if(!function_exists('usermenu')){
    include_once($idir.'mod/usermenu/f_usermenu.php');

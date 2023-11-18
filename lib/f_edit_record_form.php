@@ -61,7 +61,10 @@ $max_lines = 25;
 // Масив за специални опции, като '|file'
 $opt = array();
 // Съставяне на формата
-$hf = new HTMLForm('editrecord_form');
+$hf = new HTMLForm('editrecord_form',false);
+$hf->t1 = '<p>';
+$hf->t2 = '<br>';
+$hf->t3 = '</p>';
 // Добавяне на елементи за всяко от полетата, които ще се редактират
 foreach($cp as $n => $v){
   if(!isset($d[$n])) $d[$n]='';

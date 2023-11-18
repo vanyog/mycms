@@ -42,7 +42,31 @@ var f = document.edit_form;
 f.go_to_close.value = 1;
 f.submit();
 }
-</script><p>Database: <strong>'.$database.'</strong> Table: <strong>'.$tn_prefix.$t.'</strong></p>
+function openOtherRecord(f,e){
+var r = document.forms.edit_form[f].value;
+var l = "edit_record.php?t='.$t.'&r="+r;
+e.preventDefault();
+document.location.href = l;
+}
+function openOtherLanguage(f,e){ 
+var l = document.forms.edit_form[f].value;
+var n = document.forms.edit_form["name"].value;
+var a = "'.current_pth(__FILE__).'ajax_getRecId.php?a=" + Math.floor(Math.random() * 1000) +
+        "&t='.$t.'&language=" + l + "&name=" + n;alert(a);
+ajaxO.onreadystatechange = otherLanguageIdSent;
+ajaxO.open("GET", a, true);
+ajaxO.send();
+e.preventDefault();
+}
+function otherLanguageIdSent(){
+if (ajaxO.readyState == 4 && ajaxO.status == 200){
+  var l = "edit_record.php?t='.$t.'&r="+ajaxO.responseText;
+  alert(l);
+  document.location.href = l;
+}
+}
+</script>
+<p>Database: <strong>'.$database.'</strong> Table: <strong>'.$tn_prefix.$t.'</strong></p>
 <form method="POST" action="save_record.php" name="edit_form">
 <input type="hidden" name="table_name" value="'.$t.'">
 <input type="hidden" name="record_id" value="'.$id.'">
@@ -53,10 +77,8 @@ f.submit();
 $i = 0;
 if ($r) foreach($r as $k => $v){
  $page_content .= '<tr>';
+ if(isset($_GET[$k])) $v = $_GET[$k];
  switch ($ft[$i]){
- case 252: if(!isset($v)) $v = ''; 
-           $page_content .= '<td class="r">'.$k.':</td><td>'.editor($k,stripslashes($v)).'</td>'."\n"; 
-           break;
  case 1  :
  case 2  :
  case 3  :
@@ -65,11 +87,18 @@ if ($r) foreach($r as $k => $v){
  case 10 :
  case 12 : 
  case 254: $page_content .= '<td class="r">'.$k.':</td><td><input type="text" name="'.$k.
-                            '" value="'.$v.'"></td>'."\n";
+                            '" value="'.$v.'">';
+           if($k=='ID') $page_content .= ' <button onclick="openOtherRecord(\'ID\',event);">open</button>';
+           $page_content .= '</td>'."\n";
+           break;
+ case 252: if(!isset($v)) $v = ''; 
+           $page_content .= '<td class="r">'.$k.':</td><td>'.editor($k,stripslashes($v)).'</td>'."\n"; 
            break;
  case 253: $v = isset($v) ? stripslashes($v) : ''; 
     $v = str_replace('"','&quot;',$v);
-    $page_content .= '<td class="r">'.$k.':</td><td><input type="text" name="'.$k.'" value="'.$v.'"></td>'."\n"; 
+    $page_content .= '<td class="r">'.$k.':</td><td><input type="text" name="'.$k.'" value="'.$v.'">';
+    if($k=='language'){ $page_content .= ' <button onclick="openOtherLanguage(\'language\',event);">open</button>'; }
+    $page_content .= '</td>'."\n"; 
     break;
  default: $page_content .= '<td>'.$k.'</td><td>Unknown type '.$ft[$i].'</td>';
  }

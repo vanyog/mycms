@@ -52,20 +52,23 @@ $la = $languages;
 unset($la[$default_language]);
 $la = array_keys($la);
 
-$page_content = "<h1>Translate content</h1>\n";
+$page_content = '';
 
 if (!count($la)) $page_content = '<p>Този сайт е само на '.$languages[$default_language].'</p>';
 else {
 
 // За всяко име на стринг
 foreach($na as $n){
-  $n1 = $n['name']; //echo "$n1<br>";
+  $n1 = $n['name'];
   // Ако е намерен липсващ превод, се показва форма за превеждане и цикълът се прекратява
   $page_content .= untraslated_string($n1);
   if ($page_content) break;
 }
+$page_content .= '<p>No more strings for translation</p>';
 
 } // край на if (само един език) ...
+
+$page_content = "<h1>Translate content</h1>\n".$page_content;
 
 // JavaScript, който маркира и текста за превод, за да може бързо да се копира и постави
 // в софтуер за превеждане и после да се постави на негово бясто превода
@@ -190,6 +193,8 @@ global $la, $default_language;
             )
        )
        return new_translation($n1,$l);
+    else
+       return '';
   }
   return '<p>No strings for translation</p>';
 }

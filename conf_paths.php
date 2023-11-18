@@ -147,8 +147,11 @@ if(substr($p2, 0, $n1)!=$p1){
     $p1 = $or;
     $n1 = strlen($p1);
   }
-  else die("Problem:<br>\$_SERVER['SCRIPT_NAME']: $p1<br>__DIR__: $p2<br>".
-           "Set 'document_root' option to correct.");
+  else{
+// INSERT INTO `_m_options` (`ID`, `name`, `value`) VALUES (NULL, 'document_root', '/srv/disk12/2930858/www/vanyog.atwebpages.com');   
+    die("<p>Problem:<br>\$_SERVER['SCRIPT_NAME']: $p1<br>__DIR__: $p2<br>".
+        "Set 'document_root' option to correct.</p>");
+  }
 }
 $r = substr($p2,$n1,$n2-$n1).'/';
 return $r;

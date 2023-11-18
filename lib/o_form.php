@@ -33,6 +33,9 @@ public $astable = true;
 public $action = '';
 public $text = '';
 public $labels = true;
+public $t1 = '';
+public $t2 = '';
+public $t3 = '';
 private $ins = array();
 
 // $n - name атрибут на формата
@@ -49,7 +52,7 @@ else $this->text = $tx;
 function add_input($in){
 global $page_hash;
 $this->ins[] = $in;
-if (!$this->action) $this->action = str_replace('&','&amp;',$_SERVER['REQUEST_URI']).$page_hash;
+if (!$this->action) $this->action = str_replace('&','&amp;', $_SERVER['REQUEST_URI']).$page_hash;
 }
 
 public function html(){
@@ -85,8 +88,8 @@ $has_files = false;
 $noCheckList = '';
 foreach($this->ins as $j => $i){
   if($has_files && isset($i->max_file_size)) $i->max_file_size = '';
-  if($this->labels) $rz .= $i->html($this->astable, $this->name."_$j");
-  else $rz .= $i->html($this->astable, );
+  if($this->labels) $rz .= $i->html($this->astable, $this->name."_$j", $this->t1, $this->t2, $this->t3);
+  else $rz .= $i->html($this->astable, '', $this->t1, $this->t2, $this->t3);
   if(isset($i->type) && ($i->type=='file')) $has_files = true;
   if($i->nocheck){ $noCheckList .= '"'.$i->name.'",'; }
   if (!(strpos($i->js, 'ifNotEmpty_'.$this->name.'()')===false)){
@@ -128,7 +131,7 @@ public $textAfter = '';
 public $help = '';
 public $nocheck = false;
 
-function __construct($c,$n,$t,$v = '',$ta = ''){
+function __construct($c, $n, $t, $v = '', $ta = ''){
 $this->caption = $c;
 $this->name = $n;
 $this->type = $t;
@@ -140,20 +143,24 @@ $this->value = "$v";
 $this->textAfter = $ta;
 }
 
-public function set_event($e,$js){
+public function set_event($e, $js){
 $this->js = " $e=\"$js\"";
 }
 
-public function html($it,$id = ''){
+public function html($it, $id = '', $t1 = '', $t2 = '', $t3 = ''){
 $dsbl = lock_form_fields();
 $rz = '';
-if ($it){ if($this->type=='hidden') $rz = "<tr style=\"visibility: collapse;\"><th>";
-          else $rz = "<tr><th>"; }
+if ($it){ 
+   if($this->type=='hidden') $rz = "<tr style=\"visibility: collapse;\"><th>";
+   else $rz = "<tr><th>";
+}
+else $rz .= $t1;
 if($this->caption)
   if($this->id) $rz .= "<label for=\"$this->id\">$this->caption</label> ";
   else if($id)  $rz .= "<label for=\"$id\">$this->caption</label> ";
        else $rz .= $this->caption;
 if ($it) $rz .= " </th><td>";
+else if($this->caption) $rz .= $t2;
 if( ($this->type=='file') && $this->value){
    $p = strrpos($this->value, '/');
    $vl = current_pth($this->value).substr($this->value, $p + 1 );
@@ -177,7 +184,7 @@ if ($this->checked) $rz .= " $this->checked";
 $rz .= "$dsbl>";
 if ($this->textAfter) $rz .= ' '.$this->textAfter;
 if ($this->help) $rz .= "\n<br>".$this->help;
-if (!$it) $rz .= "\n";
+if (!$it) $rz .= "$t3\n";
 else $rz .= "</td></tr>\n";
 return $rz;
 }
@@ -204,34 +211,35 @@ public $ckbutton = ''; // Бутон CKEditor
 public $size = true;
 public $nocheck = false;
 
-function __construct($c,$n,$cl=100,$r=10,$t=''){
+function __construct($c, $n, $cl=100, $r=10, $t=''){
 global $mod_pth, $page_header, $ckpth;
 if(!isset($page_header)) $page_header = '';
 $this->caption = $c;
 $this->name = $n;
 $this->cols = $cl;
 $this->rows = $r;
-$this->text = !empty($t)? str_replace(chr(60).'!--$$_',chr(60).' !--$$_',$t) : '';
+$this->text = !empty($t)? str_replace(chr(60).'!--$$_',chr(60).' !--$$_', $t) : '';
 // Домавяне на бутон за зареждане на CKEditor.
 $cka = $_SERVER['DOCUMENT_ROOT'].$ckpth.'ckeditor.js';
 if (file_exists($cka)){
   $sc = '   <script src="'.$ckpth.'ckeditor.js"></script>'."\n";
-  if (strpos($page_header,$sc)===false) $page_header .= $sc;
+  if (strpos($page_header, $sc)===false) $page_header .= $sc;
   $this->ckbutton = '<input type="button" value="CKEditor" onclick="CKEDITOR.replace(\''.$this->name.'\');"><br>';
 }
 else {
   $sc = '   <script src="//cdn.ckeditor.com/4.5.7/full/ckeditor.js"></script>'."\n";
-  if (strpos($page_header,$sc)===false) $page_header .= $sc;
+  if (strpos($page_header, $sc)===false) $page_header .= $sc;
   $this->ckbutton = '<input type="button" value="CKEditor" onclick="CKEDITOR.replace(\''.$this->name.'\');"><br>';
 }
 }
 
-public function html($it){
+public function html($it, $id, $t1, $t2 = '', $t3 = ''){
 $dsbl = lock_form_fields();
 $rz = "$this->ckbutton<textarea name=\"$this->name\" id=\"$this->name\" ";
 if ($this->size) $rz .=  "cols=\"$this->cols\" rows=\"$this->rows\"";
-$rz .= "$this->js$dsbl>$this->text</textarea>";
-if (!$it) $rz = "$this->caption $rz<br>\n";
+if($id) $rz .= ' id="'.$id.'"';
+$rz .= "$this->js"."$dsbl>$this->text</textarea>";
+if (!$it) $rz = $this->caption.$t2.$rz.$t3."\n";
 else $rz = "<tr>\n<th>$this->caption</th>\n<td>$rz</td>\n</tr>";
 return $rz;
 }
@@ -263,14 +271,15 @@ $this->options = $op;
 $this->selected = $s;
 }
 
-public function html($it){
+public function html($it, $id, $t1 = '', $t2 = '', $t3 = ''){
 $dsbl = lock_form_fields();
 $rz = '';
-if ($it) $rz .= "<tr><th>";
+if ($it) $rz .= "<tr><th>"; else $rz .= $t1;
 $rz .= "$this->caption ";
-if ($it) $rz .= "</th><td>\n";
+if ($it) $rz .= "</th><td>\n"; else $rz .= $t2;
 $rz .= "<select";
 if ($this->name) $rz .= " name=\"$this->name\"";
+if($id) $rz .= ' id="'.$id.'"';
 $rz .= "$this->js$dsbl>\n";
 $i = 0;
 foreach($this->options as $k => $v){
@@ -288,8 +297,7 @@ foreach($this->options as $k => $v){
   $i++;
 }
 $rz .= "</select>";
-if ($it) $rz .= "</td>
-</tr>";
+if ($it) $rz .= "</td>\n</tr>\n"; else $rz .= "$t3\n";
 return $rz;
 }
 
@@ -659,10 +667,10 @@ $countries = array(
 );
 asort($countries);
 
-function formCountrySelect($c,$n,$d){
+function formCountrySelect($c, $n, $d){
 global $countries;
-$k = array_search($d,$countries);
-$s = new FormSelect($c,$n,$countries,$k);
+$k = array_search($d, $countries);
+$s = new FormSelect($c, $n, $countries, $k);
 $s->values = 'k';
 return $s;
 }
@@ -672,7 +680,7 @@ return $s;
 // представляващ падащ списък за избор на валута
 // При необходимост от допълване на списъка, виж http://www.xe.com/iso4217.php
 
-function formCurrencySelect($c,$n,$d = 0){
+function formCurrencySelect($c, $n, $d = 0){
 global $currency;
 $k = array_search($d, $currency);
 $s = new FormSelect($c, $n, $currency, $k);
