@@ -36,6 +36,7 @@ if (isset($_GET['f'])) $f = $_GET['f'];
 $d = str_replace('\\', '/', realpath($apth.$f));
 
 $f = relative_to($apth,$d.'/');
+if($f=='/') $f = '';
 //echo("$apth$f<br>$d<br>$f<br>");
 
 $page_content = "<h1>File system</h1>\n";
@@ -151,7 +152,7 @@ for($i=0; $i<count($dl); $i++){
      $page_content .= "<td>$s1$a$s2"; //  Без линк
   else
      if(in_array(strtolower(pathinfo($a, PATHINFO_EXTENSION)), array('png', 'jpg', 'jpeg', 'gif')))
-        $page_content .= "<td>$s1<a href=\"$pth$f".urlencode($a)."\">$a</a>$s2";
+        $page_content .= "<td>$s1<a href=\"$pth".$f.urlencode($a)."\">$a</a>$s2";
      else
         $page_content .= "<td>$s1<a href=\"edit_file.php?f=".urlencode("$f/$a")."\">$a</a>$s2";
   $page_content .= '</td><td style="width:1%;text-align:right;">';
