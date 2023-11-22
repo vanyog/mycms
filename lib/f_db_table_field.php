@@ -33,7 +33,7 @@ $q="SELECT $fn FROM $tn_prefix$tb WHERE $whr;";
 if ($y===true) echo $q."<br>\n";
 try 
 { $r=mysqli_query($db_link,$q); }
-catch (Exception $e){ 
+catch (Exception $e){
 if(mysqli_errno($db_link)==1146) 
   die(mysqli_error($db_link).'<br>Run <a href="manage/_install.php">manage/_install.php</a> to crate it.');
   die("<p>function db_table_field<br>".mysqli_errno($db_link).":".mysqli_error($db_link)."<br>$q</p>"); 

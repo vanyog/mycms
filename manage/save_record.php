@@ -18,6 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+// «аписване в базата данни след редактиране с edit_data.php
+
 include("conf_manage.php");
 include($idir."conf_paths.php");
 include_once($idir."lib/usedatabase.php");
@@ -36,10 +38,9 @@ case 'table_name':
      $t = $v;
      $ft = db_field_types($v);
      $fn = db_field_names($v);
-     $ft = array_combine($fn, $ft); //die(print_r($ft,true));
+     $ft = array_combine($fn, $ft);
      break;
 case 'record_id': $q3 .= $v; $r = $v; break;
-//case 'ID': break;
 case 'date_time_2': if($t!='schedules') $q2 .= " `$k`=NOW(),"; break;
 case 'go_to_close': if (1*$v) $gtc = true; break;
 case 'start_edit_time':
@@ -55,7 +56,8 @@ default:
   $v1 = element_correction($v);
   if( ($t=='content') && ($k=='text') ) $v1 = str_replace( ' />', '>', $v1);
   if($v1=='') switch ($ft[$k]){
-              case 1: $q2 .= " `$k`=0,";
+              case 1: $q2 .= " `$k`=0,"; break;
+              default: $q2 .= " `$k`='',";
               }
   else if(is_numeric($v1)) $q2 .= " `$k`=".addslashes($v1).",";
        else $q2 .= " `$k`='".addslashes($v1)."',";

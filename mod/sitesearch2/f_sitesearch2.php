@@ -39,47 +39,62 @@ if(Number.isInteger(1*t)){
 }
 else f.submit();
 }
-
 if(typeof ajaxO == "undefined"){
 if (window.XMLHttpRequest) ajaxO = new XMLHttpRequest();
 else ajaxO = new ActiveXObject("Microsoft.XMLHTTP");
 }
 var sDiv = null;
 function searchStringChanged(el,ev){
+ev.preventDefault();
 if(!sDiv){
   sDiv = document.createElement("div");
   sDiv.setAttribute("id", "sResDiv")
   document.body.appendChild(sDiv);
   sDiv.addEventListener("click", sDivHide);
-  var s = sDiv.style;
-  var l = document.getElementById("searchtextfield").offsetLeft;
-  if(l < window.innerWidth * 0.4) l = l + "px";
-  else l = "10%";
-  s.position = "absolute";
-  s.top = "43px";
-  s.left = l;
-  s.zIndex = "1";
 }
-sDiv.style.display = "block";
 var v = el.value;
 if(!v.length){ 
   sDiv.style.display = "none";
   return;
 }
-var t = el.offsetTop + el.offsetHeight;
-sDiv.style.top = (window.scrollY + 45) + "px";
+else sDivPosition();
 var a = "'.current_pth(__FILE__).'ajax_search.php?a=" + Math.floor(Math.random() * 1000) +
         "&text=" + encodeURI(v);
 ajaxO.onreadystatechange = onSearchAjaxResponse;
 ajaxO.open("GET", a, true);
 ajaxO.send();
 }
+function sDivPosition(){
+  sDiv.style.display = "block";
+  var r = document.getElementById("searchtextfield").parentElement.getBoundingClientRect();
+  var s = sDiv.style;
+  s.position = "absolute";
+  s.top = window.scrollY + r.bottom + "px";
+  s.left = r.left + "px";
+  s.zIndex = "1";
+}
+window.addEventListener("resize", sDivPosition);
 function sDivHide(){
 sDiv.style.display = "none";
 }
 function onSearchAjaxResponse(){
 if (ajaxO.readyState == 4 && ajaxO.status == 200){
   sDiv.innerHTML = ajaxO.responseText;
+}
+}
+function searchKeyDown(e){
+if ( e.ctrlKey || e.metaKey ){ 
+  var fl = document.querySelectorAll("#sResDiv a");
+  if (e.key=="1") if(fl[0]){ e.preventDefault(); document.location = fl[0].href; }
+  if (e.key=="2") if(fl[1]){ e.preventDefault(); document.location = fl[1].href; }
+  if (e.key=="3") if(fl[2]){ e.preventDefault(); document.location = fl[2].href; }
+  if (e.key=="4") if(fl[3]){ e.preventDefault(); document.location = fl[3].href; }
+  if (e.key=="5") if(fl[4]){ e.preventDefault(); document.location = fl[4].href; }
+  if (e.key=="6") if(fl[5]){ e.preventDefault(); document.location = fl[5].href; }
+  if (e.key=="7") if(fl[6]){ e.preventDefault(); document.location = fl[6].href; }
+  if (e.key=="8") if(fl[7]){ e.preventDefault(); document.location = fl[7].href; }
+  if (e.key=="9") if(fl[8]){ e.preventDefault(); document.location = fl[8].href; }
+  if (e.key=="0") if(fl[9]){ e.preventDefault(); document.location = fl[9].href; }
 }
 }
 </script>
@@ -110,7 +125,7 @@ if (isset($_SESSION['text_to_search'])) $tx = $_SESSION['text_to_search'];
 else $tx = '';
 $tx = str_replace('"','&quot;',$tx);
 $ti = new FormInput(translate('sitesearch_label'),'searchtext','text', $tx);
-$ti->js = ' onkeyup="searchStringChanged(this,event)"';
+$ti->js = ' onkeydown="searchKeyDown(event);" onkeyup="searchStringChanged(this,event)"';
 $ti->id = 'searchtextfield';
 $f->add_input($ti);
 $b = new FormInput('','','button', translate('sitesearch_submit'));
@@ -125,7 +140,7 @@ if (isset($_SESSION['text_to_search'])){
            ' title="'.translate('sitesearch_clear').'"';
   $f->add_input( $b );
 }
-add_style('site_serarch');
+add_style('site_serarch2');
 return '<div id="site_search">'.translate('sitesearch_start')."\n".$f->html()."</div>\n";
 }
 

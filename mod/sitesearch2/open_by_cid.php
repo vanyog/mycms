@@ -29,8 +29,10 @@ include_once($idir.'conf_paths.php');
 
 // Отваряне на страница по номер на заглавието
 if(isset($_GET['cid'])){
-  $n = db_table_field('name', 'content', 'ID='.(1*$_GET['cid']) );
-  $i = db_table_field('ID', 'pages', "`title`='$n'");
+  $n = db_select_1('name,language', 'content', 'ID='.(1*$_GET['cid']) );
+  $i = db_table_field('ID', 'pages', "`title`='".$n['name']."'");
+  header("Location: $main_index?pid=$i&lang=".$n['language']);
+  die;
 }
 // Отваряне на раздел от връзки
 else {

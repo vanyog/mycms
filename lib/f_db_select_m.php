@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // удовлетворяващи условието $whr.
 // Таблицата е от базата данни, определена от променливата $db_link
 // (виж usedatabase.php).
-// Функцията връща масив от асоциирани масиви,
+// Функцията връща масив от масиви,
 // съответстващи на всеки от прочетените записи.
 // Ключовете на масива за даден запис са имената на полетата,
 // а стойностите - съдържанието на полетата от таблицата.
@@ -38,7 +38,8 @@ $q="SELECT $fn FROM $tb WHERE $whr;";
 if ($y) echo "$q<br>\n";
 try { $dbr=mysqli_query($db_link,$q); }
 catch (Exception $e){ 
-  die("<p>function db_select_m<br>".mysqli_errno($db_link).":".mysqli_error($db_link)."<br>$q</p>"); 
+  echo '<pre>'; debug_print_backtrace(); echo '</pre>';
+  die("<p>function db_select_m<br>".mysqli_errno($db_link).":".mysqli_error($db_link)."<br>$q</p>");
 }
 $db_req_count++;
 $r=array();

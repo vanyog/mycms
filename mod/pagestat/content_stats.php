@@ -32,6 +32,7 @@ include_once($idir.'conf_paths.php');
 include_once($idir.'lib/f_encode.php');
 include_once($idir.'lib/f_chart.php');
 include_once($idir.'lib/f_db_table_status.php');
+include_once($idir.'lib/f_db_table_exists.php');
 
 $page_content = encode('<h1>Статистика на обема на съдържанието на сайта</h1>');
 
@@ -49,7 +50,9 @@ $td = date("Y-m-d", time() + 24*3600);
 if (!isset($dt[$td])) $dt[$td] = db_table_status('content', 'Data_length');
 
 // Четене на данните от таблица outer_links
-$ld = db_select_m('LEFT(`date_time_1`, 10), COUNT(*)', 'outer_links', "`link`>'' GROUP BY LEFT(`date_time_1`, 10)");
+$ld = array();
+if (db_table_exists('outer_links')) 
+   $ld = db_select_m('LEFT(`date_time_1`, 10), COUNT(*)', 'outer_links', "`link`>'' GROUP BY LEFT(`date_time_1`, 10)");
 
 // Съставяне на масив дата - брой
 $lt = array();

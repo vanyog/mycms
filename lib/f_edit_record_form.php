@@ -36,7 +36,7 @@ include_once($idir."lib/f_db_enum_values.php");
 include_once($idir."lib/f_element_correction.php");
 include_once($idir."lib/o_form.php");
 
-function edit_record_form($cp, $tn, $ck = true){// print_r($cp); die;
+function edit_record_form($cp, $tn, $ck = true){
 global $countries;
 // ѕрочитане имената на полетата на таблицата
 $fn = db_field_names($tn);
@@ -169,6 +169,7 @@ $i = new FORMInput('','','submit',translate('saveData'));
 $i->js = ' class="sub"';
 $hf->add_input( $i );
 $rz .= $hf->html();
+add_style('editrecord_form');
 return $rz;
 }
 

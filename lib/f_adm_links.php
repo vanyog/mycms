@@ -131,6 +131,7 @@ if (e.keyCode==13){
 function closeAdminLinks(){
 var e = document.getElementById("adm_links");
 e.style.display = "none";
+document.body.style.marginLeft = "revert";
 }
 </script>
 <p id="adm_links"><span>DB_REQ_COUNT</span> 
@@ -154,7 +155,29 @@ e.style.display = "none";
 '.$w3c.$mob.$spt.' 
 '.$clink.'
 <a href="#" onclick="closeAdminLinks();return false;">x</a>
-</p>';
+</p>
+<script>
+var block = document.getElementById("adm_links");
+var ch1 = block.firstChild;
+ch1.style.cursor = "pointer";
+block.addEventListener("mouseover", onMOverBlock);
+block.addEventListener("mouseout", onMOutBlock);
+function onClickFirstChild(e){
+var w = window.getComputedStyle(block, null).getPropertyValue("width");
+if(w=="30px"){ block.style.width = "auto"; block.style.opacity = 1; }
+else         { block.style.width = "30px"; block.style.opacity = 0.1; }
+}
+function onMOverBlock(e){
+  block.style.width = "auto"; 
+  block.style.opacity = 1; 
+  ch1.addEventListener("click", onClickFirstChild);
+}
+function onMOutBlock() {
+  block.style.width = "30px"; 
+  block.style.opacity = 0.1;
+  ch1.removeEventListener("click", onClickFirstChild);
+}
+</script>';
   return $rz;
   }
 }
