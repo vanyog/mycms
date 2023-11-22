@@ -133,7 +133,7 @@ var e = document.getElementById("adm_links");
 e.style.display = "none";
 }
 </script>
-<p id="adm_links">DB_REQ_COUNT 
+<p id="adm_links"><span>DB_REQ_COUNT</span> 
 <a href="'.$adm_pth.'">'.$_SERVER['REMOTE_ADDR'].'</a>
 <a href="'.$main_index.'">Home</a> '.$enmch.'
 <a href="'.$main_index.'?pid='.$ppid.'">&lt;</a>

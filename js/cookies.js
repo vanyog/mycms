@@ -13,7 +13,7 @@ function cookie_value(n, v = false){
 function cookie_set(n, v, perm = true){//alert("allow_cookies");
     if(allow_cookies==='no') return;
     if(allow_cookies!=='yes'){
-        if(!cookie_message) cookie_message = "Will you accept cookies from this site?";
+        if(typeof(cookie_message) == "undefined") cookie_message = "Will you accept cookies from this site?";
         if(confirm(cookie_message)){
             allow_cookies = 'yes';
             cookie_set("cookies_accept", allow_cookies);
