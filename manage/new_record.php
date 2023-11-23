@@ -29,8 +29,8 @@ include($idir."lib/f_db_table_field.php");
 include($idir."conf_paths.php");
 
 $tb = $_GET['t'];
-$ft = db_field_types($tb); //echo($language);
-$fn = db_field_names($tb); //die(print_r($fn,true));
+$ft = db_field_types($tb);
+$fn = db_field_names($tb);// die(print_r($ft,true));
 
 $q = "INSERT INTO `$tn_prefix$tb` SET ";
 foreach($fn as $i => $n){
@@ -62,6 +62,7 @@ foreach($fn as $i => $n){
            case 1:
            case 3: $q .= "`$n`=0, "; break;
            case 12: $q .= "`$n`='0000-01-01 00:00:00', "; break;
+           case 254: $q .= "`$n`='".firstEnumValue($n)."', "; break;
            default: $q .= "`$n`='', ";
            }
     }
@@ -71,12 +72,22 @@ foreach($fn as $i => $n){
 $q = substr($q,0,strlen($q)-2).";";
 //echo $q; die;
 
-mysqli_query($db_link,$q);// die($q);
+mysqli_query($db_link,$q);
 
 $i = mysqli_insert_id($db_link);
 
 if (!$i) die("Can't create new record. Error in SQL statement:<br>$q");
 
 header('Location: '.$adm_pth.'edit_record.php?t='.$tb.'&r='.$i);
+
+function firstEnumValue($n){
+global $db_link, $tb;
+$q = "SHOW COLUMNS FROM `$tb` WHERE Field = '$n'; ";
+$r = mysqli_query($db_link, $q);
+$rc=mysqli_fetch_assoc($r);
+$a = array();
+$i = preg_match('/enum\(\'(.*?)\'/', $rc['Type'], $a, PREG_UNMATCHED_AS_NULL);
+return $a[1];
+}
 
 ?>

@@ -1,10 +1,10 @@
+.DS_Store
 .htaccess
 .ftpquota
-error_log
-.DS_Store
 _*
 browserconfig.xml
 conf_database.php
+error_log
 favicons
 googleac*
 manage/ckeditor

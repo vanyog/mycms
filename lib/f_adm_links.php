@@ -154,7 +154,9 @@ document.body.style.marginLeft = "revert";
 <a hr  ="'.$adm_pth.'dump_data.php">Dump</a-->
 '.$w3c.$mob.$spt.' 
 '.$clink.'
-<a href="#" onclick="closeAdminLinks();return false;">x</a>
+<a href="#" onclick="closeAdminLinks();return false;">Hide</a> 
+<a href="'.$pth.'lib/exit.php">Exit</a>
+<span>&nbsp;</span>
 </p>
 <script>
 var block = document.getElementById("adm_links");

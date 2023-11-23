@@ -327,7 +327,7 @@ return '<a href="'.$ep.'">'.translate("user_enter").'</a>';
 // Функция за показване форма за изтриване на потребител
 //
 function delete_user($a){
-global $idir;
+global $idir, $site_encoding;
 if (!can_manage_users()) die(translate('user_cnnotcreate'));
 //if (isset($_SESSION['user_to_delete'])) { do_delete_user(); return ''; }
 $ms = '';

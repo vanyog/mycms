@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost
--- Време на генериране: 22 ное 2023 в 04:37
+-- Време на генериране: 23 ное 2023 в 09:52
 -- Версия на сървъра: 8.0.26
 -- Версия на PHP: 8.2.12
 
@@ -45,8 +45,8 @@ CREATE TABLE `content` (
 INSERT INTO `content` (`ID`, `name`, `nolink`, `date_time_1`, `date_time_2`, `language`, `text`) VALUES
 (1, 'p1_title', 0, '2023-11-01 09:14:59', '2023-11-21 19:07:10', 'bg', 'Начална страница'),
 (2, 'p1_title', 0, '2023-11-01 09:14:59', '2023-11-21 19:07:24', 'en', 'Home Page'),
-(3, 'p1_content', 0, '2023-11-01 09:14:59', '2023-11-21 19:07:57', 'bg', '<h2>Поздравления!</h2>\r\n\r\n<p>Вие успешно сте инталирали ситема за управление на съдържанието Vanyog CMS на своя сайт.</p>\r\n\r\n<p>Може да започнете с редактиране на всяко от примерните страници, за да представите в тях свое съдържание, а след това да продължите със създаване на още страници.</p>\r\n\r\n<p>Приятно и успешно представяне!</p>\r\n\r\n\r\n\r\n<h2>Защо VanyoG CMS?</h2>\r\n\r\n<ul>\r\n<li>Малка по обем система. Можете да инсталирате няколко копия и да ги използвате за различни чести на своя сайт, ако искате всяка част да има независим дизайн и съдържание.</li>\r\n<li>Напълно готов за ползване, бърз, оптимизиран по стандартите сайт с автоматично поддържаща се карта на сайта и търсачка.</li>\r\n<li>Бързо преминаване от разглеждане на сайта към редактиране на съдържанието и външния вид.</li>\r\n</ul>'),
-(4, 'p1_content', 0, '2023-11-01 09:14:59', '2023-11-21 19:08:30', 'en', '<h2>Congratulations!</h2>\r\n\r\n<p>You have successfully installed the Vanyog CMS content management system on your site.</p>\r\n\r\n<p>You can start by editing each of the sample pages to feature your own content, then continue to create more pages.</p>\r\n\r\n<p>Enjoy and successful presentation!</p>\r\n\r\n<h2>Why VanyoG CMS?</h2>\r\n\r\n<ul>\r\n<li>Small volume system. You can install multiple copies and use them for different parts of your site if you want each part to have independent design and content.</li>\r\n<li>Completely ready-to-use, fast, standards-optimized site with automatically maintained sitemap and search engine.</li>\r\n<li>Quickly switch from browsing the site to editing the content and appearance.</li>\r\n</ul>'),
+(3, 'p1_content', 0, '2023-11-01 09:14:59', '2023-11-22 21:35:19', 'bg', '<h2>Поздравления!</h2>\r\n\r\n<p>Вие успешно сте инталирали ситема за управление на съдържанието Vanyog CMS на своя сайт.</p>\r\n\r\n<p>Може да започнете с редактиране на всяка от примерните страници, за да представите в тях свое съдържание, а след това да продължите със създаване на още страници. Вижте: <a href=\"https://github.com/vanyog/mycms/wiki/%D0%A3%D0%BA%D0%B0%D0%B7%D0%B0%D0%BD%D0%B8%D1%8F-%D0%B7%D0%B0-%D0%B0%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B8%D1%80%D0%B0%D0%BD%D0%B5-%D0%BD%D0%B0-%D1%81%D0%B0%D0%B9%D1%82\" target=\"_blank\">Указания за поддържане на сайт с VanyoG CMS</a></p>\r\n\r\n<p>Приятно и успешно представяне в Интернет!</p>\r\n\r\n\r\n\r\n<h2>Защо VanyoG CMS?</h2>\r\n\r\n<ul>\r\n<li>Малка по обем система. Можете да инсталирате няколко копия и да ги използвате за различни чести на своя сайт, ако искате всяка част да има независим дизайн и съдържание.</li>\r\n<li>Напълно готов за ползване, бърз, оптимизиран по стандартите сайт с автоматично поддържаща се карта на сайта и търсачка.</li>\r\n<li>Бързо преминаване от разглеждане на сайта към редактиране на съдържанието и външния вид.</li>\r\n</ul>'),
+(4, 'p1_content', 0, '2023-11-01 09:14:59', '2023-11-23 11:43:45', 'en', '<h2>Congratulations!</h2>\r\n\r\n<p>You have successfully installed the Vanyog CMS content management system on your site.</p>\r\n\r\n<p>You can start by editing each of the sample pages to feature your own content, then continue to create more pages.</p>\r\n\r\n<p>Enjoy and successful presentation! See: <a href=\"https://github.com/vanyog/mycms/wiki/%D0%A3%D0%BA%D0%B0%D0%B7%D0%B0%D0%BD%D0%B8%D1%8F-%D0%B7%D0%B0-%D0%B0%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B8%D1%80%D0%B0%D0%BD%D0%B5-%D0%BD%D0%B0-%D1%81%D0%B0%D0%B9%D1%82\" target=\"_blank\">Указания за поддържане на сайт с VanyoG CMS</a></p>\r\n\r\n<p>Have a nice and successful presentation on the Internet!</p>\r\n\r\n<h2>Why VanyoG CMS?</h2>\r\n\r\n<ul>\r\n<li>Small volume system. You can install multiple copies and use them for different parts of your site if you want each part to have independent design and content.</li>\r\n<li>Completely ready-to-use, fast, standards-optimized site with automatically maintained sitemap and search engine.</li>\r\n<li>Quickly switch from browsing the site to editing the content and appearance.</li>\r\n</ul>'),
 (5, 'error_404_title', 0, '2023-11-01 09:14:59', '2023-11-01 09:14:59', 'bg', 'Грешен номер на страница'),
 (6, 'error_404_title', 0, '2023-11-01 09:14:59', '2023-11-01 09:14:59', 'en', 'Incorrect page number'),
 (7, 'error_404_content', 0, '2023-11-01 09:14:59', '2023-11-01 09:14:59', 'bg', '<p>На сайта няма страница с такъв номер.</p>'),
@@ -247,17 +247,17 @@ INSERT INTO `content` (`ID`, `name`, `nolink`, `date_time_1`, `date_time_2`, `la
 (207, 'admin_style', 1, '2023-11-01 12:23:46', '2023-11-01 12:23:46', 'bg', ''),
 (208, 'admin_style', 1, '2023-11-01 12:23:46', '2023-11-01 12:23:46', 'en', ''),
 (323, 'sitesearch_label', 1, '2023-11-16 22:10:52', '2023-11-19 09:23:08', 'en', 'Search the site'),
-(210, 'p2_content', 0, '2023-11-01 12:23:46', '2023-11-12 04:58:03', 'bg', '<!--$$_USERREG_admin|logout_$$-->\r\n<!--$$_USERREG_admin|edit_$$-->'),
+(210, 'p2_content', 0, '2023-11-01 12:23:46', '2023-11-22 16:22:29', 'bg', '<!--$$_USERREG_admin|logout_$$-->\r\n<!--$$_USERREG_admin|edit_$$-->'),
 (211, 'pagestat_total', 0, '2023-11-01 12:25:02', '2023-11-01 12:27:14', 'en', 'Page is visited: in total '),
 (212, 'pagestat_today', 0, '2023-11-01 12:26:22', '2023-11-01 12:28:23', 'en', ', today '),
 (213, 'userreg_nouserlogedin', 0, '2023-11-01 20:06:12', '2023-11-01 20:06:31', 'bg', 'Няма влязъл потребител'),
-(214, 'userreg_new', 0, '2023-11-01 21:19:27', '2023-11-01 21:19:40', 'bg', 'Нов потребител'),
-(215, 'userreg_create', 0, '2023-11-01 21:20:44', '2023-11-01 21:21:11', 'bg', 'Създаване на потребителя'),
+(214, 'userreg_new', 1, '2023-11-01 21:19:27', '2023-11-23 05:26:41', 'bg', 'Нов потребител'),
+(215, 'userreg_create', 1, '2023-11-01 21:20:44', '2023-11-23 05:26:03', 'bg', 'Създаване на потребителя'),
 (216, 'user_language', 1, '2023-11-11 21:54:29', '2023-11-18 08:47:08', 'bg', 'Предпочитан език за кореспонденция: '),
 (217, 'user_aemails', 1, '2023-11-11 21:55:17', '2023-11-18 08:47:18', 'bg', 'Допълнителни имейли, отделени със запетаи, без интервали: '),
 (218, 'user_position', 1, '2023-11-11 21:57:04', '2023-11-18 08:47:41', 'bg', 'Предпочитано обръщение (проф. инж. и др. подобни): '),
 (219, 'userreg_egithelp', 0, '2023-11-11 21:57:44', '2023-11-11 21:58:38', 'bg', '<p>&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<h2>Указания за попълване</h2>\r\n\r\n<p>Попълването на нито едно от полетата не е задължително, но може да е необходимо за целта, поради която е създаден профила.</p>\r\n\r\n<p>Променете само съдържанието на полетата с информация, която искате да промените или добавите, и натискате бутона <strong>&quot;Съхраняване на данните&quot;</strong></p>\r\n\r\n<p>След натискане на бутона &quot;Съхраняване на данните&quot;, системата зарежда променените данни и показва отново настоящата страница. Така виждате промените и убеждавате, че са запазени.</p>\r\n\r\n<p>Ако няма да променяте личните си данни или когато свършите с редактирането, преминете към друга страница от сайта чрез някоя от хипервръзките, намиращи се около този формуляр.</p>\r\n\r\n<p>Полетата <strong>&quot;Парола&quot;</strong> и &quot;<strong>Повторение на паролата&quot;</strong> се попълват само ако искате да смените сегашната си парола с друга. Промяната се извършва само ако в двете полета се въведат еднакви пароли.</p>\r\n\r\n<p>Поле <strong>&quot;Потребителско име&quot;</strong> се променя само ако желаете при влизане в сайта да пишете нещо друго, а не имейл адреса си.</p>\r\n\r\n<p>Ако промените &quot;Потребителско име&quot; или &quot;Парола&quot; промяната настъпва веднага след натискане на бутона &quot;Съхраняване на данните&quot; и при следващото влизане в сайта трябва да използвате новите.</p>\r\n\r\n<p>Полето <strong>&quot;Длъжност и звание&quot;</strong> се използва в обръщението към Вас в изпращани от системата имейли. Имайте предвид това и го напишете, както бихте искали да стои пред Вашето име. Например: \"доц. д-р инж.\"</p>\r\n\r\n<p>В полето &quot;<strong>Допълнителни имейли</strong>&quot; може да попълните други имайл адреси, които използвате и до които искате да бъдат изпращани съобщенията от системата.</p>\r\n'),
-(220, 'p2_content', 0, '2023-11-11 22:00:15', '2023-11-12 05:22:41', 'en', '<!--$$_USERREG_admin|logout_$$-->\r\n<!--$$_USERREG_admin|edit_$$-->'),
+(220, 'p2_content', 0, '2023-11-11 22:00:15', '2023-11-23 11:43:52', 'en', '<!--$$_USERREG_admin|logout_$$-->\r\n<!--$$_USERREG_admin|edit_$$-->'),
 (221, 'p2_title', 0, '2023-11-11 22:00:43', '2023-11-12 04:43:53', 'en', 'Registered user'),
 (222, 'user_language', 1, '2023-11-11 22:01:57', '2023-11-18 11:23:54', 'en', 'Preferred language for correspondence: '),
 (223, 'user_aemails', 1, '2023-11-11 22:03:08', '2023-11-18 11:23:48', 'en', 'Additional emails separated by commas, no spaces: '),
@@ -280,8 +280,8 @@ INSERT INTO `content` (`ID`, `name`, `nolink`, `date_time_1`, `date_time_2`, `la
 (240, 'userreg_newregtext', 0, '2023-11-12 04:42:16', '2023-11-12 04:42:16', 'en', '<h2>Register or change password</h2>\r\n<p>The password must be no shorter than 8 characters.</p>\r\n<p><b>If you have already registered to enter the site, use page</b>'),
 (241, 'userreg_logintext', 0, '2023-11-12 04:42:39', '2023-11-17 15:23:13', 'en', '<h2>Login for registered users</h2>\r\n<p>The username must be the email address you registered with, unless you set a different username when editing your personal data.</p>\r\n<p><b>If you have not yet registered or have forgotten your password,<br>go to page </b>'),
 (242, 'userreg_newreg', 0, '2023-11-12 04:42:45', '2023-11-12 04:42:45', 'en', 'New registration'),
-(243, 'userreg_create', 0, '2023-11-12 04:44:52', '2023-11-12 04:44:52', 'en', 'Create the user'),
-(244, 'userreg_new', 0, '2023-11-12 04:45:03', '2023-11-12 04:45:03', 'en', 'New user'),
+(243, 'userreg_create', 1, '2023-11-12 04:44:52', '2023-11-23 11:36:33', 'en', 'Create the user'),
+(244, 'userreg_new', 1, '2023-11-12 04:45:03', '2023-11-23 11:36:26', 'en', 'New user'),
 (245, 'userreg_nouserlogedin', 0, '2023-11-12 04:45:34', '2023-11-12 04:45:34', 'en', 'There is no user logged in'),
 (246, 'userreg_mustlogin', 0, '2023-11-12 04:58:26', '2023-11-12 05:06:31', 'bg', 'За да видите съдържанието на настоящатаа страница, трябва да влезете през страница '),
 (247, 'userreg_logoutcontent', 0, '2023-11-12 05:09:39', '2023-11-12 05:10:16', 'bg', '<h2>Вие излязохте от системата</h2>\r\n<p>Можете да влезете отново през страница  '),
@@ -367,9 +367,9 @@ INSERT INTO `content` (`ID`, `name`, `nolink`, `date_time_1`, `date_time_2`, `la
 (331, 'p7_content', 0, '2023-11-16 22:24:41', '2023-11-16 22:24:41', 'en', '<!--$$_SITESEARCH2_result_$$-->'),
 (332, 'p7_title', 0, '2023-11-16 22:25:01', '2023-11-16 22:25:01', 'en', 'Search results'),
 (333, 'cookies_admin_description', 1, '2023-11-17 07:06:12', '2023-11-17 07:10:26', 'bg', 'Означава дали сайта е в решим на администриране.'),
-(334, 'cookies_noadm_description', 1, '2023-11-17 07:09:05', '2023-11-17 07:16:50', 'bg', 'Дали да са скрити линковете за редактиране в режим на администриране. '),
+(334, 'cookies_noadm_description', 1, '2023-11-17 07:09:05', '2023-11-22 22:35:46', 'bg', 'Дали да са скрити временно линковете за администрираане. '),
 (335, 'cookies_limit_description', 1, '2023-11-17 07:10:03', '2023-11-17 07:10:50', 'bg', 'Ограничение за броя на показваните записи от базата данни при едминистриране.'),
-(336, 'cookies_noadm_description', 1, '2023-11-17 07:50:44', '2023-11-17 07:50:44', 'en', 'Whether to hide the edit links in admin mode.'),
+(336, 'cookies_noadm_description', 1, '2023-11-17 07:50:44', '2023-11-23 11:40:33', 'en', 'Whether the administration links are temporarily hidden.'),
 (337, 'cookies_limit_description', 1, '2023-11-17 07:51:06', '2023-11-17 07:51:06', 'en', 'Limit on the number of displayed database records in administration.'),
 (338, 'cookies_admin_description', 1, '2023-11-17 07:51:31', '2023-11-17 07:51:31', 'en', 'Indicates whether the site is under administration.'),
 (340, 'p8_content', 0, '2023-11-17 20:46:19', '2023-11-17 20:53:56', 'bg', '<p>Софтуерът, задвижващ този сайт се разпространява според условията на <a href=\"https://www.gnu.org/licenses/gpl-3.0.en.html\" target=\"_blank\">GNU General Public License</a>.</p>\r\n\r\n<p>Материалите, които се публикуват на сайта се предоставят под лиценз <a href=\"http://creativecommons.org/licenses/by/4.0/?ref=chooser-v1\" target=\"_blank\" rel=\"license noopener noreferrer\" style=\"display:inline-block;\">CC BY 4.0<img style=\"height:22px!important;margin-left:3px;vertical-align:text-bottom;\" src=\"https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1\"><img style=\"height:22px!important;margin-left:3px;vertical-align:text-bottom;\" src=\"https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1\"></a></p> \r\n'),
@@ -384,7 +384,16 @@ INSERT INTO `content` (`ID`, `name`, `nolink`, `date_time_1`, `date_time_2`, `la
 (349, 'p7_link', 0, '2023-11-18 11:26:25', '2023-11-18 14:58:41', 'en', 'Copyright'),
 (351, 'm2_link', 0, '2023-11-18 11:26:27', '2023-11-18 14:08:50', 'en', 'Copyright'),
 (352, 'sitesearch_notext', 0, '2023-11-19 06:36:42', '2023-11-19 06:39:03', 'bg', '<p>На тази страница се показват резултатите от търсене в сайта.</p>\r\n<p>Потърсете нещо чрез формата за търсене, за да видите резултат.</p>'),
-(353, 'sitesearch_notext', 0, '2023-11-19 09:23:43', '2023-11-19 09:23:43', 'en', '<p>This page displays the results of a site search.</p>\r\n<p>Search for something using the search form to see a result.</p>');
+(353, 'sitesearch_notext', 0, '2023-11-19 09:23:43', '2023-11-19 09:23:43', 'en', '<p>This page displays the results of a site search.</p>\r\n<p>Search for something using the search form to see a result.</p>'),
+(354, 'usermenu_newpagefrh', 0, '2023-11-22 16:20:59', '2023-11-22 16:20:59', 'bg', 'Нова страница от подзаглавие'),
+(355, 'cookies_cols_description', 1, '2023-11-22 22:37:15', '2023-11-22 22:37:28', 'bg', 'Колко букви да се показват в колоните на таблиците, при редактиране на таблици от базата данни.'),
+(356, 'cookies_rows_description', 1, '2023-11-22 22:38:21', '2023-11-22 22:38:35', 'bg', 'Колко реда да се показват в клетките на таблиците при радектиране на таблици от базата данни.');
+INSERT INTO `content` (`ID`, `name`, `nolink`, `date_time_1`, `date_time_2`, `language`, `text`) VALUES
+(357, 'user_finish', 1, '2023-11-23 03:55:25', '2023-11-23 03:57:11', 'bg', 'Връщане след изтриването'),
+(358, 'user_finish', 1, '2023-11-23 11:37:45', '2023-11-23 11:37:45', 'en', 'Go back after deletion'),
+(359, 'cookies_rows_description', 1, '2023-11-23 11:38:26', '2023-11-23 11:38:26', 'en', 'How many rows to display in table cells when redacting tables from the database.'),
+(360, 'cookies_cols_description', 1, '2023-11-23 11:39:23', '2023-11-23 11:39:23', 'en', 'How many letters to display in table columns when editing tables from the database.'),
+(361, 'usermenu_newpagefrh', 0, '2023-11-23 11:44:24', '2023-11-23 11:44:24', 'en', 'New page from subtitle');
 
 -- --------------------------------------------------------
 
@@ -433,12 +442,12 @@ CREATE TABLE `menu_items` (
 
 INSERT INTO `menu_items` (`ID`, `place`, `group`, `name`, `link`) VALUES
 (1, 10, 1, 'p1_link', '1'),
-(2, 60, 1, 'p2_link', '2'),
+(2, 70, 1, 'p2_link', '2'),
 (3, 20, 1, 'p3_link', '3'),
-(4, 40, 2, 'p4_link', '4'),
+(4, 50, 2, 'p4_link', '4'),
 (5, 30, 2, 'p5_link', '3'),
-(6, 50, 1, 'p6_link', '5'),
-(7, 35, 2, 'p7_link', '8');
+(6, 60, 1, 'p6_link', '5'),
+(7, 40, 2, 'p7_link', '8');
 
 -- --------------------------------------------------------
 
@@ -582,7 +591,8 @@ CREATE TABLE `permissions` (
 --
 
 INSERT INTO `permissions` (`ID`, `user_id`, `type`, `object`, `yes_no`) VALUES
-(1, 1, 'all', '', 1);
+(1, 1, 'all', '', 1),
+(2, 1, 'module', 'user', 0);
 
 -- --------------------------------------------------------
 
@@ -672,7 +682,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`ID`, `creator_id`, `type`, `date_time_0`, `date_time_1`, `date_time_2`, `gdpr`, `language`, `username`, `password`, `newpass`, `email`, `aemails`, `code`, `firstname`, `secondname`, `thirdname`, `country`, `institution`, `position`, `address`, `telephone`, `IP`, `nomessage`) VALUES
-(1, 0, 'admin', '2023-11-01 22:12:19', '2023-11-01 22:12:19', '2023-11-22 06:23:25', 0, 'English', 'admin', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', NULL, '', NULL, NULL, '', '', '', 'BG', NULL, NULL, NULL, '', '127.0.0.1', 0);
+(1, 0, 'admin', '2023-11-01 22:12:19', '2023-11-01 22:12:19', '2023-11-22 19:36:22', 0, 'English', 'admin', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', NULL, '', NULL, NULL, '', '', '', 'BG', NULL, NULL, NULL, '', '127.0.0.1', 0);
 
 -- --------------------------------------------------------
 
@@ -784,6 +794,12 @@ ALTER TABLE `page_cache`
 ALTER TABLE `page_cache` ADD FULLTEXT KEY `text` (`text`);
 
 --
+-- Индекси за таблица `permissions`
+--
+ALTER TABLE `permissions`
+  ADD PRIMARY KEY (`ID`);
+
+--
 -- Индекси за таблица `scripts`
 --
 ALTER TABLE `scripts`
@@ -844,7 +860,7 @@ ALTER TABLE `worktime`
 -- AUTO_INCREMENT for table `content`
 --
 ALTER TABLE `content`
-  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=354;
+  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=362;
 
 --
 -- AUTO_INCREMENT for table `content_history`
@@ -889,6 +905,12 @@ ALTER TABLE `page_cache`
   MODIFY `ID` int NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `permissions`
+--
+ALTER TABLE `permissions`
+  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `scripts`
 --
 ALTER TABLE `scripts`
@@ -904,7 +926,7 @@ ALTER TABLE `templates`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `visit_history`

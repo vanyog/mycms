@@ -48,6 +48,9 @@ if(empty($pc)) die('No page content was read.');
 $m1 = array();
 $r1 = preg_match_all('/<(h.).*?>(.*?)<\/\1(>)/s', $pc, $m1, PREG_OFFSET_CAPTURE);
 
+// Ако са наамерени заглавия
+if(count($m1[1])){
+
 // Най-главно заглавие
 $mh = "h9";
 foreach($m1[1] as $m){
@@ -78,6 +81,8 @@ $rz .= substr($pc,$p,$m1[3][$i][1]-$p);
 
 $cr['text'] = $rz;
 db_update_record($cr, 'content');
+
+} // Ако не са наамерини заглавия не се прави нищо
 
 header('Location: '.$_SERVER['HTTP_REFERER']);
 

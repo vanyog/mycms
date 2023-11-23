@@ -17,24 +17,21 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-// На локален сървър изпраща бисквитка noadm=yes, а на отдалечен - изтрива всички бисквитки.
-// Това предизмиква скриване на административното меню.
+// Изпраща бисквитка noadm=yes и това предизмиква скриване на административното меню.
 
 $idir = dirname(dirname(__FILE__)).'/';
 $ddir = $idir;
 include_once($idir."lib/f_is_local.php");
 include_once($idir."lib/f_page_cache.php");
 
-if (is_local()){ 
+//if (is_local()){ 
   setcookie('noadm','yes',time()+30*24*3600, '/');
-}
-else 
-{
+/*} else {
   $past = time() - 3600;
   foreach ( $_COOKIE as $key => $value ) setcookie( $key, $value, $past, '/' );
-}
+}*/
 
-purge_page_cache($_SERVER['HTTP_REFERER']);
+//purge_page_cache($_SERVER['HTTP_REFERER']);
 header( 'Location: '.acceptable($_SERVER['HTTP_REFERER'],false) );
 //echo '<a href="'.$_SERVER['HTTP_REFERER'].'">Back</a>';
 

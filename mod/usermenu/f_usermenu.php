@@ -43,7 +43,7 @@ if(!isset($page_id)){
      //$_SERVER['HTTP_REFERER']='http://nc/index.php?pid=96';
      die('Error in modul USERMENU. No HTTP_REFERER is set.');
   $r = array();
-  preg_match_all('/pid=(\d+)/', $_SERVER['HTTP_REFERER'], $r);
+  preg_match_all('/pid=(\d+)/', $_SERVER['HTTP_REFERER'], $r);//die($_SERVER['HTTP_REFERER']);
   if(isset($r[1][0])) $page_id = $r[1][0];
   else {
      die('Error in modul USERMENU. Cannot determine pid parameter.');
@@ -67,7 +67,7 @@ if (!$ud) return '';
 $id = $ud['ID'];
 
 // Четене на правата на потребителя
-$p = db_select_m('*', 'permissions', "`user_id`=$id");// print_r($p); die;
+$p = db_select_m('*', 'permissions', "`user_id`=$id");
 $rz = '';
 
 // Установяване на правата от различните типове
@@ -77,7 +77,7 @@ $can_manage = array();// Права за администриране на модули
 
 foreach($p as $q) if($q['yes_no']) switch($q['type']) {
 case 'all':
-  $rz .= "<a href=\"$adm_pth\">Admin path</a> \n";
+  $rz .= "<a href=\"$adm_pth\">Admin path</a> \n<div class=\"sep\"></div>\n";
   $ap = stored_value('admin_page');
   if($ap) $rz .= "<a href=\"$ap\">Admin page</a> \n";
   $can_edit = $q['yes_no'];
@@ -111,6 +111,7 @@ if ($nom===true) return '';
 
 // Съставяне на менюто
 $pt = current_pth(__FILE__);
+if ($can_edit) $rz .= edit_normal_link()." \n";
 if ($can_create){
  $rz .= '<a href="'.$pt.'new_page.php?p='.$page_data['ID']."\">Page New</a> \n";
  $rz .= '<a href="'.$pt.'new_page_from_h.php?p='.$page_data['ID'].'">Page From H</a> '."\n";
@@ -160,7 +161,6 @@ if(true || confirm("Would you like to hide user menu? It will appear again after
   m.style.display = "none";
 }
 </script>'."\n";
-if ($can_edit) $rz .= edit_normal_link()." \n";
 foreach($can_manage as $m=>$yn) if( $yn ) {
   $fn = dirname(mod_path($m)).'/f_menu_items.php';
   if (file_exists($fn)) {

@@ -3,8 +3,10 @@
 
 function schedules_menu_items(){
 global $maine_index;
-$p1 = stored_value('schedules_adminpage','/index.php?pid=11');
-return "<a href=\"$p1\">Schedules</a> ";
+$rz = '';
+$p1 = stored_value('schedules_adminpage',false);
+if($p1) $rz = "<a href=\"$p1\">Schedules</a> ";
+return $rz;
 }
 
 ?>

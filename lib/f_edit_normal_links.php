@@ -30,15 +30,15 @@ if(!empty($GLOBALS['page_id']))
 {
   $id = db_table_field('ID', 'content', 
                 "`name`='".$page_data['content']."' AND `language`='$language'", 0);
-  if($id) $el = ' <a href="'.$adm_pth."edit_record.php?t=content&r=$id\">Open to edit</a>";
+  if($id) $el = ' <a href="'.$adm_pth."edit_record.php?t=content&r=$id\">Open to edit</a>\n";
 }
 if (in_edit_mode()) {
-  return '<a href="'.$_SERVER['SCRIPT_NAME'].'?'.set_query_var($edit_name,'0').
-         '" title="Switch to normal mode">'.$p[$y].'Normal mode</a>'.$el;
+  return $el.'<a href="'.$_SERVER['SCRIPT_NAME'].'?'.set_query_var($edit_name,'0').
+         '" title="Switch to normal mode">'.$p[$y]."Normal mode</a>\n";
 }
 else
-  return '<a href="'.$_SERVER['SCRIPT_NAME'].'?'.set_query_var($edit_name,$edit_value).
-         '" title="Switch to edit mode">'.$p[$y].'Edit mode</a>'.$el;
+  return $el.'<a href="'.$_SERVER['SCRIPT_NAME'].'?'.set_query_var($edit_name,$edit_value).
+         '" title="Switch to edit mode">'.$p[$y]."Edit mode</a>\n";
 }
 
 ?>
