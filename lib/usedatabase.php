@@ -40,7 +40,7 @@ $db_link = get_db_link($host, $user, $password, $database, $colation);
 function get_db_link($host, $user, $password, $database, $colation = 'cp1251'){
 try { $l = mysqli_connect($host,$user,$password,$database); }
 catch (Exception $e){
- header("Content-Type: text/html; charset=Windows-1251");
+ if (!headers_sent()) header("Content-Type: text/html; charset=Windows-1251");
  echo "<p>Не се получава връзка с MySQL сървъра!</p>\n<pre>";
 // debug_print_backtrace();
  die;

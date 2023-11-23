@@ -677,7 +677,9 @@ $p = current_pth(__FILE__);
 foreach($da as $d){
   if($d['link']) $img = '<img src="'.$p.'go.gif" alt=""> ';
   else $img = '<img src="'.$p.'folder.png" alt=""> ';
-  $rz .= '<p>'.$img.'<a href="'.set_self_query_var('lid',$d['ID']).'" title="'.urldecode($d['link']).
+  if($d['private']) $rz .= '<p class="private">';
+  else $rz .= '<p>';
+  $rz .= $img.'<a href="'.set_self_query_var('lid',$d['ID']).'" title="'.urldecode($d['link']).
          '" target="_blank">'.stripslashes($d['Title']).'</a>';
   if ($d['up']){
      $t2 = db_table_field('Title', 'outer_links', "`ID`=".$d['up']);

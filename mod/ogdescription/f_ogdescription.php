@@ -26,7 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 function ogdescription(){
 global $page_content, $og_description, $site_encoding;
 if(!empty($og_description)) return $og_description;
-$a = !empty($page_content) ? strip_tags($page_content) : '';
+if(empty($page_content)) return '';
+$a = strip_tags($page_content);
 $a = str_replace('&nbsp;',' ',$a);
 $a = str_replace("\n",' ',$a);
 $a = str_replace("\r",'',$a);
