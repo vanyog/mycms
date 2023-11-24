@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost
--- Време на генериране: 23 ное 2023 в 09:52
+-- Време на генериране: 24 ное 2023 в 05:19
 -- Версия на сървъра: 8.0.26
 -- Версия на PHP: 8.2.12
 
@@ -328,7 +328,7 @@ INSERT INTO `content` (`ID`, `name`, `nolink`, `date_time_1`, `date_time_2`, `la
 (288, 'menu_start_2', 0, '2023-11-16 16:32:50', '2023-11-16 16:32:50', 'bg', ''),
 (289, 'menutree_start', 0, '2023-11-16 16:46:49', '2023-11-16 16:46:49', 'bg', ''),
 (290, 'p5_title', 0, '2023-11-16 16:57:06', '2023-11-16 16:57:06', 'bg', 'Карта на сайта'),
-(291, 'p5_content', 0, '2023-11-16 16:57:06', '2023-11-16 16:57:32', 'bg', '<!--$$_SITEMAP_$$-->'),
+(291, 'p5_content', 0, '2023-11-16 16:57:06', '2023-11-23 21:19:21', 'bg', '<!--$$_SITEMAP_$$-->\r\n<!--$$_SETVARIABLE_og_description|На тази страница се разглежда картата на сайта._$$-->'),
 (292, 'p6_link', 0, '2023-11-16 16:57:06', '2023-11-16 16:57:06', 'bg', 'Карта на сайта'),
 (293, 'm1_link', 0, '2023-11-16 16:57:06', '2023-11-16 16:57:06', 'bg', 'Карта на сайта'),
 (294, 'site_map_contract', 0, '2023-11-16 16:58:54', '2023-11-16 16:59:09', 'bg', 'Сгъване на всички'),
@@ -386,14 +386,22 @@ INSERT INTO `content` (`ID`, `name`, `nolink`, `date_time_1`, `date_time_2`, `la
 (352, 'sitesearch_notext', 0, '2023-11-19 06:36:42', '2023-11-19 06:39:03', 'bg', '<p>На тази страница се показват резултатите от търсене в сайта.</p>\r\n<p>Потърсете нещо чрез формата за търсене, за да видите резултат.</p>'),
 (353, 'sitesearch_notext', 0, '2023-11-19 09:23:43', '2023-11-19 09:23:43', 'en', '<p>This page displays the results of a site search.</p>\r\n<p>Search for something using the search form to see a result.</p>'),
 (354, 'usermenu_newpagefrh', 0, '2023-11-22 16:20:59', '2023-11-22 16:20:59', 'bg', 'Нова страница от подзаглавие'),
-(355, 'cookies_cols_description', 1, '2023-11-22 22:37:15', '2023-11-22 22:37:28', 'bg', 'Колко букви да се показват в колоните на таблиците, при редактиране на таблици от базата данни.'),
-(356, 'cookies_rows_description', 1, '2023-11-22 22:38:21', '2023-11-22 22:38:35', 'bg', 'Колко реда да се показват в клетките на таблиците при радектиране на таблици от базата данни.');
+(355, 'cookies_cols_description', 1, '2023-11-22 22:37:15', '2023-11-22 22:37:28', 'bg', 'Колко букви да се показват в колоните на таблиците, при редактиране на таблици от базата данни.');
 INSERT INTO `content` (`ID`, `name`, `nolink`, `date_time_1`, `date_time_2`, `language`, `text`) VALUES
+(356, 'cookies_rows_description', 1, '2023-11-22 22:38:21', '2023-11-22 22:38:35', 'bg', 'Колко реда да се показват в клетките на таблиците при радектиране на таблици от базата данни.'),
 (357, 'user_finish', 1, '2023-11-23 03:55:25', '2023-11-23 03:57:11', 'bg', 'Връщане след изтриването'),
 (358, 'user_finish', 1, '2023-11-23 11:37:45', '2023-11-23 11:37:45', 'en', 'Go back after deletion'),
 (359, 'cookies_rows_description', 1, '2023-11-23 11:38:26', '2023-11-23 11:38:26', 'en', 'How many rows to display in table cells when redacting tables from the database.'),
 (360, 'cookies_cols_description', 1, '2023-11-23 11:39:23', '2023-11-23 11:39:23', 'en', 'How many letters to display in table columns when editing tables from the database.'),
-(361, 'usermenu_newpagefrh', 0, '2023-11-23 11:44:24', '2023-11-23 11:44:24', 'en', 'New page from subtitle');
+(361, 'usermenu_newpagefrh', 0, '2023-11-23 11:44:24', '2023-11-23 11:44:24', 'en', 'New page from subtitle'),
+(362, 'uploadfile_nofile', 1, '2023-11-23 21:40:08', '2023-11-23 21:40:38', 'bg', 'Няма качен файл'),
+(363, 'uploadfile_upladpagetitle', 1, '2023-11-23 21:57:02', '2023-11-23 21:57:27', 'bg', 'Качване на файл'),
+(364, 'uploadfile_timeshow', 1, '2023-11-23 21:57:30', '2023-11-23 21:57:56', 'bg', 'Дата на показване:'),
+(365, 'uploadfile_timehide', 1, '2023-11-23 21:57:59', '2023-11-23 21:58:21', 'bg', 'Дата на скриване:'),
+(366, 'uploadfile_linktext', 1, '2023-11-23 21:58:29', '2023-11-23 21:59:04', 'bg', 'Описателен текст:'),
+(367, 'uploadfile_file', 1, '2023-11-23 21:59:07', '2023-11-23 21:59:22', 'bg', 'Файл:'),
+(368, 'uploadfile_submit', 1, '2023-11-23 21:59:42', '2023-11-23 22:00:00', 'bg', 'Качване на файла'),
+(369, 'uploadfile_confdel', 1, '2023-11-23 23:29:40', '2023-11-23 23:30:13', 'bg', 'Найстина ли искате да изтриете този файл?');
 
 -- --------------------------------------------------------
 
@@ -407,6 +415,32 @@ CREATE TABLE `content_history` (
   `date` date NOT NULL,
   `size` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
+
+-- --------------------------------------------------------
+
+--
+-- Структура на таблица `files`
+--
+
+DROP TABLE IF EXISTS `files`;
+CREATE TABLE `files` (
+  `ID` int NOT NULL,
+  `pid` int NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `date_time_1` datetime NOT NULL,
+  `date_time_2` datetime NOT NULL,
+  `date_time_3` datetime NOT NULL,
+  `date_time_4` datetime NOT NULL,
+  `filename` varchar(255) NOT NULL,
+  `text` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+--
+-- Схема на данните от таблица `files`
+--
+
+INSERT INTO `files` (`ID`, `pid`, `name`, `date_time_1`, `date_time_2`, `date_time_3`, `date_time_4`, `filename`, `text`) VALUES
+(2, 1, 'A1', '2023-11-23 23:27:55', '2023-11-23 23:27:55', '0000-01-01 00:00:00', '0000-01-01 00:00:00', '/Users/vanyog/Sites/n/_uploaded_files/site-og-image-1200x630.jpg', '');
 
 -- --------------------------------------------------------
 
@@ -502,7 +536,7 @@ INSERT INTO `options` (`ID`, `name`, `value`) VALUES
 (11, 'phpmyadmin_local', 'http://localhost/phpmyadmin'),
 (12, 'mod_path', '_mod'),
 (13, 'cache_time', '10'),
-(14, 'css_adm_links', 'body { margin-left:40px; }\r\n#adm_links { font-size:150%; line-height:35px; padding:0 4px; opacity:0.1; position:fixed; top:0; left:0; margin:0; background-color:white; width:30px; height:100vh; overflow-y:scroll; overflow-x:hidden; }\r\n#adm_links a, #adm_links span, #adm_links input { white-space:nowrap; float:left; clear:left; }\r\n#adm_links a:hover { text-decoration:underline; }\r\n'),
+(14, 'css_adm_links', 'body { margin-left:40px; }\r\n#adm_links { font-size:150%; line-height:35px; padding:0 4px; opacity:0.1; position:fixed; top:0; left:0; margin:0; background-color:white; width:30px; height:90vh; overflow-y:scroll; overflow-x:hidden; }\r\n#adm_links a, #adm_links span, #adm_links input { white-space:nowrap; float:left; clear:left; }\r\n#adm_links a:hover { text-decoration:underline; }\r\n'),
 (15, 'css_all_pages', 'body { font-family: arial, sans-serif; }\r\nh1 { font-size: 2em; }\r\nh2 { font-size: 1.5em }\r\nh3 { font-size: 1.17em }\r\nh4, h5, h6 { font-size: 1em }\r\na { color:#005941; }\r\n.lang_flag { float:left; margin:0 15px 0 0; padding:0; }\r\n.lang_flag img { width:60px; height:30px; vertical-align:middle; }\r\nnav { display:inline-block; min-width: 160px; }\r\nheader { background-color:#005941; color:#fff; padding: 10px; overflow:auto; line-height:50px; }\r\nheader a { color:#fff; text-decoration:none; margin:15px; padding:10px; white-space:nowrap; }\r\nheader span { border: solid 1px; padding:10px; margin:14px; white-space:nowrap; }\r\nheader a:hover { color:#97ff93; }\r\nsection { min-height: calc(100vh - 185px); max-width:870px; margin:10px auto; box-shadow: 1px 1px 5px 0 rgba(50,50,50,0.4); padding:10px; }\r\nfooter { text-align:center; }\r\n#cookies_message { text-align:center; overflow:auto; background-color:#ffeda4; }\r\n.searched { background-color:yellow; }\r\ntd { padding-right:10px; }\r\n#site_search input[type=\"button\"] { height:30px; }\r\n'),
 (17, 'css_usermenu', '#user_menu { display:inline-block; position:absolute; top:0; right:0; padding:5px; opacity:0.1; line-height:35px; }\r\n#user_menu:hover { background-color:#fff; opacity:1; }\r\n#user_menu a, #user_menu span, #user_menu div.sep { float:right; clear:right; }\r\n#user_menu div.sep { width:100% }\r\n#user_menu span a { float:none; }\r\n\r\n'),
 (18, 'userreg_login_admin', 'index.php?pid=2&user2=login'),
@@ -518,7 +552,9 @@ INSERT INTO `options` (`ID`, `name`, `value`) VALUES
 (30, 'css_p.message', '.message { color:red; }'),
 (31, 'sitemap_1_bg_cache_edit', '<div id=\"site_map\">\n<a href=\"/n/index.php?clear=on&amp;pid=5\">Clear cache</a><p class=\"buttons\">\r\n<button onclick=\"mapContractExpandAll(1);\">Сгъване на всички<a href=\"/n/manage/edit_record.php?t=content&amp;r=294\" style=\"color:#000000;background-color:#ffffff;margin:0;padding:0;\">*</a></button>\r\n<button onclick=\"mapContractExpandAll(2);\">Разгъване на всички<a href=\"/n/manage/edit_record.php?t=content&amp;r=295\" style=\"color:#000000;background-color:#ffffff;margin:0;padding:0;\">*</a></button>\r\n</p>\r\n\n<div id=\"map1\">\n<a href=\"/n/index.php?pid=1\">Начало</a> place:10 group:1<br>\n</div>\n<div id=\"map3\">\n<span onclick=\"mapHideShow(this);\" class=\"bullet\">&#9660;</span>&nbsp;<a href=\"/n/index.php?pid=3\">Относно<a href=\"/n/manage/edit_record.php?t=content&amp;r=261\" style=\"color:#000000;background-color:#ffffff;margin:0;padding:0;\">*</a></a> place:20 group:1<br>\n<div id=\"map7\">\n<a href=\"/n/index.php?pid=8\">Авторски права<a href=\"/n/manage/edit_record.php?t=content&amp;r=341\" style=\"color:#000000;background-color:#ffffff;margin:0;padding:0;\">*</a></a> place:35 group:2<br>\n</div>\n<div id=\"map4\">\n<a href=\"/n/index.php?pid=4\">Лични данни<a href=\"/n/manage/edit_record.php?t=content&amp;r=286\" style=\"color:#000000;background-color:#ffffff;margin:0;padding:0;\">*</a></a> place:40 group:2<br>\n</div>\n</div>\n<div id=\"map6\">\n<a href=\"/n/index.php?pid=5\">Карта на сайта<a href=\"/n/manage/edit_record.php?t=content&amp;r=292\" style=\"color:#000000;background-color:#ffffff;margin:0;padding:0;\">*</a></a> - текущата страница<a href=\"/n/manage/edit_record.php?t=content&amp;r=296\" style=\"color:#000000;background-color:#ffffff;margin:0;padding:0;\">*</a> place:50 group:1<br>\n</div>\n<div id=\"map2\">\n<a href=\"/n/index.php?pid=2\">Вход<a href=\"/n/manage/edit_record.php?t=content&amp;r=258\" style=\"color:#000000;background-color:#ffffff;margin:0;padding:0;\">*</a></a> place:60 group:1<br>\n</div>\n<p class=\"buttons\">\r\n<button onclick=\"mapContractExpandAll(1);\">Сгъване на всички<a href=\"/n/manage/edit_record.php?t=content&amp;r=294\" style=\"color:#000000;background-color:#ffffff;margin:0;padding:0;\">*</a></button>\r\n<button onclick=\"mapContractExpandAll(2);\">Разгъване на всички<a href=\"/n/manage/edit_record.php?t=content&amp;r=295\" style=\"color:#000000;background-color:#ffffff;margin:0;padding:0;\">*</a></button>\r\n</p>\r\n<a href=\"/n/index.php?clear=on&amp;pid=5\">Clear cache</a>\r\n<p class=\"clear\"></p></div>'),
 (32, 'css_editrecord_form', 'form[name=editrecord_form] input[type=text], form[name=editrecord_form] input[type=password] \r\n{ width:calc(100% - 10px); }\r\nform[name=editrecord_form] textarea { max-width:calc(100% - 10px); }\r\n'),
-(35, 'nav_script', '<script>\r\nwindow.addEventListener(\"resize\", setNavWidth);\r\nwindow.addEventListener(\"load\", setNavWidth);\r\nfunction setNavWidth(){\r\nvar navElement = document.getElementById(\"page_menu\");\r\nvar navPrev = navElement.previousElementSibling;\r\nvar navNext = navElement.nextElementSibling;\r\nvar navMaxW = navNext.getBoundingClientRect().left - navPrev.getBoundingClientRect().right - 30;\r\nif(navMaxW>160) navElement.style.width = navMaxW + \"px\";\r\n}\r\n</script>');
+(35, 'nav_script', '<script>\r\nwindow.addEventListener(\"resize\", setNavWidth);\r\nwindow.addEventListener(\"load\", setNavWidth);\r\nfunction setNavWidth(){\r\nvar navElement = document.getElementById(\"page_menu\");\r\nvar navPrev = navElement.previousElementSibling;\r\nvar navNext = navElement.nextElementSibling;\r\nvar navMaxW = navNext.getBoundingClientRect().left - navPrev.getBoundingClientRect().right - 30;\r\nif(navMaxW>160) navElement.style.width = navMaxW + \"px\";\r\n}\r\n</script>'),
+(36, 'uploadfile_nofilenotext', 'true'),
+(37, 'uploadfile_dir', '/n/_uploaded_files/');
 
 -- --------------------------------------------------------
 
@@ -641,7 +677,7 @@ CREATE TABLE `templates` (
 --
 
 INSERT INTO `templates` (`ID`, `parent`, `template`, `comment`) VALUES
-(1, 0, '<!DOCTYPE HTML>\r\n<html lang=\"<!--$$_VARIABLE_default_language_$$-->\">\r\n<head>\r\n  <title><!--$$_HEADTITLE_$$--></title>\r\n  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=<!--$$_VARIABLE_site_encoding_$$-->\">\r\n  <meta name=viewport content=\"width=device-width, initial-scale=1\">\r\n  <meta name=\"description\" content=\"<!--$$_OGDESCRIPTION_$$-->\">\r\n<!--$$_SITEICONS_$$-->\r\n<!--$$_VARIABLE_page_header_$$-->\r\n<style>\r\n<!--$$_VARIABLE_added_styles_$$-->\r\n</style>\r\n</head>\r\n<body<!--$$_BODYADDS_$$-->>\r\n<!--$$_ADMINMENU_$$-->\r\n\r\n<header>\r\n<!--$$_LANGUAGEFLAGS_$$-->\r\n<!--$$_MENU_$$-->\r\n<!--$$_SITESEARCH2_$$-->\r\n<!--$$_COOKIES_message_$$-->\r\n</header>\r\n<!--$$_OPTION_nav_script_$$-->\r\n<!--$$_MENUTREE_$$-->\r\n<section>\r\n<h1><!--$$_PAGETITLE_$$--></h1>\r\n<!--$$_CONTENT_$$-->\r\n</section>\r\n\r\n<footer>\r\n<p id=\"powered_by\"><!--$$_CONTENT_powered_by_$$--><a href=\"https://github.com/vanyog/mycms/wiki\" target=\"_blank\">VanyoG CMS</a> <!--$$_PAGESTAT_$$--></p>\r\n</footer>\r\n\r\n<!--$$_USERMENU_index.php?pid=2&amp;user2=logout_$$-->\r\n</body>\r\n</html>\r\n\r\n', 'Шаблон по подразбиране');
+(1, 0, '<!DOCTYPE HTML>\r\n<html lang=\"<!--$$_VARIABLE_default_language_$$-->\">\r\n<head>\r\n  <title><!--$$_HEADTITLE_$$--></title>\r\n  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=<!--$$_VARIABLE_site_encoding_$$-->\">\r\n  <meta name=viewport content=\"width=device-width, initial-scale=1\">\r\n  <meta name=\"description\" content=\"<!--$$_OGDESCRIPTION_$$-->\">\r\n  <meta property=\"og:type\" content=\"article\">\r\n  <meta property=\"fb:app_id\" content=\"1350744361603908\">\r\n  <meta property=\"og:url\" content=\"<!--$$_VARIABLE_SERVER[\'REQUEST_SCHEME\']_$$-->://<!--$$_VARIABLE_SERVER[\'HTTP_HOST\']_$$--><!--$$_VARIABLE_main_index_$$-->?pid=<!--$$_VARIABLE_page_id_$$-->\">\r\n  <meta property=\"og:image\" content=\"<!--$$_FIRSTIMAGE_http://sci.vanyog.com/_images/200x200-fb.png_$$-->\">\r\n  <meta property=\"og:title\" content=\"<!--$$_HTMLVAR_page_title_$$-->\">\r\n  <meta property=\"og:description\" content=\"<!--$$_OGDESCRIPTION_$$-->\">\r\n<!--$$_SITEICONS_$$-->\r\n<!--$$_VARIABLE_page_header_$$-->\r\n<style>\r\n<!--$$_VARIABLE_added_styles_$$-->\r\n</style>\r\n</head>\r\n<body<!--$$_BODYADDS_$$-->>\r\n<!--$$_ADMINMENU_$$-->\r\n\r\n<header>\r\n<!--$$_LANGUAGEFLAGS_$$-->\r\n<!--$$_MENU_$$-->\r\n<!--$$_SITESEARCH2_$$-->\r\n<!--$$_COOKIES_message_$$-->\r\n</header>\r\n<!--$$_OPTION_nav_script_$$-->\r\n<!--$$_MENUTREE_$$-->\r\n<section>\r\n<h1><!--$$_PAGETITLE_$$--></h1>\r\n<!--$$_CONTENT_$$-->\r\n</section>\r\n\r\n<footer>\r\n<p id=\"powered_by\"><!--$$_CONTENT_powered_by_$$--><a href=\"https://github.com/vanyog/mycms/wiki\" target=\"_blank\">VanyoG CMS</a> <!--$$_PAGESTAT_$$--></p>\r\n</footer>\r\n<!--$$_UPLOADFILE_A1,style=\"display:none;\"_$$-->\r\n<!--$$_USERMENU_index.php?pid=2&amp;user2=logout_$$-->\r\n</body>\r\n</html>\r\n\r\n', 'Шаблон по подразбиране');
 
 -- --------------------------------------------------------
 
@@ -682,7 +718,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`ID`, `creator_id`, `type`, `date_time_0`, `date_time_1`, `date_time_2`, `gdpr`, `language`, `username`, `password`, `newpass`, `email`, `aemails`, `code`, `firstname`, `secondname`, `thirdname`, `country`, `institution`, `position`, `address`, `telephone`, `IP`, `nomessage`) VALUES
-(1, 0, 'admin', '2023-11-01 22:12:19', '2023-11-01 22:12:19', '2023-11-22 19:36:22', 0, 'English', 'admin', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', NULL, '', NULL, NULL, '', '', '', 'BG', NULL, NULL, NULL, '', '127.0.0.1', 0);
+(1, 0, 'admin', '2023-11-01 22:12:19', '2023-11-01 22:12:19', '2023-11-23 19:14:27', 0, 'English', 'admin', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', NULL, '', NULL, NULL, '', '', '', 'BG', NULL, NULL, NULL, '', '127.0.0.1', 0);
 
 -- --------------------------------------------------------
 
@@ -747,6 +783,15 @@ ALTER TABLE `content` ADD FULLTEXT KEY `text` (`text`);
 ALTER TABLE `content_history`
   ADD PRIMARY KEY (`ID`),
   ADD KEY `date` (`date`);
+
+--
+-- Индекси за таблица `files`
+--
+ALTER TABLE `files`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `pid` (`pid`),
+  ADD KEY `name` (`name`),
+  ADD KEY `filename` (`filename`);
 
 --
 -- Индекси за таблица `filters`
@@ -860,13 +905,19 @@ ALTER TABLE `worktime`
 -- AUTO_INCREMENT for table `content`
 --
 ALTER TABLE `content`
-  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=362;
+  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=370;
 
 --
 -- AUTO_INCREMENT for table `content_history`
 --
 ALTER TABLE `content_history`
   MODIFY `ID` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `files`
+--
+ALTER TABLE `files`
+  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `filters`
@@ -890,7 +941,7 @@ ALTER TABLE `menu_tree`
 -- AUTO_INCREMENT for table `options`
 --
 ALTER TABLE `options`
-  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `pages`

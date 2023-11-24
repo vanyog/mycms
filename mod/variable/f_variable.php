@@ -28,9 +28,11 @@ $aa = explode('|',$a);
 $r = array();
 // Случай на елемент от масив
 $j = preg_match_all('/(.*)\[\'(.*)\'\]/', $aa[0], $r);
+//if($j) die(print_r($r,true).$_SERVER[$r[2][0]]);
 if($j) switch($r[1][0]){
 case '$_GET':    return $_GET[$r[2][0]];    break;
-case '$_SERVER': return $_SERVER[$r[2][0]]; break;
+case '$_SERVER':
+case 'SERVER': return $_SERVER[$r[2][0]]; break;
 }
 //if($a=='host_web') die($GLOBALS[$a]);
 if(!isset($aa[1])) $aa[1] = '';

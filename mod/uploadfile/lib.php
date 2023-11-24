@@ -26,6 +26,7 @@ function uploadfile_href($fp){
   $or = stored_value('uploadfile_otherroot');
   // Път до файла на този сървър
   $thfn = $fp;
+  $ne = false;
   if ($or){
     $l = strlen($or);
     // Истина, ако файлът не е бил в document_root на другия сървър
