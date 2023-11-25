@@ -25,6 +25,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 // която трябва да се показва чрез шаблона на страницата.
 
 function add_style($n){
+if(empty($GLOBALS['db_link'])) return '';
 global $added_styles;
 if(!isset($added_styles)) $added_styles = '';
 $v = '';

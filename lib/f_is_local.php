@@ -21,7 +21,7 @@ include_once($idir."lib/f_query_or_cookie.php");
 include_once($idir."lib/f_stored_value.php");
 include_once($idir."lib/f_adm_links.php");
 
-// Променливи и фуркции, които дават информация за хостинга и администрирането
+// Променливи и функции, които дават информация за хостинга и администрирането
 
 $web_host = stored_value('host_web','mysite.org'); // Домейн на сайта.
 if ((substr($_SERVER['SERVER_ADDR'],0,8)!='127.0.0.') &&
@@ -41,13 +41,8 @@ $phpmyadmin_local = stored_value('phpmyadmin_local','http://localhost/phpmyadmin
 
 // Връща истина, ако сайтът се намира на локален сървър.
 function is_local(){
-/*global $local_host;
-if (isset($_SERVER['HTTP_HOST'])) 
-    return ($local_host==$_SERVER['HTTP_HOST']) || 
-           ($_SERVER['HTTP_HOST']=='localhost');
-else return false;*/
-return (substr($_SERVER['SERVER_ADDR'],0,8)=='127.0.0.') ||
-       ($_SERVER['SERVER_ADDR']=='::1');
+global $web_host;
+return empty($web_host) || ($_SERVER['HTTP_HOST']!=$web_host);
 }
 
 // Функцията in_edit_mode() връща истина ако сайтът е в режим на редактиране

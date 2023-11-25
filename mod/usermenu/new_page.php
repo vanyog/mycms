@@ -19,6 +19,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 // Създаване на нова страница от страница $_GET['p']
 
+error_reporting(E_ALL); ini_set('display_errors',1);
+
 if (!isset($_GET['p'])) die('Insufficient parameters.');
 
 $idir = dirname(dirname(dirname(__FILE__))).'/';

@@ -45,7 +45,7 @@ catch (Exception $e){
 // debug_print_backtrace();
  die;
 }
-if($l===false) die('No link to database.');
+if($l===false) { debug_print_backtrace(); die('No link to database.'); }
 mysqli_query($l,"SET NAMES '$colation';");
 return $l;
 }

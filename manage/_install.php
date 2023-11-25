@@ -100,7 +100,7 @@ If there is data in the tables, it will be deleted and replaced with new data.</
 }
 $f = new HTMLForm('pform');
 $i = new FormInput('Host','host','text','localhost');     $f->add_input($i);
-$i = new FormInput('Database','database','text','VanyoG CMS'); $f->add_input($i);
+$i = new FormInput('Database','database','text','mycms'); $f->add_input($i);
 $i = new FormInput('User','user','text');                 $f->add_input($i);
 $i = new FormInput('Password','password','text');         $f->add_input($i);
 $i = new FormInput('Table mane prefix','prefix','text');

@@ -65,6 +65,7 @@ ajaxO.open("GET", a, true);
 ajaxO.send();
 }
 function sDivPosition(){
+  if(!sDiv) return "";
   sDiv.style.display = "block";
   var r = document.getElementById("searchtextfield").parentElement.getBoundingClientRect();
   var s = sDiv.style;

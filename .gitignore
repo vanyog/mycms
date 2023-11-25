@@ -13,6 +13,5 @@ mod/bgdic
 mod/uploadfile/conf_uploadfile.php
 net
 robots.txt
-site.webmanifest
 sitemap.xml
 upload*.
