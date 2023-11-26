@@ -78,13 +78,13 @@ else {
     }
     else {
        $w3c = ' <a href="http://validator.w3.org/check?uri='.
-              urlencode($_SERVER['REQUEST_SCHEME'].'//'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).
+              urlencode($_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).
               '" target="_blank">w3c</a>';
        $mob = ' <a href="https://www.google.com/webmasters/tools/mobile-friendly/?url='.
-              urlencode($_SERVER['REQUEST_SCHEME'].'//'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).
+              urlencode($_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).
               '" target="_blank">mob</a>';
        $spt = ' <a href="https://developers.google.com/speed/pagespeed/insights/?url='.
-              urlencode($_SERVER['REQUEST_SCHEME'].'//'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).
+              urlencode($_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).
               '" target="_blank">sp</a>';
     }
   }
