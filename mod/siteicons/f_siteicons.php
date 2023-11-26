@@ -27,8 +27,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 function siteicons(){
 global $adm_pth;
-$icon_apath = dirname(dirname(__DIR__)).'/favicon_package_v0.16/';
-$icon_path = current_pth(dirname(__DIR__)).'favicon_package_v0.16/';
+$icon_path = stored_value("icon_path");
+if(!$icon_path){
+  $icon_apath = dirname(dirname(__DIR__)).'/favicon_package_v0.16/';
+  $icon_path = current_pth(dirname(__DIR__)).'favicon_package_v0.16/';
+}
+else $icon_apath = $_SERVER['DOCUMENT_ROOT'].$icon_path;
 if(!file_exists($icon_apath)){
   die("<p>Icon path is not prepared.<p>".
 '<p>Create a 310x310px PNG image for your icons. '.
