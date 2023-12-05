@@ -26,6 +26,8 @@ $z2 = "\n".'<h3>'.translate('ranking_updated').'</h3>
 $z3 = "\n".'<h3>'.translate('ranking_min_visited').'</h3>
 <p>'.min_visited_page_links($limit)."</p>\n";
 
+add_style("ranking2");
+
 return '<div id="page_ranking">
 <h2>'.translate('ranking_title').'</h2>
 

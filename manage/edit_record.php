@@ -109,7 +109,7 @@ if ($r) foreach($r as $k => $v){
 }
 else die("<p>Record ID = $id do not exist.</p>
 <p>Click <a href=\"new_record.php?t=$t&ID=$id\">here</a> to create.</p>
-<p><a href=\"/\">Home</a></p>");
+<p><a href=\"/\">Home</a> &nbsp; < a href=\"show_table.php?t=$t\">Table</a></p>");
 
 $rfr = $adm_pth.'show_table.php?t='.$t;
 if (isset($_SESSION['http_referer'])) $rfr = $_SESSION['http_referer'];

@@ -67,11 +67,12 @@ ajaxO.send();
 function sDivPosition(){
   if(!sDiv) return "";
   sDiv.style.display = "block";
-  var r = document.getElementById("searchtextfield").parentElement.getBoundingClientRect();
+  var sd = document.getElementById("site_search");
+  var r = document.getElementById("site_search").parentElement.getBoundingClientRect();
   var s = sDiv.style;
-  s.position = "absolute";
-  s.top = window.scrollY + r.bottom + "px";
-  s.left = r.left + "px";
+  s.position = "fixed";//alert(sd);
+  s.top = r.bottom + "px";
+  s.left = r.left + sd.offsetLeft + "px";
   s.zIndex = "1";
 }
 window.addEventListener("resize", sDivPosition);
@@ -126,7 +127,8 @@ if (isset($_SESSION['text_to_search'])) $tx = $_SESSION['text_to_search'];
 else $tx = '';
 $tx = str_replace('"','&quot;',$tx);
 $ti = new FormInput(translate('sitesearch_label'),'searchtext','text', $tx);
-$ti->js = ' onkeydown="searchKeyDown(event);" onkeyup="searchStringChanged(this,event)"';
+$ti->js = ' onkeydown="searchKeyDown(event);" onkeyup="searchStringChanged(this,event)"'.
+          ' autocomplete="off"';
 $ti->id = 'searchtextfield';
 $f->add_input($ti);
 $b = new FormInput('','','button', translate('sitesearch_submit'));

@@ -1,7 +1,7 @@
 <?php
 /*
 VanyoG CMS - a simple Content Management System
-Copyright (C) 2012  Vanyo Georgiev <info@vanyog.com>
+Copyright (C) 2023  Vanyo Georgiev <info@vanyog.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,12 +17,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-include_once($idir."lib/f_adm_links.php");
+// Показва съдържание, ако сайтът не е в режим на редактиране.
+// Ако параметърът $a започва с 'content_' е име на запис от таблица `content`.
+// ако не започва с 'content_' е съдържанието, което се показва.
 
-if (!isset($page_header)) $page_header = '';
+function ifnoteditmode($a){
+$rz = '';
+if(!in_edit_mode() && !is_local()){
+   if(substr($a,0,8)=='content_') $rz = translate($a);
+   else $rz = stripslashes($a);
+}
+return $rz;
+}
 
-$page_content = adm_links().'
-'.$page_content;
-
-include($idir."lib/build_page.php");
 ?>

@@ -555,6 +555,8 @@ global $user_table, $idir;
 $r = userreg_id($t);
 if (!$r){
    $lp = stored_value("userreg_login_$t");
+   if((stored_value('userreg_https')=='on') && !is_local())
+      $lp = 'https://'.$_SERVER['HTTP_HOST'].$lp;
    return message(translate('userreg_mustlogin').' <a href="'.$lp.'">'.
    translate('userreg_login').'</a>');
 }

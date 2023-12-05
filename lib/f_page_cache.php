@@ -86,7 +86,7 @@ function save_cache($cnt){
 if (do_not_cache()) return;
 global $language, $page_data, $tn_prefix, $db_link;
 // Уеднаквена форма на адреса
-$htp = acceptable($_SERVER['REQUEST_URI'],true);
+$htp = acceptable($_SERVER['REQUEST_URI'], true);
 // Ако адресът не е приемлив, не се запазва кеш
 if (!$htp) return;
 $id = db_table_field('ID','page_cache',
@@ -141,7 +141,7 @@ if (isset($c['pid']) && is_numeric($c['pid'])) db_delete_where('page_cache',"`pa
 // При $y=true - връща празен стринг за недопустим параметър
 // При $y=false - само премахва недопустимите параметри
 
-function acceptable($u,$y){
+function acceptable($u, $y){
 global $edit_name;
 $a = parse_url($u);
 $b = array();

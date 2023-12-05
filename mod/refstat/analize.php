@@ -56,10 +56,13 @@ $page_content = '<h1>'.translate('refstat_stitle').'</h1>
 ';
 
 foreach($d as $d1){
- $u = parse_url($d1['referer']);// echo $u['host']."<br>";
+ $u = parse_url($d1['referer']);
  $p = array();
- parse_str($u['query'], $p);
- if (isset($qrs[$u['host']])){ $qs = $qrs[$u['host']]; } else $qs = 'q';
+ if(isset($u['query'])) {
+    parse_str($u['query'], $p);
+//    if(isset($p['q']) && $p['q']) echo (print_r($p['q'],true)."<br>");
+ }
+/* if (isset($qrs[$u['host']])){ $qs = $qrs[$u['host']]; } else $qs = 'q';
  if (isset($p[$qs])){// echo $p[$qs]."<br>";
   $rz = iconv("UTF-8", "cp1251", $p[$qs] );
   $page_content .= '<tr>
@@ -68,8 +71,9 @@ foreach($d as $d1){
 <td><a href="/index.php?pid='.$d1['page_id'].'"> '.$d1['page_id'].'</a></td>
 <td>'.$d1['count'].'</td>
 </tr>'; 
- }
+ }*/
 }
+//die;
 $page_content .= '</table>
 <h2>'.translate('refstat_direct').'</h2>
 ';

@@ -21,7 +21,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include("conf_manage.php"); 
 include($idir."conf_paths.php");
 
-$fn = $_POST['file'];
+$fn = '';
+if(isset($_POST['file'])) $fn = $_POST['file']; 
+if(isset($_GET['f'])    ){
+  $fn = $_SERVER['DOCUMENT_ROOT'].urldecode($_GET['f']);
+  if(file_exists("$fn")){ var_dump(unlink($fn)); die($fn); }
+  header("Location: ".$_SERVER['HTTP_REFERER']);
+  die;
+}
+
 $afn = $apth.$fn;
 $dn = dirname($fn);
 

@@ -83,7 +83,12 @@ if ($editMode){
   $rz .= "id $i ".'<a href="'.$adm_pth.'new_record.php?t=menu_items&group='.$i.'&link='.$page_id.
          '&name=p'.$ni.'_link" style="font-size:80%">New Item</a> '."\n";
 }
-if ($rz) $rz = "\n$sm<nav id=\"$id\">\n".translate('menu_start_'.$i, $editMode)."$rz</nav>\n";
+if ($rz){
+   $msn = 'menu_start_'.$i;
+   $mss = translate($msn, $editMode);
+   if($mss==$msn) $mss = '';
+   $rz = "\n$sm<nav id=\"$id\">\n$mss$rz</nav>\n";
+}
 return $rz;
 }
 

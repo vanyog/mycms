@@ -85,9 +85,10 @@ if($d1['confirmed']) $fi->js = ' checked';
 $f->add_input( $fi );
 $f->add_input( new FormInput( '', '', 'submit', encode('Запазване') ) ) ;
 
-$page_header = '<link href="/_style.css" rel="stylesheet" type="text/css">
-<style>body { padding:1em; }
-</style>';
+$page_header = '<style>
+body { padding:1em; }
+</style>
+';
 
 $page_title = translate('conference_makeReviewer');
 

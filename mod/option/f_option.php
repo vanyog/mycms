@@ -25,7 +25,7 @@ $d = db_select_1('ID,value', 'options', "`name`='$a'",''.false);
 if(!$d) $rz = ''; else $rz = $d['value'];
 if(in_edit_mode()) 
    if(!$d)
-     $rz .= "\n<a href=\"$adm_pth/new_record.php?t=options&value=$a\">$a option</a>\n";
+     $rz .= "\n<a href=\"$adm_pth/new_record.php?t=options&name=$a\">$a option</a>\n";
    else
      $rz .= "\n<a href=\"$adm_pth/edit_record.php?t=options&r=".$d['ID']."\">$a option</a>\n";
 return $rz;

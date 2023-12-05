@@ -25,6 +25,8 @@ $idir = dirname(dirname(__DIR__)).'/';
 $ddir = $idir;
 
 include_once($idir.'conf_paths.php');
+include_once($idir.'lib/translation.php');
+include_once($idir.'lib/f_db_select_join_m.php');
 
 // Стринга по който ще се търси
 $tx0 = $_GET['text'];
@@ -39,14 +41,18 @@ $txu = mb_strtoupper(mb_substr($tx,0,1)).mb_substr($tx,1);
 $rz = '';
 $c = 1;
 
+
 // Търсене в заглавия на страници
-$rt = db_select_m('ID,text', 'content', 
+$hidden = 'AND b.hidden=0';
+if(in_edit_mode()) $hidden = '';
+$rt = db_select_join_m('a.ID,a.text', 'content', 'pages', 'a.name=b.title',
       "`name` LIKE 'p%_title' AND ".
-      "`text` LIKE '%".addslashes($tx)."%'".
-      " ORDER BY `text` ASC LIMIT 10");
+      "`text` LIKE '%".addslashes($tx)."%' ".
+      "$hidden".
+      " ORDER BY `text` ASC LIMIT 10", false);
 if(count($rt)) $rz .= "<h2>Страници</h2>\n";
 foreach($rt as $r){
-  $rz .= '<p>'.$c.' <a href="'.current_pth(__FILE__).'open_by_cid.php?cid='.$r['ID'].'">'.
+  $rz .= '<p>'.numC($c).' <a href="'.current_pth(__FILE__).'open_by_cid.php?cid='.$r['ID'].'">'.
         preg_replace("/($tx|$txu)/i", "<span>$1</span>", $r['text'])."</a></p>\n";
   $c++;
 }
@@ -57,7 +63,7 @@ if(db_table_exists('outer_links')) {
 $rl = db_select_m('ID,Title', 'outer_links', "`Title` LIKE '%".addslashes($tx)."%' LIMIT 10"); 
 if(count($rl)) $rz .= "<h2>".translate('sitesearch2_pages')."</h2>\n";
 foreach($rl as $r){
-  $rz .= '<p>'.$c.' <a href="'.current_pth(__FILE__).'open_by_cid.php?lid='.$r['ID'].'">'.
+  $rz .= '<p>'.numC($c).' <a href="'.current_pth(__FILE__).'open_by_cid.php?lid='.$r['ID'].'">'.
         preg_replace("/($tx|$txu)/i", "<span>$1</span>", $r['Title'])."</a></p>\n";
   $c++;
 }
@@ -68,5 +74,11 @@ if(!(count($rt) + count($rl)))
           '" target="_blank">Google Search</a>';
 
 echo $rz;
+
+function numC($c){
+if($c<10) return $c;
+if($c==10) return '0';
+return '';
+}
 
 ?>

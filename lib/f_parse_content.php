@@ -101,6 +101,10 @@ else {
 
 // Заместване на елемента с генерирания html код, който е присвоен на $tx
 if(!isset($tx)) $tx = '';
+if($debug_mode){
+ if($sc) $m = 'S_'; else $m = 'M_';
+ $tx = "<!--$m".$tg[0]." start-->".$tx."<!--$m".$tg[0]." end-->";
+}
 $cnt = substr_replace($cnt,$tx,$p0,$p3-$p0);
 
 if( !empty($debug_mode) ) echo db_req_count()."<br>\n";

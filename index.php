@@ -114,6 +114,10 @@ $cnt = page_cache();
 // Ако страницата не е извлечена от кеша се генерира
 if (!$cnt){
 
+  // Проверване правата на влязъл потребител
+  include_once(mod_path('usermenu'));
+  usermenu(true);
+
   // Заглавие на страницата
   $page_title = translate($page_data['title']);
   

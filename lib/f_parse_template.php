@@ -61,8 +61,10 @@ while ($t['parent']){
 // Заместване на елементите със съдържние и връщане на резултата
 
 $rz = parse_content($cnt);
-$rz = preg_replace('/<!--(.*)-->/Uis', '', $rz);
-$rz = preg_replace('/^\n+|^[\t\s]*\n+/m', '', $rz);
+if(!in_edit_mode()){
+   $rz = preg_replace('/<!--(.*)-->/Uis', '', $rz);
+   $rz = preg_replace('/^\n+|^[\t\s]*\n+/m', '', $rz);
+}
 // Премахване на потребителското меню, ако няма влязъл потребител
 $rz = removeusermenu($rz);
 return $rz;

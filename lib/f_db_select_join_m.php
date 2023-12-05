@@ -18,29 +18,32 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Функцията db_select_join_1($fn,$ta,$tb,$on,$whr,$y = false), дефинирана в този файл
+// Функцията db_select_join_m($fn,$ta,$tb,$on,$whr,$y = false), дефинирана в този файл
 // чете полетата $fn, които са както от запис от таблица $ta, така и от запис на таблица $tb
 // Полетата от първата таблица се означават с a.имеНаПоле, а от втората с - b.имеНаПоле
 // $on е условието за присъединяване на полета от втората таблица
 // Прочетеният запис удовлетворява условието $whr.
-// Функцията връща в асоциативен масив с прочетения запис, или false при неуспех.
-// Ключовете на масива са имената на полетата,
+// Функцията връща в масив от асоциативни масиви с прочетените записи, или false при неуспех.
+// Ключовете на масивите са имената на полетата,
 // а стойностите - съдържанието на полетата от таблиците.
 
 include_once($idir."lib/usedatabase.php");
 
-function db_select_join_1($fn,$ta,$tb,$on,$whr,$y = false){
+function db_select_join_m($fn,$ta,$tb,$on,$whr,$y = false){
 global $db_link, $tn_prefix, $db_req_count;
 $ta = "`$tn_prefix$ta`";
 $tb = "`$tn_prefix$tb`";
-$q="SELECT $fn FROM $ta a LEFT JOIN $tb b ON $on WHERE $whr LIMIT 1;";
+$q="SELECT $fn FROM $ta a LEFT JOIN $tb b ON $on WHERE $whr;"; 
 if ($y) echo "$q<br>\n";
-$r=mysqli_query($db_link,$q);
+$dbr=mysqli_query($db_link,$q);
 $db_req_count++;
-if ($r===false) return false;
-$rc=mysqli_fetch_assoc($r);
-mysqli_free_result($r);
-return $rc;
+$r=array();
+if (!$dbr) return $r; 
+while ( $rc=mysqli_fetch_assoc($dbr) ){
+ $r[]=$rc;
+}
+mysqli_free_result($dbr);
+return $r;
 }
 
 ?>
