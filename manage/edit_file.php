@@ -98,6 +98,14 @@ if (fn){
 }
 else alert("Choose a file to optimize");
 }
+function doToWebp(){
+var fn = fileName();
+if (fn){
+    var fp = "'.$adm_pth.'to_webp.php?f=" + fn;
+    document.location = fp;
+}
+else alert("Choose an image file to convert");
+}
 function doView(){
 var fn = fileName();
 var lc = "'.$pth.'"+fn;
@@ -170,7 +178,9 @@ $page_content .= '</table>
 <input type="button" value="View" onclick="doView();">
 <input type="button" value="Rename" onclick="doRename();">
 <input type="button" value="Delete" onclick="doDelete();">
-<input type="button" value="Optimize" onclick="doOptimize();"></p>
+<input type="button" value="Optimize" onclick="doOptimize();"> 
+<input type="button" value="To webp" onclick="doToWebp();"> 
+</p>
 </form>
 <p>&nbsp;</p>';
 
