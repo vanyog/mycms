@@ -43,12 +43,14 @@ if(isset($_GET['icons']) && ($_GET['icons']=='set')){
 // Коригиране съдържанието на файл site.webmanifest
 $smfn = $icon_apath.'site.webmanifest';
 $fc = file_get_contents($smfn);
-$fc = str_replace('"/android-chrome-', '"'.$icon_path.'android-chrome-', $fc);
-$fc = str_replace('"start_url": "http://localhost"',
-      '"start_url": "'.$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].'"', $fc);
-if(!is_writable($smfn)) die('File: "'.$smfn.
+$fcn = str_replace('"/android-chrome-', '"'.$icon_path.'android-chrome-', $fc);
+$fcn = str_replace('"start_url": "http://localhost"',
+      '"start_url": "'.$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].'"', $fcn);
+if($fcn!=$fc){ 
+   if(!is_writable($smfn)) die('File: "'.$smfn.
     '" is not writable. Copy and paste to it the following content:<p><pre>'.$fc);
-file_put_contents($smfn, $fc);
+   file_put_contents($smfn, $fc);
+}
 // Коригиране съдържанието на файл browserconfig.xml
 $fc = file_get_contents($icon_apath.'browserconfig.xml');
 $fc = str_replace('src="/mstile-150x150.png"', 'src="'.$icon_path.'mstile-150x150.png"', $fc);
