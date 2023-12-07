@@ -2,7 +2,6 @@
 .htaccess
 .ftpquota
 _*
-browserconfig.xml
 conf_database.php
 error_log
 favicons
