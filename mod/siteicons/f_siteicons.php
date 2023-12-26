@@ -41,13 +41,24 @@ if(!file_exists($icon_apath)){
 }
 if(isset($_GET['icons']) && ($_GET['icons']=='set')){
 // Коригиране съдържанието на файл site.webmanifest
-$fc = file_get_contents($icon_apath.'site.webmanifest');
-$fc = str_replace('"/android-chrome-', '"'.$icon_path.'android-chrome-', $fc);
-file_put_contents($icon_apath.'site.webmanifest', $fc);
+$smfn = $icon_apath.'site.webmanifest';
+$fc = file_get_contents($smfn);
+$fcn = str_replace('"/android-chrome-', '"'.$icon_path.'android-chrome-', $fc);
+$fcn = str_replace('"start_url": "http://localhost"',
+      '"start_url": "'.$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].'"', $fcn);
+if($fcn!=$fc){ 
+   if(!is_writable($smfn)) die('File: "'.$smfn.
+    '" is not writable. Copy and paste to it the following content:<p><pre>'.$fc);
+   file_put_contents($smfn, $fc);
+}
 // Коригиране съдържанието на файл browserconfig.xml
 $fc = file_get_contents($icon_apath.'browserconfig.xml');
 $fc = str_replace('src="/mstile-150x150.png"', 'src="'.$icon_path.'mstile-150x150.png"', $fc);
-file_put_contents(dirname(dirname(__DIR__)).'/browserconfig.xml', $fc);
+$bcfn = dirname(dirname(__DIR__)).'/browserconfig.xml';
+if(!is_writable($bcfn))  die('File: "'.$bcfn.
+    '" is not writable. Copy and paste to it the following content:<p><pre>'.
+    str_replace('<','&lt;',$fc));
+file_put_contents($bcfn, $fc);
 //Копиране на файлове favicon.ico и apple-touch-icon.png в главната директория
 copy($icon_apath.'favicon.ico', dirname($icon_apath).'favicon.ico');
 copy($icon_apath.'apple-touch-icon.png', dirname($icon_apath).'apple-touch-icon.png');

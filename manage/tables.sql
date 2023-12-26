@@ -301,7 +301,7 @@ INSERT INTO `content` (`ID`, `name`, `nolink`, `date_time_1`, `date_time_2`, `la
 (261, 'p3_link', 0, '2023-11-14 16:09:29', '2023-11-14 16:09:29', 'bg', 'Относно'),
 (262, 'm1_link', 0, '2023-11-14 16:09:29', '2023-11-14 16:09:29', 'bg', 'Относно'),
 (263, 'cookies_message', 0, '2023-11-15 10:23:30', '2023-11-15 23:59:08', 'bg', '<p>За да бъде приятно Вашето изживяване, този сайт използва &quot;бисквитки&quot;. <a href=\"/index.php?pid=5\">Вижте повече</a>. Съгласни ли сте да приемете тези &quot;бисквитки&quot;?&nbsp; <a href=\"\" onclick=\"cookies_accept();return false;\">ДА</a></p>'),
-(264, 'cookies_message', 0, '2023-11-15 10:30:11', '2023-11-16 17:58:21', 'en', '<p id=\"cookie_message\">This website uses cookies to ensure you get the best experience on our website. <a href=\"/index.php?pid=108\">More info</a>. &nbsp; <a href=\"\" onclick=\"cookies_accept();return false;\">Got It</a>!</p>\r\n'),
+(264, 'cookies_message', 0, '2023-11-15 10:30:11', '2023-11-16 17:58:21', 'en', '<p id=\"cookie_message\">This website uses cookies to ensure you get the best experience on our website. <a href=\"/index.php?pid=5\">More info</a>. &nbsp; <a href=\"\" onclick=\"cookies_accept();return false;\">Got It</a>!</p>\r\n'),
 (265, 'p3_title', 0, '2023-11-15 16:00:56', '2023-11-16 17:57:23', 'en', 'About'),
 (266, 'p3_content', 0, '2023-11-15 16:01:48', '2023-11-18 11:25:41', 'en', '<p>Usually every site has such a page. Edit this page to present information relevant to your site.</p>'),
 (267, 'p3_link', 0, '2023-11-15 16:02:01', '2023-11-15 16:02:01', 'en', 'About'),
