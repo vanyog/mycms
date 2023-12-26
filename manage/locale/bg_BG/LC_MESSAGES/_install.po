@@ -1,0 +1,73 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: VanyoG CMS\n"
+"POT-Creation-Date: 2023-12-25 08:12+0200\n"
+"PO-Revision-Date: 2023-12-26 10:40+0200\n"
+"Last-Translator: Vanyo Georgiev <info@vanyog.com>\n"
+"Language-Team: info@vanyog.com\n"
+"Language: bg\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.4.2\n"
+"X-Poedit-Basepath: ../../..\n"
+"X-Poedit-SourceCharset: CP1251\n"
+"X-Poedit-SearchPath-0: _install.php\n"
+
+#: _install.php:103
+msgid "Creation of tables in the database"
+msgstr "Създаване на таблици в базата данни"
+
+#: _install.php:104
+#, php-format
+msgid "File %s exists."
+msgstr "Файл %s съществува."
+
+#: _install.php:106
+msgid ""
+"Click here</a> to continue with creation of data tables. \r\n"
+"If there is data in the tables, it will be deleted and replaced with new "
+"data.</p>\r\n"
+"<p>Or remove conf_database.php file to start a new instalation.</p>"
+msgstr ""
+"Щракнете тук</a> за да продължите със създаване и попълване на таблици в "
+"базата данни. \n"
+"\n"
+"Ако таблиците съществуват и в тях има данни, тези данни ще бъдат изтрити "
+"и заменени с нови.</p>\n"
+"\n"
+"<p>За да смените базата данни, изтрийте файл conf_database.php и ще "
+"започне ново инсталиране.</p>"
+
+#: _install.php:112
+msgid "Language"
+msgstr "Език на тази страница"
+
+#: _install.php:116
+msgid "Host"
+msgstr "Хост"
+
+#: _install.php:117
+msgid "Database"
+msgstr "Име на базата данни"
+
+#: _install.php:118
+msgid "User"
+msgstr "Потребител за базата данни"
+
+#: _install.php:119
+msgid "Password"
+msgstr "Парола на потребителя за базата данни"
+
+#: _install.php:120
+msgid "Table mane prefix"
+msgstr "Представка за имената на таблиците"
+
+#: _install.php:123
+msgid "Save"
+msgstr "Запазване"
+
+#: _install.php:134
+msgid "Creation of conf_database.php file"
+msgstr "Създаване на файл conf_database.php"
