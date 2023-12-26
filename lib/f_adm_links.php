@@ -57,7 +57,7 @@ else {
   if(isset($page_data['ID'])) $npid = db_table_field('ID', "pages", "`ID`>".$page_data['ID']." ORDER BY `ID` ASC LIMIT 1");
 
   $mphp = $phpmyadmin_site;
-  $go = $_SERVER['REQUEST_SCHEME'].'://'.$local_host.$_SERVER['REQUEST_URI'];
+  $go = 'http://'.$local_host.$_SERVER['REQUEST_URI'];
   $gon = 'go to LOCAL';
   if (is_local()){
     $mphp = $phpmyadmin_local;

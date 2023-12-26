@@ -33,8 +33,12 @@ $ddir = $idir;
 
 include($idir.'lib/f_db_select_m.php');
 include($idir.'lib/f_db_table_field.php');
+include($idir.'lib/f_db_delete_where.php');
 include($idir.'lib/f_encode.php');
+include($idir.'lib/f_unset_self_query_var.php');
 include($idir.'lib/translation.php');
+
+if(isset($_GET['del'])) delete_record();
 
 $d = 0; // Брой на последните дни, за които се показва статистика
 // Стойност 0 означава цялата статистика за всички дни
@@ -149,7 +153,11 @@ foreach($da as $d){
   $a = $d['count']/$max * $m;
   $t = date("N",strtotime($d['date']));
   $rz .= '<tr><td><a href="page_stats.php?date='.$d['date'].'">'.$d['date']."</a> $t".
-         '</td><td><div style="background-color:red;width:'.$a.'px;">'.$d['count'].'</div></td>';
+         '</td><td><div style="display:inline-block; background-color:red;width:'.$a.'px;">'.
+         $d['count'].'</div>';
+  $dv =  $d['count']/$ave;
+  if($dv>10 && isset($d['ID'])) $rz .= ' <a href="'.set_self_query_var('del',$d['ID']).'">x</a>';    
+  $rz .= '</td>';
   $rz .= "</tr>\n";
 }
 $rz .= '</table>';
@@ -234,5 +242,16 @@ foreach($da as $d){
   $rz .= "</tr>\n";
 }
 $rz .= '</table>';
-return $rz;}
+return $rz;
+}
+
+// Изтриване на запис с номер $_GET['del']
+
+function delete_record(){
+if(!is_numeric($_GET['del'])) return '';
+db_delete_where('visit_history', '`ID`='.$_GET['del'], false);
+$q = unset_self_query_var('del');
+header("Location: $q");
+}
+
 ?>

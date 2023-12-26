@@ -72,7 +72,8 @@ function sDivPosition(){
   var s = sDiv.style;
   s.position = "fixed";//alert(sd);
   s.top = r.bottom + "px";
-  s.left = r.left + sd.offsetLeft + "px";
+  if(window.visualViewport.offsetLeft) s.left = window.visualViewport.offsetLeft + "px";
+  else s.left = r.left + sd.offsetLeft + "px";
   s.zIndex = "1";
 }
 window.addEventListener("resize", sDivPosition);

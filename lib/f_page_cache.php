@@ -43,6 +43,7 @@ include_once($idir.'lib/f_db_delete_where.php');
 
 if(isset($_GET['purge'])){
   global $db_link;
+  if(!$db_link) die('Database is not accessible.');
   if(!$_GET['purge']) $_GET['purge'] = stored_value('main_index_pageid',1);
   if($_GET['purge']=='all') $q = '1';
   else $q = "`page_ID`=".(1*$_GET['purge']);
@@ -120,6 +121,7 @@ $rz = $other
   || in_edit_mode()
   || count($_POST)
   || isset($_COOKIE['PHPSESSID'])
+  || is_local()
   || (!is_local() && show_adm_links())
   || !empty($debug_mode)
   ;
@@ -142,7 +144,7 @@ if (isset($c['pid']) && is_numeric($c['pid'])) db_delete_where('page_cache',"`pa
 // ѕри $y=false - само премахва недопустимите параметри
 
 function acceptable($u, $y){
-global $edit_name;
+global $edit_name, $page_id;
 $a = parse_url($u);
 $b = array();
 if (isset($a['query'])) parse_str($a['query'],$b);
@@ -153,9 +155,16 @@ foreach($ka as $k){
      unset($b[$k]);
      continue;
   }
-  if (strpos($o,"=$k=")===false)
+  if (strpos($o,"=$k=")===false){
      if ($y) return '';
      else unset($b[$k]);
+  }
+  if(($k=='pid')||($k=='lid')){ 
+     $c = array();
+     if (preg_match('/\d?/', $b[$k], $c) && $c[0]) $b[$k] = $c[0];
+     else if(($k=='lid') && !in_array($b[$k], array('cat','all','new','old','click')))
+            $b[$k] = $page_id;
+  }
 }
 ksort($b);
 $a['query'] = http_build_query($b);

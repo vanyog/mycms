@@ -98,7 +98,7 @@ var v = te.value;
 var n = v.substring(0,s)+t1+v.substring(e,v.length);
 te.value = n;
 e = s + t1.length;
-if(sl){
+if(sl===true){
   te.selectionStart = s;
   te.selectionEnd = e;
 }
@@ -113,7 +113,7 @@ te.focus();
 var s = te.selectionStart;
 var e = te.selectionEnd;
 var v = te.value;
-if (t2.length) v = v.substring(0,e)+t2+v.substring(e,v.length); 
+if (t2.length) v = v.substring(0,e)+t2+v.substring(e,v.length);
 te.value = v.substring(0,s)+t1+v.substring(s,v.length);
 s += t1.length;
 e += t1.length;
@@ -133,7 +133,11 @@ metaPressed = false;
 shiftPressed = false;
 lastEv = "";
 }
-function editor_onKey(e,v){
+function editor_onKey(e,v){ 
+if(event.key=="\""){ event.preventDefault(); insert_2_texts("\"", "\""); }
+if(event.key=="\'"){ event.preventDefault(); insert_2_texts("\'", "\'"); }
+if(event.key=="{") { event.preventDefault(); insert_2_texts("{", "}"); }
+if(event.key=="(") { event.preventDefault(); insert_2_texts("(", ")"); }
 lastEv = v;
 if(shiftPressed && !metaPressed && (v.key=="Enter")) insert_text("<br>", false);
 var ya = "'.encode('ÿ').'";

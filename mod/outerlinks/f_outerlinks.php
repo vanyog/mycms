@@ -277,6 +277,25 @@ if(e.ctrlKey || e.metaKey) n -= 5; else n += 5;
 u.value = "" + n;
 u.focus();
 }
+if(typeof ajaxO == "undefined"){
+if (window.XMLHttpRequest) ajaxO = new XMLHttpRequest();
+else ajaxO = new ActiveXObject("Microsoft.XMLHTTP");
+}
+var clickedLink = "";
+function countClick(e){
+var a = "'.current_pth(__FILE__).'ajax_count_link.php"
+        + "?a=" + Math.floor(Math.random() * 10000)
+        + "&l=" + e.id;
+clickedLink = e.href;        
+ajaxO.onreadystatechange = onCountResponse;
+ajaxO.open("GET", a, true);
+ajaxO.send();
+}
+function onCountResponse(){
+if (ajaxO.readyState == 4 && ajaxO.status == 200){
+  var r = ajaxO.responseText;
+  window.open(clickedLink, "_blank");
+}}
 </script>
 ';
 
@@ -330,8 +349,10 @@ foreach($la as $l){
   if($rewrite_on)
     $rz .= "/$page_id/lid/".$l1['ID']."/";
   else
-    $rz .= set_self_query_var('lid',$l1['ID']);
-    $rz .= '" title="'.(isset($l1['link'])?urldecode($l1['link']):'').
+//    $rz .= set_self_query_var('lid',$l1['ID']);die(print_r($l1,true));
+    $rz .= $l1['link'];
+    $rz .= '" onclick="countClick(this);return false;'.
+           '" title="'.(isset($l1['link'])?urldecode($l1['link']):'').
            '" '.$tb.'id="lk'.$l1['ID'].'">'.stripslashes($l1['Title'])."</a>";
   $rz .= outerlinks_autocomment($l1);
 //  if($l1!=$l) die($rz."<br>".print_r($l,true)."<br>".print_r($l,true));
@@ -538,10 +559,9 @@ else return '<input type="radio" name="link_id" value="'.$d['ID'].'" onclick="li
 
 // Обработка на данните, изпратени с $_POST в режим на редактиране
 // ----------------------------------------------------
-function edit_link($lid){
+function edit_link($lid){ //var_dump(in_edit_mode()); die;
 if ( ! in_edit_mode() ) return;
 global $tn_prefix,$db_link;
-
 $id = 0;
 if( isset($_POST['link_id']) && is_numeric($_POST['link_id']) ) 
    $id = $_POST['link_id'];
@@ -590,7 +610,7 @@ if ( ($q2!="`up`=$lid, ") && (($_POST['action']=='delete') || $_POST['link'] || 
 // ------------------------------------------
 function outerlenks_all($up, $tx, $lv = 1){
 $rz = '';
-// Добавка към SQL за пропускане на private линковете
+// Добавка към SQL заявката за пропускане на private линковете
 $qp = '';
 if (!in_edit_mode()) $qp = 'AND `private`=0';
 $dt = db_select_m('*', 'outer_links', "`up`=$up AND (`link`>'')$qp ORDER BY `place` ASC");
@@ -599,7 +619,7 @@ foreach($dt as $d){
   if($d['private']) $pr = ' class="private"';
   $rz .= "<p$pr><a href=\"".
   set_self_query_var('lid',$d['ID']).'" title="'.urldecode($d['link']).
-  '" target="_blank">'.stripslashes($d['Title'])."</a>";
+  '" target="_blank">'.stripslashes(isset($d['Title']) ? $d['Title'] : '')."</a>";
   if ($d['Comment']) $rz .= outerlinks_autocomment($d);
   $rz .= "</p>\n";
 }

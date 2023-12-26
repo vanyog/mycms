@@ -52,7 +52,7 @@ return empty($web_host) || ($_SERVER['HTTP_HOST']!=$web_host);
 // - получи $_GET['im']=='admin'
 
 function in_edit_mode(){
-global $edit_name, $edit_value; // echo "$edit_name, $edit_value"; die;
+global $edit_name, $edit_value;// die(print_r($_COOKIE,true ));
 if (isset($_COOKIE['PHPSESSID']) || show_adm_links()) return query_or_cookie($edit_name,$edit_value);
 return false;
 }

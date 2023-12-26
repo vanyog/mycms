@@ -34,7 +34,8 @@ $q = "UPDATE `$tn_prefix$t` SET ";
 foreach($d as $n=>$v){
   if ($n=='ID') continue;
   if ( ($v=='NOW()') || ($v=='NULL') ) $q .= "`$n`=$v,";
-  else $q .= "`$n`='".addslashes($v)."',";
+  else if($v[0]=='`') $q .= "`$n`=$v,";
+       else $q .= "`$n`='".addslashes($v)."',";
 }
 $q = substr($q,0,strlen($q)-1)." WHERE `ID`=".$d['ID'].";";
 if ($y) return "$q<br>\n";

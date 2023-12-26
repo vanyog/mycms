@@ -29,6 +29,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 error_reporting(E_ALL); ini_set('display_errors',1);
 
+$language = 'en';
+$languages = array('bg'=>'Bulgarian','en'=>'English');
+if(isset($_GET['lang']) && in_array($_GET['lang'], array_keys($languages)))
+    $language = $_GET['lang'];
+$locales = array('bg'=>'bg_BG','en'=>'en_US');
+putenv('LANG='.$locales[$language]);
+setlocale(LC_ALL, $locales[$language]);
+bindtextdomain("_install", "locale");
+textdomain("_install");
+
 include('conf_manage.php');
 
 if (isset($_GET['c'])){
@@ -83,34 +93,45 @@ echo '<p>All done.</p>
 // да се запишат във файл conf_database.php.
 //
 function create_conf_database(){
-global $idir, $ddir;
+global $idir, $ddir, $languages, $language;
 include_once($idir.'lib/o_form.php');
 // Ако файл conf_database.php вече съществува
 if (file_exists($ddir.'conf_database.php')){
   // Ако вече е отговорено да се продължи
   if (isset($_GET['continue'])&&($_GET['continue']=='yes')) { return; }
   // Показва се бутон за продължаване
-  echo '<h1>Creation of tables in the database</h1>
-<p>File '.$ddir.'<strong>conf_database.php</strong>'.' exists.</p>
+  echo '<h1>'._('Creation of tables in the database').'</h1>
+<p>'.sprintf(_('File %s exists.'),$ddir.'<strong>conf_database.php</strong>').'</p>
 <p><a href="'.$_SERVER['PHP_SELF'].
-'?continue=yes">Click here</a> to continue with creation of data tables. 
+'?continue=yes">'._('Click here</a> to continue with creation of data tables. 
 If there is data in the tables, it will be deleted and replaced with new data.</p>
-<p>Or remove conf_database.php file to start a new instalation.</p>';
+<p>Or remove conf_database.php file to start a new instalation.</p>');
   die;
 }
 $f = new HTMLForm('pform');
-$i = new FormInput('Host','host','text','localhost');     $f->add_input($i);
-$i = new FormInput('Database','database','text','mycms'); $f->add_input($i);
-$i = new FormInput('User','user','text');                 $f->add_input($i);
-$i = new FormInput('Password','password','text');         $f->add_input($i);
-$i = new FormInput('Table mane prefix','prefix','text');
+$i = new FormSelect(_('Language'), 'language', $languages, $language);
+     $i->js = 'onchange="langChange()"';
+     $i -> values = 'k';
+     $f->add_input($i);
+$i = new FormInput(_('Host'),'host','text','localhost');     $f->add_input($i);
+$i = new FormInput(_('Database'),'database','text','mycms'); $f->add_input($i);
+$i = new FormInput(_('User'),'user','text');                 $f->add_input($i);
+$i = new FormInput(_('Password'),'password','text');         $f->add_input($i);
+$i = new FormInput(_('Table mane prefix'),'prefix','text');
      $i -> nocheck = true; 
      $f->add_input($i);
-$i = new FormInput('','','button','Save'); 
+$i = new FormInput('','','button',_('Save')); 
      $i -> set_event('onclick','ifNotEmpty_pform();');
      $f->add_input($i);
 if (count($_POST)) process_data();
-else { echo "<h1>Creation of conf_database.php file</h1>\n".$f->html(); die; }
+else { echo '
+<script>
+function langChange(){
+var l = document.forms.pform.language.value;
+document.location = "_install.php?lang=" + l;
+}
+</script>
+<h1>'._('Creation of conf_database.php file').'</h1>'."\n".$f->html(); die; }
 }
 
 //
