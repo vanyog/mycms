@@ -401,9 +401,9 @@ function user_can_visit($i){
 global $page_id;
 $rz = db_table_field('yes_no','permissions',"`user_id`=$i AND `type`='all'", false);
 if (!($rz===false)) return $rz;
-$rz = db_table_field('yes_no','permissions',"`user_id`=$i AND `type`='visit' AND `object`=$page_id", false);
+$rz = db_table_field('yes_no','permissions',"`user_id`=$i AND `type`='visit' AND `object`='$page_id'", false);
 if (!($rz===false)) return $rz;
-$rz = db_table_field('yes_no','permissions',"`user_id`=0 AND `type`='visit' AND `object`=$page_id", false);
+$rz = db_table_field('yes_no','permissions',"`user_id`=0 AND `type`='visit' AND `object`='$page_id'", false);
 if (!($rz===false)) return $rz;
 return stored_value('user_can_visit',false);
 }

@@ -38,7 +38,8 @@ function usermenu($nom = false){
 global $page_id, $page_data, $can_edit, $can_create, $can_manage, $can_visit, $pth, 
        $adm_pth, $page_header, $added_styles;
 
-if(!isset($page_id)){ 
+// Ако не е задаадена стойност на $page_id
+if(!isset($page_id)){ var_dump($_SERVER['HTTP_REFERER']); die;
   if(!isset($_SERVER['HTTP_REFERER'])) 
      //$_SERVER['HTTP_REFERER']='http://nc/index.php?pid=96';
      die('Error in modul USERMENU. No HTTP_REFERER is set.');
