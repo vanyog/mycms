@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Ако има стойност $_GET[$k] се установява бисквитка с тази стойност.
 
 function mysetcookie($k,$v){
-$rz = false; 
+$rz = false;// var_dump($_COOKIE['cookies_accept']); die();
 if(!isset($_COOKIE['cookies_accept']) || ($_COOKIE['cookies_accept']!='yes')){
    if (isset($_GET['cookies_accept']) && ($_GET['cookies_accept']=='yes') ){
        $rz = setcookie('cookies_accept', 'yes', 

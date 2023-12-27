@@ -34,8 +34,9 @@ if ($y===true) echo $q."<br>\n";
 try 
 { $r=mysqli_query($db_link,$q); }
 catch (Exception $e){
-if(mysqli_errno($db_link)==1146) 
-  die(mysqli_error($db_link).'<br>Run <a href="manage/_install.php">manage/_install.php</a> to crate it.');
+  if(mysqli_errno($db_link)==1146) 
+     die(mysqli_error($db_link).'<br>Run <a href="manage/_install.php">manage/_install.php</a> to crate it.');
+  if(substr($_SERVER['REMOTE_ADDR'],0,4)=='127.') {echo '<pre>'; debug_print_backtrace();}
   die("<p>function db_table_field<br>".mysqli_errno($db_link).":".mysqli_error($db_link)."<br>$q</p>"); 
 }
 $db_req_count++;
