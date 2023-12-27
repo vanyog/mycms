@@ -36,17 +36,23 @@ if (!session_id() && isset($_COOKIE['PHPSESSID'])) session_start();
 function usermenu($nom = false){
 
 global $page_id, $page_data, $can_edit, $can_create, $can_manage, $can_visit, $pth, 
-       $adm_pth, $page_header, $added_styles;
+       $adm_pth, $page_header, $added_styles, $main_index;
 
-if(!isset($page_id)){ 
-  if(!isset($_SERVER['HTTP_REFERER'])) 
-     //$_SERVER['HTTP_REFERER']='http://nc/index.php?pid=96';
+// Ако не е задаадена стойност на $page_id
+if(!isset($page_id)){
+  if(!isset($_SERVER['HTTP_REFERER'])) // Търсене в адреса на страницата, от която се идва
      die('Error in modul USERMENU. No HTTP_REFERER is set.');
   $r = array();
   preg_match_all('/pid=(\d+)/', $_SERVER['HTTP_REFERER'], $r);//die($_SERVER['HTTP_REFERER']);
   if(isset($r[1][0])) $page_id = $r[1][0];
   else {
-     die('Error in modul USERMENU. Cannot determine pid parameter.');
+     // Проверка дали не се идва от главната страница
+     $h = $_SERVER['REQUEST_SCHEME']."://".$_SERVER['HTTP_HOST']."$main_index?";
+     $l = strlen($h);
+     // Ако се идва от главната страница $page_id е нейния ID
+     if(substr($_SERVER['HTTP_REFERER'], 0, $l)==$h) $page_id = stored_value('main_index_pageid',1);
+     // Ако и това не става - фатална грешка
+     if(!$page_id) die('Error in modul USERMENU. Cannot determine pid parameter.');
   }
 }
 

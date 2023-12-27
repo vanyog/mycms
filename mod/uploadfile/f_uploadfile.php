@@ -165,7 +165,7 @@ else {
          $f = $fn;
       }
       // Ако е инсталиран скрипта lazysizes.min.js
-      if(strpos($page_header, 'lazysizes.min.js')>0){
+      if(strpos(isset($page_header) ? $page_header : '', 'lazysizes.min.js')>0){
          $rz .= '<img data-src="'.$f."\"$ss alt=\"".stripslashes($fr['text']).'" id="'.$fr['name'].'" class="lazyload">';
 	  }
       else {
