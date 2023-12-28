@@ -227,7 +227,7 @@ if (file_exists($cka)){
   $this->ckbutton = '<input type="button" value="CKEditor" onclick="CKEDITOR.replace(\''.$this->name.'\');"><br>';
 }
 else {
-  $sc = '   <script src="//cdn.ckeditor.com/4.5.7/full/ckeditor.js"></script>'."\n";
+  $sc = '   <script async src="//cdn.ckeditor.com/4.5.7/full/ckeditor.js"></script>'."\n";
   if (strpos($page_header, $sc)===false) $page_header .= $sc;
   $this->ckbutton = '<input type="button" value="CKEditor" onclick="CKEDITOR.replace(\''.$this->name.'\');"><br>';
 }
@@ -240,7 +240,7 @@ if ($this->size) $rz .=  "cols=\"$this->cols\" rows=\"$this->rows\"";
 if($id) $rz .= ' id="'.$id.'"';
 $rz .= "$this->js"."$dsbl>$this->text</textarea>";
 if (!$it) $rz = $this->caption.$t2.$rz.$t3."\n";
-else $rz = "<tr>\n<th>$this->caption</th>\n<td>$rz</td>\n</tr>";
+else $rz = "<tr>\n<th><label for=\"$this->name\">$this->caption</label></th>\n<td>$rz</td>\n</tr>";
 return $rz;
 }
 
