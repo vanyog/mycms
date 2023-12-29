@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // с име CONTENT, който се пази в таблица 'scripts'.)
 
 function ogdescription(){
-global $page_content, $og_description, $site_encoding;
+global $page_content, $og_description, $site_encoding;// die($og_description);
 if(!empty($og_description)) return $og_description;
 if(empty($page_content)) return '';
 $a = strip_tags($page_content);

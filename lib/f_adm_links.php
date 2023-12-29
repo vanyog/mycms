@@ -61,11 +61,12 @@ else {
   $gon = 'go to LOCAL';
   if (is_local()){
     $mphp = $phpmyadmin_local;
-    $go = $_SERVER['REQUEST_SCHEME'].'://'.$web_host.substr($_SERVER['REQUEST_URI'],strlen($pth)-1);
+//    $go = $_SERVER['REQUEST_SCHEME'].'://'.$web_host.substr($_SERVER['REQUEST_URI'],strlen($pth)-1);
+    $go = $_SERVER['REQUEST_SCHEME'].'://'.$web_host.$_SERVER['REQUEST_URI'];
     if (substr($_SERVER['REQUEST_URI'],0,strlen($adm_pth))==$adm_pth){
        $wp = stored_value('admin_path','manage').'/';
        if ($wp[0]!='/') $wp = $pth.$wp;
-       $go = str_replace($adm_pth, $wp, $go);
+       $go = str_replace($adm_pth, $wp, $go);//die("$adm_pth, $wp, $go");
     }
     $gon = 'go to WEB';
     $w3c = ''; $mob = ''; $spt = '';

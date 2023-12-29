@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include_once($idir.'lib/translation.php');
 
 function parse_template($p){
-global $content_date_time, $debug_mode, $adm_pth;
+global $content_date_time, $debug_mode, $adm_pth, $page_content;
 
 // Номер на използвания за показване на страницата шаблон
 $tid = $p['template_id'];

@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // При грешка в изпълнението на функция eval(), адреса на страницата се запазва в таблица
 // `options` под име 'eval_error_uri'.
 
-global $debug_mode;
+global $debug_mode, $page_content;
 
 include_once($idir.'lib/f_translate.php');
 include_once($idir.'lib/f_adm_links.php');
@@ -34,7 +34,7 @@ include_once($idir.'mod/rawfile/f_rawfile.php');
 function parse_content($cnt){
 global $page_options, $page_data, $page_title, $page_content, $body_adds, $page_header, $added_styles,
        $content_date_time,
-       $idir, $pth, $adm_pth, $apth, $mod_pth, $mod_apth,
+       $idir, $ddir, $pth, $adm_pth, $apth, $mod_pth, $mod_apth,
        $can_visit, $can_manage, $site_encoding, $debug_mode, $no_style, $global_filters;
 
 $l = strlen($cnt);
@@ -68,8 +68,10 @@ $sc = script($tg[0]);
 if (!$sc){ // Ако няма такъв скрипт се търси модул с това име
   $f = strtolower($tg[0]);
   $fn = mod_path($f);
-  if( !empty($debug_mode) ) 
-       echo 'Module <a href="'.$adm_pth.'edit_file.php?f='.current_pth($fn).'">'.$tg[0]."</a>(".( isset($tg[1]) ? $tg[1] : '' ).") ";
+  if( !empty($debug_mode) ){ //die(relative_to($idir,$fn));
+       echo 'Module <a href="'.$adm_pth.'edit_file.php?f='.relative_to($idir,$fn).'">'.$tg[0].
+            "</a>(".( isset($tg[1]) ? $tg[1] : '' ).") ";
+  }
   if ($fn){
     // Зареждане на файл _style.css, ако в директорията на модула има такъв
     $sf = dirname($fn).'/_style.css';
