@@ -62,7 +62,7 @@ if (count($_POST) && isset($_POST['link'])) edit_link($lid);
 $l = db_select_1('*','outer_links',"`ID`=$lid");
 
 // Ако е линк се изброява кликването и се препраща към адреса на линка
-if (isset($l['link']) && $l['link']>''){
+/*if (isset($l['link']) && $l['link']>''){
  $i = $l['link'];
  if(is_numeric($l['link'])){
     $l = db_select_1('*','outer_links',"`ID`=".$l['link']);
@@ -79,7 +79,7 @@ if (isset($l['link']) && $l['link']>''){
  if(isset($_GET['h'])) $l['link'] .= '#'.$_GET['h'];
  header('Location: '.$l['link']);
  die;
-}
+}*/
 
 // Път към началната страница
 $tr = link_tree($lid);
@@ -294,7 +294,8 @@ ajaxO.send();
 function onCountResponse(){
 if (ajaxO.readyState == 4 && ajaxO.status == 200){
   var r = ajaxO.responseText;
-  window.open(clickedLink, "_blank");
+  if(clickedLink.indexOf("'.$_SERVER['HTTP_HOST'].'")>-1) window.location = clickedLink;
+  else window.open(clickedLink, "_blank");
 }}
 </script>
 ';
@@ -334,7 +335,9 @@ if (count($la)) $rz .= '<p>'.count($la).' '.translate('outerlinks_links')."</p>\
 foreach($la as $l){
   $l2 = $l['ID'];
   $tb = 'target="_blank" ';
+  // Ако поле `link` e число това е дубликат на друг линк
   if(is_numeric($l['link'])/* && $l['link']*/){
+    // четат се данните за другия линк
     $l1 = db_select_1('*', 'outer_links', '`ID`='.$l['link']); //die(print_r($l1,true));
     $l1['place'] = $l['place'];
     $l['link'] = $l1['link'];
@@ -345,17 +348,19 @@ foreach($la as $l){
   if(($l1['ID']!=$l2) && empty($l1['link'])) $tb = '';
   $cl = '';
   if ($l['private']) $cl = ' class="private"';
-  $rz .= "<p$cl>".edit_radio($l1, $l2).'<img src="'.$p.'go.gif" alt=""> '."\n".'<a href="';
+  $rz .= "<p$cl>".edit_radio($l1, $l2).'<img src="'.$p.'go.gif" alt=""> '."\n".
+         '<a href="';
   if($rewrite_on)
     $rz .= "/$page_id/lid/".$l1['ID']."/";
   else
-//    $rz .= set_self_query_var('lid',$l1['ID']);die(print_r($l1,true));
-    $rz .= $l1['link'];
+    if(!$l1['link']){
+       $rz .= set_self_query_var('lid',$l1['ID']).'#outer_links';
+    }
+    else $rz .= $l1['link'];
     $rz .= '" onclick="countClick(this);return false;'.
            '" title="'.(isset($l1['link'])?urldecode($l1['link']):'').
            '" '.$tb.'id="lk'.$l1['ID'].'">'.stripslashes($l1['Title'])."</a>";
   $rz .= outerlinks_autocomment($l1);
-//  if($l1!=$l) die($rz."<br>".print_r($l,true)."<br>".print_r($l,true));
   if (in_edit_mode()) $rz .= ' <a href="'.$adm_pth.'duplicate_record.php?t=outer_links&r='.$l['ID'].
                             '" onclick="doDuplicate(this);return false;">2</a>';
   if($spage) $rz .= ' <img class="sid" src="'.$p.'search.png" alt="" onclick="onSearchClick(this);"> ';

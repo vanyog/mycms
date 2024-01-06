@@ -40,7 +40,7 @@ $r = false;
 try { $r = mysqli_query($db_link,$q); }
 catch(Exception $e){ die($e->getMessage()."<br>".$q); }
 $db_req_count++;
-if ($r===false) return false;
+if (($r===false) || ($r->num_rows==0)) return false;
 $rc=mysqli_fetch_assoc($r);
 mysqli_free_result($r);
 return $rc;

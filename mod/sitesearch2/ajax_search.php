@@ -25,7 +25,7 @@ $idir = dirname(dirname(__DIR__)).'/';
 $ddir = $idir;
 
 include_once($idir.'conf_paths.php');
-include_once($idir.'lib/translation.php');
+include_once($idir.'lib/translation.php');	
 include_once($idir.'lib/f_db_select_join_m.php');
 
 // Стринга по който ще се търси
@@ -35,6 +35,8 @@ $tx0 = $_GET['text'];
 $tx = str_replace('/', '\/', $tx0);
 $tx = str_replace('?', '\?', $tx);
 $tx = str_replace('.', '\.', $tx);
+$tx = str_replace('(', '\(', $tx);
+$tx = str_replace(')', '\)', $tx);
 // С първа главна буква
 $txu = mb_strtoupper(mb_substr($tx,0,1)).mb_substr($tx,1);
 

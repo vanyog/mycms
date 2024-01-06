@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-include("ta_ctag.php");
+include_once("ta_ctag.php");
 include_once($idir.'lib/f_mod_list.php');
 include_once($idir.'lib/f_mod_picker.php');
 
@@ -37,13 +37,25 @@ if(tf) if(!window.find(tf)){
 //   alert(ta.value.search(tf));
 }
 }
+function insertSy(a){
+if(tefc) insert_text(a.innerHTML, false);
+}
 </script>
 ';
 
 $body_adds .= ' onload="findAndSelect()"';
 
+// Съставяне на поредица от символи за вмъкване на техните HTML кодове при щракване върху тях
+$or = db_select_1('*', 'options', "`name`='editor_sybols_to_insert'");
+if($or===false) $lk = 'new_record.php?t=options&name=editor_sybols_to_insert';
+else $lk = 'edit_record.php?t=options&r='.$or['ID'];
+$esytoi = "<a href=\"$lk\">Symbols</a>: ";
+$ss = array();
+if($or) $ss = explode(" ", $or['value']);
+foreach($ss as $s){ $esytoi .= '<span style="cursor:pointer;" onclick="insertSy(this);">'.$s.'</span> '; }
+
 function editor($n,$tx){//die($n);
-global $ta_ctag, $ta_fctag, $page_header, $idir, $adm_pth;
+global $ta_ctag, $ta_fctag, $page_header, $idir, $adm_pth, $esytoi;
 $tx = str_replace('&','&amp;',$tx);
 $tx = str_replace(chr(60).'!--$$_',chr(60).' !--$$_',$tx);
 if(!empty($tx)) $row_count = substr_count($tx, "\n") + 2;
@@ -190,10 +202,11 @@ te.selectionEnd = s;
 '.mod_picker();
 } else $js = '';
 $tec += 1;
-// Връщане на резултата
-$rz = $js.
 
-'<input type="button" value="tag" onclick="doInsertTag();">'.'
+// Връщане на резултата
+$rz = $js.$esytoi.'<br>
+
+<input type="button" value="tag" onclick="doInsertTag();">'.'
 '.make_tag_button('a','tag_a1','tag_a2').'
 '.make_insert_2_button('b','\'<b>\'','\'</b>\'', '').'
 '.make_insert_2_button('i','\'<i>\'','\'</i>\'', '').'
