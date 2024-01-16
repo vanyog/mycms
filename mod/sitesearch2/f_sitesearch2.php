@@ -24,6 +24,7 @@ include_once($idir.'lib/translation.php');
 include_once($idir.'lib/f_db_select_m.php');
 
 global $page_header, $main_index;
+
 $page_header .= '<style>
 #search_button{ background-image:url('.current_pth(__FILE__).'images/search19x19.png); background-repeat: no-repeat; background-position: center; }
 #search_clear { background-image:url('.current_pth(__FILE__).'images/clear19x19.png); background-repeat: no-repeat; background-position: center; }
@@ -187,12 +188,12 @@ global $language, $pth;
   $wa = array_unique(explode(' ',$ts));
   // Отчитане на статистика за думите в таблица sitesearch_words
   site_search_stat($wa);
-  // Добавяне на дума $wa в WHARE частта на SQL зявката за търсене
+  // Добавяне на думите $wa в WHARE частта на SQL зявката за търсене
   $q = where_part($wa,'AND');
   //  
   $msg = '';
   if (count($wa)>1) $msg = translate('sitesearch_allwords');
-  $r = db_select_m('name','content',"($q) AND `language`='$language' ORDER BY `date_time_2` DESC");
+  $r = db_select_m('name','content',"($q) AND `language`='$language' ORDER BY `date_time_2` DESC", false);
   //         ,      
   if (!count($r)){
     $q = where_part($wa,'OR');
@@ -233,18 +234,20 @@ function siteserch_pgids($r){
 
 //
 //  WHERE   SQL     
-// $wa -   
+// $wa -  масив думи 
 // $o  - ,   'AND'  'OR'
 //
 function where_part($wa,$o){
   $q = '';
+  $like = stored_value('sitesearch2_like_not_match') == 'true';
   foreach($wa as $w){
     $w1 = addslashes(trim($w));
     if ($w){
-//       if ($q) $q .= " $o `text` LIKE '%$w1%'";
-//       else $q .= "`text` LIKE '%$w1%'";
-      if (strlen($w)>3){
-       if ($q) $q .= " $o MATCH (`text`) AGAINST ('$w1')";
+       if ($like) {
+          if ($q) $q .= " $o `text` LIKE '%$w1%'";
+          else $q .= "`text` LIKE '%$w1%'";
+      } else if (strlen($w)>3){
+       if ($q) $q .= " $o MATCH (`text`) AGAINST ('$w1'";
        else $q .= "MATCH (`text`) AGAINST ('$w1')";
       }
       else {

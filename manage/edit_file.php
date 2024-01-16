@@ -155,13 +155,18 @@ for($i=0; $i<count($dl); $i++){
   if ($j>count($dl)-1) { $rw++; $j = $rw; }
   $s1 = ''; $s2 = '';
   if (is_dir($d.'/'.$a)){ $s1 = '<strong>'; $s2 = '</strong>'; }
-  $page_content .= '<td style="width:1%;"><input type="radio" name="file" value="'.$f.$a."\"></td>";
+  $page_content .= '<td style="width:1%;"><input type="radio" name="file" value="'.
+                   $f.rawurlencode($a)."\"></td>";
   if(is_dir($d.'/'.$a) && ($a=='..') && !$alls)
      $page_content .= "<td>$s1$a$s2"; //  Без линк
   else
-     if(in_array(strtolower(pathinfo($a, PATHINFO_EXTENSION)), array('png', 'jpg', 'jpeg', 'gif')))
-        $page_content .= "<td>$s1<a href=\"$pth".$f.urlencode($a)."\">$a</a>$s2";
-     else
+     if(in_array(
+        strtolower(pathinfo($a, PATHINFO_EXTENSION)),
+        array('png', 'jpg', 'jpeg', 'gif', 'webp'))
+       ){
+        $page_content .= "<td>$s1<a href=\"$pth".$f.rawurlencode($a)."\">$a</a>$s2";
+      }
+      else
         $page_content .= "<td>$s1<a href=\"edit_file.php?f=".urlencode("$f/$a")."\">$a</a>$s2";
   $page_content .= '</td><td style="width:1%;text-align:right;">';
   if (is_file($d.'/'.$a)) $page_content .= filesize($d.'/'.$a);

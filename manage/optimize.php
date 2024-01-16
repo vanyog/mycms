@@ -18,7 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Оптимизиране на изображения
+// Оптимизиране на изображения. Може да се използва само на локален сървър.
+// Всъщност, само генерира команда, кояото трабва да се изпълни от терминал, за да се оптимизира посоченото изображение.
 
 if(!isset($_GET['f'])) die("No file is specified to be optimized");
 
@@ -31,12 +32,12 @@ $e = strtolower(pathinfo($_GET['f'], PATHINFO_EXTENSION));
 $fe = str_replace(' ', '\ ', $_GET['f']);
 
 switch ($e){
-case 'png': $f = "/opt/local/bin/mogrify -strip ".$idir.$fe;
+case 'png': $f = "/usr/local/bin/mogrify -strip ".$idir.$fe;
             echo passthru("$f");
             echo $f;
             break;
 case 'jpg' :
-case 'jpeg':$f = "/opt/local/bin/mogrify -sampling-factor 4:2:0 -strip -quality 85 -interlace JPEG -colorspace sRGB ".$idir.$fe;
+case 'jpeg':$f = "/usr/local/bin/mogrify -sampling-factor 4:2:0 -strip -quality 85 -interlace JPEG -colorspace sRGB ".$idir.$fe;
             echo passthru("$f");
             echo $f;
             break;

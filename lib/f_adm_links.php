@@ -175,7 +175,7 @@ function onMOverBlock(e){
   let s = admBlock.style;
   s.width = "auto"; 
   s.opacity = 1; 
-  s.zIndex = 1;
+//  s.zIndex = 1;
   ch1.addEventListener("click", onClickFirstChild);
 }
 function onMOutBlock() {

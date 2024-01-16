@@ -62,7 +62,7 @@ if (count($_POST) && isset($_POST['link'])) edit_link($lid);
 $l = db_select_1('*','outer_links',"`ID`=$lid");
 
 // Ако е линк се изброява кликването и се препраща към адреса на линка
-/*if (isset($l['link']) && $l['link']>''){
+if (isset($l['link']) && $l['link']>''){
  $i = $l['link'];
  if(is_numeric($l['link'])){
     $l = db_select_1('*','outer_links',"`ID`=".$l['link']);
@@ -79,7 +79,7 @@ $l = db_select_1('*','outer_links',"`ID`=$lid");
  if(isset($_GET['h'])) $l['link'] .= '#'.$_GET['h'];
  header('Location: '.$l['link']);
  die;
-}*/
+}
 
 // Път към началната страница
 $tr = link_tree($lid);
@@ -219,7 +219,6 @@ $qp = '';
 if (!in_edit_mode()) $qp = 'AND `private`=0';
 // Сайт за търсене
 $seng = stored_value('outerlenks_sengin', 'https://www.google.bg/search?q=');
-//die("-$page_header-");
 if (in_edit_mode()) $page_header .= '<script>
 function chCaseClick(){
 var f = document.forms.link_edit_form.title;
@@ -669,7 +668,7 @@ $rz = '<h2>'.translate('outerlinks_newest')."</h2>\n";
 // Добавка за пропускане на private линковете
 $qp = '';
 if (!in_edit_mode()) $qp = '`private`=0';  else $qp = '1';
-$da = db_select_m('*', 'outer_links', "$qp ORDER BY `date_time_1` DESC LIMIT 0,20");
+$da = db_select_m('*', 'outer_links', "$qp ORDER BY `date_time_1` DESC LIMIT 0,20", false);
 return $rz.outerlinks_showlinks($da);
 }
 
@@ -704,7 +703,8 @@ foreach($da as $d){
   else $img = '<img src="'.$p.'folder.png" alt=""> ';
   if($d['private']) $rz .= '<p class="private">';
   else $rz .= '<p>';
-  $rz .= $img.'<a href="'.set_self_query_var('lid',$d['ID']).'" title="'.urldecode($d['link']).
+  $rz .= $img.'<a href="'.set_self_query_var('lid',$d['ID']).'" title="'.
+         urldecode(isset($d['link'])?$d['link']:"").
          '" target="_blank">'.stripslashes($d['Title']).'</a>';
   if ($d['up']){
      $t2 = db_table_field('Title', 'outer_links', "`ID`=".$d['up']);

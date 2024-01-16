@@ -29,7 +29,7 @@ include_once($idir."lib/f_db2user_date_time.php");
 global $can_manage;
 
 function uploadfile($n){
-global $mod_pth, $page_id, $page_data, $page_header;
+global $mod_pth, $page_id, $page_data, $page_header, $adm_pth;
 
 $n = stripslashes($n);
 
@@ -156,14 +156,14 @@ else {
     // Изображение
     if (in_array($e, $imgs)){
       // За съвместимост .webp файловете, трябва да имат и .jp2 и .jpg варианти
-      if($e=='webp'){//die($_SERVER['HTTP_USER_AGENT']);
-         $fn = $f;
-         if((strpos($_SERVER['HTTP_USER_AGENT'], 'Safari')>0) &&
-            (strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')===false) ) $fn = substr($f,0,-4).'jp2';
-         if(strpos($_SERVER['HTTP_USER_AGENT'], 'Edge'  )>0) $fn = substr($f,0,-4).'jpg';
-         if(strpos($_SERVER['HTTP_USER_AGENT'], 'MSIЕ'  )>0) $fn = substr($f,0,-4).'jpg';
-         $f = $fn;
-      }
+//      if($e=='webp'){//die($_SERVER['HTTP_USER_AGENT']);
+//         $fn = $f;
+//         if((strpos($_SERVER['HTTP_USER_AGENT'], 'Safari')>0) &&
+//            (strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')===false) ) $fn = substr($f,0,-4).'jp2';
+//         if(strpos($_SERVER['HTTP_USER_AGENT'], 'Edge'  )>0) $fn = substr($f,0,-4).'jpg';
+//         if(strpos($_SERVER['HTTP_USER_AGENT'], 'MSIЕ'  )>0) $fn = substr($f,0,-4).'jpg';
+//         $f = $fn;
+//      }
       // Ако е инсталиран скрипта lazysizes.min.js
       if(strpos(isset($page_header) ? $page_header : '', 'lazysizes.min.js')>0){
          $rz .= '<img data-src="'.$f."\"$ss alt=\"".stripslashes($fr['text']).'" id="'.$fr['name'].'" class="lazyload">';
@@ -219,7 +219,9 @@ if (can_upload()){
   $rz .= ' <a href="'.$cp."upload.php?pid=$pid&amp;fid=$fid&amp;fn=$n"."\" title=\"Update\">+</a>\n";
   if ( isset($fr['filename']) && $fr['filename'] && !$ne )
     $rz .= ' <a href="'.$cp."delete.php?fid=$fid".'" title="Delete" onclick="return confirm(\''.
-      translate('uploadfile_confdel').$f.' ?\');">-</a>'."\n";
+           translate('uploadfile_confdel').$f.' ?\');">-</a>'."\n";
+  if (in_array($e, $imgs) && ($e!='webp')) 
+    $rz .= '<a href="'.$adm_pth.'to_webp.php?f='.$f.'" title="Convert to webp">webp</a>';
 }
 
 return $rz;
