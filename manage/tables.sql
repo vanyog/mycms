@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost
--- Време на генериране: 24 ное 2023 в 05:19
+-- Време на генериране: 27 яну 2024 в 10:02
 -- Версия на сървъра: 8.0.26
 -- Версия на PHP: 8.2.12
 
@@ -27,7 +27,6 @@ SET time_zone = "+00:00";
 -- Структура на таблица `content`
 --
 
-DROP TABLE IF EXISTS `content`;
 CREATE TABLE `content` (
   `ID` int NOT NULL,
   `name` varchar(50) NOT NULL,
@@ -45,7 +44,7 @@ CREATE TABLE `content` (
 INSERT INTO `content` (`ID`, `name`, `nolink`, `date_time_1`, `date_time_2`, `language`, `text`) VALUES
 (1, 'p1_title', 0, '2023-11-01 09:14:59', '2023-11-21 19:07:10', 'bg', 'Начална страница'),
 (2, 'p1_title', 0, '2023-11-01 09:14:59', '2023-11-21 19:07:24', 'en', 'Home Page'),
-(3, 'p1_content', 0, '2023-11-01 09:14:59', '2023-11-22 21:35:19', 'bg', '<h2>Поздравления!</h2>\r\n\r\n<p>Вие успешно сте инталирали ситема за управление на съдържанието Vanyog CMS на своя сайт.</p>\r\n\r\n<p>Може да започнете с редактиране на всяка от примерните страници, за да представите в тях свое съдържание, а след това да продължите със създаване на още страници. Вижте: <a href=\"https://github.com/vanyog/mycms/wiki/%D0%A3%D0%BA%D0%B0%D0%B7%D0%B0%D0%BD%D0%B8%D1%8F-%D0%B7%D0%B0-%D0%B0%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B8%D1%80%D0%B0%D0%BD%D0%B5-%D0%BD%D0%B0-%D1%81%D0%B0%D0%B9%D1%82\" target=\"_blank\">Указания за поддържане на сайт с VanyoG CMS</a></p>\r\n\r\n<p>Приятно и успешно представяне в Интернет!</p>\r\n\r\n\r\n\r\n<h2>Защо VanyoG CMS?</h2>\r\n\r\n<ul>\r\n<li>Малка по обем система. Можете да инсталирате няколко копия и да ги използвате за различни чести на своя сайт, ако искате всяка част да има независим дизайн и съдържание.</li>\r\n<li>Напълно готов за ползване, бърз, оптимизиран по стандартите сайт с автоматично поддържаща се карта на сайта и търсачка.</li>\r\n<li>Бързо преминаване от разглеждане на сайта към редактиране на съдържанието и външния вид.</li>\r\n</ul>'),
+(3, 'p1_content', 0, '2023-11-01 09:14:59', '2023-12-08 09:37:39', 'bg', '<h2>Поздравления!</h2>\r\n\r\n<p>Вие успешно сте инталирали ситема за управление на съдържанието Vanyog CMS на своя сайт.</p>\r\n\r\n<p>Може да започнете с редактиране на всяка от примерните страници, за да представите в тях свое съдържание, а след това да продължите със създаване на още страници. Вижте: <a href=\"https://github.com/vanyog/mycms/wiki/%D0%A3%D0%BA%D0%B0%D0%B7%D0%B0%D0%BD%D0%B8%D1%8F-%D0%B7%D0%B0-%D0%B0%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B8%D1%80%D0%B0%D0%BD%D0%B5-%D0%BD%D0%B0-%D1%81%D0%B0%D0%B9%D1%82\" target=\"_blank\">Указания за поддържане на сайт с VanyoG CMS</a></p>\r\n\r\n<p>Приятно и успешно представяне в Интернет!</p>\r\n\r\n\r\n\r\n<h2>Защо VanyoG CMS?</h2>\r\n\r\n<ul>\r\n<li>Система оптимизирана на 100% по всички правени с <a href=\"https://chromewebstore.google.com/detail/blipmdconlkpinefehnmjammfjpmpbjk\" taget=\"_blank\">Google Lighthouse</a> анализи.</li>\r\n<li>Малка по обем система - сваля се и се нисталира бързо.</li>\r\n<li>Създава напълно готов за ползване, бърз, оптимизиран по стандартите сайт с автоматично поддържаща се <a href=\"/index.php?pid=5\">карта на сайта</a> и търсачка.</li>\r\n<li>Бързо преминаване от разглеждане на сайта към редактиране на съдържанието и външния вид.</li>\r\n</ul>'),
 (4, 'p1_content', 0, '2023-11-01 09:14:59', '2023-11-23 11:43:45', 'en', '<h2>Congratulations!</h2>\r\n\r\n<p>You have successfully installed the Vanyog CMS content management system on your site.</p>\r\n\r\n<p>You can start by editing each of the sample pages to feature your own content, then continue to create more pages.</p>\r\n\r\n<p>Enjoy and successful presentation! See: <a href=\"https://github.com/vanyog/mycms/wiki/%D0%A3%D0%BA%D0%B0%D0%B7%D0%B0%D0%BD%D0%B8%D1%8F-%D0%B7%D0%B0-%D0%B0%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B8%D1%80%D0%B0%D0%BD%D0%B5-%D0%BD%D0%B0-%D1%81%D0%B0%D0%B9%D1%82\" target=\"_blank\">Указания за поддържане на сайт с VanyoG CMS</a></p>\r\n\r\n<p>Have a nice and successful presentation on the Internet!</p>\r\n\r\n<h2>Why VanyoG CMS?</h2>\r\n\r\n<ul>\r\n<li>Small volume system. You can install multiple copies and use them for different parts of your site if you want each part to have independent design and content.</li>\r\n<li>Completely ready-to-use, fast, standards-optimized site with automatically maintained sitemap and search engine.</li>\r\n<li>Quickly switch from browsing the site to editing the content and appearance.</li>\r\n</ul>'),
 (5, 'error_404_title', 0, '2023-11-01 09:14:59', '2023-11-01 09:14:59', 'bg', 'Грешен номер на страница'),
 (6, 'error_404_title', 0, '2023-11-01 09:14:59', '2023-11-01 09:14:59', 'en', 'Incorrect page number'),
@@ -385,9 +384,9 @@ INSERT INTO `content` (`ID`, `name`, `nolink`, `date_time_1`, `date_time_2`, `la
 (351, 'm2_link', 0, '2023-11-18 11:26:27', '2023-11-18 14:08:50', 'en', 'Copyright'),
 (352, 'sitesearch_notext', 0, '2023-11-19 06:36:42', '2023-11-19 06:39:03', 'bg', '<p>На тази страница се показват резултатите от търсене в сайта.</p>\r\n<p>Потърсете нещо чрез формата за търсене, за да видите резултат.</p>'),
 (353, 'sitesearch_notext', 0, '2023-11-19 09:23:43', '2023-11-19 09:23:43', 'en', '<p>This page displays the results of a site search.</p>\r\n<p>Search for something using the search form to see a result.</p>'),
-(354, 'usermenu_newpagefrh', 0, '2023-11-22 16:20:59', '2023-11-22 16:20:59', 'bg', 'Нова страница от подзаглавие'),
-(355, 'cookies_cols_description', 1, '2023-11-22 22:37:15', '2023-11-22 22:37:28', 'bg', 'Колко букви да се показват в колоните на таблиците, при редактиране на таблици от базата данни.');
+(354, 'usermenu_newpagefrh', 0, '2023-11-22 16:20:59', '2023-11-22 16:20:59', 'bg', 'Нова страница от подзаглавие');
 INSERT INTO `content` (`ID`, `name`, `nolink`, `date_time_1`, `date_time_2`, `language`, `text`) VALUES
+(355, 'cookies_cols_description', 1, '2023-11-22 22:37:15', '2023-11-22 22:37:28', 'bg', 'Колко букви да се показват в колоните на таблиците, при редактиране на таблици от базата данни.'),
 (356, 'cookies_rows_description', 1, '2023-11-22 22:38:21', '2023-11-22 22:38:35', 'bg', 'Колко реда да се показват в клетките на таблиците при радектиране на таблици от базата данни.'),
 (357, 'user_finish', 1, '2023-11-23 03:55:25', '2023-11-23 03:57:11', 'bg', 'Връщане след изтриването'),
 (358, 'user_finish', 1, '2023-11-23 11:37:45', '2023-11-23 11:37:45', 'en', 'Go back after deletion'),
@@ -409,7 +408,6 @@ INSERT INTO `content` (`ID`, `name`, `nolink`, `date_time_1`, `date_time_2`, `la
 -- Структура на таблица `content_history`
 --
 
-DROP TABLE IF EXISTS `content_history`;
 CREATE TABLE `content_history` (
   `ID` int NOT NULL,
   `date` date NOT NULL,
@@ -422,7 +420,6 @@ CREATE TABLE `content_history` (
 -- Структура на таблица `files`
 --
 
-DROP TABLE IF EXISTS `files`;
 CREATE TABLE `files` (
   `ID` int NOT NULL,
   `pid` int NOT NULL,
@@ -440,7 +437,7 @@ CREATE TABLE `files` (
 --
 
 INSERT INTO `files` (`ID`, `pid`, `name`, `date_time_1`, `date_time_2`, `date_time_3`, `date_time_4`, `filename`, `text`) VALUES
-(2, 1, 'A1', '2023-11-23 23:27:55', '2023-11-23 23:27:55', '0000-01-01 00:00:00', '0000-01-01 00:00:00', '/Users/vanyog/Sites/n/_uploaded_files/site-og-image-1200x630.jpg', '');
+(2, 1, 'A1', '2023-11-23 23:27:55', '2023-12-06 08:09:07', '0000-01-01 00:00:00', '0000-01-01 00:00:00', '/Users/vanyog/Sites/n/_uploaded_files/site-og-image-1200x630.webp', '');
 
 -- --------------------------------------------------------
 
@@ -448,7 +445,6 @@ INSERT INTO `files` (`ID`, `pid`, `name`, `date_time_1`, `date_time_2`, `date_ti
 -- Структура на таблица `filters`
 --
 
-DROP TABLE IF EXISTS `filters`;
 CREATE TABLE `filters` (
   `ID` int NOT NULL,
   `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
@@ -461,7 +457,6 @@ CREATE TABLE `filters` (
 -- Структура на таблица `menu_items`
 --
 
-DROP TABLE IF EXISTS `menu_items`;
 CREATE TABLE `menu_items` (
   `ID` int NOT NULL,
   `place` int NOT NULL,
@@ -489,7 +484,6 @@ INSERT INTO `menu_items` (`ID`, `place`, `group`, `name`, `link`) VALUES
 -- Структура на таблица `menu_tree`
 --
 
-DROP TABLE IF EXISTS `menu_tree`;
 CREATE TABLE `menu_tree` (
   `ID` int NOT NULL,
   `group` int NOT NULL,
@@ -511,7 +505,6 @@ INSERT INTO `menu_tree` (`ID`, `group`, `parent`, `index_page`) VALUES
 -- Структура на таблица `options`
 --
 
-DROP TABLE IF EXISTS `options`;
 CREATE TABLE `options` (
   `ID` int NOT NULL,
   `name` varchar(100) NOT NULL,
@@ -530,14 +523,14 @@ INSERT INTO `options` (`ID`, `name`, `value`) VALUES
 (5, 'adm_value', 'on'),
 (6, 'edit_name', 'edit'),
 (7, 'edit_value', 'on'),
-(8, 'host_web', 'vanyog.atwebpages.com'),
-(9, 'host_local', 'localhost/n'),
+(8, 'host_web', 'mysite.org'),
+(9, 'host_local', 'localhost'),
 (10, 'phpmyadmin_web', 'http://localhost/phpmyadmin'),
 (11, 'phpmyadmin_local', 'http://localhost/phpmyadmin'),
 (12, 'mod_path', '_mod'),
 (13, 'cache_time', '10'),
 (14, 'css_adm_links', 'body { margin-left:40px; }\r\n#adm_links { font-size:150%; line-height:35px; padding:0 4px; opacity:0.1; position:fixed; top:0; left:0; margin:0; background-color:white; width:30px; height:90vh; overflow-y:scroll; overflow-x:hidden; }\r\n#adm_links a, #adm_links span, #adm_links input { white-space:nowrap; float:left; clear:left; }\r\n#adm_links a:hover { text-decoration:underline; }\r\n'),
-(15, 'css_all_pages', 'body { font-family: arial, sans-serif; }\r\nh1 { font-size: 2em; }\r\nh2 { font-size: 1.5em }\r\nh3 { font-size: 1.17em }\r\nh4, h5, h6 { font-size: 1em }\r\na { color:#005941; }\r\n.lang_flag { float:left; margin:0 15px 0 0; padding:0; }\r\n.lang_flag img { width:60px; height:30px; vertical-align:middle; }\r\nnav { display:inline-block; min-width: 160px; }\r\nheader { background-color:#005941; color:#fff; padding: 10px; overflow:auto; line-height:50px; }\r\nheader a { color:#fff; text-decoration:none; margin:15px; padding:10px; white-space:nowrap; }\r\nheader span { border: solid 1px; padding:10px; margin:14px; white-space:nowrap; }\r\nheader a:hover { color:#97ff93; }\r\nsection { min-height: calc(100vh - 185px); max-width:870px; margin:10px auto; box-shadow: 1px 1px 5px 0 rgba(50,50,50,0.4); padding:10px; }\r\nfooter { text-align:center; }\r\n#cookies_message { text-align:center; overflow:auto; background-color:#ffeda4; }\r\n.searched { background-color:yellow; }\r\ntd { padding-right:10px; }\r\n#site_search input[type=\"button\"] { height:30px; }\r\n'),
+(15, 'css_all_pages', 'body { font-family: arial, sans-serif; }\r\nh1 { font-size: 2em; }\r\nh2 { font-size: 1.5em }\r\nh3 { font-size: 1.17em }\r\nh4, h5, h6 { font-size: 1em }\r\na { color:#005941; }\r\n.lang_flag { float:left; margin:0 15px 0 0; padding:0; }\r\n.lang_flag img { width:60px; height:30px; vertical-align:middle; }\r\nheader { background-color:#005941; color:#fff; padding: 10px; overflow:auto; line-height:50px; }\r\nheader a { color:#fff; text-decoration:none; margin:15px; padding:10px; white-space:nowrap; }\r\nheader span { border: solid 1px; padding:10px; margin:14px; white-space:nowrap; }\r\nheader a:hover { color:#97ff93; }\r\nnav { display:inline-block; min-width:160px; white-space:nowrap; }\r\n#navHidden { display:inline-block; position:absolute; top:0; z-index:1; background-color:#005941; line-height:initial; overflow:hidden; }\r\n#navHidden a { float:left; }\r\nsection { min-height: calc(100vh - 196px); max-width:870px; margin:10px auto; box-shadow: 1px 1px 5px 0 rgba(50,50,50,0.4); padding:10px; }\r\nfooter { text-align:center; }\r\n#cookies_message { text-align:center; overflow:auto; background-color:#ffeda4; }\r\n.searched { background-color:yellow; }\r\ntd { padding-right:10px; }\r\n#site_search input[type=\"button\"] { height:30px; }\r\n'),
 (17, 'css_usermenu', '#user_menu { display:inline-block; position:absolute; top:0; right:0; padding:5px; opacity:0.1; line-height:35px; }\r\n#user_menu:hover { background-color:#fff; opacity:1; }\r\n#user_menu a, #user_menu span, #user_menu div.sep { float:right; clear:right; }\r\n#user_menu div.sep { width:100% }\r\n#user_menu span a { float:none; }\r\n\r\n'),
 (18, 'userreg_login_admin', 'index.php?pid=2&user2=login'),
 (19, 'userreg_newreg_admin', 'index.php?pid=2&user2=newreg'),
@@ -552,9 +545,11 @@ INSERT INTO `options` (`ID`, `name`, `value`) VALUES
 (30, 'css_p.message', '.message { color:red; }'),
 (31, 'sitemap_1_bg_cache_edit', '<div id=\"site_map\">\n<a href=\"/n/index.php?clear=on&amp;pid=5\">Clear cache</a><p class=\"buttons\">\r\n<button onclick=\"mapContractExpandAll(1);\">Сгъване на всички<a href=\"/n/manage/edit_record.php?t=content&amp;r=294\" style=\"color:#000000;background-color:#ffffff;margin:0;padding:0;\">*</a></button>\r\n<button onclick=\"mapContractExpandAll(2);\">Разгъване на всички<a href=\"/n/manage/edit_record.php?t=content&amp;r=295\" style=\"color:#000000;background-color:#ffffff;margin:0;padding:0;\">*</a></button>\r\n</p>\r\n\n<div id=\"map1\">\n<a href=\"/n/index.php?pid=1\">Начало</a> place:10 group:1<br>\n</div>\n<div id=\"map3\">\n<span onclick=\"mapHideShow(this);\" class=\"bullet\">&#9660;</span>&nbsp;<a href=\"/n/index.php?pid=3\">Относно<a href=\"/n/manage/edit_record.php?t=content&amp;r=261\" style=\"color:#000000;background-color:#ffffff;margin:0;padding:0;\">*</a></a> place:20 group:1<br>\n<div id=\"map7\">\n<a href=\"/n/index.php?pid=8\">Авторски права<a href=\"/n/manage/edit_record.php?t=content&amp;r=341\" style=\"color:#000000;background-color:#ffffff;margin:0;padding:0;\">*</a></a> place:35 group:2<br>\n</div>\n<div id=\"map4\">\n<a href=\"/n/index.php?pid=4\">Лични данни<a href=\"/n/manage/edit_record.php?t=content&amp;r=286\" style=\"color:#000000;background-color:#ffffff;margin:0;padding:0;\">*</a></a> place:40 group:2<br>\n</div>\n</div>\n<div id=\"map6\">\n<a href=\"/n/index.php?pid=5\">Карта на сайта<a href=\"/n/manage/edit_record.php?t=content&amp;r=292\" style=\"color:#000000;background-color:#ffffff;margin:0;padding:0;\">*</a></a> - текущата страница<a href=\"/n/manage/edit_record.php?t=content&amp;r=296\" style=\"color:#000000;background-color:#ffffff;margin:0;padding:0;\">*</a> place:50 group:1<br>\n</div>\n<div id=\"map2\">\n<a href=\"/n/index.php?pid=2\">Вход<a href=\"/n/manage/edit_record.php?t=content&amp;r=258\" style=\"color:#000000;background-color:#ffffff;margin:0;padding:0;\">*</a></a> place:60 group:1<br>\n</div>\n<p class=\"buttons\">\r\n<button onclick=\"mapContractExpandAll(1);\">Сгъване на всички<a href=\"/n/manage/edit_record.php?t=content&amp;r=294\" style=\"color:#000000;background-color:#ffffff;margin:0;padding:0;\">*</a></button>\r\n<button onclick=\"mapContractExpandAll(2);\">Разгъване на всички<a href=\"/n/manage/edit_record.php?t=content&amp;r=295\" style=\"color:#000000;background-color:#ffffff;margin:0;padding:0;\">*</a></button>\r\n</p>\r\n<a href=\"/n/index.php?clear=on&amp;pid=5\">Clear cache</a>\r\n<p class=\"clear\"></p></div>'),
 (32, 'css_editrecord_form', 'form[name=editrecord_form] input[type=text], form[name=editrecord_form] input[type=password] \r\n{ width:calc(100% - 10px); }\r\nform[name=editrecord_form] textarea { max-width:calc(100% - 10px); }\r\n'),
-(35, 'nav_script', '<script>\r\nwindow.addEventListener(\"resize\", setNavWidth);\r\nwindow.addEventListener(\"load\", setNavWidth);\r\nfunction setNavWidth(){\r\nvar navElement = document.getElementById(\"page_menu\");\r\nvar navPrev = navElement.previousElementSibling;\r\nvar navNext = navElement.nextElementSibling;\r\nvar navMaxW = navNext.getBoundingClientRect().left - navPrev.getBoundingClientRect().right - 30;\r\nif(navMaxW>160) navElement.style.width = navMaxW + \"px\";\r\n}\r\n</script>'),
+(35, 'nav_script', '<script>\r\nwindow.addEventListener(\"resize\", setNavWidth);\r\nwindow.addEventListener(\"load\", setNavWidth);\r\nvar navElement = document.getElementById(\"page_menu\");\r\nvar navLinks = Array();\r\nfor(var i=0; i<navElement.children.length; i++){\r\n  navLinks[i] = navElement.children[i];\r\n}\r\nfunction setNavWidth(){\r\nvar navPrev = navElement.previousElementSibling;\r\nvar navNext = navElement.nextElementSibling;\r\nvar navMaxW = navNext.getBoundingClientRect().left - navPrev.getBoundingClientRect().right - 30;\r\nif(navMaxW>160) navElement.style.width = navMaxW + \"px\";\r\nmoveNavLinks();\r\n}\r\nvar navHDiv = undefined;\r\nfunction moveNavLinks(){\r\nvar w = 0;\r\nfor(var i=0; i<navLinks.length; i++){\r\n   w = w + elementWholeWidth(navLinks[i]);\r\n   if(w<=navElement.clientWidth){\r\n     if(navLinks[i].parentNode.id != \"page_menu\"){\r\n        navLinks[i].style.float = \"none\";\r\n        if(navHDiv) navElement.insertBefore(navLinks[i], navHDiv);\r\n        else        navElement.appendChild(navLinks[i]);\r\n     }\r\n     if(navHDiv && navHDiv.children.length<2) navHDiv.style.display = \"none\"; \r\n   }\r\n   else {\r\n     navHDiv = aNavDiv();\r\n     if(navLinks[i].parentNode.id != \"navHidden\"){\r\n       navLinks[i].style.float = \"left\";\r\n       navLinks[i].style.clear = \"both\";\r\n       if(navHDiv.children.length>1) navHDiv.insertBefore(navLinks[i], navHDiv.children[1]);\r\n       else{\r\n          navHDiv.style.display = \"inline-block\";\r\n          navHDiv.appendChild(navLinks[i]); \r\n       }\r\n     }\r\n   }\r\n}\r\n}\r\nfunction aNavDiv(){\r\n   if(this.navDiv) return this.navDiv;\r\n   this.navDiv = document.createElement(\"div\");\r\n   this.navDiv.id = \"navHidden\";\r\n   var a = document.createElement(\"a\");\r\n   a.innerText = \">\";\r\n   a.href = \"#\";\r\n   a.onclick = function(){\r\n     var mh = navElement.offsetHeight;\r\n     if(navHDiv.offsetHeight>mh){\r\n       navHDiv.style.backgroundColor = \"rgba(0, 0, 0, 0)\";\r\n       navHDiv.style.height = mh + \"px\";\r\n     }\r\n     else{\r\n       navHDiv.style.backgroundColor = \"#005941\";\r\n       navHDiv.style.height = \"auto\";\r\n     }\r\n   }\r\n   this.navDiv.appendChild(a)\r\n   var s = this.navDiv.style;\r\n   s.top = navElement.parentNode.offsetTop + \"px\";\r\n   s.height = navElement.offsetHeight + \"px\";\r\n   s.backgroundColor = \"rgba(0, 0, 0, 0)\";\r\n   navElement.appendChild(this.navDiv);\r\n   return this.navDiv;\r\n}\r\nfunction elementWholeWidth(e){\r\n  var cs = getComputedStyle(e);\r\n  return parseInt(cs.marginLeft)   + parseInt(cs.borderLeftWidth) + parseInt(cs.paddingLeft) + e.offsetWidth + \r\n         parseInt(cs.paddingRight) + parseInt(cs.borderRightWidth)+ parseInt(cs.marginRight);\r\n}\r\nfunction elementWholeHeight(e){\r\n  var cs = getComputedStyle(e);\r\n  return parseInt(cs.marginTop)   + parseInt(cs.borderTopWidth) + parseInt(cs.paddingTop) + e.offsetHeight + \r\n         parseInt(cs.paddingBottom) + parseInt(cs.borderBottomWidth)+ parseInt(cs.marginBottom);\r\n}\r\n</script>'),
 (36, 'uploadfile_nofilenotext', 'true'),
-(37, 'uploadfile_dir', '/n/_uploaded_files/');
+(37, 'uploadfile_dir', '/n/_uploaded_files/'),
+(38, 'today', '6'),
+(39, 'menu_1_sep', 'none');
 
 -- --------------------------------------------------------
 
@@ -562,7 +557,6 @@ INSERT INTO `options` (`ID`, `name`, `value`) VALUES
 -- Структура на таблица `pages`
 --
 
-DROP TABLE IF EXISTS `pages`;
 CREATE TABLE `pages` (
   `ID` int NOT NULL,
   `menu_group` int NOT NULL,
@@ -581,11 +575,11 @@ CREATE TABLE `pages` (
 --
 
 INSERT INTO `pages` (`ID`, `menu_group`, `title`, `content`, `template_id`, `hidden`, `donotcache`, `options`, `dcount`, `tcount`) VALUES
-(1, 1, 'p1_title', 'p1_content', 1, 0, 0, '', 0, 0),
-(2, 1, 'p2_title', 'p2_content', 1, 0, 0, '', 0, 0),
+(1, 1, 'p1_title', 'p1_content', 1, 0, 0, '', 22, 0),
+(2, 1, 'p2_title', 'p2_content', 1, 0, 0, '', 23, 0),
 (3, 2, 'p3_title', 'p3_content', 1, 0, 0, NULL, 0, 0),
 (4, 2, 'p4_title', 'p4_content', 1, 0, 0, '', 0, 0),
-(5, 1, 'p5_title', 'p5_content', 1, 0, 0, NULL, 0, 0),
+(5, 1, 'p5_title', 'p5_content', 1, 0, 0, NULL, 2, 0),
 (6, 1, 'error_404_title', 'error_404_content', 1, 0, 0, '', 0, 0),
 (7, 1, 'p7_title', 'p7_content', 1, 0, 0, '', 0, 0),
 (8, 2, 'p8_title', 'p8_content', 1, 0, 0, NULL, 0, 0);
@@ -596,7 +590,6 @@ INSERT INTO `pages` (`ID`, `menu_group`, `title`, `content`, `template_id`, `hid
 -- Структура на таблица `page_cache`
 --
 
-DROP TABLE IF EXISTS `page_cache`;
 CREATE TABLE `page_cache` (
   `ID` int NOT NULL,
   `page_ID` int NOT NULL,
@@ -613,7 +606,6 @@ CREATE TABLE `page_cache` (
 -- Структура на таблица `permissions`
 --
 
-DROP TABLE IF EXISTS `permissions`;
 CREATE TABLE `permissions` (
   `ID` int NOT NULL,
   `user_id` int NOT NULL,
@@ -636,7 +628,6 @@ INSERT INTO `permissions` (`ID`, `user_id`, `type`, `object`, `yes_no`) VALUES
 -- Структура на таблица `scripts`
 --
 
-DROP TABLE IF EXISTS `scripts`;
 CREATE TABLE `scripts` (
   `ID` int NOT NULL,
   `name` varchar(50) NOT NULL,
@@ -664,7 +655,6 @@ INSERT INTO `scripts` (`ID`, `name`, `script`, `coment`) VALUES
 -- Структура на таблица `templates`
 --
 
-DROP TABLE IF EXISTS `templates`;
 CREATE TABLE `templates` (
   `ID` int NOT NULL,
   `parent` int DEFAULT NULL,
@@ -677,7 +667,7 @@ CREATE TABLE `templates` (
 --
 
 INSERT INTO `templates` (`ID`, `parent`, `template`, `comment`) VALUES
-(1, 0, '<!DOCTYPE HTML>\r\n<html lang=\"<!--$$_VARIABLE_default_language_$$-->\">\r\n<head>\r\n  <title><!--$$_HEADTITLE_$$--></title>\r\n  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=<!--$$_VARIABLE_site_encoding_$$-->\">\r\n  <meta name=viewport content=\"width=device-width, initial-scale=1\">\r\n  <meta name=\"description\" content=\"<!--$$_OGDESCRIPTION_$$-->\">\r\n  <meta property=\"og:type\" content=\"article\">\r\n  <meta property=\"fb:app_id\" content=\"1350744361603908\">\r\n  <meta property=\"og:url\" content=\"<!--$$_VARIABLE_SERVER[\'REQUEST_SCHEME\']_$$-->://<!--$$_VARIABLE_SERVER[\'HTTP_HOST\']_$$--><!--$$_VARIABLE_main_index_$$-->?pid=<!--$$_VARIABLE_page_id_$$-->\">\r\n  <meta property=\"og:image\" content=\"<!--$$_FIRSTIMAGE_http://sci.vanyog.com/_images/200x200-fb.png_$$-->\">\r\n  <meta property=\"og:title\" content=\"<!--$$_HTMLVAR_page_title_$$-->\">\r\n  <meta property=\"og:description\" content=\"<!--$$_OGDESCRIPTION_$$-->\">\r\n<!--$$_SITEICONS_$$-->\r\n<!--$$_VARIABLE_page_header_$$-->\r\n<style>\r\n<!--$$_VARIABLE_added_styles_$$-->\r\n</style>\r\n</head>\r\n<body<!--$$_BODYADDS_$$-->>\r\n<!--$$_ADMINMENU_$$-->\r\n\r\n<header>\r\n<!--$$_LANGUAGEFLAGS_$$-->\r\n<!--$$_MENU_$$-->\r\n<!--$$_SITESEARCH2_$$-->\r\n<!--$$_COOKIES_message_$$-->\r\n</header>\r\n<!--$$_OPTION_nav_script_$$-->\r\n<!--$$_MENUTREE_$$-->\r\n<section>\r\n<h1><!--$$_PAGETITLE_$$--></h1>\r\n<!--$$_CONTENT_$$-->\r\n</section>\r\n\r\n<footer>\r\n<p id=\"powered_by\"><!--$$_CONTENT_powered_by_$$--><a href=\"https://github.com/vanyog/mycms/wiki\" target=\"_blank\">VanyoG CMS</a> <!--$$_PAGESTAT_$$--></p>\r\n</footer>\r\n<!--$$_UPLOADFILE_A1,style=\"display:none;\"_$$-->\r\n<!--$$_USERMENU_index.php?pid=2&amp;user2=logout_$$-->\r\n</body>\r\n</html>\r\n\r\n', 'Шаблон по подразбиране');
+(1, 0, '<!DOCTYPE HTML>\r\n<html lang=\"<!--$$_VARIABLE_default_language_$$-->\">\r\n<head>\r\n  <title><!--$$_HEADTITLE_$$--></title>\r\n  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=<!--$$_VARIABLE_site_encoding_$$-->\">\r\n  <meta name=viewport content=\"width=device-width, initial-scale=1\">\r\n  <meta name=\"description\" content=\"<!--$$_OGDESCRIPTION_$$-->\">\r\n  <meta property=\"og:type\" content=\"article\">\r\n  <meta property=\"fb:app_id\" content=\"1350744361603908\">\r\n  <meta property=\"og:url\" content=\"<!--$$_VARIABLE_SERVER[\'REQUEST_SCHEME\']_$$-->://<!--$$_VARIABLE_SERVER[\'HTTP_HOST\']_$$--><!--$$_VARIABLE_main_index_$$-->?pid=<!--$$_VARIABLE_page_id_$$-->\">\r\n  <meta property=\"og:image\" content=\"<!--$$_FIRSTIMAGE_http://sci.vanyog.com/_images/200x200-fb.png_$$-->\">\r\n  <meta property=\"og:title\" content=\"<!--$$_HTMLVAR_page_title_$$-->\">\r\n  <meta property=\"og:description\" content=\"<!--$$_OGDESCRIPTION_$$-->\">\r\n<!--$$_SITEICONS_$$-->\r\n<!--$$_VARIABLE_page_header_$$-->\r\n<style>\r\n<!--$$_VARIABLE_added_styles_$$-->\r\n</style>\r\n</head>\r\n<body<!--$$_BODYADDS_$$-->>\r\n<!--$$_ADMINMENU_$$-->\r\n\r\n<header>\r\n<!--$$_LANGUAGEFLAGS_$$-->\r\n<!--$$_MENU_$$-->\r\n<!--$$_SITESEARCH2_$$-->\r\n<!--$$_COOKIES_message_$$-->\r\n</header>\r\n\r\n<!--$$_MENUTREE_$$-->\r\n\r\n<section>\r\n<h1><!--$$_PAGETITLE_$$--></h1>\r\n<!--$$_CONTENT_$$-->\r\n</section>\r\n\r\n<footer>\r\n<p id=\"powered_by\"><!--$$_CONTENT_powered_by_$$--><a href=\"https://github.com/vanyog/mycms/wiki\" target=\"_blank\">VanyoG CMS</a> <!--$$_PAGESTAT_$$--></p>\r\n</footer>\r\n\r\n<!--$$_UPLOADFILE_A1,style=\"display:none;\"_$$-->\r\n<!--$$_USERMENU_index.php?pid=2&amp;user2=logout_$$-->\r\n<!--$$_OPTION_nav_script_$$-->\r\n</body>\r\n</html>\r\n\r\n', 'Шаблон по подразбиране');
 
 -- --------------------------------------------------------
 
@@ -685,7 +675,6 @@ INSERT INTO `templates` (`ID`, `parent`, `template`, `comment`) VALUES
 -- Структура на таблица `users`
 --
 
-DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `ID` int NOT NULL,
   `creator_id` int NOT NULL DEFAULT '0',
@@ -718,7 +707,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`ID`, `creator_id`, `type`, `date_time_0`, `date_time_1`, `date_time_2`, `gdpr`, `language`, `username`, `password`, `newpass`, `email`, `aemails`, `code`, `firstname`, `secondname`, `thirdname`, `country`, `institution`, `position`, `address`, `telephone`, `IP`, `nomessage`) VALUES
-(1, 0, 'admin', '2023-11-01 22:12:19', '2023-11-01 22:12:19', '2023-11-23 19:14:27', 0, 'English', 'admin', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', NULL, '', NULL, NULL, '', '', '', 'BG', NULL, NULL, NULL, '', '127.0.0.1', 0);
+(1, 0, 'admin', '2023-11-01 22:12:19', '2023-11-01 22:12:19', '2023-12-06 07:07:13', 0, 'English', 'admin', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', NULL, '', NULL, NULL, '', '', '', 'BG', NULL, NULL, NULL, '', '::1', 0);
 
 -- --------------------------------------------------------
 
@@ -726,7 +715,6 @@ INSERT INTO `users` (`ID`, `creator_id`, `type`, `date_time_0`, `date_time_1`, `
 -- Структура на таблица `visit_history`
 --
 
-DROP TABLE IF EXISTS `visit_history`;
 CREATE TABLE `visit_history` (
   `ID` int NOT NULL,
   `page_id` int NOT NULL,
@@ -740,7 +728,6 @@ CREATE TABLE `visit_history` (
 -- Структура на таблица `who_made_change`
 --
 
-DROP TABLE IF EXISTS `who_made_change`;
 CREATE TABLE `who_made_change` (
   `ID` int NOT NULL,
   `date_time_1` datetime NOT NULL,
@@ -756,11 +743,22 @@ CREATE TABLE `who_made_change` (
 -- Структура на таблица `worktime`
 --
 
-DROP TABLE IF EXISTS `worktime`;
 CREATE TABLE `worktime` (
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `time` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
+
+--
+-- Схема на данните от таблица `worktime`
+--
+
+INSERT INTO `worktime` (`name`, `time`) VALUES
+('content.3', 360),
+('files.2', 11),
+('options.15', 2025),
+('options.35', 17345),
+('options.39', 45),
+('templates.1', 616);
 
 --
 -- Indexes for dumped tables
@@ -929,7 +927,7 @@ ALTER TABLE `filters`
 -- AUTO_INCREMENT for table `menu_items`
 --
 ALTER TABLE `menu_items`
-  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `menu_tree`
@@ -941,7 +939,7 @@ ALTER TABLE `menu_tree`
 -- AUTO_INCREMENT for table `options`
 --
 ALTER TABLE `options`
-  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `pages`
@@ -953,7 +951,7 @@ ALTER TABLE `pages`
 -- AUTO_INCREMENT for table `page_cache`
 --
 ALTER TABLE `page_cache`
-  MODIFY `ID` int NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `permissions`

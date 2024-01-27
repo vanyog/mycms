@@ -106,7 +106,7 @@ else if ($editMode && $elink){
          // Четене на записа на езика по подразбиране
          else $r2 = db_select_1('c.*, f.filters', 'content` c LEFT JOIN `'.$tn_prefix.'filters` f ON c.name=f.`name', "c.name='$n' AND `language`='$default_language'",$debug);
          // Ако няма запис се показва името на текста
-         if ( !$r2 ){ $r2['text'] = $n; $r2['filters'] = ''; }
+         if ( !$r2 ){ $r2 = array(); $r2['text'] = $n; $r2['filters'] = ''; }
          else {
            $content_create_time = $r2['date_time_1'];
            $content_date_time = $r2['date_time_2'];

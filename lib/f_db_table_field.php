@@ -21,7 +21,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Функцията db_table_field($fn,$tb,$whr), връща съдържанието на полетато $fn
 // на първия, отговарящ на условието $whr запис от таблица $tb.
 
-// Таблицата е от базата данни, определена от променливата $db_link,
+// При липса на запис, отговарящ на условието $whr, се връща стойността на параметър $def
+// - по подразбиране празен стринг.
+
+// Таблицата е от базата данни, с която е установена връзкаа променливата $db_link,
 // дефинирана в usedatabase.php.
 
 include_once($idir."lib/usedatabase.php");
@@ -32,7 +35,7 @@ if(($db_link===false)||is_null($db_link)) return $def;
 $q="SELECT $fn FROM $tn_prefix$tb WHERE $whr;";
 if ($y===true) echo $q."<br>\n";
 try 
-{ $r=mysqli_query($db_link,$q); }
+{ $r = mysqli_query($db_link,$q); }
 catch (Exception $e){
   if(mysqli_errno($db_link)==1146) 
      die(mysqli_error($db_link).'<br>Run <a href="manage/_install.php">manage/_install.php</a> to crate it.');
@@ -40,7 +43,7 @@ catch (Exception $e){
   die("<p>function db_table_field<br>".mysqli_errno($db_link).":".mysqli_error($db_link)."<br>$q</p>"); 
 }
 $db_req_count++;
-if (!$r){
+if ($r->num_rows == 0){
   return $def;
 }
 if ($fn[0]=='`') $fn = substr($fn,1,strlen($fn)-2);

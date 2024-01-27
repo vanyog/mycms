@@ -104,6 +104,7 @@ else $show_text = (stored_value('uploadfile_nofilenotext','false')!='true');
 
 $inEditMode = in_edit_mode();
 
+$e = ''; // Разширение на файла
 if (!$fr){ // Ако няма данни за файл - надпис "Няма качен файл" или нищо
   if ($show_text || $inEditMode) $rz .= translate('uploadfile_nofile');
   $fid = 0;
@@ -147,6 +148,7 @@ else {
     case '2': $rz .= translate('uploadfile_nofile'); break;
     }
   }
+  // но ако има файл:
   else {
     if($just_link){
       return $f;

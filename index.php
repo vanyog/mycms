@@ -79,7 +79,7 @@ $can_manage = array(); // Права за администриране на модули
 $can_visit = true;     // Право на влязъл потребител да вижда съдържанието на страницата.
 
 // Номер на страницата
-$page_id = stored_value('main_index_pageid',1);
+$page_id = stored_value('main_index_pageid', 1);
 if (isset($_GET['pid'])) $page_id = is_numeric($_GET['pid']) ? 1*$_GET['pid'] : $page_id;
 
 // Заглавие на страницата
@@ -100,7 +100,7 @@ else {
       if(strpos($_SERVER['REQUEST_URI'], '&')===false)
            header("Location: $h");
    }
-   $page_data = db_select_1('*','pages',"ID=$page_id");
+   $page_data = db_select_1('*','pages',"ID=$page_id", false);
 }
 if (!$page_data) $page_data = page404();
 

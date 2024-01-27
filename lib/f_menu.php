@@ -30,14 +30,16 @@ include_once($idir.'lib/f_db_select_m.php');
 function menu($i, $id = 'page_menu'){
 global $ind_fl, $adm_pth, $page_id, $page_data, $page_hash, $pth, $seo_names, $rewrite_on, $can_create;
 $d = db_select_m('*','menu_items',"`group`=$i ORDER BY `place`");
-$rz = ''; // Връщания резултат
+$rz = ''; // Връщаният резултат
 $once = false; // Флаг, който се използва за да се покаже само веднъж различно линка от менюто на текущата страница
 $sm = ''; // Изскачащо подменю, ако има такова
 $si = 1; // Номер на изскачащото подменю
 $lk = stored_value('menu_'.$i.'_aslink'); // Дали линкът на текущата страница да се покаже като линк
 $pp = stored_value('menu_'.$i.'_popup');  // Дали да се показват изскачащи подменюта
 $hm = stored_value('menu_'.$i.'_hide',1); // Дали да се скриват линкове към скрити страници
-$hs = stored_value('menu_'.$i.'_nash',''); // Дали да се добави #сегмент към url-а в линка
+$hs = stored_value('menu_'.$i.'_hash',''); // Дали да се добави #сегмент към url-а в линка
+$sp = stored_value('menu_'.$i.'_sep', ' '); // Разделител между линковете в менюто - по подразбиране - интервал
+if($sp=='none') $sp = '';
 $editMode = in_edit_mode() && (show_adm_links() || $can_create);
 foreach($d as $m){
   if(is_numeric($m['link'])) $lnn = 1*$m['link']; else $lnn = 0;
@@ -48,7 +50,6 @@ foreach($d as $m){
     if($seo_names) $ln = '/'.db_table_field('seo_name', 'seo_names', "`ID`='$lnn'").'/';
     else if($rewrite_on) $ln = "/$lnn/";
          else $ln = $ind_fl.'?pid='.$lnn;
-//    var_dump("$ln"); die;
   }
   $ln .= $page_hash;
   if(!(strpos($ln,'http')===0) && $hs) $ln .= "#$hs";
@@ -64,12 +65,12 @@ foreach($d as $m){
      // Ако преводът вече съдържа <a> таг, то не се добавя <a> таг
      if(!(strpos($nm,'<a ')===false)) $rz .= preg_replace('/>/', "$js>", $nm, 1);
      // инече се добавя <a> таг
-     else $rz .= "<a href=\"$ln\"$js>".$pl.$nm.'</a> '."\n";
+     else $rz .= "<a href=\"$ln\"$js>".$pl.$nm.'</a>'."$sp";
   }
   else {
      $once = true;
-     if ($lk) $rz .= '<a href="'.$ln.'" class="current"'.$js.'>'.$pl.$nm.'</a> '."\n";
-     else $rz .= '<span class="current">'.$pl.$nm."</span> \n";
+     if ($lk) $rz .= '<a href="'.$ln.'" class="current"'.$js.'>'.$pl.$nm.'</a>'."$sp";
+     else $rz .= '<span class="current">'.$pl.$nm."</span>$sp";
   }
   // Добавяне на * за редактиране
   if ($editMode){
@@ -81,7 +82,7 @@ foreach($d as $m){
 if ($editMode){
   $ni = db_table_field('MAX(`ID`)','menu_items','1')+1;
   $rz .= "id $i ".'<a href="'.$adm_pth.'new_record.php?t=menu_items&group='.$i.'&link='.$page_id.
-         '&name=p'.$ni.'_link" style="font-size:80%">New Item</a> '."\n";
+         '&name=p'.$ni.'_link" style="font-size:80%">New Item</a>'."$sp";
 }
 if ($rz){
    $msn = 'menu_start_'.$i;
@@ -178,13 +179,15 @@ function submenu($m,$si,$editMode){
 // Четене номера на меню, което има за родител $m
 $sm = db_select_1('*','menu_tree','`parent`='.$m['group'].' AND `index_page`='.$m['link']);
 if (!$sm) return '';
+// Разделител между линковете в менюто - по подразбиране - интервал
+$sp = stored_value('menu_'.$m['group'].'_sep', ' ');
 // Четене на линковете от намереното меню
 $sd = db_select_m('*','menu_items','`group`='.$sm['group'].' ORDER BY `place` ASC');
 // Съставяне на изскачащото меню
 $rz = "<div id=\"Layer$si\">\n";
 foreach($sd as $d){
   $a = translate($d['name']);
-  $rz .= "<a href=\"index.php?pid=".$d['link']."\">$a</a> \n";
+  $rz .= "<a href=\"index.php?pid=".$d['link']."\">$a</a>$sp\n";
 }
 if (in_edit_mode()) $rz .= $sm['group'];
 $rz .= "</div>\n";
