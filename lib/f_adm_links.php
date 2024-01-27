@@ -135,7 +135,7 @@ e.style.display = "none";
 document.body.style.marginLeft = "revert";
 }
 </script>
-<p id="adm_links"><span>DB_REQ_COUNT</span> 
+<p id="adm_links" class="adm_links_closed"><span>DB_REQ_COUNT</span> 
 <a href="'.$adm_pth.'">'.$_SERVER['REMOTE_ADDR'].'</a>
 <a href="'.$main_index.'">Home</a> '.$enmch.'
 <a href="'.$main_index.'?pid='.$ppid.'">&lt;</a>
@@ -172,16 +172,11 @@ function onClickFirstChild(e){
   else         { s.width = "30px"; s.opacity = 0.1; }
 }
 function onMOverBlock(e){
-  let s = admBlock.style;
-  s.width = "auto"; 
-  s.opacity = 1; 
-//  s.zIndex = 1;
+  admBlock.classList.add("adm_links_opened");
   ch1.addEventListener("click", onClickFirstChild);
 }
 function onMOutBlock() {
-  let s = admBlock.style;
-  s.width = "30px"; 
-  s.opacity = 0.1;
+  admBlock.classList.remove("adm_links_opened");
   ch1.removeEventListener("click", onClickFirstChild);
 }
 </script>';
