@@ -75,9 +75,11 @@ if (ajaxO.readyState == 4 && ajaxO.status == 200){
 <input type="hidden" name="go_to_close" value="0">
 <input type="hidden" name="start_edit_time" value="'.time().'">
 <table>';
-
+//die(print_r($ft,true));
 $i = 0;
 if ($r) foreach($r as $k => $v){
+ if(($ft[$i]==1)||($ft[$i]==3)) $js = ' onfocus="select()"';
+ else $js = '';
  $page_content .= '<tr>';
  if(isset($_GET[$k])) $v = $_GET[$k];
  switch ($ft[$i]){
@@ -89,7 +91,7 @@ if ($r) foreach($r as $k => $v){
  case 10 :
  case 12 : 
  case 254: $page_content .= '<td class="r">'.$k.':</td><td><input type="text" name="'.$k.
-                            '" value="'.$v.'">';
+                            '" value="'.$v.'"'.$js.'>';
            if($k=='ID') $page_content .= ' <button onclick="openOtherRecord(\'ID\',event);">open</button>';
            $page_content .= '</td>'."\n";
            break;

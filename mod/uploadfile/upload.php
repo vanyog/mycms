@@ -44,6 +44,15 @@ $fn = addslashes($_GET['fn']);
 
 // Надпис върху хипервръзката на файла
 $ftx = '';
+if(isset($_GET['text'])) $ftx = $_GET['text'];
+
+// URL - ако има изпратен
+$url = '';
+if(isset($_GET['url'])){
+  $u = parse_url($_GET['url']);
+  $url = $u['scheme'].'://'.$u['host'].$u['path'];
+}
+
 // Дата на показване
 $tshow = '0000-01-01 00:00:00';
 // Дата на скриване
@@ -72,7 +81,7 @@ else {
 // Показване форма за качване на файл.
 // 
 function show_form(){
-global $ftx, $tshow, $thide, $page_content, $fd;
+global $ftx, $url, $tshow, $thide, $page_content, $fd;
 
 $f = isset($fd['filename']) ? uploadfile_href($fd['filename']) : '';
 
@@ -87,6 +96,10 @@ $uf->add_input( new FormInput(translate('uploadfile_timeshow'), 'timeshow', 'tex
 $uf->add_input( new FormInput(translate('uploadfile_timehide'), 'timehide', 'text', $thide) );
 
 $tx = new FormInput(translate('uploadfile_linktext'), 'text', 'text', $ftx);
+$tx->size = 80;
+$uf->add_input( $tx );
+
+$tx = new FormInput(translate('uploadfile_url'), 'url', 'text', $url);
 $tx->size = 80;
 $uf->add_input( $tx );
 
@@ -110,11 +123,14 @@ $fld = current_pth(__FILE__);
 $fld = $_SERVER['DOCUMENT_ROOT'].stored_value('uploadfile_dir',$fld);
 if(substr($fld,-1)!='/') $fld .= '/';
 
-if(!file_exists($fld)) die("Directory '$fld' do not exist.");
+if (!file_exists($fld)) die("Directory '$fld' do not exist.");
 if (!is_writable($fld)) die("Directory '$fld' is not writable.");
 
 // Път до качения файл
 $fln = $fld.$_FILES['file']['name'];
+
+// Aко е изпратен URL
+if(!empty($_POST['url'])) $fln = $fld.basename($_POST['url']);
 
 // Четене на данни от запис за файл със същото име.
 $dt = db_select_1('*','files',"`filename`='$fln'",false);
@@ -142,6 +158,9 @@ if (($fln!=$fld) && file_exists($fln) && (!$dt || ($dt['ID']!=$fid)) ){
   die(translate('uploadfile_fileexists'));
 }
 
+// Aко е изпратен URL, файла се изтегля от него
+if(!empty($_POST['url'])) file_put_contents($fln, fopen($_POST['url'], 'r'));
+
 // Преместване на качения файл в директория за качване на файлове
 if ($_FILES['file']['tmp_name'] && !move_uploaded_file($_FILES['file']['tmp_name'], $fln)) die('Do not uploaded');
 
@@ -155,7 +174,7 @@ else $q = "INSERT INTO `$tn_prefix"."files` SET `date_time_1`=NOW(), `date_time_
 $q .= "`date_time_3`='".$_POST['timeshow'].
       "', `date_time_4`='".$_POST['timehide'].
       "', `pid`='$pid', `name`='$fn', ";
-if ($_FILES['file']['tmp_name']) $q .= "`filename`='$fln', ";
+if ($_FILES['file']['tmp_name'] || !empty($_POST['url'])) $q .= "`filename`='$fln', ";
 $q .= "`text`='".addslashes($_POST['text'])."'$w;";
 mysqli_query($db_link,$q);
 purge_page_cache($_POST['referer']);

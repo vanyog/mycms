@@ -18,10 +18,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 function error404(){
-global $adm_pth, $page_id;
+global $adm_pth, $page_id, $page_data;
 if (show_adm_links() && ($page_id>0))
   return '<p><a href="'.$adm_pth.'new_record.php?t=pages&ID='.$page_id.
-         '&title=p'.$page_id.'_title&content=p'.$page_id.'_content">Click here</a> to create this page.</p>';
+         '&template_id='.$page_data['template_id'].
+         '&title=p'.$page_id.'_title&content=p'.$page_id.'_content'.
+         '&hidden=0">Click here</a> to create this page.</p>';
 }
 
 ?>

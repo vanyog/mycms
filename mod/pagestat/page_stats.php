@@ -155,7 +155,7 @@ foreach($da as $d){
   $rz .= '<tr><td><a href="page_stats.php?date='.$d['date'].'">'.$d['date']."</a> $t".
          '</td><td><div style="display:inline-block; background-color:red;width:'.$a.'px;">'.
          $d['count'].'</div>';
-  $dv =  $d['count']/$ave;
+  $dv =  $ave ? intval($d['count'])/intval($ave) : 0;
   if($dv>10 && isset($d['ID'])) $rz .= ' <a href="'.set_self_query_var('del',$d['ID']).'">x</a>';    
   $rz .= '</td>';
   $rz .= "</tr>\n";

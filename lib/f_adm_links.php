@@ -132,7 +132,8 @@ if (e.keyCode==13){
 function closeAdminLinks(){
 var e = document.getElementById("adm_links");
 e.style.display = "none";
-document.body.style.marginLeft = "revert";
+document.body.style.marginLeft = "initial";
+document.body.style.width = "initial";
 }
 </script>
 <p id="adm_links" class="adm_links_closed"><span>DB_REQ_COUNT</span> 

@@ -147,7 +147,7 @@ function acceptable($u, $y){
 global $edit_name, $page_id;
 $a = parse_url($u);
 $b = array();
-if (isset($a['query'])) parse_str($a['query'],$b);
+if (isset($a['query'])) parse_str($a['query'], $b);
 $ka = array_keys($b);
 $o = stored_value('acceptable_params');
 foreach($ka as $k){
@@ -158,6 +158,7 @@ foreach($ka as $k){
   if (strpos($o,"=$k=")===false){
      if ($y) return '';
      else unset($b[$k]);
+     continue;
   }
   if(($k=='pid')||($k=='lid')){ 
      $c = array();

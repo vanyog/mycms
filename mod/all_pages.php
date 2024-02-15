@@ -80,7 +80,9 @@ foreach($pd as $p){
   }
 }
 
-$page_content = encode('<p>Всичко страници: '.count($pd).", показани: $c".', неизползвани номера: <a href="'.set_self_query_var('u',1).'">'.($ma-count($pd))."</a></p>
+$page_content = encode('<h1>Списък на всички страници на сайта</h1>'.
+//'<p><a href="'.$pth.'">Начална страница на сайта</a></p>'.
+'<p>Всичко страници: '.count($pd).", показани: $c".', неизползвани номера: <a href="'.set_self_query_var('u',1).'">'.($ma-count($pd))."</a></p>
 <p><a href=\"".set_self_query_var('t',1)."\">Със заглавия</a></p>
 <table><tr>").$rz.'</tr></table>';
 

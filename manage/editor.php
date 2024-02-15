@@ -187,13 +187,16 @@ var tx = te.value;
 var s = te.selectionStart;
 var e = te.selectionEnd;
 if(s!=e) return;
-if((tx[e]=="<")&&(tx[e+1]!="/")) while( (e<tx.length) && (tx[e]!=" ") && (tx[e]!=">")) e++;
+if((tx[e]=="<")&&(tx[e+1]!="/")) 
+   while( (e<tx.length) && (tx[e]!=" ") && (tx[e]!=">")) e++;
 if(e==s) return;
 var tn = tx.substring(s+1,e);
 while( (e<tx.length) && (tx[e]!=">") ) e++;
 var ct = "</"+tn+">";
 var i = tx.indexOf(ct, e+1);
-var nt = tx.substring(0,s) + tx.substring(e+1, i) + tx.substring(i+ct.length);
+var nt = "";
+if(i<0) nt = tx.substring(0,s) + tx.substring(e+1);
+else nt = tx.substring(0,s) + tx.substring(e+1, i) + tx.substring(i+ct.length);
 te.value = nt;
 te.selectionStart = s;
 te.selectionEnd = s;

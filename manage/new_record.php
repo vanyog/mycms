@@ -41,7 +41,7 @@ foreach($fn as $i => $n){
      if (!isset($_GET['date_time_1'])) $q .= "`$n`=NOW(), ";
      else $q .= "`$n`='".addslashes($_GET['date_time_1'])."', ";
      break;
-  case 'hidden': break;
+//  case 'hidden': die("aaa");break;
   case 'language':
      if($tb=='users'){
      if (!isset($_GET['language'])) $q .= "`$n`='English', ";
