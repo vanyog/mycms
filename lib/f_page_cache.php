@@ -57,7 +57,7 @@ if(isset($_GET['purge'])){
 
 function page_cache(){
 // При случаи, в които не се използва кеш - празен стринг
-if (do_not_cache()) return '';
+//if (do_not_cache()) return '';
 global $language, $page_data;
 $t = stored_value('cache_time');
 // Не е зададено време за кеширане, или то е 0
@@ -160,17 +160,17 @@ foreach($ka as $k){
      else unset($b[$k]);
      continue;
   }
-  if(($k=='pid')||($k=='lid')){ 
+  if(($k=='pid')||($k=='lid')){
      $c = array();
-     if (preg_match('/\d?/', $b[$k], $c) && $c[0]) $b[$k] = $c[0];
+     if (preg_match('/\d+/', $b[$k], $c) && $c[0]) $b[$k] = $c[0];
      else if(($k=='lid') && !in_array($b[$k], array('cat','all','new','old','click')))
-            $b[$k] = $page_id;
+              $b[$k] = $page_id;
   }
 }
 ksort($b);
 $a['query'] = http_build_query($b);
 $rz = isset($a['path']) ? $a['path'] : '';
-if ($a['query']) $rz .= '?'.$a['query'];
+if ($a['query']) $rz .= '?'.$a['query'];// die($rz);
 return $rz;
 }
 
