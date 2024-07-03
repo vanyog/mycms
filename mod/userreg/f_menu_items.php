@@ -20,7 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 function userreg_menu_items(){
 $lk = current_pth(__FILE__).'new_user.php';
-return "<a href=\"$lk\" target=\"UserReg\">UserReg New</a> ";
+$l2 = current_pth(__FILE__).'delete_users.php';
+return "<a href=\"$lk\" target=\"UserReg\">UserReg New</a> 
+<a href=\"$l2\" target=\"UserReg\">UserReg Delete</a> ";
 }
 
 ?>

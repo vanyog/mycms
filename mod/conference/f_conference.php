@@ -221,7 +221,7 @@ $ut = schedules_in_event($day2[1],$day2[0]) || $adm;
 // Адрес на страницата за редактиране на резюме и качване на доклад от участник
 $edp = stored_value('conference_editpaper', '/index.php?pid=1068');
 // Показване на следващ доклад, ако има право на такъв
-if ( $et && ($i=count($pd)) && ($i<$proccount) )
+if ( $et && ($i==count($pd)) && ($i<$proccount) )
     $rz .= '<h3>'.translate('conference_'.($i+1).'paper')."</h3>\n";
 if (isset($pd[$i]['title'])) 
     $rz .= "<ptitle>".mb_strtoupper($pd[$i]['title'])."</ptitle>\n";

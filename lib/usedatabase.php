@@ -42,7 +42,7 @@ try { $l = mysqli_connect($host,$user,$password,$database); }
 catch (Exception $e){
  if (!headers_sent()) header("Content-Type: text/html; charset=Windows-1251");
  echo "<p>Не се получава връзка с MySQL сървъра!</p>\n<pre>";
- if(substr($_SERVER['REMOTE_ADDR'],0,4)=='127.'){ echo '<p>'.$e->xdebug_message."</p>\n"; }
+ if(substr($_SERVER['REMOTE_ADDR'],0,4)=='127.'){ echo '<p>'/*.$e->message."</p>\n"*/; var_dump($e); }
  die;
 }
 if($l===false) { debug_print_backtrace(); die('No link to database.'); }

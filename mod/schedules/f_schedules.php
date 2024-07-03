@@ -88,7 +88,7 @@ return $s.'
 
 function schedules_select($l){
 // Четене имена на графици
-$da = db_select_m('sch_name', 'schedules', '1 GROUP BY `sch_name` ORDER BY `ID` DESC');
+$da = db_select_m('sch_name', 'schedules', '1 GROUP BY `sch_name`,`ID` ORDER BY `ID` DESC');
 $sl = array();
 foreach($da as $d){
   $sl[$d['sch_name']] = db_table_field('text', 'content', "`name`='".$d['sch_name']."'");

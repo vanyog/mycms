@@ -91,7 +91,7 @@ foreach($this->ins as $j => $i){
   if($this->labels) $rz .= $i->html($this->astable, $this->name."_$j", $this->t1, $this->t2, $this->t3);
   else $rz .= $i->html($this->astable, '', $this->t1, $this->t2, $this->t3);
   if(isset($i->type) && ($i->type=='file')) $has_files = true;
-  if($i->nocheck){ $noCheckList .= '"'.$i->name.'",'; }
+  if(isset($i->nocheck) && $i->nocheck){ $noCheckList .= '"'.$i->name.'",'; }
   if (!(strpos($i->js, 'ifNotEmpty_'.$this->name.'()')===false)){
      if($noCheckList) $js1 = sprintf($js1, substr($noCheckList,0,-1) );
      $js .= $js1;
