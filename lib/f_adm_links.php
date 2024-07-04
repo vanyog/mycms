@@ -161,23 +161,24 @@ document.body.style.width = "initial";
 <span>&nbsp;</span>
 </p>
 <script>
-var admBlock = document.getElementById("adm_links");
-var ch1 = admBlock.firstChild;
+var block = document.getElementById("adm_links");
+var ch1 = block.firstChild;
 ch1.style.cursor = "pointer";
-admBlock.addEventListener("mouseover", onMOverBlock);
-admBlock.addEventListener("mouseout", onMOutBlock);
+block.addEventListener("mouseover", onMOverBlock);
+block.addEventListener("mouseout", onMOutBlock);
 function onClickFirstChild(e){
-  let s = admBlock.style;
-  var w = window.getComputedStyle(admBlock, null).getPropertyValue("width");
-  if(w=="30px"){ s.width = "auto"; s.opacity = 1; }
-  else         { s.width = "30px"; s.opacity = 0.1; }
+var w = window.getComputedStyle(block, null).getPropertyValue("width");
+if(w=="30px"){ block.style.width = "auto"; block.style.opacity = 1; }
+else         { block.style.width = "30px"; block.style.opacity = 0.1; }
 }
 function onMOverBlock(e){
-  admBlock.classList.add("adm_links_opened");
+  block.style.width = "auto"; 
+  block.style.opacity = 1; 
   ch1.addEventListener("click", onClickFirstChild);
 }
 function onMOutBlock() {
-  admBlock.classList.remove("adm_links_opened");
+  block.style.width = "30px"; 
+  block.style.opacity = 0.1;
   ch1.removeEventListener("click", onClickFirstChild);
 }
 </script>';
