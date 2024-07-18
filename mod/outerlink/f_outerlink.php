@@ -39,7 +39,7 @@ $bb = explode(':',$aa[0]);
 if(isset($bb[1])){
   $n = stored_value('outer_links_server_'.$bb[0]);
   if(!$n) die('outer_links_server_'.$bb[0].' server is not defined in options table');
-  die($aa[1]);
+///  die($aa[1]);
   if(isset($aa[1])){
      return '<a href="'.$n.'&lid='.$bb[1].'" target="_blank">'.$aa[1].'</a>';
   }

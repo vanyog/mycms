@@ -18,14 +18,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Тази функция проверява дали с GET e изпратена променлива $k със стойност $v
-// или има бисквитка с име $k и стойност $v.
-// Ако това е така връща истина.
+// Тази функция проверява дали има бисквита с име cookies_accept и стойност yes.
+// Ако има - създава бисквитка с има $k и стойност $v.
+// иначе задава глобална променлива $need_cookie = true и връща false.
 
-// Ако има стойност $_GET[$k] се установява бисквитка с тази стойност.
 
 function mysetcookie($k,$v){
-$rz = false;//var_dump($_COOKIE['cookies_accept']); die();
+$rz = false;//var_dump($_COOKIE); die();
 if(!isset($_COOKIE['cookies_accept']) || ($_COOKIE['cookies_accept']!='yes')){
    if (isset($_GET['cookies_accept']) && ($_GET['cookies_accept']=='yes') ){
        $rz = setcookie('cookies_accept', 'yes', 

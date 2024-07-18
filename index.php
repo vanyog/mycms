@@ -128,7 +128,7 @@ if (!$cnt){
   // Масив с опции
   $page_options = '';
   if ($page_data['options']) { $page_options = explode(' ',$page_data['options']); }
-
+  
  // Попълване със съдържание на елементите в шаблона
  $cnt = parse_template($page_data);
 
