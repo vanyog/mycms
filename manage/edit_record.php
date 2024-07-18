@@ -67,6 +67,12 @@ if (ajaxO.readyState == 4 && ajaxO.status == 200){
   document.location.href = l;
 }
 }
+function onDelete(id)
+{
+if(confirm("Do you really want to delete this record (id="+id+")?")){ 
+  document.location.href = "delete_record.php?t='.$t.'&r='.$id.'";
+}
+}
 </script>
 <p>Database: <strong>'.$database.'</strong> Table: <strong>'.$tn_prefix.$t.'</strong></p>
 <form method="POST" action="save_record.php" name="edit_form">
@@ -111,7 +117,7 @@ if ($r) foreach($r as $k => $v){
 }
 else die("<p>Record ID = $id do not exist.</p>
 <p>Click <a href=\"new_record.php?t=$t&ID=$id\">here</a> to create.</p>
-<p><a href=\"/\">Home</a> &nbsp; < a href=\"show_table.php?t=$t\">Table</a></p>");
+<p><a href=\"/\">Home</a> &nbsp; <a href=\"show_table.php?t=$t\">Table</a></p>");
 
 $rfr = $adm_pth.'show_table.php?t='.$t;
 if (isset($_SESSION['http_referer'])) $rfr = $_SESSION['http_referer'];
@@ -120,6 +126,7 @@ $page_content .= '</table>
 <input type="submit" value="Save"> 
 <input type="button" value="Save & Go back" onclick="saveAndClose();"> 
 <input type="button" value="Table" onclick="document.location=\''.$adm_pth.'show_table.php?t='.$t.'\'">
+<input type="button" value="Delete" onclick="onDelete('.$id.');"> 
 <input type="button" value="Cancel" onclick="document.location=\''.$rfr.'\'">
 </form>';
 
