@@ -6,6 +6,7 @@ conf_database.php
 error_log
 favicons
 googleac*
+!manage/_secure.php
 manage/ckeditor
 manifest.json
 mod/bgdic

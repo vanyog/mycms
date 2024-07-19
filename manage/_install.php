@@ -86,7 +86,7 @@ echo '<p>All done.</p>
 
 <p><a href="'.dirname($_SERVER['PHP_SELF']).
 '/">Go to manage</a> folder or go to <a href="'.dirname(dirname($_SERVER['PHP_SELF'])).
-'/index.php">Home page</a>.</p>';
+'/">Home page</a>.</p>';
 
 // 
 // Функция, показваща форма за въвеждане на данните, които трябва
