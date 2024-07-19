@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0-rc1
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Хост: localhost
--- Време на генериране: 27 яну 2024 в 10:02
--- Версия на сървъра: 8.0.26
--- Версия на PHP: 8.2.12
+-- Host: localhost
+-- Generation Time: Jul 19, 2024 at 09:11 AM
+-- Server version: 8.3.0
+-- PHP Version: 8.3.9
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,15 +18,16 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- База данни: `mycms`
+-- Database: `mycms`
 --
 
 -- --------------------------------------------------------
 
 --
--- Структура на таблица `content`
+-- Table structure for table `content`
 --
 
+DROP TABLE IF EXISTS `content`;
 CREATE TABLE `content` (
   `ID` int NOT NULL,
   `name` varchar(50) NOT NULL,
@@ -34,11 +35,11 @@ CREATE TABLE `content` (
   `date_time_1` datetime NOT NULL DEFAULT '0000-01-01 00:00:00',
   `date_time_2` datetime NOT NULL,
   `language` varchar(5) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT 'bg',
-  `text` mediumtext CHARACTER SET utf8 COLLATE utf8_unicode_ci
+  `text` mediumtext CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 --
--- Схема на данните от таблица `content`
+-- Dumping data for table `content`
 --
 
 INSERT INTO `content` (`ID`, `name`, `nolink`, `date_time_1`, `date_time_2`, `language`, `text`) VALUES
@@ -405,9 +406,10 @@ INSERT INTO `content` (`ID`, `name`, `nolink`, `date_time_1`, `date_time_2`, `la
 -- --------------------------------------------------------
 
 --
--- Структура на таблица `content_history`
+-- Table structure for table `content_history`
 --
 
+DROP TABLE IF EXISTS `content_history`;
 CREATE TABLE `content_history` (
   `ID` int NOT NULL,
   `date` date NOT NULL,
@@ -417,9 +419,10 @@ CREATE TABLE `content_history` (
 -- --------------------------------------------------------
 
 --
--- Структура на таблица `files`
+-- Table structure for table `files`
 --
 
+DROP TABLE IF EXISTS `files`;
 CREATE TABLE `files` (
   `ID` int NOT NULL,
   `pid` int NOT NULL,
@@ -429,11 +432,11 @@ CREATE TABLE `files` (
   `date_time_3` datetime NOT NULL,
   `date_time_4` datetime NOT NULL,
   `filename` varchar(255) NOT NULL,
-  `text` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
+  `text` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
--- Схема на данните от таблица `files`
+-- Dumping data for table `files`
 --
 
 INSERT INTO `files` (`ID`, `pid`, `name`, `date_time_1`, `date_time_2`, `date_time_3`, `date_time_4`, `filename`, `text`) VALUES
@@ -442,21 +445,23 @@ INSERT INTO `files` (`ID`, `pid`, `name`, `date_time_1`, `date_time_2`, `date_ti
 -- --------------------------------------------------------
 
 --
--- Структура на таблица `filters`
+-- Table structure for table `filters`
 --
 
+DROP TABLE IF EXISTS `filters`;
 CREATE TABLE `filters` (
   `ID` int NOT NULL,
-  `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `filters` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_bin;
+  `name` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL,
+  `filters` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
 -- --------------------------------------------------------
 
 --
--- Структура на таблица `menu_items`
+-- Table structure for table `menu_items`
 --
 
+DROP TABLE IF EXISTS `menu_items`;
 CREATE TABLE `menu_items` (
   `ID` int NOT NULL,
   `place` int NOT NULL,
@@ -466,7 +471,7 @@ CREATE TABLE `menu_items` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
--- Схема на данните от таблица `menu_items`
+-- Dumping data for table `menu_items`
 --
 
 INSERT INTO `menu_items` (`ID`, `place`, `group`, `name`, `link`) VALUES
@@ -481,9 +486,10 @@ INSERT INTO `menu_items` (`ID`, `place`, `group`, `name`, `link`) VALUES
 -- --------------------------------------------------------
 
 --
--- Структура на таблица `menu_tree`
+-- Table structure for table `menu_tree`
 --
 
+DROP TABLE IF EXISTS `menu_tree`;
 CREATE TABLE `menu_tree` (
   `ID` int NOT NULL,
   `group` int NOT NULL,
@@ -492,7 +498,7 @@ CREATE TABLE `menu_tree` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
--- Схема на данните от таблица `menu_tree`
+-- Dumping data for table `menu_tree`
 --
 
 INSERT INTO `menu_tree` (`ID`, `group`, `parent`, `index_page`) VALUES
@@ -502,9 +508,10 @@ INSERT INTO `menu_tree` (`ID`, `group`, `parent`, `index_page`) VALUES
 -- --------------------------------------------------------
 
 --
--- Структура на таблица `options`
+-- Table structure for table `options`
 --
 
+DROP TABLE IF EXISTS `options`;
 CREATE TABLE `options` (
   `ID` int NOT NULL,
   `name` varchar(100) NOT NULL,
@@ -512,7 +519,7 @@ CREATE TABLE `options` (
 ) ENGINE=InnoDB DEFAULT CHARSET=cp1251;
 
 --
--- Схема на данните от таблица `options`
+-- Dumping data for table `options`
 --
 
 INSERT INTO `options` (`ID`, `name`, `value`) VALUES
@@ -531,7 +538,7 @@ INSERT INTO `options` (`ID`, `name`, `value`) VALUES
 (13, 'cache_time', '10'),
 (14, 'css_adm_links', 'body { margin-left:40px; }\r\n#adm_links { font-size:150%; line-height:35px; padding:0 4px; opacity:0.1; position:fixed; top:0; left:0; margin:0; background-color:white; width:30px; height:90vh; overflow-y:scroll; overflow-x:hidden; }\r\n#adm_links a, #adm_links span, #adm_links input { white-space:nowrap; float:left; clear:left; }\r\n#adm_links a:hover { text-decoration:underline; }\r\n'),
 (15, 'css_all_pages', 'body { font-family: arial, sans-serif; }\r\nh1 { font-size: 2em; }\r\nh2 { font-size: 1.5em }\r\nh3 { font-size: 1.17em }\r\nh4, h5, h6 { font-size: 1em }\r\na { color:#005941; }\r\n.lang_flag { float:left; margin:0 15px 0 0; padding:0; }\r\n.lang_flag img { width:60px; height:30px; vertical-align:middle; }\r\nheader { background-color:#005941; color:#fff; padding: 10px; overflow:auto; line-height:50px; }\r\nheader a { color:#fff; text-decoration:none; margin:15px; padding:10px; white-space:nowrap; }\r\nheader span { border: solid 1px; padding:10px; margin:14px; white-space:nowrap; }\r\nheader a:hover { color:#97ff93; }\r\nnav { display:inline-block; min-width:160px; white-space:nowrap; }\r\n#navHidden { display:inline-block; position:absolute; top:0; z-index:1; background-color:#005941; line-height:initial; overflow:hidden; }\r\n#navHidden a { float:left; }\r\nsection { min-height: calc(100vh - 196px); max-width:870px; margin:10px auto; box-shadow: 1px 1px 5px 0 rgba(50,50,50,0.4); padding:10px; }\r\nfooter { text-align:center; }\r\n#cookies_message { text-align:center; overflow:auto; background-color:#ffeda4; }\r\n.searched { background-color:yellow; }\r\ntd { padding-right:10px; }\r\n#site_search input[type=\"button\"] { height:30px; }\r\n'),
-(17, 'css_usermenu', '#user_menu { display:inline-block; position:absolute; top:0; right:0; padding:5px; opacity:0.1; line-height:35px; }\r\n#user_menu:hover { background-color:#fff; opacity:1; }\r\n#user_menu a, #user_menu span, #user_menu div.sep { float:right; clear:right; }\r\n#user_menu div.sep { width:100% }\r\n#user_menu span a { float:none; }\r\n\r\n'),
+(17, 'css_usermenu', '#user_menu { display:inline-block; position:fixed; top:0; right:0; padding:5px; opacity:0.1; line-height:35px; height:95vh; overflow-y:scroll; }\r\n#user_menu:hover { background-color:#fff; opacity:1; }\r\n#user_menu a, #user_menu span, #user_menu div.sep { float:right; clear:right; }\r\n#user_menu div.sep { width:100% }\r\n#user_menu span a { float:none; }\r\n\r\n'),
 (18, 'userreg_login_admin', 'index.php?pid=2&user2=login'),
 (19, 'userreg_newreg_admin', 'index.php?pid=2&user2=newreg'),
 (20, 'userreg_logout_admin', 'index.php?pid=2&user2=logout'),
@@ -554,9 +561,10 @@ INSERT INTO `options` (`ID`, `name`, `value`) VALUES
 -- --------------------------------------------------------
 
 --
--- Структура на таблица `pages`
+-- Table structure for table `pages`
 --
 
+DROP TABLE IF EXISTS `pages`;
 CREATE TABLE `pages` (
   `ID` int NOT NULL,
   `menu_group` int NOT NULL,
@@ -571,7 +579,7 @@ CREATE TABLE `pages` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
--- Схема на данните от таблица `pages`
+-- Dumping data for table `pages`
 --
 
 INSERT INTO `pages` (`ID`, `menu_group`, `title`, `content`, `template_id`, `hidden`, `donotcache`, `options`, `dcount`, `tcount`) VALUES
@@ -587,25 +595,27 @@ INSERT INTO `pages` (`ID`, `menu_group`, `title`, `content`, `template_id`, `hid
 -- --------------------------------------------------------
 
 --
--- Структура на таблица `page_cache`
+-- Table structure for table `page_cache`
 --
 
+DROP TABLE IF EXISTS `page_cache`;
 CREATE TABLE `page_cache` (
   `ID` int NOT NULL,
   `page_ID` int NOT NULL,
-  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `language` varchar(5) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL,
+  `language` varchar(5) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL,
   `date_time_1` datetime NOT NULL,
-  `text` mediumtext CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `referer` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8_bin;
+  `text` mediumtext CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL,
+  `referer` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
 -- --------------------------------------------------------
 
 --
--- Структура на таблица `permissions`
+-- Table structure for table `permissions`
 --
 
+DROP TABLE IF EXISTS `permissions`;
 CREATE TABLE `permissions` (
   `ID` int NOT NULL,
   `user_id` int NOT NULL,
@@ -615,7 +625,7 @@ CREATE TABLE `permissions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=cp1251 COLLATE=cp1251_bulgarian_ci;
 
 --
--- Схема на данните от таблица `permissions`
+-- Dumping data for table `permissions`
 --
 
 INSERT INTO `permissions` (`ID`, `user_id`, `type`, `object`, `yes_no`) VALUES
@@ -625,9 +635,10 @@ INSERT INTO `permissions` (`ID`, `user_id`, `type`, `object`, `yes_no`) VALUES
 -- --------------------------------------------------------
 
 --
--- Структура на таблица `scripts`
+-- Table structure for table `scripts`
 --
 
+DROP TABLE IF EXISTS `scripts`;
 CREATE TABLE `scripts` (
   `ID` int NOT NULL,
   `name` varchar(50) NOT NULL,
@@ -636,7 +647,7 @@ CREATE TABLE `scripts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
--- Схема на данните от таблица `scripts`
+-- Dumping data for table `scripts`
 --
 
 INSERT INTO `scripts` (`ID`, `name`, `script`, `coment`) VALUES
@@ -652,9 +663,10 @@ INSERT INTO `scripts` (`ID`, `name`, `script`, `coment`) VALUES
 -- --------------------------------------------------------
 
 --
--- Структура на таблица `templates`
+-- Table structure for table `templates`
 --
 
+DROP TABLE IF EXISTS `templates`;
 CREATE TABLE `templates` (
   `ID` int NOT NULL,
   `parent` int DEFAULT NULL,
@@ -663,7 +675,7 @@ CREATE TABLE `templates` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
--- Схема на данните от таблица `templates`
+-- Dumping data for table `templates`
 --
 
 INSERT INTO `templates` (`ID`, `parent`, `template`, `comment`) VALUES
@@ -672,9 +684,10 @@ INSERT INTO `templates` (`ID`, `parent`, `template`, `comment`) VALUES
 -- --------------------------------------------------------
 
 --
--- Структура на таблица `users`
+-- Table structure for table `users`
 --
 
+DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `ID` int NOT NULL,
   `creator_id` int NOT NULL DEFAULT '0',
@@ -683,38 +696,39 @@ CREATE TABLE `users` (
   `date_time_1` datetime NOT NULL DEFAULT '0000-01-01 00:00:00',
   `date_time_2` datetime NOT NULL DEFAULT '0000-01-01 00:00:00',
   `gdpr` tinyint(1) NOT NULL DEFAULT '0',
-  `language` enum('English','Български') CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT 'English',
-  `username` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
-  `password` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
-  `newpass` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
-  `email` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `aemails` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `language` enum('English','Български') CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL DEFAULT 'English',
+  `username` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin DEFAULT NULL,
+  `password` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin DEFAULT NULL,
+  `newpass` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin DEFAULT NULL,
+  `email` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `aemails` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   `code` varchar(40) CHARACTER SET ascii COLLATE ascii_bin DEFAULT NULL,
-  `firstname` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `secondname` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `thirdname` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `firstname` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `secondname` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `thirdname` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   `country` varchar(2) CHARACTER SET ascii COLLATE ascii_bin DEFAULT NULL,
-  `institution` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `position` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `address` text CHARACTER SET utf8 COLLATE utf8_general_ci,
+  `institution` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `position` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `address` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci,
   `telephone` varchar(40) CHARACTER SET ascii COLLATE ascii_bin DEFAULT NULL,
   `IP` varchar(15) CHARACTER SET armscii8 COLLATE armscii8_bin DEFAULT NULL,
   `nomessage` tinyint(1) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Схема на данните от таблица `users`
+-- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`ID`, `creator_id`, `type`, `date_time_0`, `date_time_1`, `date_time_2`, `gdpr`, `language`, `username`, `password`, `newpass`, `email`, `aemails`, `code`, `firstname`, `secondname`, `thirdname`, `country`, `institution`, `position`, `address`, `telephone`, `IP`, `nomessage`) VALUES
-(1, 0, 'admin', '2023-11-01 22:12:19', '2023-11-01 22:12:19', '2023-12-06 07:07:13', 0, 'English', 'admin', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', NULL, '', NULL, NULL, '', '', '', 'BG', NULL, NULL, NULL, '', '::1', 0);
+(1, 0, 'admin', '2023-11-01 22:12:19', '2023-11-01 22:12:19', '2024-07-19 12:09:23', 0, 'English', 'admin', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', NULL, '', NULL, NULL, '', '', '', 'BG', NULL, NULL, NULL, '', '127.0.0.1', 0);
 
 -- --------------------------------------------------------
 
 --
--- Структура на таблица `visit_history`
+-- Table structure for table `visit_history`
 --
 
+DROP TABLE IF EXISTS `visit_history`;
 CREATE TABLE `visit_history` (
   `ID` int NOT NULL,
   `page_id` int NOT NULL,
@@ -725,37 +739,40 @@ CREATE TABLE `visit_history` (
 -- --------------------------------------------------------
 
 --
--- Структура на таблица `who_made_change`
+-- Table structure for table `who_made_change`
 --
 
+DROP TABLE IF EXISTS `who_made_change`;
 CREATE TABLE `who_made_change` (
   `ID` int NOT NULL,
   `date_time_1` datetime NOT NULL,
-  `user_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `user_name` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL,
   `is_admin` tinyint(1) NOT NULL,
   `content_id` int NOT NULL,
   `page_id` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
 -- --------------------------------------------------------
 
 --
--- Структура на таблица `worktime`
+-- Table structure for table `worktime`
 --
 
+DROP TABLE IF EXISTS `worktime`;
 CREATE TABLE `worktime` (
-  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL,
   `time` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
 
 --
--- Схема на данните от таблица `worktime`
+-- Dumping data for table `worktime`
 --
 
 INSERT INTO `worktime` (`name`, `time`) VALUES
 ('content.3', 360),
 ('files.2', 11),
 ('options.15', 2025),
+('options.17', 74),
 ('options.35', 17345),
 ('options.39', 45),
 ('templates.1', 616);
@@ -765,7 +782,7 @@ INSERT INTO `worktime` (`name`, `time`) VALUES
 --
 
 --
--- Индекси за таблица `content`
+-- Indexes for table `content`
 --
 ALTER TABLE `content`
   ADD PRIMARY KEY (`ID`),
@@ -776,14 +793,14 @@ ALTER TABLE `content`
 ALTER TABLE `content` ADD FULLTEXT KEY `text` (`text`);
 
 --
--- Индекси за таблица `content_history`
+-- Indexes for table `content_history`
 --
 ALTER TABLE `content_history`
   ADD PRIMARY KEY (`ID`),
   ADD KEY `date` (`date`);
 
 --
--- Индекси за таблица `files`
+-- Indexes for table `files`
 --
 ALTER TABLE `files`
   ADD PRIMARY KEY (`ID`),
@@ -792,41 +809,41 @@ ALTER TABLE `files`
   ADD KEY `filename` (`filename`);
 
 --
--- Индекси за таблица `filters`
+-- Indexes for table `filters`
 --
 ALTER TABLE `filters`
   ADD PRIMARY KEY (`ID`),
   ADD KEY `name` (`name`);
 
 --
--- Индекси за таблица `menu_items`
+-- Indexes for table `menu_items`
 --
 ALTER TABLE `menu_items`
   ADD PRIMARY KEY (`ID`),
   ADD KEY `group` (`group`);
 
 --
--- Индекси за таблица `menu_tree`
+-- Indexes for table `menu_tree`
 --
 ALTER TABLE `menu_tree`
   ADD PRIMARY KEY (`ID`),
   ADD KEY `group` (`group`);
 
 --
--- Индекси за таблица `options`
+-- Indexes for table `options`
 --
 ALTER TABLE `options`
   ADD PRIMARY KEY (`ID`),
   ADD KEY `name` (`name`);
 
 --
--- Индекси за таблица `pages`
+-- Indexes for table `pages`
 --
 ALTER TABLE `pages`
   ADD PRIMARY KEY (`ID`);
 
 --
--- Индекси за таблица `page_cache`
+-- Indexes for table `page_cache`
 --
 ALTER TABLE `page_cache`
   ADD PRIMARY KEY (`ID`),
@@ -837,26 +854,26 @@ ALTER TABLE `page_cache`
 ALTER TABLE `page_cache` ADD FULLTEXT KEY `text` (`text`);
 
 --
--- Индекси за таблица `permissions`
+-- Indexes for table `permissions`
 --
 ALTER TABLE `permissions`
   ADD PRIMARY KEY (`ID`);
 
 --
--- Индекси за таблица `scripts`
+-- Indexes for table `scripts`
 --
 ALTER TABLE `scripts`
   ADD PRIMARY KEY (`ID`),
   ADD UNIQUE KEY `name` (`name`);
 
 --
--- Индекси за таблица `templates`
+-- Indexes for table `templates`
 --
 ALTER TABLE `templates`
   ADD PRIMARY KEY (`ID`);
 
 --
--- Индекси за таблица `users`
+-- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`ID`),
@@ -870,7 +887,7 @@ ALTER TABLE `users`
 ALTER TABLE `users` ADD FULLTEXT KEY `position` (`position`);
 
 --
--- Индекси за таблица `visit_history`
+-- Indexes for table `visit_history`
 --
 ALTER TABLE `visit_history`
   ADD PRIMARY KEY (`ID`),
@@ -879,7 +896,7 @@ ALTER TABLE `visit_history`
   ADD KEY `count` (`count`);
 
 --
--- Индекси за таблица `who_made_change`
+-- Indexes for table `who_made_change`
 --
 ALTER TABLE `who_made_change`
   ADD PRIMARY KEY (`ID`),
@@ -890,7 +907,7 @@ ALTER TABLE `who_made_change`
   ADD KEY `date_time_1` (`date_time_1`);
 
 --
--- Индекси за таблица `worktime`
+-- Indexes for table `worktime`
 --
 ALTER TABLE `worktime`
   ADD PRIMARY KEY (`name`);
