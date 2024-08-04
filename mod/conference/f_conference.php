@@ -252,7 +252,7 @@ if ($i<count($pd)){
    if(db_table_field('COUNT(*)', 'reviewer_work', 
                      "`proc_id`=".$pd[$i]['ID']." AND `decision`=3",false,false )
      ){
-      $js .= 'CKEDITOR.replace("revanswer");'."\n";
+      $js .= 'CKEDITOR.replace("revanswer",{versionCheck:false});'."\n";
       $f = new HTMLForm('conference_varA_'.$pd[$i]['ID']);
       $f->add_input( new FormInput('', 'ID', 'hidden', $pd[$i]['ID']));
       $fi = new FormTextArea(translate('coference_revAnswer'), 'revanswer', 100, 10, $pd[$i]['revanswer']);
@@ -535,7 +535,7 @@ $fi->ckbutton = '';
 $f->add_input($fi);
 $fi = new FormTextArea( translate('conference_cabstract'), 'abstract', 61, 10, stripslashes($d['abstract']) );
 if (!$et) $fi->js = ' disabled="disabled"';
-else $body_adds .= ' onload="CKEDITOR.replace(\'abstract\');"';
+else $body_adds .= ' onload="CKEDITOR.replace(\'abstract\', {versionCheck:false});"';
 $fi->ckbutton = '';
 $f->add_input($fi);
 // Дали сме в период на качване на пълен текст

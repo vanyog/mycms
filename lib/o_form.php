@@ -229,7 +229,8 @@ if (file_exists($cka)){
 else {
   $sc = '   <script async src="//cdn.ckeditor.com/4.5.7/full/ckeditor.js"></script>'."\n";
   if (strpos($page_header, $sc)===false) $page_header .= $sc;
-  $this->ckbutton = '<input type="button" value="CKEditor" onclick="CKEDITOR.replace(\''.$this->name.'\');"><br>';
+  $this->ckbutton = '<input type="button" value="CKEditor" onclick="CKEDITOR.replace(\''.$this->name.'\',
+{versionCheck:false, language:\'fr\'});"><br>';
 }
 }
 
