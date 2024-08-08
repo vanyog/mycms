@@ -154,7 +154,7 @@ if(substr($t, 0, 5)=='vsu21'){
 $ta = new FormTextArea(translate('feedback_text'), 'text', 100, 10, $tx );
 $ta->size = false;
 $ta->js = ' style="width:99%; height:200px;"';
-$body_adds .= ' onload="CKEDITOR.replace(\'text\');"';
+$body_adds .= ' onload="CKEDITOR.replace(\'text\', {versionCheck:false});"';
 $ta->ckbutton = '';
 $f->add_input( $ta );
 

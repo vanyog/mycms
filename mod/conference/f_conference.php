@@ -486,7 +486,7 @@ if ($adm) {
   $f->add_input($ti);
   $pi = new FormSelect(encode('За публикуване:'), 'publish', array('no','yes'), $d['publish']);
   $f->add_input($pi);
-  $pi = new FormTextArea(encode('Решение на ОК:'), 'oc_decision', 63, 5, stripslashes($d['oc_decision']) );
+  $pi = new FormTextArea(encode('Решение на ОК:'), 'oc_decision', 63, 5, isset($d['oc_decision']) ? stripslashes($d['oc_decision']) : '' );
   $f->add_input($pi);
   $ti = new FormInput(encode('Пленарен доклад:'), 'keylec', 'checkbox');
   if ($d['keylec']) $ti->checked = ' checked';
