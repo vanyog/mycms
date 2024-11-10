@@ -44,6 +44,11 @@ var f = document.edit_form;
 f.go_to_close.value = 1;
 f.submit();
 }
+function doDublicate(id){
+if (confirm("Do you want to duplicate record ID="+id+"?")){
+document.location="duplicate_record.php?t=english_bulgarian&r="+id;
+}
+}
 function openOtherRecord(f,e){
 var r = document.forms.edit_form[f].value;
 var l = "edit_record.php?t='.$t.'&r="+r;
@@ -125,6 +130,7 @@ if (isset($_SESSION['http_referer'])) $rfr = $_SESSION['http_referer'];
 $page_content .= '</table>
 <input type="submit" value="Save"> 
 <input type="button" value="Save & Go back" onclick="saveAndClose();"> 
+<input type="button" value="Duplicate" onclick="doDublicate('.$id.');">
 <input type="button" value="Table" onclick="document.location=\''.$adm_pth.'show_table.php?t='.$t.'\'">
 <input type="button" value="Delete" onclick="onDelete('.$id.');"> 
 <input type="button" value="Cancel" onclick="document.location=\''.$rfr.'\'">
