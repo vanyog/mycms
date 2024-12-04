@@ -60,7 +60,7 @@ else create_conf_database();
 
 include($idir.'conf_database.php');
 
-$site_encoding = $site_encoding = 'UTF-8';
+$site_encoding = 'UTF-8';
 
 header("Content-Type: text/html; charset=$site_encoding");
 
@@ -86,7 +86,7 @@ echo '<p>All done.</p>
 
 <p><a href="'.dirname($_SERVER['PHP_SELF']).
 '/">Go to manage</a> folder or go to <a href="'.dirname(dirname($_SERVER['PHP_SELF'])).
-'/">Home page</a>.</p>';
+'index.php">Home page</a>.</p>';
 
 // 
 // Функция, показваща форма за въвеждане на данните, които трябва
@@ -124,14 +124,17 @@ $i = new FormInput('','','button',_('Save'));
      $i -> set_event('onclick','ifNotEmpty_pform();');
      $f->add_input($i);
 if (count($_POST)) process_data();
-else { echo '
+else { $page_content = '
 <script>
 function langChange(){
 var l = document.forms.pform.language.value;
 document.location = "_install.php?lang=" + l;
 }
 </script>
-<h1>'._('Creation of conf_database.php file').'</h1>'."\n".$f->html(); die; }
+<h1>'._('Creation of conf_database.php file').'</h1>'."\n".$f->html();
+$site_encoding = "UTF-8";
+include($idir.'lib/build_page.php');
+die; }
 }
 
 //
