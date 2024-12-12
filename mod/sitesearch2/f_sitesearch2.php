@@ -135,7 +135,7 @@ $ti->id = 'searchtextfield';
 $f->add_input($ti);
 $b = new FormInput('','','button', translate('sitesearch_submit'));
 $p = current_pth(__FILE__);
-$b->js = 'onclick="doSiteSearch();" id="search_button"'.
+$b->js = 'onclick="doSiteSearch();"'.
          ' title="'.translate('sitesearch_submit').'"'; 
 $f->add_input($b);
 if (isset($_SESSION['text_to_search'])){
