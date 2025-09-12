@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 function mysetcookie($k,$v){
-$rz = false;//var_dump($_COOKIE); die();
+$rz = false; //var_dump($_GET); die();
 if(!isset($_COOKIE['cookies_accept']) || ($_COOKIE['cookies_accept']!='yes')){
    if (isset($_GET['cookies_accept']) && ($_GET['cookies_accept']=='yes') ){
        $rz = setcookie('cookies_accept', 'yes', 
@@ -36,8 +36,8 @@ if(!isset($_COOKIE['cookies_accept']) || ($_COOKIE['cookies_accept']!='yes')){
           return $rz;
        }
        $u = $_SERVER['REQUEST_URI'];
-       if(!(strpos($u, '?')===false)) $u .= '&';
-       $u .= '?cookies_accept=yes';
+       if(strpos($u, '?')===false) $u .= '?'; else $u .= '&';
+       $u .= 'cookies_accept=yes'; //die($u);
        die("<p>To make administration convenient, this site uses cookies. ".
            "Please confirm that you agree to have cookies from this site stored on your device.</p>".
            '<p><a href="'.$u.'">Well I agree</a>.');

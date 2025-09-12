@@ -273,7 +273,7 @@ $this->options = $op;
 $this->selected = $s;
 }
 
-public function html($it, $id, $t1 = '', $t2 = '', $t3 = ''){
+public function html($it, $id = '', $t1 = '', $t2 = '', $t3 = ''){
 $dsbl = lock_form_fields();
 $rz = '';
 if ($it) $rz .= "<tr><th>"; else $rz .= $t1;

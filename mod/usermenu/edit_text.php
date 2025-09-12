@@ -17,7 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Редактиране на текст, показван на някоя страница, след щракване върху линка * след този текст в режим на редактиране
+// Редактиране на текст, показван на някоя страница, след щракване върху линка * след този текст 
+// в режим на редактиране
 
 // Параметри, изпращани с $_GET:
 // Задължителни:
@@ -82,7 +83,7 @@ if (count($_POST)){
   $d['is_admin'] = show_adm_links();
   $d['content_id'] = $i;
   if(isset($_GET['pid'])) $d['page_id'] = $_GET['pid'];
-  db_insert_1($d,'who_made_change');
+  echo db_insert_1($d,'who_made_change',true);  die("222");
   $_POST['date_time_2'] = 'NOW()';
   // Запазване на редактираните данни
   if ($i) process_record($_POST, 'content');

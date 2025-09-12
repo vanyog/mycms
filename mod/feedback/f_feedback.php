@@ -267,6 +267,16 @@ case '[mypatrpage]': $lk = 'https://conference.vsu.bg/index.php?pid=57&lang='.$l
 case '[titlestoreview]': include_once($idir.'mod/conference/f_conference.php');
                          $rz = str_replace($p, conference_userRevList($uid, false, false), $rz );
                          break;
+case '[nofile]': $flns = db_select_1('abstracttextfile,fulltextfile,fulltextfile2,fulltextfile3,fulltextfile4',
+                                     'proceedings', "`ID`=".$_GET['proc'], false);
+                 $ct = stored_value('conference_usertype');
+                 $fd = $_SERVER['DOCUMENT_ROOT'].stored_value('conference_files_'.$ct);
+                 $lk = '';          
+                 foreach($flns as $fn) if(!empty($fn) && !file_exists($fd.$fn)){
+                    $lk .= '<br>'.$fn;
+                 }
+                 $rz = str_replace($p, $lk, $rz);
+                 break;
 }
 return $rz;
 }

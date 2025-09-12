@@ -88,6 +88,8 @@ $year = substr($day_start,0,4);
 
 // Важна дата в MYSQL формат
 // $n - има на срока от таблица 'options'
+// В таблица 'options' стойността и `ID` полето на записа от таблица 'schedules',
+// съответния срок е стойността на полето `date_time_2`
 
 function conference_important_day($n){
 $i = stored_value($n);
