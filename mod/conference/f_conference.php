@@ -505,6 +505,7 @@ else {
 }
 // Дали сме в период на редактиране на резюмета
 $et = ($today < $day_a_submit) || $adm;
+foreach($d as $k => $v) if(!isset($v)) $d[$k] = '';
 // Съставяне на формата за редактиране
 $ti = new FormSelect(translate('conference_language'), 'language', $languages, $d['language']);
 if (!$et) $ti->js = ' disabled="disabled"';
