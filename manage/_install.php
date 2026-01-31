@@ -80,13 +80,14 @@ $fc = str_replace('INSERT INTO `', "INSERT INTO `$tn_prefix", $fc);
 $fc = preg_replace('/\'host_local\', \'.*\'/', '\'host_local\', \'localhost\'', $fc);
 $fc = preg_replace('/\'host_web\', \'.*\'/', '\'host_web\', \'mysite.org\'', $fc);
 
+include($idir.'lib/usedatabase.php');
 mysqli_multi_query($db_link, $fc);
 
 echo '<p>All done.</p>
 
 <p><a href="'.dirname($_SERVER['PHP_SELF']).
 '/">Go to manage</a> folder or go to <a href="'.dirname(dirname($_SERVER['PHP_SELF'])).
-'index.php">Home page</a>.</p>';
+'/index.php">Home page</a>.</p>';
 
 // 
 // Функция, показваща форма за въвеждане на данните, които трябва
@@ -94,7 +95,6 @@ echo '<p>All done.</p>
 //
 function create_conf_database(){
 global $idir, $ddir, $languages, $language;
-include_once($idir.'lib/o_form.php');
 // Ако файл conf_database.php вече съществува
 if (file_exists($ddir.'conf_database.php')){
   // Ако вече е отговорено да се продължи
@@ -108,6 +108,7 @@ If there is data in the tables, it will be deleted and replaced with new data.</
 <p>Or remove conf_database.php file to start a new instalation.</p>');
   die;
 }
+include_once($idir.'lib/o_form.php');
 $f = new HTMLForm('pform');
 $i = new FormSelect(_('Language'), 'language', $languages, $language);
      $i->js = 'onchange="langChange()"';
@@ -146,7 +147,10 @@ global $idir;
 // Създаване на базата данни, ако не съществува
 try{ //print_r($_POST); die;
    $db_link = mysqli_connect($_POST['host'],$_POST['user'],$_POST['password']);
-} catch (Exception $e){ echo('<p>Can\'t connect to database.</p>'); }
+} catch (Exception $e){ 
+   echo('<p>Can\'t connect to database.</p>'); 
+   die('<a href="" >'._("Try again").'</a>'); 
+}
 if (empty($db_link)) echo("<p>Failed to connect to MySQL: " . mysqli_connect_error().'</p>');
 else {
   $q = "CREATE DATABASE IF NOT EXISTS `".$_POST['database']."` COLLATE=utf8_unicode_ci;";

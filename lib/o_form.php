@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Клас за създаване на html форми
 
+error_reporting(E_ALL); ini_set('display_errors',1); 
+
 include_once($idir.'lib/f_add_style.php');
 include_once($idir.'lib/f_stored_value.php');
 include_once($idir.'lib/f_encode.php');

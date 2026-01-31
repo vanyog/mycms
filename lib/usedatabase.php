@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Този файл инициализира променливата $db_link
 // която се използва в mysqli_ функциите
 
+error_reporting(E_ALL); ini_set('display_errors',1);
+
 global $db_link, $db_req_count;
 
 $db_link = false;
