@@ -79,7 +79,6 @@ $rz = '';
 $r1 = db_select_1('c.*, f.filters',
                   'content` c LEFT JOIN `'.$tn_prefix.'filters` f ON c.name=f.`name', "c.name='$n' AND `language`='$language'",
                   $debug);
-//if(substr($n, 0, 6)=='Vladim') { var_dump($r1); die; }
 
 if ($r1){ // Ако има такъв запис
   $content_create_time = $r1['date_time_1'];

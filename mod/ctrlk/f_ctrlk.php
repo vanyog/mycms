@@ -23,9 +23,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 function ctrlk(){
 if(!in_edit_mode()) return '';
-global $body_adds, $page_header, $page_data, $language, $adm_pth;
+global $body_adds, $page_header, $page_data, $language, $adm_pth, $pth;
 $id = db_table_field('ID', 'content', "`name`='".$page_data['content']."' AND `language`='$language'", 0);
 $lk = $adm_pth.'edit_record.php?t=content&r='.$id;
+if(strpos($page_header,"js/cookies.js")===false) 
+   $page_header .= '<script src="'.$pth.'js/cookies.js"></script>';
 $page_header .= '<script>
 function ctrl_pus_e(e,v){
 if((e.ctrlKey || e.metaKey) && (e.key=="e")){

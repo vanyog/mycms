@@ -46,7 +46,7 @@ f.submit();
 }
 function doDublicate(id){
 if (confirm("Do you want to duplicate record ID="+id+"?")){
-document.location="duplicate_record.php?t=english_bulgarian&r="+id;
+document.location="duplicate_record.php?t='.$t.'&r="+id;
 }
 }
 function openOtherRecord(f,e){

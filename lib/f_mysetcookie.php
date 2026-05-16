@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 function mysetcookie($k,$v){
-$rz = false; //var_dump($_GET); die();
+$rz = false;
 if(!isset($_COOKIE['cookies_accept']) || ($_COOKIE['cookies_accept']!='yes')){
    if (isset($_GET['cookies_accept']) && ($_GET['cookies_accept']=='yes') ){
        $rz = setcookie('cookies_accept', 'yes', 

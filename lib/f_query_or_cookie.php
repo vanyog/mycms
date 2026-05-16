@@ -26,13 +26,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 function query_or_cookie($k,$v){
 if (isset($_GET[$k])){
-   if(!mysetcookie($k, $_GET[$k])){
+   $r = mysetcookie($k, $_GET[$k]);
+   if(!$r){
      // die("The cookie could not be set. Maybe cookies are disabled by the user.");
    }
    return ($_GET[$k]==$v);
 }
 else if (isset($_COOKIE[$k])) return ($_COOKIE[$k]==$v);
-        else return '';
+        else return false;
 }
 
 ?>
