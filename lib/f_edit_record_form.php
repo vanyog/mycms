@@ -149,7 +149,7 @@ foreach($cp as $n => $v){
       }
       break;
     case 'enum':
-      $op = str_getcsv($tp[2], ',', "'");
+      $op = str_getcsv($tp[2], ',', "'","\\");
       $i = array_search(isset($d[$n])?$d[$n]:array(), $op);
       if(($i===false) && $fd[$n]) $i = array_search($fd[$n], $op);;
       $fi =  new FormSelect($v, $n, $op, $i);

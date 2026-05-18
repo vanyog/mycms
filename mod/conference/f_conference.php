@@ -1088,11 +1088,14 @@ for($i = 0; $i<count($tp); $i++){
         $ex3 = strtolower( pathinfo( $d['fulltextfile3'], PATHINFO_EXTENSION ) );
         if ( $team ){
         //   Преименуване на файловете. Само ако е необходимо се откоментирва този ред
-           if(isset($_GET['rename']) && ($_GET['rename']=='on')) $d = conference_rename_files($d);
+//           if(isset($_GET['rename']) && ($_GET['rename']=='on')) $d = conference_rename_files($d);
            if ($d['form']==4){ // Форма на участие "Слушател"
               // Име на участника
               $ud = db_select_1('*', $user_table, "`ID`=".$d['user_id']);
-              $un = $ud['firstname']." ".$ud['secondname']."  ".$ud['thirdname'];
+              if(!isset($ud['firstname']) || !isset($ud['secondname']) || !isset($ud['secondname']) )
+                 $un = "";
+              else
+                 $un = $ud['firstname']." ".$ud['secondname']."  ".$ud['thirdname'];
               $lk = "$un - ".encode('Слушател');
            }
            else{
@@ -1303,10 +1306,11 @@ $rwc = db_table_field('COUNT(*)', 'reviewer_work', '`proc_id`='.$d['ID'].
                       ' AND (`decision`=2)');
 if($rwc) $lk .= ", ".encode('одобрили').": $rwc";
 $ue = db_select_1('email', 'users', "`ID`=".$d['user_id']." AND `type`='$utype'");
-$rwc = db_table_field('COUNT(*)', 'mail_sent', 
+if(isset($ue['email'])) $rwc = db_table_field('COUNT(*)', 'mail_sent', 
        "`email`='".$ue['email']."' AND `date_time_2`>'$year-01-01 00:00:00'".
        " AND (`template_id`=17 OR `template_id`=18 OR `template_id`=19".
          " OR `template_id`=20 OR `template_id`=34 OR `template_id`=46)",'',false);
+else $rwc = 0;
 $lk .= ", ".encode('съобщения').": $rwc";
 if($rwc)
 {
