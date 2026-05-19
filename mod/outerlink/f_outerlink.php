@@ -39,14 +39,15 @@ $bb = explode(':',$aa[0]);
 if(isset($bb[1])){
   $n = stored_value('outer_links_server_'.$bb[0]);
   if(!$n) die('outer_links_server_'.$bb[0].' server is not defined in options table');
-///  die($aa[1]);
   if(isset($aa[1])){
      return '<a href="'.$n.'&lid='.$bb[1].'" target="_blank">'.$aa[1].'</a>';
   }
   $u = $n.'&lid='.$bb[1].'&just=data';
   $d =  file_get_contents($u);
   $o =  json_decode($d);
-  return '<a href="'.$n.'&lid='.$bb[1].'" target="_blank">'.$o->Title.'</a>';
+  if(!isset($o->Title)) $t = 'ERROR';
+  else $t = $o->Title;
+  return '<a href="'.$n.'&lid='.$bb[1].'" target="_blank">'.$t.'</a>';
 }
 // Четене данните за хипервръзката
 $d = db_select_1('*', 'outer_links', "`ID`=".$aa[0], false );
