@@ -124,10 +124,10 @@ else
    
 // Хипервръзка "pdfs", която се показва на локален сървър и отваря скрипта check_pdfs.php
 if (is_local())
-   $rz .= ' &nbsp <a href="'.$pth.'mod/outerlinks/check_pdfs.php">pdfs</p>';
+   $rz .= ' &nbsp <a href="'.$pth.'mod/outerlinks/check_pdfs.php">pdfs</a></p>'."\n";
 
 }
-$rz .= "</p>\n";
+else $rz .= "</p>\n";
 
 // Линкове "Най-нови", "Най-стари", "Най-кликвани"
 if($lc>10){
@@ -451,7 +451,8 @@ $rz1 = ''; // Намерени категории
 $rz2 = ''; // Намерени линкове
 foreach($ra as $r){
   // Линк
-  $lk = set_self_query_var('lid',$r['ID']);
+  if($r['link'] && !is_numeric($r['link'])) $lk = urldecode($r['link']).'" onclick="countClick(this);return false;';
+  else $lk = set_self_query_var('lid',$r['ID']);
   // Заглавие на категорията на линка
   if (!$r['up']) $t2 = translate('outerlinks_home'); 
   else $t2 = db_table_field('Title','outer_links',"`ID`=".$r['up']);
@@ -623,12 +624,12 @@ foreach($dt as $d){
   $pr = '';
   if($d['private']) $pr = ' class="private"';
   $rz .= "<p$pr><a href=\"";
-  if($d['link']){
-    if(is_numeric($d['link'])) die("Numeric link: ".$d['link']);
-  	$rz .= $d['link'];
+  if($d['link'] && !is_numeric($d['link'])){
+  	$rz .= urlencode($d['link']);
   }
   else $rz .= set_self_query_var('lid',$d['ID']);
-  $rz .= '" onclick="countClick(this);return false;" title="'.urldecode($d['link']).
+  $rz .= '" onclick="countClick(this);return false;" title="'.
+  str_replace('"', '&quot;', urldecode($d['link'])).
   '" target="_blank">'.stripslashes(isset($d['Title']) ? $d['Title'] : '')."</a>";
   if ($d['Comment']) $rz .= outerlinks_autocomment($d);
   $rz .= "</p>\n";
@@ -637,7 +638,10 @@ $da = db_select_m('*', 'outer_links', "`up`=$up AND (`link`='' OR `link` IS NULL
 foreach($da as $d){
   $pr = '';
   if($d['private']) $pr = ' class="private"';
-  $t = '<h'.($lv+1).$pr.'><a href="'.set_self_query_var('lid',$d['ID']).'#outer_links">'.$d['Title'].'</a></h'.($lv+1).">\n";
+  $ohl = $lv+1;
+  $chl = $ohl;
+  if($ohl>6){ $ohl = '6 class="h'.$ohl.'"'; $chl = '6'; }
+  $t = '<h'.$ohl.$pr.'><a href="'.set_self_query_var('lid',$d['ID']).'#outer_links">'.$d['Title'].'</a></h'.$chl.">\n";
   if ($d['Comment']) $t .= '<p>'.outerlinks_autocomment($d)."</p>\n";
   $rz .= outerlenks_all( $d['ID'], $t, $lv + 1 );
 }
@@ -668,7 +672,6 @@ return $rz;
 }
 
 // Показване на "най-новите"
-
 function outerlenks_new(){
 $rz = '<h2>'.translate('outerlinks_newest')."</h2>\n";
 // Добавка за пропускане на private линковете
@@ -679,7 +682,6 @@ return $rz.outerlinks_showlinks($da);
 }
 
 // Показване на "най-старите"
-
 function outerlenks_old(){
 $rz = '<h2>'.translate('outerlinks_oldest')."</h2>\n";
 // Добавка за пропускане на private линковете
@@ -690,7 +692,6 @@ return $rz.outerlinks_showlinks($da);
 }
 
 // Показване на "най-кликваните"
-
 function outerlenks_click(){
 $rz = '<h2>'.translate('outerlinks_clicked')."</h2>\n";
 // Добавка за пропускане на private линковете
@@ -748,7 +749,6 @@ if (!empty($d['link']) && !(strpos($d['link'], 'en.wikipedia.org')===false))
 }
 
 // Брой връзки в категория и нейните подкатегории
-
 function uoterlinks_count($c, $qp){
 $c1 = db_table_field('COUNT(*)','outer_links', "`up`=".$c['ID']." AND `link`>' ' $qp ORDER BY `place` ASC");
 $dt = db_select_m('ID',         'outer_links', "`up`=".$c['ID']." AND (`link`='' OR `link` IS NULL)$qp ORDER BY `place` ASC");
