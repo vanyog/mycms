@@ -21,20 +21,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Без параметри се показва README.txt файла на системата.
 // С параметър $_GET['m']=xx се README.txt файла на модул xx.
 
+error_reporting(E_ALL); ini_set('display_errors',1);
+
 $idir = dirname(dirname(__FILE__)).'/';
 $ddir = $idir;
 
 include_once($idir.'conf_paths.php');
 
+$fln1 = 'README-bg.txt';
 $fln = $apth.'README-bg.txt';
 
-if (isset($_GET['m'])) $fln = $_SERVER['DOCUMENT_ROOT'].$mod_pth.strtolower($_GET['m']).'/README.txt';
-if (!file_exists($fln)) $fln = $apth.'mod/'.strtolower($_GET['m']).'/README.txt';
+if (isset($_GET['m'])) { 
+   $fln1 = $mod_pth.strtolower($_GET['m']).'/README.txt';
+   $fln = $_SERVER['DOCUMENT_ROOT'].$fln1;
+   $fln1 = substr($fln1,1);
+}
+if (!file_exists($fln)) {
+    $fln1 = 'mod/'.strtolower($_GET['m']).'/README.txt';
+    $fln = $apth.$fln1;
+}
 
 if (!file_exists($fln)) $cnt = "File not found<br>$fln";
 else $cnt = nl2br( htmlspecialchars( file_get_contents($fln), ENT_COMPAT, 'cp1251' ) );
 
-$page_content = '<div style="width:800px; margin:0 auto; font-family:monospace;">'.iconv('windows-1251', $site_encoding, $cnt).'</div>';
+$page_content = '<div style="width:800px; margin:0 auto; font-family:monospace;">'.
+                iconv('windows-1251', $site_encoding, $cnt).'</div>';
+
+if(in_edit_mode()) $page_content .= '<p><a href="'.$adm_pth.'edit_file.php?f='.$fln1.'">Edit</a> </p>';
 
 include($idir.'lib/build_page.php');
 
