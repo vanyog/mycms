@@ -38,7 +38,8 @@ foreach($d as $n=>$v){
 $q = substr($q,0,strlen($q)-1)." WHERE $w;";
 if ($y) return "$q<br>\n";
 else{
- mysqli_query($db_link,$q);
+ try { mysqli_query($db_link, $q); } 
+ catch (mysqli_sql_exception $e) { die($e->getMessage()."<br>\n".$q); }
  $db_req_count++;
 }
 }
